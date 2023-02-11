@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModel="clr-namespace:CoffeeSpace._ViewModels"
+             xmlns:data="clr-namespace:CoffeeSpace.Data.Models.Orders;assembly=CoffeeSpace.Data"
+             x:DataType="viewModel:OrderViewModel"
+             x:Class="CoffeeSpace.Views.OrderView"
+             Title="Orders">
+
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,1" EndPoint="1,0">
+            <GradientStop Color="#C33764" Offset="0.2" />
+
+            <GradientStop Color="#1D2671" Offset="1.0" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
+    
+    <ScrollView>
+        <FlexLayout Wrap="Wrap" JustifyContent="SpaceBetween"
+                    BindableLayout.ItemsSource="{Binding Orders}">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate x:DataType="data:Order">
+                    <Frame>
+                        <Grid RowDefinitions="Auto,Auto,Auto,Auto"
+                              ColumnDefinitions="Auto,Auto,Auto,Auto">
+                        
+                            <Label Text="{Binding Customer.Email}"/>
+                        
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </FlexLayout>
+    </ScrollView>
+    
+</ContentPage>
