@@ -55,7 +55,7 @@
 		<PackageReference Include="CommunityToolkit.Maui.Markup" Version="3.0.0" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
 		<PackageReference Include="IdentityModel.OidcClient" Version="5.2.1" />
-		<PackageReference Include="MediatR.Contracts" Version="1.0.1" />
+		<PackageReference Include="MediatR.Contracts" Version="2.0.0" />
 		<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.2" />

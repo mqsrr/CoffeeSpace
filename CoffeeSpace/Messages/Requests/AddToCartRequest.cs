@@ -1,10 +1,9 @@
 ﻿using CoffeeSpace.Data.Models.Orders;
 using MediatR;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace CoffeeSpace.Messages.Requests;
 
-public sealed class AddToCartRequest : IRequest
+public sealed class AddToCartRequest : IRequest<Unit>
 {
     public OrderItem Item { get; }
 

@@ -6,7 +6,7 @@ public static class AddSignalRHubConnectionExtension
 {
     public static IServiceCollection AddSignalRHubConnection(this IServiceCollection services)
     {
-        services.AddScoped(_ => new HubConnectionBuilder()
+        services.AddSingleton(_ => new HubConnectionBuilder()
             .WithUrl("https://localhost:7194/orders")
             .WithAutomaticReconnect()
             .Build());

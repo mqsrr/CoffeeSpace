@@ -29,6 +29,8 @@ public sealed class CustomerRepository : IRepository<Customer>
         await _dbContext.SaveChangesAsync(token);
     }
 
+    public IEnumerable<Customer> GetAll() => _dbContext.Customers;
+
     public async Task<Customer> GetByIdAsync(string id, CancellationToken token = default)
     {
         Customer customer = await _dbContext.Customers.FindAsync(new object[] { id }, cancellationToken: token);

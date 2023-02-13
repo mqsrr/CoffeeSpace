@@ -26,18 +26,22 @@ public partial class CartViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void ClearCart() => OrderItems.Clear();
+    private void ClearCart()
+    {
+        OrderItems.AsParallel().ForAll(x => x.Quantity = 0);
+        OrderItems.Clear();
+    }
 
     [RelayCommand]
     internal void AddOrderItem(OrderItem orderItem)
     {
+        orderItem.Quantity++;
         if (!OrderItems.Contains(orderItem))
         {
             OrderItems.Add(orderItem);
             return;
         }
 
-        orderItem.Quantity++;
         RefreshOrderItem(orderItem);
     }
 

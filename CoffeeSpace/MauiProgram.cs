@@ -35,7 +35,7 @@ public static class MauiProgram
 		builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
 		builder.Configuration.AddUserSecrets(Assembly.GetExecutingAssembly());
-
+		
 		string applicationConnectionString = builder.Configuration["ApplicationDb:ConnectionString"];
 		string customersConnectionString = builder.Configuration["CustomersDb:ConnectionString"];
 
@@ -45,7 +45,7 @@ public static class MauiProgram
 		builder.Services.AddIdentity<Customer, IdentityRole>()
 			.AddEntityFrameworkStores<CustomersDb>()
 			.AddDefaultTokenProviders();
-			
+
 		builder.Services.AddScoped<IRepository<OrderItem>, OrderItemRepository>();
 		builder.Services.AddScoped<IRepository<Customer>, CustomerRepository>();
 		builder.Services.AddScoped<IOrderRepository, OrderRepository>();

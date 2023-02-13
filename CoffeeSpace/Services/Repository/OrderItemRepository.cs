@@ -24,6 +24,8 @@ public sealed class OrderItemRepository : IRepository<OrderItem>
             ? _dbContext.OrderItems
             : Enumerable.Empty<OrderItem>();
 
+    public IEnumerable<OrderItem> GetAll() => _dbContext.OrderItems;
+
     public async Task<OrderItem> GetByIdAsync(string id, CancellationToken token = default)
     {
         OrderItem orderItem = await _dbContext.OrderItems.FindAsync(new object[] { id }, cancellationToken: token);

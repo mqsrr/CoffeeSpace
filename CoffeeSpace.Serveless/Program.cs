@@ -1,6 +1,7 @@
 using CoffeeSpace.Data.Context;
 using CoffeeSpace.Data.Models.CustomerInfo;
 using CoffeeSpace.Serveless;
+using CoffeeSpace.Serveless.Controllers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,8 +12,8 @@ builder.Services.AddSignalR()
 
 builder.Services.AddEndpointsApiExplorer(); ;
 
-string applicationConnectionString = builder.Configuration["ApplicationDb:ConnectionString"];
-string customersConnectionString = builder.Configuration["CustomersDb:ConnectionString"];
+string applicationConnectionString = builder.Configuration["ApplicationDb:ConnectionString"]!;
+string customersConnectionString = builder.Configuration["CustomersDb:ConnectionString"]!;
 
 builder.Services.AddMySql<ApplicationDb>(applicationConnectionString, ServerVersion.AutoDetect(applicationConnectionString));
 builder.Services.AddMySql<CustomersDb>(customersConnectionString, ServerVersion.AutoDetect(customersConnectionString));

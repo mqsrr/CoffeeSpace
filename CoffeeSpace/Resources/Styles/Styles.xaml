@@ -407,7 +407,7 @@
         <Setter Property="Margin" Value="10"/>
         <Setter Property="CornerRadius" Value="10"/>
         <Setter Property="BackgroundColor" Value="WhiteSmoke"/>
-        <Setter Property="WidthRequest" Value="370"/>
+        <Setter Property="WidthRequest" Value="670"/>
         <Setter Property="HeightRequest" Value="330"/>
     </Style>   
     
@@ -417,7 +417,7 @@
         <Setter Property="CornerRadius" Value="10"/>
         <Setter Property="BackgroundColor" Value="WhiteSmoke"/>
         <Setter Property="HeightRequest" Value="320"/>
-        <Setter Property="WidthRequest" Value="620"/>
+        <Setter Property="WidthRequest" Value="820"/>
     </Style>    
     
     <Style TargetType="Frame" x:Key="MainViewOrderItemWindows">
@@ -425,9 +425,8 @@
         <Setter Property="Margin" Value="10"/>
         <Setter Property="CornerRadius" Value="10"/>
         <Setter Property="BackgroundColor" Value="WhiteSmoke"/>
-        <Setter Property="HeightRequest" Value="320"/>
+        <Setter Property="HeightRequest" Value="330"/>
         <Setter Property="WidthRequest" Value="280"/>
-        <Setter Property="HorizontalOptions" Value="Center"/>
 
     </Style>
     
@@ -438,7 +437,5 @@
         <Setter Property="BackgroundColor" Value="WhiteSmoke"/>
         <Setter Property="HeightRequest" Value="320"/>
         <Setter Property="WidthRequest" Value="420"/>
-        <Setter Property="HorizontalOptions" Value="Center"/>
-        
     </Style>
 </ResourceDictionary>

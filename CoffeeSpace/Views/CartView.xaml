@@ -24,25 +24,11 @@
 
                 <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="data:OrderItem">
-                        <Frame
-                            Style="{OnPlatform Android={StaticResource CartOrderItemAndroid},WinUI={StaticResource CartOrderItemWindows}}">
-                            <Grid Padding="10">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-
+                        <Frame Style="{OnPlatform Android={StaticResource CartOrderItemAndroid},WinUI={StaticResource CartOrderItemWindows}}">
+                            <Grid RowSpacing="1"
+                                  RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
+                                  ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,80">
+                                
                                 <Image Grid.Row="0" Grid.Column="0" Grid.RowSpan="5"
                                        Source="{Binding PictureUrl}" HeightRequest="280"
                                        VerticalOptions="Start" HorizontalOptions="Center" />
@@ -137,7 +123,8 @@
             <Button Text="Place Order" TextColor="Black"
                     HorizontalOptions="Start" VerticalOptions="End"
                     MinimumWidthRequest="1300" Margin="20"
-                    Command="{Binding CreateOrderCommand}"/>
+                    Command="{Binding CreateOrderCommand}"
+                    IsVisible="{Binding OrderItems.Count}"/> 
         </StackLayout>
     </ScrollView>
 

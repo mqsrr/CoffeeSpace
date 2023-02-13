@@ -22,7 +22,7 @@ public partial class MainViewModel : ObservableObject
         _orderItemRepo = orderItemRepo;
         _mediator = mediator;
         
-        _products = new ObservableCollection<OrderItem>(_orderItemRepo.GetAllAsync().Result);
+        _products = new ObservableCollection<OrderItem>(_orderItemRepo.GetAll());
         
         // _products = new ObservableCollection<OrderItem>
         // {

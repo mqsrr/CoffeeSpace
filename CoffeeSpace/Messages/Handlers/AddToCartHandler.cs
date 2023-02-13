@@ -8,15 +8,14 @@ namespace CoffeeSpace.Messages.Handlers;
 
 public sealed class AddToCartHandler : IRequestHandler<AddToCartRequest>
 {
-    private readonly IServiceScope _serviceScope;
+    private readonly CartViewModel _cartViewModel;
 
-    public AddToCartHandler(IServiceScopeFactory serviceFactory) => _serviceScope = serviceFactory.CreateScope();
+    public AddToCartHandler(CartViewModel cartViewModel) => _cartViewModel = cartViewModel;
 
     public Task<Unit> Handle(AddToCartRequest request, CancellationToken cancellationToken)
     {
-        CartViewModel cartViewModel = _serviceScope.ServiceProvider.GetService<CartViewModel>();
 
-        cartViewModel.AddOrderItem(request.Item);
+        _cartViewModel.AddOrderItem(request.Item);
         
         return Unit.Task;
     }
