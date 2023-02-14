@@ -1,0 +1,33 @@
+﻿version: "1.0"
+services: 
+  applicationDb:
+    image: mysql:8.0.32
+    command: --default-authentication-plugin=caching_sha2_password
+    healthcheck:
+      test: "mysqladmin ping -h localhost"
+      interval: 1s
+      timeout: 1s
+      retries: 60
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+      - MYSQL_DATABASE=ApplicationDb
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=hunter2  
+    ports:
+      - 33060:3306
+    
+  customersDb:
+    image: mysql:8.0.32
+    command: --default-authentication-plugin=caching_sha2_password
+    healthcheck:
+      test: "mysqladmin ping -h localhost"
+      interval: 1s
+      timeout: 1s
+      retries: 60
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+      - MYSQL_DATABASE=CustomersDb
+      - MYSQL_USER=sa
+      - MYSQL_PASSWORD=hunter22
+    ports:
+      - 33061:3306

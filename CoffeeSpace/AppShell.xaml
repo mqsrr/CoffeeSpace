@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="CoffeeSpace.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:CoffeeSpace"
+    xmlns:views="using:CoffeeSpace.Views"
+    Shell.FlyoutBehavior="Flyout">
+
+    <ShellContent
+        Title="Home"
+        ContentTemplate="{DataTemplate views:MainView}"
+        Route="MainPage" />
+
+    <ShellContent
+        Title="Orders"
+        ContentTemplate="{DataTemplate views:OrderView}"
+        Route="OrderPage"/>
+
+    <ShellContent
+        Title="Cart"
+        ContentTemplate="{DataTemplate views:CartView}"
+        Route="CartPage"/>
+
+    <ShellContent
+        Title="Login"
+        ContentTemplate="{DataTemplate views:LoginView}"
+        Route="LoginPage"/>
+
+    <!--<ShellContent
+        Title="Cart"
+        ContentTemplate=""
+        Route="CartPage"/>
+    
+    <ShellContent
+        Title="Profile"
+        ContentTemplate=""
+        Route="ProfilePage"/>-->
+
+
+</Shell>
