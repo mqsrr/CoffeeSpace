@@ -1,4 +1,5 @@
-﻿using CoffeeSpace.Data.Models.Orders;
+﻿using System.Buffers;
+using CoffeeSpace.Data.Models.Orders;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
 using CoffeeSpace.Data.Models.CustomerInfo;
@@ -49,6 +50,7 @@ public partial class CartViewModel : ObservableObject
     private async Task CreateOrder()
     {
         await _mediator.Send(new CreateOrderRequest(OrderItems, await _customerRepository.GetByIdAsync("638BC3AA-7CC5-49A6-BBE1-6842EDF22F78")));
+        
         ClearCart();
     }
 

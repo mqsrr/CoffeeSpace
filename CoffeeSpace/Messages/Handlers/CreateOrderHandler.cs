@@ -3,6 +3,7 @@ using CoffeeSpace._ViewModels;
 using CoffeeSpace.Data.Models.Orders;
 using CoffeeSpace.Messages.Requests;
 using CoffeeSpace.Services.Repository;
+using CommunityToolkit.Maui.Core.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.SignalR.Client;
 using static System.GC;
@@ -28,11 +29,10 @@ public class CreateOrderHandler : IRequestHandler<CreateOrderRequest>, IDisposab
             await _hubConnection.StartAsync(cancellationToken);
 
         Order order = await _orderRepository.CreateAsync(request.OrderItems, request.Customer, cancellationToken);
-        
-        // await _orderRepository.AddAsync(order, cancellationToken);
-        IEnumerable<OrderItem> orderItems = order.OrderItems;
-        order.OrderItems = new ObservableCollection<OrderItem>(orderItems);
 
+        if (order.OrderItems is not ObservableCollection<OrderItem>)
+            order.OrderItems = order.OrderItems.ToObservableCollection();
+        
         _orderViewModel.Orders.Add(order);
 
         await _hubConnection.SendAsync("SendOrder", order, cancellationToken: cancellationToken);

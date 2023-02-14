@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
 using CoffeeSpace.Services.Repository;
+using CommunityToolkit.Mvvm.Input;
 
 namespace CoffeeSpace._ViewModels;
 
@@ -19,4 +20,8 @@ public partial class OrderViewModel : ObservableObject
 		
 		_orders = new ObservableCollection<Order>();
 	}
+
+	[RelayCommand]
+	private void CancelOrder(Order order)
+		=> Orders.Remove(order);
 }

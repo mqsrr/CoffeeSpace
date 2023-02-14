@@ -14,7 +14,6 @@ public sealed class AddToCartHandler : IRequestHandler<AddToCartRequest>
 
     public Task<Unit> Handle(AddToCartRequest request, CancellationToken cancellationToken)
     {
-
         _cartViewModel.AddOrderItem(request.Item);
         
         return Unit.Task;

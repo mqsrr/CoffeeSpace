@@ -33,8 +33,9 @@
                                    VerticalOptions="Start" HorizontalOptions="Start" />
 
                             <Label Grid.Row="1" Grid.Column="2" 
-                                   Text="Price: " TextColor="Black"
-                                   VerticalOptions="Center" HorizontalOptions="Center" />
+                                   Text="Price:" TextColor="Black"
+                                   VerticalOptions="Center" HorizontalOptions="Center" 
+                                   Margin="0,0,10,0"/>
 
                             <Label Grid.Row="1" Grid.Column="3"
                                    Text="{Binding UnitPrice}" TextColor="Black"
