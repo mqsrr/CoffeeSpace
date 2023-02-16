@@ -7,6 +7,7 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\CoffeeSpace</DockerfileContext>
     <UserSecretsId>86c493ab-83ba-4a1d-b15a-047c259a0409</UserSecretsId>
+    <RootNamespace>CoffeeSpace.WebAPI</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

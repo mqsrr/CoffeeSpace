@@ -15,18 +15,17 @@
     </ContentPage.Background>
 
     <ScrollView>
-        <FlexLayout Wrap="Wrap" AlignItems="Center"
-                    BindableLayout.ItemsSource="{Binding Products}" AlignContent="SpaceBetween">
+        <FlexLayout BindableLayout.ItemsSource="{Binding Products}" Style="{OnPlatform Android={StaticResource MainViewFlexLayoutAndroid}, WinUI={StaticResource MainViewFlexLayoutWindows}}">
             <BindableLayout.ItemTemplate>
                 <DataTemplate x:DataType="data:OrderItem">
-                    <Frame Style="{OnPlatform Android={StaticResource MainViewOrderItemAndroid},WinUI={StaticResource MainViewOrderItemWindows}}" >
+                    <Frame Style="{OnPlatform Android={StaticResource MainViewOrderItemFrameAndroid},WinUI={StaticResource MainViewOrderItemFrameWindows}}" >
                         <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,120"
                               ColumnDefinitions="50,Auto,Auto,Auto,Auto,Auto,120">
                             
                             <Image Grid.Row="0" Grid.Column="1"
                                    Source="{Binding PictureUrl}" HeightRequest="160"
                                    VerticalOptions="Center" HorizontalOptions="Center"
-                                   Margin="0,0,0,10"/>
+                                   Margin="0,5,0,0"/>
 
                             <Label Grid.Row="1" Grid.Column="0"
                                    Text="{Binding Title}" TextColor="Black"

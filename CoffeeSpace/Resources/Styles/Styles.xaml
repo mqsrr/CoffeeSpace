@@ -402,40 +402,127 @@
         <Setter Property="SelectedTabColor" Value="{AppThemeBinding Light={StaticResource Gray950}, Dark={StaticResource Gray200}}" />
     </Style>
 
-    <Style TargetType="Frame" x:Key="CartOrderItemAndroid">
+    <!--CartViewStyles-->
+
+    <Style TargetType="Frame" x:Key="CartOrderItemFrameAndroid">
         <Setter Property="BorderColor" Value="WhiteSmoke"/>
         <Setter Property="Margin" Value="10"/>
         <Setter Property="CornerRadius" Value="10"/>
         <Setter Property="BackgroundColor" Value="WhiteSmoke"/>
-        <Setter Property="WidthRequest" Value="670"/>
-        <Setter Property="HeightRequest" Value="330"/>
+        <Setter Property="WidthRequest" Value="400"/>
+        <Setter Property="HeightRequest" Value="300"/>
     </Style>   
     
-    <Style TargetType="Frame" x:Key="CartOrderItemWindows">
+    <Style TargetType="Frame" x:Key="CartOrderItemFrameWindows">
+        <Setter Property="BorderColor" Value="WhiteSmoke"/>
+        <Setter Property="Margin" Value="10"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="BackgroundColor" Value="WhiteSmoke"/>
+        <Setter Property="HeightRequest" Value="420"/>
+        <Setter Property="WidthRequest" Value="820"/>
+    </Style>    
+
+    <Style TargetType="Image" x:Key="CartOrderImageAndroid">
+        <Setter Property="HeightRequest" Value="200"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+    </Style>
+
+    <Style TargetType="Image" x:Key="CartOrderImageWindows">
+        <Setter Property="HeightRequest" Value="280"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+    </Style>
+
+    <Style TargetType="Label" x:Key="CartProductTitleAndroid">
+        <Setter Property="TextColor" Value="Black"/>
+        <Setter Property="FontSize" Value="Small"/>
+        <Setter Property="CharacterSpacing" Value="1"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="Padding" Value="7"/>
+    </Style>
+
+    <Style TargetType="Label" x:Key="CartProductTitleWindows">
+        <Setter Property="TextColor" Value="Black"/>
+        <Setter Property="FontSize" Value="Medium"/>
+        <Setter Property="CharacterSpacing" Value="1"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="Padding" Value="10"/>
+    </Style>
+
+    <Style TargetType="Label" x:Key="CartBindableTitleAndroid">
+        <Setter Property="TextColor" Value="Black"/>
+        <Setter Property="FontSize" Value="Small"/>
+        <Setter Property="CharacterSpacing" Value="1"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <Style TargetType="Label" x:Key="CartBindableLabelWindows">
+        <Setter Property="TextColor" Value="Black"/>
+        <Setter Property="FontSize" Value="Medium"/>
+        <Setter Property="CharacterSpacing" Value="1"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="MaximumWidthRequest" Value="10"/>
+        <Setter Property="Padding" Value="10"/>
+    </Style>
+
+    <!--MainViewStyles-->
+    
+    <Style TargetType="FlexLayout" x:Key="MainViewFlexLayoutAndroid">
+        <Setter Property="Wrap" Value="Wrap"/>
+        <Setter Property="JustifyContent" Value="SpaceEvenly"/>
+        <Setter Property="AlignItems" Value="Center"/>
+    </Style>
+    
+    <Style TargetType="FlexLayout" x:Key="MainViewFlexLayoutWindows">
+        <Setter Property="Wrap" Value="Wrap"/>
+        <Setter Property="JustifyContent" Value="SpaceAround"/>
+        <Setter Property="AlignItems" Value="Start"/>
+    </Style>
+    
+    <Style TargetType="Frame" x:Key="MainViewOrderItemFrameAndroid">
         <Setter Property="BorderColor" Value="WhiteSmoke"/>
         <Setter Property="Margin" Value="10"/>
         <Setter Property="CornerRadius" Value="10"/>
         <Setter Property="BackgroundColor" Value="WhiteSmoke"/>
         <Setter Property="HeightRequest" Value="320"/>
-        <Setter Property="WidthRequest" Value="820"/>
-    </Style>    
+        <Setter Property="WidthRequest" Value="300"/>
+    </Style>
     
-    <Style TargetType="Frame" x:Key="MainViewOrderItemWindows">
+    <Style TargetType="Frame" x:Key="MainViewOrderItemFrameWindows">
         <Setter Property="BorderColor" Value="WhiteSmoke"/>
         <Setter Property="Margin" Value="10"/>
         <Setter Property="CornerRadius" Value="10"/>
         <Setter Property="BackgroundColor" Value="WhiteSmoke"/>
         <Setter Property="HeightRequest" Value="330"/>
         <Setter Property="WidthRequest" Value="280"/>
-
     </Style>
-    
-    <Style TargetType="Frame" x:Key="MainViewOrderItemAndroid">
-        <Setter Property="BorderColor" Value="WhiteSmoke"/>
-        <Setter Property="Margin" Value="10"/>
-        <Setter Property="CornerRadius" Value="10"/>
-        <Setter Property="BackgroundColor" Value="WhiteSmoke"/>
-        <Setter Property="HeightRequest" Value="320"/>
-        <Setter Property="WidthRequest" Value="420"/>
+
+    <Style TargetType="Image" x:Key="MainViewImageAndroid">
+        <Setter Property="HeightRequest" Value="160"/>
+        <Setter Property="VerticalOptions" Value="Start"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="Margin" Value="5,5,0,0"/>
+    </Style>
+
+    <Style TargetType="Image" x:Key="MainViewImageWindows">
+        <Setter Property="HeightRequest" Value="160"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="Margin" Value="0,10,0,0"/>
+    </Style>
+
+    <Style TargetType="Button" x:Key="OrderViewButtonWindows">
+        <Setter Property="VerticalOptions" Value="End"/>
+    </Style>
+
+    <Style TargetType="Button" x:Key="OrderViewButtonAndroid">
+        <Setter Property="VerticalOptions" Value="End"/>
+        <Setter Property="HorizontalOptions" Value="Start"/>
+        <Setter Property="WidthRequest" Value="130"/>
     </Style>
 </ResourceDictionary>

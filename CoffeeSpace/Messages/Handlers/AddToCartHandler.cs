@@ -1,6 +1,4 @@
-﻿using System.Xml;
-using CoffeeSpace._ViewModels;
-using CoffeeSpace.Data.Models.Orders;
+﻿using CoffeeSpace._ViewModels;
 using CoffeeSpace.Messages.Requests;
 using MediatR;
 

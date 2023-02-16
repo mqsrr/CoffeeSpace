@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoffeeSpace", "CoffeeSpace\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeSpace.Data", "CoffeeSpace.Data\CoffeeSpace.Data.csproj", "{99BC5B38-EB79-4B90-921B-9F954860DCA4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeSpace.Serveless", "CoffeeSpace.Serveless\CoffeeSpace.Serveless.csproj", "{F5951027-1707-4D7C-A589-3849C2CFDB15}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeSpace.WebAPI", "CoffeeSpace.WebAPI\CoffeeSpace.WebAPI.csproj", "{F5951027-1707-4D7C-A589-3849C2CFDB15}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

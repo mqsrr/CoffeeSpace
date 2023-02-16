@@ -2,7 +2,7 @@
 using CoffeeSpace._ViewModels;
 using CoffeeSpace.Data.Models.Orders;
 using CoffeeSpace.Messages.Requests;
-using CoffeeSpace.Services.Repository;
+using CoffeeSpace.Services;
 using CommunityToolkit.Maui.Core.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -13,14 +13,14 @@ namespace CoffeeSpace.Messages.Handlers;
 public class CreateOrderHandler : IRequestHandler<CreateOrderRequest>, IDisposable
 {
     private readonly HubConnection _hubConnection;
-    private readonly IOrderRepository _orderRepository;
     private readonly OrderViewModel _orderViewModel;
+    private readonly IServiceDataProvider<Order> _orderServiceData;
 
-    public CreateOrderHandler(HubConnection hubConnection, IOrderRepository orderRepository, OrderViewModel orderViewModel)
+    public CreateOrderHandler(HubConnection hubConnection, OrderViewModel orderViewModel, IServiceDataProvider<Order> orderServiceData)
     {
         _hubConnection = hubConnection;
-        _orderRepository = orderRepository;
         _orderViewModel = orderViewModel;
+        _orderServiceData = orderServiceData;
     }
 
     public async Task<Unit> Handle(CreateOrderRequest request, CancellationToken cancellationToken)
@@ -28,8 +28,17 @@ public class CreateOrderHandler : IRequestHandler<CreateOrderRequest>, IDisposab
         if (_hubConnection.State is not HubConnectionState.Connected)
             await _hubConnection.StartAsync(cancellationToken);
 
-        Order order = await _orderRepository.CreateAsync(request.OrderItems, request.Customer, cancellationToken);
+        Order order = new Order
+        {
+            OrderItems = request.OrderItems,
+            CustomerId = request.Customer.Id,
+            Customer = request.Customer,
+            AdmittedTime = DateTime.Now,
+            Status = OrderStatus.Submitted
+        };
 
+        // await _orderService.AddAsync(order, cancellationToken);
+        
         if (order.OrderItems is not ObservableCollection<OrderItem>)
             order.OrderItems = order.OrderItems.ToObservableCollection();
         

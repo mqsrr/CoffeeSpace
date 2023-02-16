@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CoffeeSpace.Services.Repository
+namespace CoffeeSpace.WebAPI.Services.Repository
 {
     public interface IOrderRepository : IRepository<Order>
     {

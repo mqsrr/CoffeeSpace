@@ -10,7 +10,5 @@ public sealed class Order
 
     public string CustomerId { get; set; } = default!;
     public Customer Customer { get; set; } = default!;
-    
-    public string OrderItemId { get; set; } = default!;
     public IEnumerable<OrderItem> OrderItems { get; set; } = default!;
 }

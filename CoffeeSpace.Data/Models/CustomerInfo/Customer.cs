@@ -15,11 +15,9 @@ public sealed class Customer : IdentityUser
     public string Password { get; init; } = null!;
     public DateOnly Birthday { get; set; }
     
-
+    
     public string PaymentId { get; set; } = null!;
     public PaymentInfo PaymentInfo { get; set; } = null!;
-    
-    
     public string AddressId { get; set; } = null!;
     public Address Address { get; set; } = null!;
 

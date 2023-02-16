@@ -2,7 +2,7 @@
 using CoffeeSpace.Data.Models.Orders;
 using Microsoft.EntityFrameworkCore;
 
-namespace CoffeeSpace.Services.Repository;
+namespace CoffeeSpace.WebAPI.Services.Repository;
 
 public sealed class OrderItemRepository : IRepository<OrderItem>
 {
@@ -28,7 +28,7 @@ public sealed class OrderItemRepository : IRepository<OrderItem>
 
     public async Task<OrderItem> GetByIdAsync(string id, CancellationToken token = default)
     {
-        OrderItem orderItem = await _dbContext.OrderItems.FindAsync(new object[] { id }, cancellationToken: token);
+        OrderItem? orderItem = await _dbContext.OrderItems.FindAsync(new object[] { id }, cancellationToken: token);
 
         ArgumentNullException.ThrowIfNull(orderItem);
 

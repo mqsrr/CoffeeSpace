@@ -1,7 +1,7 @@
 ﻿using CoffeeSpace.Data.Models.Orders;
 using Microsoft.AspNetCore.SignalR;
 
-namespace CoffeeSpace.Serveless;
+namespace CoffeeSpace.WebAPI;
 
 public class OrderHub : Hub
 {

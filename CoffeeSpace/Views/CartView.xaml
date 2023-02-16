@@ -18,102 +18,59 @@
 
     <ScrollView>
         <StackLayout>
-
-            <FlexLayout Wrap="Wrap" AlignItems="Start"
+            <FlexLayout Wrap="Wrap" AlignItems="Start" 
                         BindableLayout.ItemsSource="{Binding OrderItems}">
-
                 <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="data:OrderItem">
-                        <Frame Style="{OnPlatform Android={StaticResource CartOrderItemAndroid},WinUI={StaticResource CartOrderItemWindows}}">
+                        <Frame Style="{OnPlatform Android={StaticResource CartOrderItemFrameAndroid},WinUI={StaticResource CartOrderItemFrameWindows}}">
                             <Grid RowSpacing="1"
                                   RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
-                                  ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,80">
+                                  ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,80*">
                                 
-                                <Image Grid.Row="0" Grid.Column="0" Grid.RowSpan="5"
-                                       Source="{Binding PictureUrl}" HeightRequest="280"
-                                       VerticalOptions="Start" HorizontalOptions="Center" />
+                                <Image Grid.Row="0" Grid.Column="0" Grid.RowSpan="5" Grid.ColumnSpan="3"
+                                       Source="{Binding PictureUrl}" Style="{OnPlatform Android={StaticResource CartOrderImageAndroid}, WinUI={StaticResource CartOrderImageWindows}}" />
 
                                 <HorizontalStackLayout Grid.Row="0" Grid.Column="1" Grid.RowSpan="2">
                                     <Label
-                                        Text="Product Title: " TextColor="Black"
-                                        FontSize="Medium" CharacterSpacing="1"
-                                        HorizontalOptions="Center" VerticalOptions="Start"
-                                        Padding="10" />
+                                        Text="Product Title: " 
+                                        Style="{OnPlatform Android={StaticResource CartProductTitleAndroid}, WinUI={StaticResource CartProductTitleWindows}}"/>
 
                                     <Label
-                                        Text="{Binding Title}" TextColor="Black"
-                                        HorizontalOptions="Center" VerticalOptions="Start"
-                                        CharacterSpacing="1" FontSize="Small"
-                                        Padding="12" />
+                                        Text="{Binding Title}"
+                                        Style="{OnPlatform Android={StaticResource CartBindableTitleAndroid}, WinUI={StaticResource CartBindableLabelWindows}}"/>
                                 </HorizontalStackLayout>
 
                                 <HorizontalStackLayout Grid.Row="1" Grid.Column="1" Grid.RowSpan="2">
-                                    <Label Text="Description: " TextColor="Black"
-                                           FontSize="Medium" CharacterSpacing="1"
-                                           HorizontalOptions="Center" VerticalOptions="Start"
-                                           Padding="10" />
+                                    <Label Text="Description: "
+                                            Style="{OnPlatform Android={StaticResource CartProductTitleAndroid}, WinUI={StaticResource CartProductTitleWindows}}"/>
 
-                                    <Label Text="{Binding Description}" TextColor="Black"
-                                           HorizontalOptions="Center" VerticalOptions="Start"
-                                           CharacterSpacing="1" FontSize="Small"
-                                           Padding="12" />
+                                    <Label Text="{Binding Description}"
+                                            Style="{OnPlatform Android={StaticResource CartBindableTitleAndroid}, WinUI={StaticResource CartBindableLabelWindows}}"/>
                                 </HorizontalStackLayout>
 
-                                <HorizontalStackLayout Grid.Row="4" Grid.Column="1" Grid.RowSpan="2"
-                                                       Grid.ColumnSpan="2">
-                                    <Label Text="Price: " TextColor="Black"
-                                           FontSize="Medium" CharacterSpacing="1"
-                                           HorizontalOptions="Center" VerticalOptions="Start"
-                                           Padding="10" />
+                                <HorizontalStackLayout Grid.Row="2" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="2">
+                                    <Label Text="Price: "
+                                           Style="{OnPlatform Android={StaticResource CartProductTitleAndroid}, WinUI={StaticResource CartProductTitleWindows}}"/>
 
-                                    <Label Text="{Binding UnitPrice}" TextColor="Black"
-                                           HorizontalOptions="Center" VerticalOptions="Start"
-                                           CharacterSpacing="1" FontSize="Small"
-                                           Padding="12" />
+
+                                    <Label Text="{Binding UnitPrice}" 
+                                           Style="{OnPlatform Android={StaticResource CartBindableTitleAndroid}, WinUI={StaticResource CartBindableLabelWindows}}"/>
                                 </HorizontalStackLayout>
 
+                                <HorizontalStackLayout Grid.Row="4" Grid.Column="1" Grid.RowSpan="2">
+                                    <Label Text="Quantity: "
+                                           Style="{OnPlatform Android={StaticResource CartProductTitleAndroid}, WinUI={StaticResource CartProductTitleWindows}}"/>
 
-                                <HorizontalStackLayout Grid.Row="4" Grid.Column="2" Grid.RowSpan="2">
-                                    <Label Text="Quantity: " TextColor="Black"
-                                           CharacterSpacing="1" FontSize="Small"
-                                           Padding="10" />
-
-                                    <Label Text="{Binding Quantity}" TextColor="Black"
-                                           CharacterSpacing="1" FontSize="Small"
-                                           Padding="10" />
+                                    <Label Text="{Binding Quantity}"
+                                           Style="{OnPlatform Android={StaticResource CartProductTitleAndroid}, WinUI={StaticResource CartProductTitleWindows}}"/>
                                 </HorizontalStackLayout>
-                                <!-- <HorizontalStackLayout Grid.Row="4" Grid.Column="2" Grid.RowSpan="2" Grid.ColumnSpan="1" -->
-                                <!--                        Spacing="100"> -->
-                                <!--     <Rectangle Background="Red" Scale="2"> -->
-                                <!--         <Rectangle.GestureRecognizers> -->
-                                <!--             <TapGestureRecognizer -->
-                                <!--                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:CartViewModel}}, Path=AddSameOrderCommand}" -->
-                                <!--                 CommandParameter="{Binding Mode=TwoWay}" /> -->
-                                <!--         </Rectangle.GestureRecognizers> -->
-                                <!--     </Rectangle> -->
-                                <!--     <Label Text="{Binding Quantity}" TextColor="Black" /> -->
-                                <!--     <Rectangle Background="Red" Scale="2"> -->
-                                <!--         <Rectangle.GestureRecognizers> -->
-                                <!--             <TapGestureRecognizer -->
-                                <!--                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewModel:CartViewModel}}, Path=RemoveSameOrderCommand}" -->
-                                <!--                 CommandParameter="{Binding Mode=TwoWay}" -->
-                                <!--                 Buttons="Primary" /> -->
-                                <!--         </Rectangle.GestureRecognizers> -->
-                                <!-- -->
-                                <!--     </Rectangle> -->
-                                <!-- </HorizontalStackLayout> -->
 
-                                <HorizontalStackLayout Grid.Row="4" Grid.Column="3" Grid.RowSpan="2"
-                                                       Grid.ColumnSpan="2">
-                                    <Label Text="Total: " TextColor="Black"
-                                           FontSize="Medium" CharacterSpacing="1"
-                                           HorizontalOptions="Center" VerticalOptions="Start"
-                                           Padding="10" />
+                                <HorizontalStackLayout Grid.Row="5" Grid.Column="1">
+                                    <Label Text="Total: " 
+                                           Style="{OnPlatform Android={StaticResource CartProductTitleAndroid}, WinUI={StaticResource CartProductTitleWindows}}"/>
 
-                                    <Label Text="{Binding Total}" TextColor="Black"
-                                           HorizontalOptions="Center" VerticalOptions="Start"
-                                           CharacterSpacing="1" FontSize="Small"
-                                           Padding="12" />
+                                    <Label Text="{Binding Total}" 
+                                           Style="{OnPlatform Android={StaticResource CartProductTitleAndroid}, WinUI={StaticResource CartProductTitleWindows}}"/>
                                 </HorizontalStackLayout>
                             </Grid>
                         </Frame>

@@ -3,7 +3,7 @@ using CoffeeSpace.Data.Models.CustomerInfo;
 using CoffeeSpace.Data.Models.Orders;
 using Microsoft.EntityFrameworkCore;
 
-namespace CoffeeSpace.Services.Repository;
+namespace CoffeeSpace.WebAPI.Services.Repository;
 
 public sealed class OrderRepository : IOrderRepository
 {
@@ -36,7 +36,6 @@ public sealed class OrderRepository : IOrderRepository
         Order order = new Order
         {
             Customer = customer,
-            CustomerId = customer.Id,
             OrderItems = orderItems,
             Status = OrderStatus.Submitted
         };
@@ -53,7 +52,7 @@ public sealed class OrderRepository : IOrderRepository
 
     public async Task<Order> GetByIdAsync(string id, CancellationToken token = default)
     {
-        Order order = await _dbContext.Orders.FindAsync(new object[] { id }, token); 
+        Order? order = await _dbContext.Orders.FindAsync(new object[] { id }, token); 
         
         ArgumentNullException.ThrowIfNull(order);
         
@@ -79,7 +78,6 @@ public sealed class OrderRepository : IOrderRepository
             
             return;
         }
-        
         _dbContext.Update(entity);
         
         await _dbContext.SaveChangesAsync(token);

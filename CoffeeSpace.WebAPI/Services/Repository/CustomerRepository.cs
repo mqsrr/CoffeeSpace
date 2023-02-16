@@ -2,7 +2,7 @@
 using CoffeeSpace.Data.Models.CustomerInfo;
 using Microsoft.EntityFrameworkCore;
 
-namespace CoffeeSpace.Services.Repository;
+namespace CoffeeSpace.WebAPI.Services.Repository;
 
 public sealed class CustomerRepository : IRepository<Customer>
 {
@@ -18,8 +18,7 @@ public sealed class CustomerRepository : IRepository<Customer>
             .Include(x => x.Orders)
             .ThenInclude(x => x.OrderItems);
     }
-
-
+    
     public async Task AddAsync(Customer entity, CancellationToken token = default)
     {
         if (!await _dbContext.Customers.ContainsAsync(entity, token))
@@ -33,7 +32,7 @@ public sealed class CustomerRepository : IRepository<Customer>
 
     public async Task<Customer> GetByIdAsync(string id, CancellationToken token = default)
     {
-        Customer customer = await _dbContext.Customers.FindAsync(new object[] { id }, cancellationToken: token);
+        Customer? customer = await _dbContext.Customers.FindAsync(new object[] { id }, cancellationToken: token);
 
         ArgumentNullException.ThrowIfNull(customer);
         
