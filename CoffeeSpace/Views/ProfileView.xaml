@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModel="clr-namespace:CoffeeSpace._ViewModels"
+             xmlns:data="clr-namespace:CoffeeSpace.Data.Models.CustomerInfo;assembly=CoffeeSpace.Data"
+             x:DataType="viewModel:ProfileViewModel"
+             x:Class="CoffeeSpace.Views.ProfileView">
+    <Frame x:DataType="data:Customer">
+        <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+              ColumnDefinitions="Auto,Auto,Auto,Auto,Auto"
+              ColumnSpacing="1">
+            
+            <Image Source="{Binding PictureUrl}"/>
+            
+        </Grid>
+    </Frame>
+</ContentPage>

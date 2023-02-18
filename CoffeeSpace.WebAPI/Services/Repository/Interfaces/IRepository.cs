@@ -1,4 +1,4 @@
-﻿namespace CoffeeSpace.WebAPI.Services.Repository;
+﻿namespace CoffeeSpace.WebAPI.Services.Repository.Interfaces;
 
 public interface IRepository<TEntity> where TEntity : class
 {

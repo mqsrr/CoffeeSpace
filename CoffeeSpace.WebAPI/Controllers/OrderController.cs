@@ -1,5 +1,6 @@
 ﻿using CoffeeSpace.Data.Models.Orders;
 using CoffeeSpace.WebAPI.Services.Repository;
+using CoffeeSpace.WebAPI.Services.Repository.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoffeeSpace.WebAPI.Controllers;
@@ -10,8 +11,8 @@ public sealed class OrderController : ControllerBase
 {
     private readonly IOrderRepository _orderRepo;
     
-    public OrderController(IOrderRepository orderRepo) 
-        => _orderRepo = orderRepo;
+    public OrderController(IOrderRepository orderRepo) =>
+        _orderRepo = orderRepo;
 
     [HttpGet("get")]
     public async Task<IActionResult> GetAll()

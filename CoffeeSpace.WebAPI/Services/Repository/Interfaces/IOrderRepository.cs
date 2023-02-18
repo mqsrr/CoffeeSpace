@@ -1,13 +1,7 @@
 ﻿using CoffeeSpace.Data.Models.CustomerInfo;
 using CoffeeSpace.Data.Models.Orders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace CoffeeSpace.WebAPI.Services.Repository
+namespace CoffeeSpace.WebAPI.Services.Repository.Interfaces
 {
     public interface IOrderRepository : IRepository<Order>
     {

@@ -34,10 +34,8 @@ public static class MauiProgram
 
 		builder.Configuration.AddUserSecrets(Assembly.GetExecutingAssembly());
 
-		builder.Services.AddScoped<IServiceDataProvider<Order>, ServiceDataProvider<Order>>();
-		builder.Services.AddScoped<IServiceDataProvider<OrderItem>, ServiceDataProvider<OrderItem>>();
-		builder.Services.AddScoped<IServiceDataProvider<Customer>, ServiceDataProvider<Customer>>();
-			
+		builder.Services.AddScoped(typeof(IServiceDataProvider<>), typeof(ServiceDataProvider<>));
+		
 		builder.Services.AddAuth0Client();
 		builder.Services.AddOidClient();
 		builder.Services.AddSignalRHubConnection();

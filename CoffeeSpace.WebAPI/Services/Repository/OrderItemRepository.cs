@@ -1,5 +1,6 @@
 ﻿using CoffeeSpace.Data.Context;
 using CoffeeSpace.Data.Models.Orders;
+using CoffeeSpace.WebAPI.Services.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeSpace.WebAPI.Services.Repository;

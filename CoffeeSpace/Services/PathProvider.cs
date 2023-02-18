@@ -7,4 +7,7 @@ public static class PathProvider
     public const string Add = "/add";
     public const string Update = "/update";
     public const string Delete = "/delete/{0}";
+
+    public const string Register = "/auth/register";
+    public const string Login = "/auth/login";
 }

@@ -1,5 +1,6 @@
 ﻿using CoffeeSpace.Data.Models.Orders;
 using CoffeeSpace.WebAPI.Services.Repository;
+using CoffeeSpace.WebAPI.Services.Repository.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoffeeSpace.WebAPI.Controllers;

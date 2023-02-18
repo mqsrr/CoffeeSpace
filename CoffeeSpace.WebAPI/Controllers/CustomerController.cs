@@ -1,5 +1,7 @@
 ﻿using CoffeeSpace.Data.Models.CustomerInfo;
+using CoffeeSpace.Data.Models.Orders;
 using CoffeeSpace.WebAPI.Services.Repository;
+using CoffeeSpace.WebAPI.Services.Repository.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoffeeSpace.WebAPI.Controllers;
@@ -12,14 +14,6 @@ public class CustomerController : ControllerBase
 
     public CustomerController(IRepository<Customer> customerRepo) 
         => _customerRepo = customerRepo;
-    
-    [HttpGet("get")]
-    public async Task<IActionResult> GetAll()
-    {
-        IEnumerable<Customer> customers = await _customerRepo.GetAllAsync();
-
-        return Ok(customers);
-    }
 
     [HttpGet("get/{id:guid}")]
     public async Task<IActionResult> GetById(Guid id)
@@ -27,6 +21,16 @@ public class CustomerController : ControllerBase
         Customer customer = await _customerRepo.GetByIdAsync(id.ToString());
 
         return Ok(customer);
+    }
+    
+    [HttpGet("get/customer-orders/{id:guid}")]
+    public async Task<IActionResult> GetCustomerOrders(Guid id)
+    {
+        Customer customer = await _customerRepo.GetByIdAsync(id.ToString());
+
+        ICollection<Order> orders = customer.Orders;
+
+        return Ok(orders);
     }
 
     [HttpPost("add")]
