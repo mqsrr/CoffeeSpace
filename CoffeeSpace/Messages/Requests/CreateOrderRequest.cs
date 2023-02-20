@@ -4,14 +4,4 @@ using MediatR;
 
 namespace CoffeeSpace.Messages.Requests;
 
-public sealed class CreateOrderRequest : IRequest<Unit>
-{
-    public IEnumerable<OrderItem> OrderItems { get; }
-    public Customer Customer { get; }
-
-    public CreateOrderRequest(IEnumerable<OrderItem> orderItems, Customer customer)
-    {
-        OrderItems = orderItems;
-        Customer = customer;
-    }
-}
+public sealed record CreateOrderRequest(IEnumerable<OrderItem> OrderItems, Customer Customer) : IRequest<Unit>;

@@ -10,13 +10,13 @@ using static System.GC;
 
 namespace CoffeeSpace.Messages.Handlers;
 
-public class CreateOrderHandler : IRequestHandler<CreateOrderRequest>, IDisposable
+public class CreateOrderRequestHandler : IRequestHandler<CreateOrderRequest>, IDisposable
 {
     private readonly HubConnection _hubConnection;
     private readonly OrderViewModel _orderViewModel;
     private readonly IServiceDataProvider<Order> _orderServiceData;
 
-    public CreateOrderHandler(HubConnection hubConnection, OrderViewModel orderViewModel, IServiceDataProvider<Order> orderServiceData)
+    public CreateOrderRequestHandler(HubConnection hubConnection, OrderViewModel orderViewModel, IServiceDataProvider<Order> orderServiceData)
     {
         _hubConnection = hubConnection;
         _orderViewModel = orderViewModel;
@@ -45,7 +45,7 @@ public class CreateOrderHandler : IRequestHandler<CreateOrderRequest>, IDisposab
         _orderViewModel.Orders.Add(order);
 
         await _hubConnection.SendAsync("SendOrder", order, cancellationToken: cancellationToken);
-        
+
         return Unit.Value;
     }
 

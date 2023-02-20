@@ -4,11 +4,11 @@ using MediatR;
 
 namespace CoffeeSpace.Messages.Handlers;
 
-public sealed class AddToCartHandler : IRequestHandler<AddToCartRequest>
+public sealed class AddToCartRequestHandler : IRequestHandler<AddToCartRequest>
 {
     private readonly CartViewModel _cartViewModel;
 
-    public AddToCartHandler(CartViewModel cartViewModel) => _cartViewModel = cartViewModel;
+    public AddToCartRequestHandler(CartViewModel cartViewModel) => _cartViewModel = cartViewModel;
 
     public Task<Unit> Handle(AddToCartRequest request, CancellationToken cancellationToken)
     {

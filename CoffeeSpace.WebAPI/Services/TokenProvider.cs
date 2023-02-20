@@ -1,7 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using CoffeeSpace.WebAPI.Dto.Response;
 using CoffeeSpace.WebAPI.Options;
 using CoffeeSpace.WebAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
@@ -22,16 +21,16 @@ public sealed class TokenProvider<TEntity> : ITokenProvider<TEntity>
         _jwtSettings = jwtSettings.Value;
     }
 
-    public async Task<JwtTokenResponse> GetTokenAsync(TEntity entity, CancellationToken token = default)
+    public async Task<string> GetTokenAsync(TEntity entity, CancellationToken token = default)
     {
         ClaimsPrincipal claimsPrincipal = await _claimsPrincipalFactory.CreateAsync(entity);
         
-        JwtTokenResponse jwtTokenResponse = await GetTokenAsync(claimsPrincipal, token);
+        string jwtToken = await GetTokenAsync(claimsPrincipal, token);
 
-        return jwtTokenResponse;
+        return jwtToken;
     }
 
-    public Task<JwtTokenResponse> GetTokenAsync(ClaimsPrincipal claimsPrincipal, CancellationToken token = default)
+    public Task<string> GetTokenAsync(ClaimsPrincipal claimsPrincipal, CancellationToken token = default)
     {
         SymmetricSecurityKey symmetricKey =
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
@@ -44,10 +43,7 @@ public sealed class TokenProvider<TEntity> : ITokenProvider<TEntity>
             DateTime.UtcNow, 
             DateTime.UtcNow.AddMinutes(_jwtSettings.ExpiredTime), 
             signingCred);
-
-        JwtTokenResponse jwtTokenResponse =
-            new JwtTokenResponse(token: new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken));
-
-        return Task.FromResult(jwtTokenResponse);
+        
+        return Task.FromResult(new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken));
     }
 }

@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Authentication\Request" />
     <Folder Include="Migrations\ApplicationDb" />
     <Folder Include="Migrations\CustomersDb" />
   </ItemGroup>

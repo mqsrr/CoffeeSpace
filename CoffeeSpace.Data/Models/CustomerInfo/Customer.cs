@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace CoffeeSpace.Data.Models.CustomerInfo;
 
-public sealed class Customer : IdentityUser
+public sealed partial class Customer : IdentityUser
 {
     public override string Id { get; set; } = Guid.NewGuid().ToString();
     public string Name { get; set; } = default!;

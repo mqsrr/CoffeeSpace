@@ -35,6 +35,7 @@ public static class MauiProgram
 		builder.Configuration.AddUserSecrets(Assembly.GetExecutingAssembly());
 
 		builder.Services.AddScoped(typeof(IServiceDataProvider<>), typeof(ServiceDataProvider<>));
+		builder.Services.AddScoped(typeof(IAuthService), typeof(AuthService));
 		
 		builder.Services.AddAuth0Client();
 		builder.Services.AddOidClient();

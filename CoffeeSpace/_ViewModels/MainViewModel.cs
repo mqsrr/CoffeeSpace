@@ -1,7 +1,6 @@
 using System.Collections.ObjectModel;
 using CoffeeSpace.Data.Models.Orders;
 using CoffeeSpace.Messages.Requests;
-using CoffeeSpace.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MediatR;
@@ -13,13 +12,11 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private ObservableCollection<OrderItem> _products;
 
-    private readonly IMediator _mediator;
+    private readonly ISender _sender;
 
-    public MainViewModel(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-    
+    public MainViewModel(ISender sender) => _sender = sender;
+
     [RelayCommand]
-    private Task AddToCart(OrderItem item) => _mediator.Send(new AddToCartRequest(item));
+    private Task AddToCart(OrderItem item, CancellationToken cancellationToken) 
+        => _sender.Send(new AddToCartRequest(item), cancellationToken);
 }

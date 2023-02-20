@@ -4,11 +4,11 @@ using MediatR;
 
 namespace CoffeeSpace.Messages.Handlers;
 
-public sealed class DeleteOrderItemHandler : IRequestHandler<DeleteOrderItemRequest>
+public sealed class DeleteOrderItemRequestHandler : IRequestHandler<DeleteOrderItemRequest>
 {
     private readonly CartViewModel _cartViewModel;
 
-    public DeleteOrderItemHandler(CartViewModel cartViewModel) => _cartViewModel = cartViewModel;
+    public DeleteOrderItemRequestHandler(CartViewModel cartViewModel) => _cartViewModel = cartViewModel;
 
     public Task<Unit> Handle(DeleteOrderItemRequest request, CancellationToken cancellationToken)
     {

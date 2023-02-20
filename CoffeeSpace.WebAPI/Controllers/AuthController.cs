@@ -1,5 +1,5 @@
-﻿using CoffeeSpace.WebAPI.Dto.Requests;
-using CoffeeSpace.WebAPI.Dto.Response;
+﻿using CoffeeSpace.Data.Authentication.Response;
+using CoffeeSpace.WebAPI.Dto.Requests;
 using CoffeeSpace.WebAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,19 +17,19 @@ public sealed class AuthController : ControllerBase
     }
     
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] CustomerLoginModel customer)
+    public async Task<IActionResult> Login([FromBody] CustomerLoginModel customer, CancellationToken cancellationToken)
     {
-        JwtTokenResponse token = await _accountService.LoginAsync(customer);
+        JwtResponse jwtResponse = await _accountService.LoginAsync(customer, cancellationToken);
 
-        return Ok(token);
+        return Ok(jwtResponse);
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] CustomerRegisterModel customer)
+    public async Task<IActionResult> Register([FromBody] CustomerRegisterModel customer, CancellationToken cancellationToken)
     {
-        JwtTokenResponse token = await _accountService.RegisterAsync(customer);
+        JwtResponse jwtResponse = await _accountService.RegisterAsync(customer, cancellationToken);
         
-        return Ok(token);
+        return Ok(jwtResponse);
     }
 
 

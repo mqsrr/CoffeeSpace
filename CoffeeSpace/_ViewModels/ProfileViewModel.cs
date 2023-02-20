@@ -1,12 +1,10 @@
 ﻿using CoffeeSpace.Data.Models.CustomerInfo;
-using CoffeeSpace.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace CoffeeSpace._ViewModels;
 
-public sealed class ProfileViewModel
+public partial class ProfileViewModel : ObservableObject
 {
     [ObservableProperty]
-    private readonly Customer _customer;
-    
+    private Customer _customer;
 }

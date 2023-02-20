@@ -3,8 +3,4 @@ using MediatR;
 
 namespace CoffeeSpace.Messages.Requests;
 
-public sealed class DeleteOrderItemRequest : IRequest<Unit>
-{
-    public OrderItem Item { get; }
-    
-}
+public sealed record DeleteOrderItemRequest(OrderItem Item) : IRequest<Unit>;

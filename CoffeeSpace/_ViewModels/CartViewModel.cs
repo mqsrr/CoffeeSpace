@@ -1,5 +1,4 @@
-﻿using System.Buffers;
-using CoffeeSpace.Data.Models.Orders;
+﻿using CoffeeSpace.Data.Models.Orders;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
 using CoffeeSpace.Data.Models.CustomerInfo;
@@ -16,13 +15,13 @@ public partial class CartViewModel : ObservableObject
     private ObservableCollection<OrderItem> _orderItems;
 
     private readonly IServiceDataProvider<Customer> _customerServiceData;
-    private readonly IMediator _mediator;
+    private readonly ISender _sender;
 
-    public CartViewModel(IMediator mediator, IServiceDataProvider<Customer> customerServiceData)
+    public CartViewModel(ISender sender, IServiceDataProvider<Customer> customerServiceData)
     {
         _orderItems = new ObservableCollection<OrderItem>();
         
-        _mediator = mediator;
+        _sender = sender;
         _customerServiceData = customerServiceData;
     }
 
@@ -47,12 +46,12 @@ public partial class CartViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task CreateOrder()
+    private async Task CreateOrder(CancellationToken cancellationToken)
     {
         Customer currentCustomer =
-            await _customerServiceData.GetByIdAsync(Guid.Parse("638BC3AA-7CC5-49A6-BBE1-6842EDF22F78"));
+            await _customerServiceData.GetByIdAsync(Guid.Parse("638BC3AA-7CC5-49A6-BBE1-6842EDF22F78"), cancellationToken);
         
-        await _mediator.Send(new CreateOrderRequest(OrderItems, currentCustomer));
+        await _sender.Send(new CreateOrderRequest(OrderItems, currentCustomer), cancellationToken);
         
         ClearCart();
     }

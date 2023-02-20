@@ -6,12 +6,21 @@
              xmlns:data="clr-namespace:CoffeeSpace.Data.Models.CustomerInfo;assembly=CoffeeSpace.Data"
              x:DataType="viewModel:ProfileViewModel"
              x:Class="CoffeeSpace.Views.ProfileView">
+    
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,1" EndPoint="1,0">
+            <GradientStop Color="#C33764" Offset="0.2" />
+
+            <GradientStop Color="#1D2671" Offset="1.0" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
+
     <Frame x:DataType="data:Customer">
         <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto"
               ColumnDefinitions="Auto,Auto,Auto,Auto,Auto"
               ColumnSpacing="1">
             
-            <Image Source="{Binding PictureUrl}"/>
+            <Label Text="{Binding Name}"/>
             
         </Grid>
     </Frame>

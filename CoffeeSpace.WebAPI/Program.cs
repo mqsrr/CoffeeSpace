@@ -27,30 +27,6 @@ builder.Services.AddIdentityDb();
 builder.Services.AddMvc(options => options.Filters.Add<ValidationFilter>())
     .AddFluentValidation(config => config.RegisterValidatorsFromAssemblyContaining<Program>());
 
-// builder.Services.Scan(scan =>
-//     {
-//         scan.FromAssemblyOf<Program>()
-//             .AddClasses(classes => classes.AssignableTo(typeof(IValidator<>)))
-//             .AsImplementedInterfaces()
-//             .WithScopedLifetime();
-//         
-//         scan.FromAssemblyOf<Program>()
-//             .AddClasses(classes => classes.AssignableTo(typeof(IRepository<>)))
-//             .AsImplementedInterfaces()
-//             .WithScopedLifetime();
-//
-//         scan.FromAssemblyOf<Program>()
-//             .AddClasses(classes => classes.AssignableTo(typeof(IAccountService)))
-//             .AsImplementedInterfaces()
-//             .WithTransientLifetime();
-//         
-//         scan.FromAssemblyOf<Program>()
-//             .AddClasses(classes => classes.AssignableTo(typeof(ITokenProvider<>)))
-//             .AsImplementedInterfaces()
-//             .WithTransientLifetime();
-//     }
-// );
-
 builder.Services.AddApplicationService(typeof(IValidator<>), ServiceLifetime.Scoped);
 builder.Services.AddApplicationService(typeof(IRepository<>), ServiceLifetime.Scoped);
 

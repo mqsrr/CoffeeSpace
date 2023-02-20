@@ -3,7 +3,6 @@
     x:Class="CoffeeSpace.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:CoffeeSpace"
     xmlns:views="using:CoffeeSpace.Views"
     Shell.FlyoutBehavior="Flyout">
 
@@ -21,21 +20,9 @@
         Title="Cart"
         ContentTemplate="{DataTemplate views:CartView}"
         Route="CartPage"/>
-
+    
     <ShellContent
         Title="Login"
         ContentTemplate="{DataTemplate views:LoginView}"
         Route="LoginPage"/>
-
-    <!--<ShellContent
-        Title="Cart"
-        ContentTemplate=""
-        Route="CartPage"/>
-    
-    <ShellContent
-        Title="Profile"
-        ContentTemplate=""
-        Route="ProfilePage"/>-->
-
-
 </Shell>

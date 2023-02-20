@@ -1,8 +1,8 @@
 ﻿using System.Security.Claims;
 using AutoMapper;
+using CoffeeSpace.Data.Authentication.Response;
 using CoffeeSpace.Data.Models.CustomerInfo;
 using CoffeeSpace.WebAPI.Dto.Requests;
-using CoffeeSpace.WebAPI.Dto.Response;
 using CoffeeSpace.WebAPI.Services.Interfaces;
 using CommunityToolkit.Diagnostics;
 using Microsoft.AspNetCore.Identity;
@@ -22,20 +22,25 @@ public sealed class AccountService : IAccountService
         _tokenProvider = tokenProvider;
     }
 
-    public async Task<JwtTokenResponse> LoginAsync(CustomerLoginModel customerViewModel, CancellationToken token = default!)
+    public async Task<JwtResponse> LoginAsync(CustomerLoginModel customerViewModel, CancellationToken token = default!)
     {
-        SignInResult signInResult = await _signInManager.PasswordSignInAsync(customerViewModel.UserName!, customerViewModel.Password, false, false);
+        SignInResult signInResult = await _signInManager.PasswordSignInAsync(customerViewModel.UserName, customerViewModel.Password, false, false);
         Guard.IsTrue(signInResult.Succeeded, nameof(signInResult));
 
         Customer? customer = await _signInManager.UserManager.FindByEmailAsync(customerViewModel.Email);
         Guard.IsNotNull(customer);
         
-        JwtTokenResponse jwtToken = await _tokenProvider.GetTokenAsync(customer, token);
+        JwtResponse jwtResponse = new JwtResponse
+        {
+            Customer = customer,
+            Token = await _tokenProvider.GetTokenAsync(customer, token),
+            IsSuccess = true
+        };
 
-        return jwtToken;
+        return jwtResponse;
     }
 
-    public async Task<JwtTokenResponse> RegisterAsync(CustomerRegisterModel customerViewModel, CancellationToken token = default!)
+    public async Task<JwtResponse> RegisterAsync(CustomerRegisterModel customerViewModel, CancellationToken token = default!)
     {
         Customer customer = _mapper.Map<Customer>(customerViewModel);
 
@@ -48,9 +53,14 @@ public sealed class AccountService : IAccountService
         
         SignInResult signInResult = await _signInManager.PasswordSignInAsync(customer,customer.Password, false, false);
         Guard.IsTrue(signInResult.Succeeded, nameof(signInResult));
+
+        JwtResponse jwtResponse = new JwtResponse
+        {
+            Customer = customer,
+            Token = await _tokenProvider.GetTokenAsync(customer, token),
+            IsSuccess = true
+        };
         
-        JwtTokenResponse jwtToken = await _tokenProvider.GetTokenAsync(customer, token);
-        
-        return jwtToken;
+        return jwtResponse;
     }
 }

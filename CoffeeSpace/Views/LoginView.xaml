@@ -2,9 +2,10 @@
 
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:viewMode="clr-namespace:CoffeeSpace._ViewModels"
+             xmlns:viewModel="clr-namespace:CoffeeSpace._ViewModels"
+             xmlns:dto="using:CoffeeSpace.Dto"
              x:Class="CoffeeSpace.Views.LoginView"
-             x:DataType="viewMode:LoginViewModel"
+             x:DataType="viewModel:LoginViewModel"
              Title="Login Page">
 
     <ContentPage.Background>
@@ -16,7 +17,7 @@
     </ContentPage.Background>
 
 
-    <Frame HeightRequest="550" WidthRequest="380"
+    <Frame HeightRequest="580" WidthRequest="380"
            Margin="10" BackgroundColor="WhiteSmoke"
            BorderColor="SlateGray" CornerRadius="10">
         <Grid>
@@ -46,34 +47,45 @@
 
             <StackLayout Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4"
                          Spacing="10" Margin="10">
-
+                
                 <Entry PlaceholderColor="SlateGray" Placeholder="Email"
                        HorizontalOptions="Fill" Margin="10"
-                       IsTextPredictionEnabled="True" TextColor="SlateGray" />
+                       IsTextPredictionEnabled="False" TextColor="SlateGray"
+                       Text="{Binding LoginModel.Email}"/>
+                
+                <Entry PlaceholderColor="SlateGray" Placeholder="Username"
+                       HorizontalOptions="Fill" Margin="10"
+                       IsTextPredictionEnabled="False" TextColor="SlateGray"
+                       Text="{Binding LoginModel.Username}"/>
 
                 <Entry PlaceholderColor="SlateGray" Placeholder="Password"
                        HorizontalOptions="Fill" Margin="10"
                        IsTextPredictionEnabled="False" IsPassword="True"
-                       TextColor="SlateGray" />
+                       TextColor="SlateGray" 
+                       Text="{Binding LoginModel.Password}"/>
+                
+                <Button Text="Login" CharacterSpacing="1"
+                        FontAttributes="Bold" WidthRequest="90"
+                        Command="{Binding LoginCommand}"/>
             </StackLayout>
 
-            <StackLayout Grid.Row="2" Grid.Column="2" 
+            <StackLayout Grid.Row="2" Grid.Column="2"
                          Spacing="10" HorizontalOptions="Center">
 
-                <Button Text="Login" CharacterSpacing="1"
-                        FontAttributes="Bold" WidthRequest="90" 
-                        Command="{Binding LoginWithOidcCommand}"/>
+                <Button Text="LoginOid" CharacterSpacing="1"
+                        FontAttributes="Bold" WidthRequest="120"
+                        Command="{Binding LoginWithOidcCommand}" />
 
                 <Button Text="Login via Auth0" CharacterSpacing="1"
                         FontAttributes="Bold" Command="{Binding LoginWithAuth0Command}"
-                        WidthRequest="160" IsVisible="{OnPlatform Android=True, WinUI=False}"/>
+                        WidthRequest="160" IsVisible="{OnPlatform Android=True, WinUI=False}" />
             </StackLayout>
 
-            <StackLayout Grid.Row="3" Grid.Column="2" 
+            <StackLayout Grid.Row="3" Grid.Column="2"
                          Margin="15" HorizontalOptions="Center">
 
                 <Label Text="Dont have account?" TextColor="Gray"
-                       TextDecorations="Underline"/>
+                       TextDecorations="Underline" />
             </StackLayout>
 
             <ScrollView Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="4"
