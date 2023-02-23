@@ -37,11 +37,9 @@ public class CreateOrderRequestHandler : IRequestHandler<CreateOrderRequest>, ID
             Status = OrderStatus.Submitted
         };
 
-        // await _orderService.AddAsync(order, cancellationToken);
-        
         if (order.OrderItems is not ObservableCollection<OrderItem>)
             order.OrderItems = order.OrderItems.ToObservableCollection();
-        
+
         _orderViewModel.Orders.Add(order);
 
         await _hubConnection.SendAsync("SendOrder", order, cancellationToken: cancellationToken);

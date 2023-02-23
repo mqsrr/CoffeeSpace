@@ -49,7 +49,7 @@ public partial class CartViewModel : ObservableObject
     private async Task CreateOrder(CancellationToken cancellationToken)
     {
         Customer currentCustomer =
-            await _customerServiceData.GetByIdAsync(Guid.Parse("638BC3AA-7CC5-49A6-BBE1-6842EDF22F78"), cancellationToken);
+            await _customerServiceData.GetByIdAsync(Guid.Parse("f8ebb2ee-bbd5-4267-be4b-67032af3cfa1"), cancellationToken);
         
         await _sender.Send(new CreateOrderRequest(OrderItems, currentCustomer), cancellationToken);
         

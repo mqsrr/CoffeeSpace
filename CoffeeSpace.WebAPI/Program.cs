@@ -25,7 +25,9 @@ builder.AddJwtBearer();
 builder.Services.AddIdentityDb();
 
 builder.Services.AddMvc(options => options.Filters.Add<ValidationFilter>())
+#pragma warning disable CS0618
     .AddFluentValidation(config => config.RegisterValidatorsFromAssemblyContaining<Program>());
+#pragma warning restore CS0618
 
 builder.Services.AddApplicationService(typeof(IValidator<>), ServiceLifetime.Scoped);
 builder.Services.AddApplicationService(typeof(IRepository<>), ServiceLifetime.Scoped);

@@ -13,16 +13,16 @@ public sealed class CustomerRepository : IRepository<Customer>
     {
         _dbContext = dbContext;
 
-        _dbContext.Customers
-            .Include(x => x.Address)
-            .Include(x => x.PaymentInfo)
-            .Include(x => x.Orders)
-            .ThenInclude(x => x.OrderItems);
+        // _dbContext.Customers
+        //     .Include(x => x.Address)
+        //     .Include(x => x.PaymentInfo)
+        //     .Include(x => x.Orders)
+        //     .ThenInclude(x => x.OrderItems);
     }
     
     public async Task AddAsync(Customer entity, CancellationToken token = default)
     {
-        if (!await _dbContext.Customers.ContainsAsync(entity, token))
+        if (await _dbContext.Customers.ContainsAsync(entity, token))
             return;
 
         await _dbContext.AddAsync(entity, token);
@@ -34,8 +34,13 @@ public sealed class CustomerRepository : IRepository<Customer>
     public async Task<Customer> GetByIdAsync(string id, CancellationToken token = default)
     {
         Customer? customer = await _dbContext.Customers.FindAsync(new object[] { id }, cancellationToken: token);
-
+        
         ArgumentNullException.ThrowIfNull(customer);
+
+        customer.Address = 
+            (await _dbContext.Addresses.FindAsync(new object?[] { customer.AddressId }, cancellationToken: token))!;
+        customer.PaymentInfo =
+            (await _dbContext.PaymentInfos.FindAsync(new object?[] { customer.PaymentId }, cancellationToken: token))!;
         
         return customer;
     }

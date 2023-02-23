@@ -15,7 +15,7 @@ namespace CoffeeSpace.Data.Migrations.ApplicationDb
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Address",
+                name: "Addresses",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "varchar(255)", nullable: false)
@@ -37,7 +37,7 @@ namespace CoffeeSpace.Data.Migrations.ApplicationDb
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Address", x => x.Id);
+                    table.PrimaryKey("PK_Addresses", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -63,7 +63,7 @@ namespace CoffeeSpace.Data.Migrations.ApplicationDb
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "PaymentInfo",
+                name: "PaymentInfos",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "varchar(255)", nullable: false)
@@ -78,7 +78,7 @@ namespace CoffeeSpace.Data.Migrations.ApplicationDb
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PaymentInfo", x => x.Id);
+                    table.PrimaryKey("PK_PaymentInfos", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -128,14 +128,14 @@ namespace CoffeeSpace.Data.Migrations.ApplicationDb
                 {
                     table.PrimaryKey("PK_Customers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Customers_Address_AddressId",
+                        name: "FK_Customers_Addresses_AddressId",
                         column: x => x.AddressId,
-                        principalTable: "Address",
+                        principalTable: "Addresses",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Customers_PaymentInfo_PaymentId",
+                        name: "FK_Customers_PaymentInfos_PaymentId",
                         column: x => x.PaymentId,
-                        principalTable: "PaymentInfo",
+                        principalTable: "PaymentInfos",
                         principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -149,8 +149,6 @@ namespace CoffeeSpace.Data.Migrations.ApplicationDb
                     Status = table.Column<int>(type: "int", nullable: false),
                     AdmittedTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CustomerId = table.Column<string>(type: "varchar(255)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    OrderItemId = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -217,10 +215,10 @@ namespace CoffeeSpace.Data.Migrations.ApplicationDb
                 name: "Customers");
 
             migrationBuilder.DropTable(
-                name: "Address");
+                name: "Addresses");
 
             migrationBuilder.DropTable(
-                name: "PaymentInfo");
+                name: "PaymentInfos");
         }
     }
 }

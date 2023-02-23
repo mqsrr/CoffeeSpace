@@ -2,5 +2,5 @@
 
 public sealed class ErrorResponse
 {
-    public ICollection<ErrorModel> Errors { get; set; }
+    public ICollection<ErrorModel> Errors { get; set; } = null!;
 }

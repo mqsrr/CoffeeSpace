@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoffeeSpace.Data.Migrations.ApplicationDb
 {
     [DbContext(typeof(Context.ApplicationDb))]
-    [Migration("20230211150715_Initial")]
+    [Migration("20230223090031_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -57,7 +57,7 @@ namespace CoffeeSpace.Data.Migrations.ApplicationDb
 
                     b.HasKey("Id");
 
-                    b.ToTable("Address");
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("CoffeeSpace.Data.Models.CustomerInfo.CardInfo.PaymentInfo", b =>
@@ -84,7 +84,7 @@ namespace CoffeeSpace.Data.Migrations.ApplicationDb
 
                     b.HasKey("Id");
 
-                    b.ToTable("PaymentInfo");
+                    b.ToTable("PaymentInfos");
                 });
 
             modelBuilder.Entity("CoffeeSpace.Data.Models.CustomerInfo.Customer", b =>
@@ -206,10 +206,6 @@ namespace CoffeeSpace.Data.Migrations.ApplicationDb
                     b.Property<string>("CustomerId")
                         .IsRequired()
                         .HasColumnType("varchar(255)");
-
-                    b.Property<string>("OrderItemId")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");

@@ -5,8 +5,8 @@ namespace CoffeeSpace.Data.Authentication.Response;
 
 public sealed class JwtResponse
 {
-    public string Token { get; init; }
-    public Customer Customer { get; init; }
+    public string Token { get; init; } = default!;
+    public Customer Customer { get; init; } = default!;
     public bool IsSuccess { get; init; }
 
 }

@@ -15,4 +15,5 @@ public partial class ProfileView : ContentPage
 
         BindingContext = viewModel;
     }
+
 }

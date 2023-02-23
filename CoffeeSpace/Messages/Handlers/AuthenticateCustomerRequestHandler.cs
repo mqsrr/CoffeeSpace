@@ -1,4 +1,5 @@
 ﻿using CoffeeSpace._ViewModels;
+using CoffeeSpace.Data.Models.CustomerInfo;
 using CoffeeSpace.Messages.Requests;
 using MediatR;
 
@@ -13,7 +14,12 @@ public sealed class AuthenticateCustomerRequestHandler : IRequestHandler<Custome
     
     public Task<Unit> Handle(CustomerAuthenticatedRequest authenticatedRequest, CancellationToken cancellationToken)
     {
-        _profileViewModel.Customer = authenticatedRequest.Customer;
+        Customer customer = authenticatedRequest.Customer;
+
+        if (customer.PictureUrl == "default") 
+            customer.PictureUrl = "user.png";
+
+        _profileViewModel.Customer = customer;
 
         return Unit.Task;
     }

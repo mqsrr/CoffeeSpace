@@ -48,7 +48,6 @@ public partial class LoginViewModel : ObservableObject
         }
         
         await _sender.Send(new CustomerAuthenticatedRequest(response.Customer), cancellationToken);
-        //send mediatr request to authenticate customer in application
 
         await Shell.Current.GoToAsync("MainView");
     }    
@@ -67,8 +66,6 @@ public partial class LoginViewModel : ObservableObject
             return;
         }
         
-        //send mediatr request to authenticate customer in application
-
         await Shell.Current.GoToAsync("MainPage");
     }
 
