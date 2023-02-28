@@ -10,7 +10,7 @@ public static class AddMySqlDbContextExtension
         string connectionString = builder.Configuration[jsonPath]!;
 
         builder.Services.AddMySql<TContext>(connectionString, ServerVersion.AutoDetect(connectionString));
-
+        
         return builder;
     }
 }

@@ -1,10 +1,10 @@
 ﻿using System.Security.Claims;
 using AutoMapper;
-using CoffeeSpace.Data.Authentication.Response;
-using CoffeeSpace.Data.Models.CustomerInfo;
-using CoffeeSpace.WebAPI.Dto.Requests;
+using CoffeeSpace.Application.Authentication.Response;
+using CoffeeSpace.Application.Models.CustomerInfo;
+using CoffeeSpace.Application.Repositories.Interfaces;
+using CoffeeSpace.Contracts.Requests.Customer;
 using CoffeeSpace.WebAPI.Services.Interfaces;
-using CoffeeSpace.WebAPI.Services.Repository.Interfaces;
 using CommunityToolkit.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 
@@ -24,29 +24,29 @@ public sealed class AccountService : IAccountService
         _customerRepo = customerRepo;
     }
 
-    public async Task<JwtResponse> LoginAsync(CustomerLoginModel customerViewModel, CancellationToken token = default!)
+    public async Task<JwtResponse> LoginAsync(LoginRequest request, CancellationToken token = default!)
     {
-        SignInResult signInResult = await _signInManager.PasswordSignInAsync(customerViewModel.UserName, customerViewModel.Password, false, false);
+        SignInResult signInResult = await _signInManager.PasswordSignInAsync(request.Username, request.Password, false, false);
         Guard.IsTrue(signInResult.Succeeded, nameof(signInResult));
 
-        Customer? customer = await _signInManager.UserManager.FindByEmailAsync(customerViewModel.Email);
+        Customer? customer = await _signInManager.UserManager.FindByEmailAsync(request.Email);
         Guard.IsNotNull(customer);
 
         customer = await _customerRepo.GetByIdAsync(customer.Id, token);
         
         JwtResponse jwtResponse = new JwtResponse
         {
-            Customer = customer,
-            Token = await _tokenProvider.GetTokenAsync(customer, token),
+            Customer = customer!,
+            Token = await _tokenProvider.GetTokenAsync(customer!, token),
             IsSuccess = true
         };
 
         return jwtResponse;
     }
 
-    public async Task<JwtResponse> RegisterAsync(CustomerRegisterModel customerViewModel, CancellationToken token = default!)
+    public async Task<JwtResponse> RegisterAsync(RegisterRequest request, CancellationToken token = default!)
     {
-        Customer customer = _mapper.Map<Customer>(customerViewModel);
+        Customer customer = _mapper.Map<Customer>(request);
 
         IdentityResult identityResult = await _signInManager.UserManager.CreateAsync(customer, customer.Password);
         Guard.IsTrue(identityResult.Succeeded, nameof(identityResult));
@@ -58,7 +58,7 @@ public sealed class AccountService : IAccountService
         SignInResult signInResult = await _signInManager.PasswordSignInAsync(customer,customer.Password, false, false);
         Guard.IsTrue(signInResult.Succeeded, nameof(signInResult));
 
-        await _customerRepo.AddAsync(customer, token);
+        await _customerRepo.CreateAsync(customer, token);
         
         JwtResponse jwtResponse = new JwtResponse
         {

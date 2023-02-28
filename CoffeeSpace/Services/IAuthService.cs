@@ -1,5 +1,4 @@
-﻿using CoffeeSpace.Data.Authentication.Response;
-using CoffeeSpace.Data.Models.CustomerInfo;
+﻿using CoffeeSpace.Application.Authentication.Response;
 using CoffeeSpace.Dto;
 
 namespace CoffeeSpace.Services;

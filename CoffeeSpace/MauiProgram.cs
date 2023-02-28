@@ -1,6 +1,4 @@
 ﻿using System.Reflection;
-using CoffeeSpace.Data.Models.CustomerInfo;
-using CoffeeSpace.Data.Models.Orders;
 using CoffeeSpace.Extensions;
 using CoffeeSpace.Initializers;
 using CoffeeSpace.Services;

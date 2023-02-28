@@ -1,9 +1,9 @@
-﻿using CoffeeSpace.WebAPI.Dto.Requests;
+﻿using CoffeeSpace.Contracts.Requests.Customer;
 using FluentValidation;
 
 namespace CoffeeSpace.WebAPI.Validators;
 
-public sealed class CustomerRegisterModelValidator : AbstractValidator<CustomerRegisterModel>
+public sealed class CustomerRegisterModelValidator : AbstractValidator<RegisterRequest>
 {
     public CustomerRegisterModelValidator()
     {

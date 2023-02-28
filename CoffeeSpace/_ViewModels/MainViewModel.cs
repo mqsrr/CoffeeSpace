@@ -1,5 +1,5 @@
 using System.Collections.ObjectModel;
-using CoffeeSpace.Data.Models.Orders;
+using CoffeeSpace.Application.Models.Orders;
 using CoffeeSpace.Messages.Requests;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;

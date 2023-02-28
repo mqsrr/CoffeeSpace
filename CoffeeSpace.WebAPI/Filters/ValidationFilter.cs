@@ -1,4 +1,4 @@
-﻿using CoffeeSpace.WebAPI.Dto.Response;
+﻿using CoffeeSpace.Contracts.Responses.Errors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -19,10 +19,13 @@ public sealed class ValidationFilter : IAsyncActionFilter
                 Messages = x.Value!.Errors.Select(e => e.ErrorMessage)
             });
 
-        ErrorResponse response = new ErrorResponse();
+        ErrorResponse response = new ErrorResponse
+        {
+            ErrorModels = new List<ErrorModel>()
+        };
         
         foreach (var errors in errorsInModelState)
-            response.Errors.Add(new ErrorModel
+            response.ErrorModels.Add(new ErrorModel
             {
                 FieldName = errors.Key,
                 Messages = errors.Messages

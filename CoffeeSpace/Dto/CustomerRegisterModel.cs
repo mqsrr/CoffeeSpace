@@ -1,5 +1,5 @@
-﻿using CoffeeSpace.Data.Models.CustomerInfo;
-using CoffeeSpace.Data.Models.CustomerInfo.CardInfo;
+﻿using CoffeeSpace.Application.Models.CustomerInfo;
+using CoffeeSpace.Application.Models.CustomerInfo.CardInfo;
 
 namespace CoffeeSpace.Dto;
 

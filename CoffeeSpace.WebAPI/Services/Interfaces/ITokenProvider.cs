@@ -1,5 +1,4 @@
 ﻿using System.Security.Claims;
-using CoffeeSpace.WebAPI.Dto.Response;
 using Microsoft.AspNetCore.Identity;
 
 namespace CoffeeSpace.WebAPI.Services.Interfaces;

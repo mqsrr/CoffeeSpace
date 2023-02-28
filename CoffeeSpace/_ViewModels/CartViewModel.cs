@@ -1,7 +1,7 @@
-﻿using CoffeeSpace.Data.Models.Orders;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
-using CoffeeSpace.Data.Models.CustomerInfo;
+using CoffeeSpace.Application.Models.CustomerInfo;
+using CoffeeSpace.Application.Models.Orders;
 using CoffeeSpace.Messages.Requests;
 using CoffeeSpace.Services;
 using CommunityToolkit.Mvvm.Input;
@@ -49,7 +49,7 @@ public partial class CartViewModel : ObservableObject
     private async Task CreateOrder(CancellationToken cancellationToken)
     {
         Customer currentCustomer =
-            await _customerServiceData.GetByIdAsync(Guid.Parse("f8ebb2ee-bbd5-4267-be4b-67032af3cfa1"), cancellationToken);
+            await _customerServiceData.GetByIdAsync(Guid.Parse("69a92976-98d9-456e-91fa-9114d0330873"), cancellationToken);
         
         await _sender.Send(new CreateOrderRequest(OrderItems, currentCustomer), cancellationToken);
         

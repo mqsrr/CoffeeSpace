@@ -1,4 +1,4 @@
-﻿using CoffeeSpace.Data.Models.CustomerInfo;
+﻿using CoffeeSpace.Application.Models.CustomerInfo;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 

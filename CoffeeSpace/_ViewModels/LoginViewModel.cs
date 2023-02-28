@@ -1,5 +1,5 @@
-﻿using CoffeeSpace.Auth0;
-using CoffeeSpace.Data.Authentication.Response;
+﻿using CoffeeSpace.Application.Authentication.Response;
+using CoffeeSpace.Auth0;
 using CoffeeSpace.Dto;
 using CoffeeSpace.Views;
 using CommunityToolkit.Mvvm.ComponentModel;

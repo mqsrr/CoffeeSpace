@@ -1,5 +1,5 @@
 ﻿using CoffeeSpace._ViewModels;
-using CoffeeSpace.Data.Models.CustomerInfo;
+using CoffeeSpace.Application.Models.CustomerInfo;
 using CoffeeSpace.Messages.Requests;
 using MediatR;
 

@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using CoffeeSpace._ViewModels;
-using CoffeeSpace.Data.Models.Orders;
+using CoffeeSpace.Application.Models.Orders;
 using CoffeeSpace.Messages.Requests;
 using CoffeeSpace.Services;
 using CommunityToolkit.Maui.Core.Extensions;

@@ -1,4 +1,4 @@
-﻿using CoffeeSpace.Data.Models.Orders;
+﻿using CoffeeSpace.Application.Models.Orders;
 using Microsoft.AspNetCore.SignalR;
 
 namespace CoffeeSpace.WebAPI;

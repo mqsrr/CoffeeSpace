@@ -1,4 +1,4 @@
-﻿using CoffeeSpace.Data.Models.CustomerInfo;
+﻿using CoffeeSpace.Application.Models.CustomerInfo;
 using MediatR;
 
 namespace CoffeeSpace.Messages.Requests;

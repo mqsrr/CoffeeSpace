@@ -1,6 +1,6 @@
-﻿using CoffeeSpace.Data.Models.Orders;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
+using CoffeeSpace.Application.Models.Orders;
 using CommunityToolkit.Mvvm.Input;
 
 namespace CoffeeSpace._ViewModels;

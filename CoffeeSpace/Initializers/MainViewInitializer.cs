@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using CoffeeSpace._ViewModels;
-using CoffeeSpace.Data.Models.Orders;
+using CoffeeSpace.Application.Models.Orders;
 using CoffeeSpace.Services;
 
 namespace CoffeeSpace.Initializers;

@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Json;
-using CoffeeSpace.Data.Authentication.Response;
+using CoffeeSpace.Application;
+using CoffeeSpace.Application.Authentication.Response;
 using CoffeeSpace.Dto;
 
 namespace CoffeeSpace.Services;
@@ -13,8 +14,8 @@ public sealed class AuthService : IAuthService
         _httpClient = httpClient;
         
         string basePath = DeviceInfo.Platform == DevicePlatform.Android
-            ? "http://10.0.2.2:5109"
-            : "https://localhost:7194";
+            ? "http://10.0.2.2:5109/"
+            : "https://localhost:7194/";
 
         _httpClient.BaseAddress = new Uri(basePath);
     }
@@ -22,7 +23,7 @@ public sealed class AuthService : IAuthService
     public async Task<JwtResponse> LoginAsync(CustomerLoginModel loginModel, CancellationToken token = default)
     {
         HttpResponseMessage response =
-            await _httpClient.PostAsJsonAsync(PathProvider.Login, loginModel, cancellationToken: token);
+            await _httpClient.PostAsJsonAsync(ApiEndpoints.Auth.Login, loginModel, cancellationToken: token);
 
         if (!response.IsSuccessStatusCode)
             return new JwtResponse { IsSuccess = false };
@@ -35,7 +36,7 @@ public sealed class AuthService : IAuthService
     public async Task<JwtResponse> RegisterAsync(CustomerRegisterModel registerModel, CancellationToken token = default)
     {
         HttpResponseMessage response =
-            await _httpClient.PostAsJsonAsync(PathProvider.Register, registerModel, cancellationToken: token);
+            await _httpClient.PostAsJsonAsync(ApiEndpoints.Auth.Register, registerModel, cancellationToken: token);
 
         if (!response.IsSuccessStatusCode)
             return new JwtResponse { IsSuccess = false };

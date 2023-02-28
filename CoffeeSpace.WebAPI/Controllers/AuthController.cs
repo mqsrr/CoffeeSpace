@@ -1,33 +1,35 @@
-﻿using CoffeeSpace.Data.Authentication.Response;
-using CoffeeSpace.WebAPI.Dto.Requests;
+﻿using AutoMapper;
+using CoffeeSpace.Application;
+using CoffeeSpace.Application.Authentication.Response;
+using CoffeeSpace.Contracts.Requests.Customer;
 using CoffeeSpace.WebAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoffeeSpace.WebAPI.Controllers;
 
 [ApiController]
-[Route("[controller]")]
 public sealed class AuthController : ControllerBase
 {
     private readonly IAccountService _accountService;
-
-    public AuthController(IAccountService accountService)
+    private readonly IMapper _mapper;
+    public AuthController(IAccountService accountService, IMapper mapper)
     {
         _accountService = accountService;
+        _mapper = mapper;
     }
     
-    [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] CustomerLoginModel customer, CancellationToken cancellationToken)
+    [HttpPost(ApiEndpoints.Auth.Login)]
+    public async Task<IActionResult> Login([FromBody] LoginRequest request, CancellationToken cancellationToken)
     {
-        JwtResponse jwtResponse = await _accountService.LoginAsync(customer, cancellationToken);
+        JwtResponse jwtResponse = await _accountService.LoginAsync(request, cancellationToken);
 
         return Ok(jwtResponse);
     }
 
-    [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] CustomerRegisterModel customer, CancellationToken cancellationToken)
+    [HttpPost(ApiEndpoints.Auth.Register)]
+    public async Task<IActionResult> Register([FromBody] RegisterRequest request, CancellationToken cancellationToken)
     {
-        JwtResponse jwtResponse = await _accountService.RegisterAsync(customer, cancellationToken);
+        JwtResponse jwtResponse = await _accountService.RegisterAsync(request, cancellationToken);
         
         return Ok(jwtResponse);
     }

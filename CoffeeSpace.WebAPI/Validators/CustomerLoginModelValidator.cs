@@ -1,13 +1,13 @@
-﻿using CoffeeSpace.WebAPI.Dto.Requests;
+﻿using CoffeeSpace.Contracts.Requests.Customer;
 using FluentValidation;
 
 namespace CoffeeSpace.WebAPI.Validators;
 
-public sealed class CustomerLoginModelValidator : AbstractValidator<CustomerLoginModel>
+public sealed class CustomerLoginModelValidator : AbstractValidator<LoginRequest>
 {
     public CustomerLoginModelValidator()
     {
-        RuleFor(x => x.UserName)
+        RuleFor(x => x.Username)
             .NotEmpty()
             .MaximumLength(50);
 

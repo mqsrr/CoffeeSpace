@@ -1,5 +1,5 @@
-﻿using CoffeeSpace.Data.Context;
-using CoffeeSpace.Data.Models.CustomerInfo;
+﻿using CoffeeSpace.Application.Context;
+using CoffeeSpace.Application.Models.CustomerInfo;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 

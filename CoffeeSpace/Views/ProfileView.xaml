@@ -3,8 +3,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModel="clr-namespace:CoffeeSpace._ViewModels"
-             xmlns:data="clr-namespace:CoffeeSpace.Data.Models;assembly=CoffeeSpace.Data"
-             xmlns:orders="clr-namespace:CoffeeSpace.Data.Models.Orders;assembly=CoffeeSpace.Data"
+             xmlns:data="clr-namespace:CoffeeSpace.Application.Models;assembly=CoffeeSpace.Application"
+             xmlns:orders="clr-namespace:CoffeeSpace.Application.Models.Orders;assembly=CoffeeSpace.Application"
              x:DataType="viewModel:ProfileViewModel"
              x:Class="CoffeeSpace.Views.ProfileView">
     
