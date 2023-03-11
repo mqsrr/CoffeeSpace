@@ -1,7 +1,7 @@
 ﻿using IdentityModel.Client;
 using IdentityModel.OidcClient.Browser;
 
-namespace MauiAuth0App.Auth0;
+namespace CoffeeSpace.Auth0;
 
 public class WebBrowserAuthenticator : IdentityModel.OidcClient.Browser.IBrowser
 {

@@ -11,6 +11,7 @@ public static class RegisterViewModelExtension
         builder.Services.AddSingleton<LoginViewModel>();
         builder.Services.AddSingleton<OrderViewModel>();
         builder.Services.AddSingleton<CartViewModel>();
+        builder.Services.AddSingleton<ProfileViewModel>();
         
         return builder;
     }

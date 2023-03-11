@@ -10,6 +10,7 @@ public static class RegisterViewsExtension
         builder.Services.AddSingleton<LoginView>();
         builder.Services.AddSingleton<OrderView>();
         builder.Services.AddSingleton<CartView>();
+        builder.Services.AddSingleton<ProfileView>();
 
         return builder;
     }

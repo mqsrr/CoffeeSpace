@@ -3,7 +3,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModel="clr-namespace:CoffeeSpace._ViewModels"
-             xmlns:data="clr-namespace:CoffeeSpace.Data.Models.Orders;assembly=CoffeeSpace.Data"
+             xmlns:data="clr-namespace:CoffeeSpace.Application.Models.Orders;assembly=CoffeeSpace.Application"
              x:DataType="viewModel:OrderViewModel"
              x:Class="CoffeeSpace.Views.OrderView"
              Title="Orders">
@@ -21,11 +21,10 @@
                     BindableLayout.ItemsSource="{Binding Orders}" AlignItems="Start">
             <BindableLayout.ItemTemplate>
                 <DataTemplate x:DataType="data:Order">
-                    <Frame
-                        BackgroundColor="WhiteSmoke">
+                    <Frame BackgroundColor="WhiteSmoke">
                         <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,10*"
                               ColumnDefinitions="Auto,Auto,Auto,Auto,300"
-                              RowSpacing="3" ColumnSpacing="3"
+                              RowSpacing="1" ColumnSpacing="2"
                               Padding="10">
 
                             <Label Grid.Row="1" Grid.Column="0"
@@ -63,9 +62,11 @@
                                         <ViewCell>
                                             <Grid RowDefinitions="Auto,Auto,Auto"
                                                   ColumnDefinitions="Auto,Auto,Auto"
-                                                  Padding="5">
+                                                  Padding="1">
                                                 <Label Grid.Row="0" Grid.Column="0"
-                                                       Text="{Binding Title}" TextColor="Black" /></Grid>
+                                                       Text="{Binding Title}" TextColor="Black" 
+                                                       Margin="2"/>
+                                            </Grid>
                                         </ViewCell>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
@@ -83,7 +84,8 @@
                                    VerticalOptions="End" />
 
                             <Button Grid.Row="6" Grid.Column="4"
-                                    Text="Cancel Order" VerticalOptions="End"
+                                    Text="Cancel Order"
+                                    Style="{OnPlatform Android={StaticResource OrderViewButtonAndroid}, WinUI={StaticResource OrderViewButtonWindows}}"
                                     Command="{Binding Source={RelativeSource Mode=FindAncestorBindingContext, AncestorType={x:Type viewModel:OrderViewModel}}, Path=CancelOrderCommand}"
                                     CommandParameter="{Binding}" />
                         </Grid>

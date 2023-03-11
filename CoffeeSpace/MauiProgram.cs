@@ -1,14 +1,10 @@
 ﻿using System.Reflection;
-using CoffeeSpace.Data.Context;
-using CoffeeSpace.Data.Models.CustomerInfo;
-using CoffeeSpace.Data.Models.Orders;
 using CoffeeSpace.Extensions;
-using CoffeeSpace.Services.Repository;
+using CoffeeSpace.Initializers;
+using CoffeeSpace.Services;
 using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Markup;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
@@ -35,25 +31,17 @@ public static class MauiProgram
 		builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
 		builder.Configuration.AddUserSecrets(Assembly.GetExecutingAssembly());
+
+		builder.Services.AddScoped(typeof(IServiceDataProvider<>), typeof(ServiceDataProvider<>));
+		builder.Services.AddScoped(typeof(IAuthService), typeof(AuthService));
 		
-		string applicationConnectionString = builder.Configuration["ApplicationDb:ConnectionString"];
-		string customersConnectionString = builder.Configuration["CustomersDb:ConnectionString"];
-
-		builder.Services.AddMySql<ApplicationDb>(applicationConnectionString, ServerVersion.AutoDetect(applicationConnectionString));
-		builder.Services.AddMySql<CustomersDb>(customersConnectionString, ServerVersion.AutoDetect(customersConnectionString));
-
-		builder.Services.AddIdentity<Customer, IdentityRole>()
-			.AddEntityFrameworkStores<CustomersDb>()
-			.AddDefaultTokenProviders();
-
-		builder.Services.AddScoped<IRepository<OrderItem>, OrderItemRepository>();
-		builder.Services.AddScoped<IRepository<Customer>, CustomerRepository>();
-		builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-
 		builder.Services.AddAuth0Client();
 		builder.Services.AddOidClient();
 		builder.Services.AddSignalRHubConnection();
 
+		builder.Services.AddTransient<HttpClient>();
+		builder.Services.AddTransient<IMauiInitializeService, MainViewInitializer>();
+		
 #if DEBUG
 		builder.Logging.AddDebug();
 #endif

@@ -1,11 +1,14 @@
-﻿using CoffeeSpace.Auth0;
+﻿using CoffeeSpace.Application.Authentication.Response;
+using CoffeeSpace.Auth0;
+using CoffeeSpace.Dto;
 using CoffeeSpace.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using IdentityModel.Client;
 using IdentityModel.OidcClient;
-using CoffeeSpace.Data.Models.CustomerInfo;
-using Microsoft.AspNetCore.Identity;
+using CoffeeSpace.Messages.Requests;
+using CoffeeSpace.Services;
+using MediatR;
 
 namespace CoffeeSpace._ViewModels;
 
@@ -14,21 +17,62 @@ public partial class LoginViewModel : ObservableObject
     private readonly Auth0Client _clientAuth0;
     private readonly OidcClient _oidcClient;
     private readonly HttpClient _httpClient;
-    private readonly SignInManager<Customer> _signInManager;
+    private readonly IAuthService _authService;
+    private readonly ISender _sender;
 
-    public LoginViewModel(Auth0Client clientAuth0, OidcClient client, SignInManager<Customer> signInManager)
+    public CustomerLoginModel LoginModel { get; set; }
+    
+    public LoginViewModel(Auth0Client clientAuth0, OidcClient client, IAuthService authService, ISender sender)
     {
         _clientAuth0 = clientAuth0;
         _oidcClient = client;
-        _signInManager = signInManager;
+        _authService = authService;
+        _sender = sender;
 
         _httpClient = new HttpClient();
+        LoginModel = new CustomerLoginModel();
     }
 
     [RelayCommand]
-    private async Task LoginWithOidc()
+    private async Task Login(CancellationToken cancellationToken)
     {
-        var loginResult = await _oidcClient.LoginAsync();
+        JwtResponse response = await _authService.LoginAsync(LoginModel, cancellationToken);
+
+        if (!response.IsSuccess)
+        {
+            await Shell.Current.DisplayAlert("Invalid customer credentials",
+                "Entered username or password is invalid!",
+                "OK");
+            
+            return;
+        }
+        
+        await _sender.Send(new CustomerAuthenticatedRequest(response.Customer), cancellationToken);
+
+        await Shell.Current.GoToAsync("MainView");
+    }    
+    
+    [RelayCommand]
+    private async Task Register(CustomerRegisterModel registerModel, CancellationToken cancellationToken)
+    {
+        JwtResponse response = await _authService.RegisterAsync(registerModel, cancellationToken);
+
+        if (!response.IsSuccess)
+        {
+            await Shell.Current.DisplayAlert("Invalid customer credentials",
+                "Please enter valid customer data in registration fields",
+                "OK");
+            
+            return;
+        }
+        
+        await Shell.Current.GoToAsync("MainPage");
+    }
+
+    [RelayCommand]
+    private async Task LoginWithOidc(CancellationToken cancellationToken)
+    {
+        var loginResult = await _oidcClient.LoginAsync(cancellationToken: cancellationToken);
 
         if (loginResult.IsError)
         {
@@ -37,16 +81,16 @@ public partial class LoginViewModel : ObservableObject
         }
 
         _httpClient.SetBearerToken(loginResult.AccessToken);
-        var response = await _httpClient.GetAsync("https://demo.duendesoftware.com/api/test");
+        var response = await _httpClient.GetAsync("https://demo.duendesoftware.com/api/test", cancellationToken);
 
         if (!response.IsSuccessStatusCode)
             await Shell.Current.DisplayAlert("Login Error", loginResult.ErrorDescription, "Ok");
     }
 
-    [RelayCommand(AllowConcurrentExecutions = true)]
-    private async Task LoginWithAuth0()
+    [RelayCommand]
+    private async Task LoginWithAuth0(CancellationToken cancellationToken)
     {
-        var loginResult = await _clientAuth0.LoginAsync();
+        var loginResult = await _clientAuth0.LoginAsync(cancellationToken);
 
         await Task.WhenAny(loginResult.IsError
             ? Shell.Current.DisplayAlert("Login Error", loginResult.ErrorDescription, "Ok")

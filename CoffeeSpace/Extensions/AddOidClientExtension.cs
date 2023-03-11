@@ -1,5 +1,5 @@
-﻿using IdentityModel.OidcClient;
-using MauiAuth0App.Auth0;
+﻿using CoffeeSpace.Auth0;
+using IdentityModel.OidcClient;
 
 namespace CoffeeSpace.Extensions;
 

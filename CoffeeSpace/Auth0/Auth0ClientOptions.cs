@@ -1,5 +1,4 @@
-﻿using MauiAuth0App.Auth0;
-using IBrowser = IdentityModel.OidcClient.Browser.IBrowser;
+﻿using IBrowser = IdentityModel.OidcClient.Browser.IBrowser;
 
 namespace CoffeeSpace.Auth0;
 
