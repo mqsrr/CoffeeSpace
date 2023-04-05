@@ -30,4 +30,4 @@ services:
       - MYSQL_USER=sa
       - MYSQL_PASSWORD=hunter22
     ports:
-      - 33061:3306
+      - 33062:3306

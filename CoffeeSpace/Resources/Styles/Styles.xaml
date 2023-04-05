@@ -422,6 +422,17 @@
         <Setter Property="WidthRequest" Value="820"/>
     </Style>    
 
+    <Style TargetType="Grid" x:Key="GridCartOrderItemWindows">
+        <Setter Property="RowDefinitions" Value="Auto,Auto,Auto,Auto,Auto,Auto,Auto,420"/>
+        <Setter Property="ColumnDefinitions" Value="Auto,Auto,Auto,Auto,Auto,Auto,820"/>
+    </Style>
+
+    <Style TargetType="Grid" x:Key="GridCartOrderItemAndroid">
+        <Setter Property="RowDefinitions" Value="Auto,Auto,Auto,Auto,Auto,Auto,Auto"/>
+        <Setter Property="ColumnDefinitions" Value="Auto,Auto,Auto,Auto,Auto,Auto,80*"/>
+        <Setter Property="RowSpacing" Value="1"/>
+    </Style>
+
     <Style TargetType="Image" x:Key="CartOrderImageAndroid">
         <Setter Property="HeightRequest" Value="200"/>
         <Setter Property="VerticalOptions" Value="Center"/>

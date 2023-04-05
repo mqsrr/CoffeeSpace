@@ -4,6 +4,7 @@
     <option name="keyValueStorage">
       <map>
         <entry key="Common:1cfef25b-4df7-4e73-a9ee-53949fba95dc:dbContext" value="CoffeeSpace.Data.Context.CustomersDb" />
+        <entry key="Common:22294e0e-207b-499c-a5b9-4ae731f8d415:dbContext" value="CoffeeSpace.Application.Context.ApplicationDb" />
         <entry key="Common:99bc5b38-eb79-4b90-921b-9f954860dca4:dbContext" value="CoffeeSpace.Data.Context.ApplicationDb" />
         <entry key="Common:buildConfiguration" value="Debug" />
         <entry key="Common:dbContext" value="CoffeeSpace.Data.Context.ApplicationDb" />

@@ -1,73 +1,77 @@
-﻿using CoffeeSpace.Application.Context;
-using CoffeeSpace.Application.Models.Orders;
-using CoffeeSpace.Application.Repositories.Interfaces;
+﻿using CoffeeSpace.Application.Repositories.Abstractions;
+using CoffeeSpace.Domain.Models.Orders;
+using CoffeeSpace.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace CoffeeSpace.Application.Repositories;
 
 public sealed class OrderItemRepository : IOrderItemRepository
 {
-    private readonly ApplicationDb _dbContext;
+    private readonly ApplicationDbContext _dbContextContext;
 
-    public OrderItemRepository(ApplicationDb applicationDb) => _dbContext = applicationDb;
-
-    public async Task<bool> CreateAsync(OrderItem orderItem, CancellationToken token = default)
+    public OrderItemRepository(ApplicationDbContext dbContextContext)
     {
-        OrderItem? result = await _dbContext.OrderItems.SingleOrDefaultAsync(x => x.Title.Equals(orderItem), cancellationToken: token);
-        
-        if (result is not null)
-            return false;
-
-        await _dbContext.OrderItems.AddAsync(orderItem, token);
-        await _dbContext.SaveChangesAsync(token);
-
-        return true;
+        _dbContextContext = dbContextContext;
     }
 
-    public async Task<IEnumerable<OrderItem>> GetAllAsync(CancellationToken token = default)
-        => await _dbContext.OrderItems.AnyAsync(token)
-                ? _dbContext.OrderItems
-                : Enumerable.Empty<OrderItem>();
-
-    public IEnumerable<OrderItem> GetAll()
-        => _dbContext.OrderItems.Any()
-            ? _dbContext.OrderItems
-            : Enumerable.Empty<OrderItem>();
-
-    public async Task<OrderItem?> GetByIdAsync(string id, CancellationToken token = default)
+    public async Task<IEnumerable<OrderItem>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        OrderItem? orderItem = await _dbContext.OrderItems.FindAsync(new object[] { id }, cancellationToken: token);
-        
+        var isEmpty = await _dbContextContext.OrderItems.AnyAsync(cancellationToken);
+        if (!isEmpty)
+        {
+            return Enumerable.Empty<OrderItem>();
+        }
+
+        return _dbContextContext.OrderItems;
+    }
+
+    public async Task<OrderItem?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
+    {
+        var orderItem = await _dbContextContext.OrderItems.FindAsync(new object?[] {id}, cancellationToken);
+
         return orderItem;
     }
 
-    public async Task<bool> UpdateAsync(OrderItem orderItem, CancellationToken token = default)
+    public Task<IEnumerable<OrderItem>> GetAllByOrderIdAsync(string orderId, CancellationToken cancellationToken = default)
     {
-        OrderItem? searchable =
-            await _dbContext.OrderItems.FindAsync(new object?[] { orderItem.Id }, cancellationToken: token); 
-        
-        if (searchable is null)
-            return false;
-        
-        _dbContext.OrderItems.Update(orderItem);
+        var orderItems = _dbContextContext.OrderItems.Where(x => x.Id == orderId).AsEnumerable();
 
-        await _dbContext.SaveChangesAsync(token);
-
-        return true;
+        return Task.FromResult(orderItems);
     }
 
-    public async Task<bool> DeleteByIdAsync(string id, CancellationToken token = default)
+    public async Task<bool> CreateAsync(OrderItem orderItem, CancellationToken cancellationToken = default)
     {
-        OrderItem? orderItem = await _dbContext.OrderItems.FindAsync(new object?[] { id }, cancellationToken: token);
-        
+        await _dbContextContext.OrderItems.AddAsync(orderItem, cancellationToken);
+        var result = await _dbContextContext.SaveChangesAsync(cancellationToken);
+
+        return result > 0;
+    }
+
+    public async Task<OrderItem?> UpdateAsync(OrderItem orderItem, CancellationToken cancellationToken = default)
+    {
+        var isContains = await _dbContextContext.OrderItems.ContainsAsync(orderItem, cancellationToken);
+        if (!isContains)
+        {
+            return null;
+        }
+
+        _dbContextContext.OrderItems.Update(orderItem);
+        await _dbContextContext.SaveChangesAsync(cancellationToken);
+
+        return orderItem;
+    }
+
+    public async Task<bool> DeleteByIdAsync(string id, CancellationToken cancellationToken = default)
+    {
+        var orderItem = await _dbContextContext.OrderItems.FindAsync(new object?[] {id}, cancellationToken);
         if (orderItem is null)
+        {
             return false;
+        }
 
-        _dbContext.OrderItems.Remove(orderItem);
+        _dbContextContext.OrderItems.Remove(orderItem);
+        var result = await _dbContextContext.SaveChangesAsync(cancellationToken);
 
-        await _dbContext.SaveChangesAsync(token);
-
-        return true;
+        return result > 0;
     }
 }

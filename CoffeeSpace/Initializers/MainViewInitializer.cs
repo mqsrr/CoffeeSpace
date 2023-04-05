@@ -9,7 +9,7 @@ public sealed class MainViewInitializer : IMauiInitializeService
 {
     public async void Initialize(IServiceProvider services)
     {
-        var provider = services.GetRequiredService<IServiceDataProvider<OrderItem>>();
+        var provider = services.GetRequiredService<IOrderItemService>();
         var viewModel = services.GetRequiredService<MainViewModel>();
 
         var orderItems = await provider.GetAllAsync();

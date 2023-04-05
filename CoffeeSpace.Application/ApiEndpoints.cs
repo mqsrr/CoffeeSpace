@@ -2,7 +2,7 @@
 
 public static class ApiEndpoints
 {
-    private const string ApiBase = "api";
+    private const string ApiBase = "/api";
 
     public static class OrderItems
     {
@@ -33,6 +33,7 @@ public static class ApiEndpoints
         public const string Create = Base;
         public const string Get = $"{Base}/{{id:guid}}";
         public const string GetOrders = $"{Base}/{{id:guid}}/orders";
+        public const string GetWithEmail = $"{Base}";
         public const string Update = Base;
         public const string Delete = $"{Base}/{{id:guid}}";
     }
