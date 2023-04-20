@@ -7,11 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Ordering\" />
+      <Folder Include="Ordering\Commands\" />
+      <Folder Include="Products\Commands\" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+      <ProjectReference Include="..\CoffeeSpace.Domain\CoffeeSpace.Domain.csproj" />
     </ItemGroup>
 
 </Project>

@@ -1,0 +1,122 @@
+﻿version: '1.0'
+networks:
+  backend:
+    
+services:
+  cache:
+    image: redis:7.0.9-alpine
+    restart: always
+    container_name: redis-cache
+    ports:
+      - 6379:6379
+    networks:
+      - backend
+
+  message-broker:
+    image: rabbitmq:3.11.3-management-alpine
+    container_name: rabbitMq
+    environment:
+      - RABBITMQ_DEFAULT_PASS=hunter2
+      - RABBITMQ_DEFAULT_USER=rabbit
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - backend
+
+  productsDb:
+    image: mysql:8.0.32
+    command: --default-authentication-plugin=caching_sha2_password
+    container_name: products-mysql
+    healthcheck:
+      test: "mysqladmin ping -h localhost"
+      interval: 1s
+      timeout: 1s
+      retries: 60
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+      - MYSQL_DATABASE=ProductsDb
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=productHunter
+    ports:
+      - 33060:3306
+    
+  orderingDb:
+    image: mysql:8.0.32
+    command: --default-authentication-plugin=caching_sha2_password
+    container_name: ordering-mysql
+    healthcheck:
+      test: "mysqladmin ping -h localhost"
+      interval: 1s
+      timeout: 1s
+      retries: 60
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+      - MYSQL_DATABASE=OrderingDb
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=orderHunter
+    ports:
+      - 33061:3306  
+  
+  orderStateSagaDb:
+    image: mysql:8.0.32
+    command: --default-authentication-plugin=caching_sha2_password
+    container_name: order-states-mysql
+    healthcheck:
+      test: "mysqladmin ping -h localhost"
+      interval: 1s
+      timeout: 1s
+      retries: 60
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+      - MYSQL_DATABASE=OrderStateSagaDb
+      - MYSQL_USER=state-manager
+      - MYSQL_PASSWORD=newbie
+    ports:
+      - 33070:3306
+  
+  paymentDb:
+    image: postgres:15.2-alpine
+    container_name: payment-postgres
+    environment:
+      - POSTGRES_PASSWORD=payment-manager
+      - POSTGRES_USER=economist
+    ports:
+      - 5432:5432
+  
+  customersDb:
+    image: mysql:8.0.32
+    command: --default-authentication-plugin=caching_sha2_password
+    container_name: customersDb
+    healthcheck:
+      test: "mysqladmin ping -h localhost"
+      interval: 1s
+      timeout: 1s
+      retries: 60
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+      - MYSQL_DATABASE=CustomersDb
+      - MYSQL_USER=sa
+      - MYSQL_PASSWORD=hunter22
+    ports:
+      - 33062:3306
+    
+#  coffeespace.productapi:
+#    image: coffeespace.productapi
+#    build:
+#      context: .
+#      dockerfile: CoffeeSpace.ProductApi/Dockerfile
+#    networks:
+#      - backend
+#    depends_on:
+#      - productsDb#  
+
+#    coffeespace.orderingApi:
+#    image: coffeespace.orderingApi
+#    build:
+#      context: .
+#      dockerfile: CoffeeSpace.OrderingApi/Dockerfile
+#    networks:
+#      - backend
+#    depends_on:
+#      - orderingDb
