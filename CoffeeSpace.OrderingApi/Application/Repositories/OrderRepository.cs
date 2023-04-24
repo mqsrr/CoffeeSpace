@@ -42,7 +42,7 @@ internal sealed class OrderRepository : IOrderRepository
         
         return orders;
     }
-
+    
     public async Task<Order?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
         var order = await _orderingDbContext.Orders.FindAsync(new object?[] { id},  cancellationToken);
@@ -73,7 +73,20 @@ internal sealed class OrderRepository : IOrderRepository
 
         _orderingDbContext.Orders.Update(order);
         await _orderingDbContext.SaveChangesAsync(cancellationToken);
+        
+        return order;
+    }
 
+    public async Task<Order?> UpdateOrderStatusAsync(Order order, OrderStatus orderStatus, CancellationToken cancellationToken = default)
+    {
+        var isContains = await _orderingDbContext.Orders.ContainsAsync(order, cancellationToken);
+        if (!isContains)
+        {
+            return null;
+        }
+
+        _orderingDbContext.Orders.Entry(order).Property(x => x.Status).CurrentValue = orderStatus;
+        await _orderingDbContext.SaveChangesAsync(cancellationToken);
         return order;
     }
 

@@ -1,4 +1,5 @@
-using CoffeeSpace.Domain.Ordering.CustomerInfo;
+using CoffeeSpace.Application.Services.Abstractions;
+using CoffeeSpace.Domain.Ordering.BuyerInfo;
 using CoffeeSpace.OrderingApi.Application.Helpers;
 using CoffeeSpace.OrderingApi.Application.Messaging.Mediator.Commands.Buyers;
 using CoffeeSpace.OrderingApi.Application.Messaging.Mediator.Queries.Buyers;

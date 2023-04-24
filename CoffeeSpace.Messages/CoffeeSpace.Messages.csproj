@@ -7,11 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Ordering\Commands\" />
-      <Folder Include="Products\Commands\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\CoffeeSpace.Domain\CoffeeSpace.Domain.csproj" />
     </ItemGroup>
 

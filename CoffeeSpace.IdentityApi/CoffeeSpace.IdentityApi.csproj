@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <RootNamespace>CoffeeSpace.IdentityApi</RootNamespace>
+        <UserSecretsId>b73b7485-a45f-4737-a876-eef3b1e4108d</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+        <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.3.1" />
+        <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.14" />
+        <PackageReference Include="Mediator.Abstractions" Version="2.1.1" />
+        <PackageReference Include="Mediator.SourceGenerator" Version="2.1.1">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.5" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.5">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.3" />
+        <PackageReference Include="Riok.Mapperly" Version="2.7.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Persistence\Abstractions\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\CoffeeSpace.Application\CoffeeSpace.Application.csproj" />
+      <ProjectReference Include="..\CoffeeSpace.Messages\CoffeeSpace.Messages.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
+    </ItemGroup>
+
+</Project>

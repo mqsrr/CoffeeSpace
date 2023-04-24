@@ -1,16 +1,11 @@
 ﻿version: '1.0'
-networks:
-  backend:
     
 services:
   cache:
     image: redis:7.0.9-alpine
-    restart: always
     container_name: redis-cache
     ports:
       - 6379:6379
-    networks:
-      - backend
 
   message-broker:
     image: rabbitmq:3.11.3-management-alpine
@@ -21,11 +16,9 @@ services:
     ports:
       - 5672:5672
       - 15672:15672
-    networks:
-      - backend
 
   productsDb:
-    image: mysql:8.0.32
+    image: mysql:8.0.33-oracle
     command: --default-authentication-plugin=caching_sha2_password
     container_name: products-mysql
     healthcheck:
@@ -42,7 +35,7 @@ services:
       - 33060:3306
     
   orderingDb:
-    image: mysql:8.0.32
+    image: mysql:8.0.33-oracle
     command: --default-authentication-plugin=caching_sha2_password
     container_name: ordering-mysql
     healthcheck:
@@ -56,10 +49,10 @@ services:
       - MYSQL_USER=user
       - MYSQL_PASSWORD=orderHunter
     ports:
-      - 33061:3306  
+      - 33061:3306 
   
   orderStateSagaDb:
-    image: mysql:8.0.32
+    image: mysql:8.0.33-oracle
     command: --default-authentication-plugin=caching_sha2_password
     container_name: order-states-mysql
     healthcheck:
@@ -84,39 +77,101 @@ services:
     ports:
       - 5432:5432
   
-  customersDb:
-    image: mysql:8.0.32
-    command: --default-authentication-plugin=caching_sha2_password
-    container_name: customersDb
-    healthcheck:
-      test: "mysqladmin ping -h localhost"
-      interval: 1s
-      timeout: 1s
-      retries: 60
+  identityDb:
+    image: postgres:15.2-alpine
+    container_name: identity-postgres
     environment:
-      - MYSQL_RANDOM_ROOT_PASSWORD=yes
-      - MYSQL_DATABASE=CustomersDb
-      - MYSQL_USER=sa
-      - MYSQL_PASSWORD=hunter22
+      - POSTGRES_PASSWORD=identity-manager
+      - POSTGRES_USER=sa
     ports:
-      - 33062:3306
-    
-#  coffeespace.productapi:
-#    image: coffeespace.productapi
-#    build:
-#      context: .
-#      dockerfile: CoffeeSpace.ProductApi/Dockerfile
-#    networks:
-#      - backend
-#    depends_on:
-#      - productsDb#  
+      - 5433:5432
 
-#    coffeespace.orderingApi:
-#    image: coffeespace.orderingApi
-#    build:
-#      context: .
-#      dockerfile: CoffeeSpace.OrderingApi/Dockerfile
-#    networks:
-#      - backend
-#    depends_on:
-#      - orderingDb
+  coffeespace.identityservice:
+    container_name: identity-api
+    image: coffeespace.identityapi:1.0.0
+    build:
+      context: .
+      dockerfile: CoffeeSpace.IdentityApi/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development" 
+    volumes:
+      - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets
+    depends_on:
+      - message-broker
+      - identityDb
+  
+  coffeespace.ordering-api:
+    container_name: ordering-api
+    image: coffeespace.orderingapi:1.0.0
+    build:
+      context: .
+      dockerfile: CoffeeSpace.OrderingApi/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+    command: ["./wait-for-it.sh", "ordering-mysql:3306", "--", "npm", "start"]
+    volumes:
+      - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets
+    depends_on:
+      - message-broker
+      - orderingDb
+      - orderStateSagaDb
+      - cache
+
+  coffeespace.paymentservice:
+    container_name: payment-service
+    image: coffeespace.paymentservice:1.0.0
+    build:
+      context: .
+      dockerfile: CoffeeSpace.PaymentService/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+    volumes:
+      - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets
+    depends_on:
+      - message-broker
+      - paymentDb
+
+  coffeespace.productsapi:
+    container_name: products-api
+    image: coffeespace.productsapi:1.0.0
+    build:
+      context: .
+      dockerfile: CoffeeSpace.ProductApi/Dockerfile 
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+    volumes:
+      - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets
+    depends_on:
+      - message-broker
+      - productsDb
+      - cache
+
+  coffeespace.shipmentservice:
+    container_name: shipment-service
+    image: coffeespace.shipmentservice:1.0.0
+    build:
+      context: .
+      dockerfile: CoffeeSpace.ShipmentService/Dockerfile
+    environment:
+        ASPNETCORE_ENVIRONMENT: "Development"
+    volumes:
+      - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets
+    depends_on:
+      - message-broker
+
+  coffeespace.apigateway:
+    image: coffeespace.apigateway:1.0.0
+    container_name: api-gateway
+    build:
+      context: .
+      dockerfile: CoffeeSpace.ApiGateway/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+    volumes:
+      - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets
+    ports:
+      - 8085:80
+    depends_on:
+      - coffeespace.ordering-api
+      - coffeespace.productsapi
+      - coffeespace.identityservice

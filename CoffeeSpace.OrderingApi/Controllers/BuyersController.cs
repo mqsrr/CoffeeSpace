@@ -2,11 +2,15 @@ using CoffeeSpace.OrderingApi.Application.Contracts.Requests.Buyers;
 using CoffeeSpace.OrderingApi.Application.Helpers;
 using CoffeeSpace.OrderingApi.Application.Services.Abstractions;
 using CoffeeSpace.OrderingApi.Mapping;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace CoffeeSpace.OrderingApi.Controllers;
 
 [ApiController]
+[Authorize]
+[EnableRateLimiting("TokenBucket")]
 public sealed class BuyersController : ControllerBase
 {
     private readonly IBuyerService _buyerService;
@@ -48,11 +52,12 @@ public sealed class BuyersController : ControllerBase
     }
 
     [HttpPut(ApiEndpoints.Buyer.Update)]
-    public async Task<IActionResult> UpdateBuyer([FromBody] UpdateBuyerRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateBuyer([FromRoute] Guid id, [FromBody] UpdateBuyerRequest request,CancellationToken cancellationToken)
     {
+        request.Id = id;
         var buyer = request.ToBuyer();
+        
         var updatedBuyer = await _buyerService.UpdateAsync(buyer, cancellationToken);
-
         return updatedBuyer is not null
             ? Ok(updatedBuyer.ToResponse())
             : NotFound();

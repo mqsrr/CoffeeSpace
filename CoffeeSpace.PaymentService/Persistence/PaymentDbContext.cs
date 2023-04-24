@@ -1,5 +1,5 @@
 using System.Reflection;
-using CoffeeSpace.PaymentService.Domain;
+using CoffeeSpace.PaymentService.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeSpace.PaymentService.Persistence;
@@ -10,7 +10,7 @@ internal sealed class PaymentDbContext : DbContext
     
     public PaymentDbContext(DbContextOptions<PaymentDbContext> options) : base(options)
     {
-        
+
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

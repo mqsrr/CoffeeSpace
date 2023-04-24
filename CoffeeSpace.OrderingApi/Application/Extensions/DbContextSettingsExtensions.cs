@@ -1,5 +1,4 @@
-using CoffeeSpace.OrderingApi.Application.Settings;
-using CoffeeSpace.OrderingApi.Persistence;
+using CoffeeSpace.Application.Settings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using MySqlConnector;
@@ -11,10 +10,10 @@ internal static class DbContextSettingsExtensions
     public static IServiceCollection AddDbContextOptions<TDbContext>(this IServiceCollection services, string connectionString)
         where TDbContext : DbContext
     {
-        services.AddTransient<IOptions<DbContextSettings<TDbContext>>>(_ =>
+        services.AddTransient<IOptions<MySqlDbContextSettings<TDbContext>>>(_ =>
         {
             var mySqlbuilder = new MySqlConnectionStringBuilder(connectionString);
-            return Options.Create(new DbContextSettings<TDbContext>
+            return Options.Create(new MySqlDbContextSettings<TDbContext>
             {
                 ConnectionString = mySqlbuilder.ConnectionString,
                 Database = mySqlbuilder.Database,

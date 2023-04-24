@@ -24,6 +24,9 @@ namespace CoffeeSpace.OrderingApi.Persistence.Migrations.SagaDbContext
                     b.Property<Guid>("CorrelationId")
                         .HasColumnType("char(36)");
 
+                    b.Property<string>("BuyerId")
+                        .HasColumnType("longtext");
+
                     b.Property<int>("CurrentState")
                         .HasColumnType("int");
 
@@ -36,6 +39,9 @@ namespace CoffeeSpace.OrderingApi.Persistence.Migrations.SagaDbContext
 
                     b.Property<bool>("StockValidationSuccess")
                         .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("UpdateOrderStatudCorrelationId")
+                        .HasColumnType("longtext");
 
                     b.HasKey("CorrelationId");
 

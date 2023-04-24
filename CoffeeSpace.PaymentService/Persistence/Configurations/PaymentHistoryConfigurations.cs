@@ -1,4 +1,4 @@
-using CoffeeSpace.PaymentService.Domain;
+using CoffeeSpace.PaymentService.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

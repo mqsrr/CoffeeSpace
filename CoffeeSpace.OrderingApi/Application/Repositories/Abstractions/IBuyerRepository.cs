@@ -1,4 +1,5 @@
-﻿using CoffeeSpace.Domain.Ordering.CustomerInfo;
+﻿using CoffeeSpace.Domain.Ordering.BuyerInfo;
+using CoffeeSpace.Domain.Ordering.CustomerInfo;
 
 namespace CoffeeSpace.OrderingApi.Application.Repositories.Abstractions;
 

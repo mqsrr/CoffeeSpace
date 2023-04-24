@@ -1,4 +1,4 @@
-using CoffeeSpace.Domain.Ordering.CustomerInfo;
+using CoffeeSpace.Domain.Ordering.BuyerInfo;
 using CoffeeSpace.OrderingApi.Application.Contracts.Requests.Buyers;
 using CoffeeSpace.OrderingApi.Application.Contracts.Responses.Buyers;
 using Riok.Mapperly.Abstractions;

@@ -1,3 +1,4 @@
+using CoffeeSpace.Application.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeSpace.OrderingApi.Application.Extensions;

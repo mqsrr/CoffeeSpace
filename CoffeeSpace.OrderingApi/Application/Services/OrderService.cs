@@ -1,10 +1,9 @@
+using CoffeeSpace.Application.Services.Abstractions;
 using CoffeeSpace.Domain.Ordering.Orders;
-using CoffeeSpace.Messages.Ordering.Events;
 using CoffeeSpace.OrderingApi.Application.Helpers;
 using CoffeeSpace.OrderingApi.Application.Messaging.Mediator.Commands.Orders;
 using CoffeeSpace.OrderingApi.Application.Messaging.Mediator.Queries.Orders;
 using CoffeeSpace.OrderingApi.Application.Services.Abstractions;
-using MassTransit;
 using Mediator;
 
 namespace CoffeeSpace.OrderingApi.Application.Services;
@@ -12,14 +11,12 @@ namespace CoffeeSpace.OrderingApi.Application.Services;
 internal sealed class OrderService : IOrderService
 {
     private readonly ISender _sender;
-    private readonly IPublishEndpoint _publishEndpoint;
     private readonly ICacheService<Order> _cache;
 
-    public OrderService(ISender sender, ICacheService<Order> cache, IPublishEndpoint publishEndpoint)
+    public OrderService(ISender sender, ICacheService<Order> cache)
     {
         _sender = sender;
         _cache = cache;
-        _publishEndpoint = publishEndpoint;
     }
 
     public Task<IEnumerable<Order>> GetAllByBuyerIdAsync(string buyerId, CancellationToken cancellationToken = default)
@@ -59,10 +56,7 @@ internal sealed class OrderService : IOrderService
         if (created)
         {
             await _cache.RemoveAsync(CacheKeys.Order.GetAll(order.BuyerId), cancellationToken);
-            await _publishEndpoint.Publish<SubmitOrder>(new
-            {
-                Order = order
-            }, cancellationToken);
+            await _cache.RemoveAsync(CacheKeys.Buyers.Get(order.BuyerId), cancellationToken);
         }
 
         return created;
@@ -79,6 +73,9 @@ internal sealed class OrderService : IOrderService
         {
             await _cache.RemoveAsync(CacheKeys.Order.GetAll(order.BuyerId), cancellationToken);
             await _cache.RemoveAsync(CacheKeys.Order.GetByCustomerId(order.Id, order.BuyerId), cancellationToken);
+            
+            await _cache.RemoveAsync(CacheKeys.Buyers.Get(order.BuyerId), cancellationToken);
+            await _cache.RemoveAsync(CacheKeys.Buyers.GetByEmail(order.Buyer!.Email), cancellationToken);
         }
 
         return result;

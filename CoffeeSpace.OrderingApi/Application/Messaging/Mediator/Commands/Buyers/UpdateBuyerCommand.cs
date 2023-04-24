@@ -1,4 +1,5 @@
-﻿using CoffeeSpace.Domain.Ordering.CustomerInfo;
+﻿using CoffeeSpace.Domain.Ordering.BuyerInfo;
+using CoffeeSpace.Domain.Ordering.CustomerInfo;
 using Mediator;
 
 namespace CoffeeSpace.OrderingApi.Application.Messaging.Mediator.Commands.Buyers;

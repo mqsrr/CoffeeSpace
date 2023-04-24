@@ -10,12 +10,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
-    </ItemGroup>
-
-    <ItemGroup>
       <Folder Include="Application\Messaging\Mediator\Commands\" />
       <Folder Include="Application\Messaging\Mediator\Queries\" />
       <Folder Include="Persistence\Migrations\" />
@@ -23,6 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
       <PackageReference Include="MassTransit.AspNetCore" Version="7.3.1" />
       <PackageReference Include="MassTransit.EntityFrameworkCore" Version="8.0.14" />
       <PackageReference Include="MassTransit.Newtonsoft" Version="8.0.14" />
@@ -37,15 +32,19 @@
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
       <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="7.0.5" />
-      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-      <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0" />
       <PackageReference Include="Riok.Mapperly" Version="2.7.0" />
-      <PackageReference Include="Scrutor.AspNetCore" Version="3.3.0" />
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\CoffeeSpace.Application\CoffeeSpace.Application.csproj" />
       <ProjectReference Include="..\CoffeeSpace.Domain\CoffeeSpace.Domain.csproj" />
       <ProjectReference Include="..\CoffeeSpace.Messages\CoffeeSpace.Messages.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
 
 </Project>

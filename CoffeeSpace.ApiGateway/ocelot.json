@@ -1,0 +1,188 @@
+{
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/auth/login",
+      "UpstreamHttpMethod": [ "POST" ],
+
+      "DownstreamPathTemplate": "/api/auth/login",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity-api",
+          "Port": 80
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/auth/register",
+      "UpstreamHttpMethod": [ "POST" ],
+
+      "DownstreamPathTemplate": "/api/auth/register",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity-api",
+          "Port": 80
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/products",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+
+      "DownstreamPathTemplate": "/api/products",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "products-api",
+          "Port": 80
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "QoSOptions": {
+        "ExceptionsAllowedBeforeBreaking": 3,
+        "DurationOfBreak": 1000,
+        "TimeoutValue": 3500
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/products/{id:guid}",
+      "UpstreamHttpMethod": [ "GET", "DELETE", "PUT" ],
+
+      "DownstreamPathTemplate": "/api/products/{id:guid}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "products-api",
+          "Port": 80
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "QoSOptions": {
+        "ExceptionsAllowedBeforeBreaking": 3,
+        "DurationOfBreak": 1000,
+        "TimeoutValue": 3500
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/buyers",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+
+      "DownstreamPathTemplate": "/api/buyers",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ordering-api",
+          "Port": 80
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "QoSOptions": {
+        "ExceptionsAllowedBeforeBreaking": 3,
+        "DurationOfBreak": 1000,
+        "TimeoutValue": 3500
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/buyers/{id:guid}",
+      "UpstreamHttpMethod": [ "GET", "DELETE" ,"PUT" ],
+
+      "DownstreamPathTemplate": "/api/buyers/{id:guid}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ordering-api",
+          "Port": 80
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "QoSOptions": {
+        "ExceptionsAllowedBeforeBreaking": 3,
+        "DurationOfBreak": 1500,
+        "TimeoutValue": 3500
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/buyers/{email}",
+      "UpstreamHttpMethod": [ "GET" ],
+
+      "DownstreamPathTemplate": "/api/buyers/{email}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ordering-api",
+          "Port": 80
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "QoSOptions": {
+        "ExceptionsAllowedBeforeBreaking": 3,
+        "DurationOfBreak": 1000,
+        "TimeoutValue": 3500
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/buyers/{buyerId:guid}/orders",
+      "UpstreamHttpMethod": [ "GET" ,"POST" ],
+
+      "DownstreamPathTemplate": "/api/buyers/{buyerId:guid}/orders",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ordering-api",
+          "Port": 80
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "QoSOptions": {
+        "ExceptionsAllowedBeforeBreaking": 3,
+        "DurationOfBreak": 1000,
+        "TimeoutValue": 3500
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/buyers/{buyerId:guid}/orders/{id:guid}",
+      "UpstreamHttpMethod": [ "GET" ,"PUT" ],
+
+      "DownstreamPathTemplate": "/api/buyers/{buyerId:guid}/orders/{id:guid}",
+      "DownstreamScheme": "http",
+      "ServiceName": "ordering-api",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ordering-api",
+          "Port": 80
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "QoSOptions": {
+        "ExceptionsAllowedBeforeBreaking": 3,
+        "DurationOfBreak": 1000,
+        "TimeoutValue": 3500
+      }
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost:8085"
+  }
+}

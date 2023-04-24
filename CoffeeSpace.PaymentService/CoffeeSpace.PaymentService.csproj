@@ -9,12 +9,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.3.1" />
       <PackageReference Include="MassTransit.Newtonsoft" Version="8.0.14" />
       <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.14" />
@@ -32,6 +26,12 @@
 
     <ItemGroup>
       <ProjectReference Include="..\CoffeeSpace.Messages\CoffeeSpace.Messages.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
 
 </Project>

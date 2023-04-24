@@ -1,8 +1,8 @@
+using CoffeeSpace.Application.Attributes;
+using CoffeeSpace.Application.Services.Abstractions;
 using CoffeeSpace.Domain.Products;
-using CoffeeSpace.ProductApi.Application.Attributes;
 using CoffeeSpace.ProductApi.Application.Helpers;
 using CoffeeSpace.ProductApi.Application.Repositories.Abstractions;
-using CoffeeSpace.ProductApi.Application.Services.Abstractions;
 
 namespace CoffeeSpace.ProductApi.Application.Repositories;
 

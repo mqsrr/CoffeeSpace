@@ -17,10 +17,17 @@ internal sealed class AwaitProductsValidationConsumer : IConsumer<AwaitProductsV
     public async Task Consume(ConsumeContext<AwaitProductsValidation> context)
     {
         var products = await _productRepository.GetAllProductsAsync(context.CancellationToken);
-
         var isValid = context.Message
-            .Products.All(x => products.Any(product => product.Title == x.Title));
+            .Products
+            .All(x => products.Any(product => product.Title == x.Title));
+        
         Thread.Sleep(TimeSpan.FromSeconds(4));
+        if (!isValid)
+        {
+            await context.RespondAsync<Fault<AwaitProductsValidation>>(context.Message);
+            return;
+        }
+        
         await context.RespondAsync<OrderStockValidationResult>(new
         {
             context.Message.Order,

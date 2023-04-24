@@ -1,5 +1,5 @@
-﻿using CoffeeSpace.Domain.Ordering.CustomerInfo;
-using CoffeeSpace.Domain.Ordering.CustomerInfo.CardInfo;
+﻿using CoffeeSpace.Domain.Ordering.BuyerInfo.CardInfo;
+using CoffeeSpace.Domain.Ordering.CustomerInfo;
 using CoffeeSpace.Domain.Ordering.Orders;
 
 namespace CoffeeSpace.OrderingApi.Application.Contracts.Requests.Orders;

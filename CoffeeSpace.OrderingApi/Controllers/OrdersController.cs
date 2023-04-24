@@ -2,11 +2,15 @@ using CoffeeSpace.OrderingApi.Application.Contracts.Requests.Orders;
 using CoffeeSpace.OrderingApi.Application.Helpers;
 using CoffeeSpace.OrderingApi.Application.Services.Abstractions;
 using CoffeeSpace.OrderingApi.Mapping;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace CoffeeSpace.OrderingApi.Controllers;
 
 [ApiController]
+[Authorize]
+[EnableRateLimiting("TokenBucket")]
 public sealed class OrdersController : ControllerBase
 {
     private readonly IOrderService _orderService;
@@ -61,7 +65,7 @@ public sealed class OrdersController : ControllerBase
             ? Ok(updatedOrder.ToResponse())
             : BadRequest();
     }
-
+    
     [HttpDelete(ApiEndpoints.Orders.Delete)]
     public async Task<IActionResult> DeleteOrder([FromRoute] Guid buyerId, [FromRoute] Guid id, CancellationToken cancellationToken)
     {

@@ -1,6 +1,7 @@
 using System.Reflection;
+using CoffeeSpace.Domain.Ordering.BuyerInfo;
+using CoffeeSpace.Domain.Ordering.BuyerInfo.CardInfo;
 using CoffeeSpace.Domain.Ordering.CustomerInfo;
-using CoffeeSpace.Domain.Ordering.CustomerInfo.CardInfo;
 using CoffeeSpace.Domain.Ordering.Orders;
 using CoffeeSpace.OrderingApi.Persistence.Abstractions;
 using CoffeeSpace.OrderingApi.Persistence.EntityTypeConfigurations;
