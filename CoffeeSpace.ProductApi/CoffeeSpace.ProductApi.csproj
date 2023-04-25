@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <UserSecretsId>85e69844-e33d-4d1d-870b-c98c8659a448</UserSecretsId>
+        <PackageId>CoffeeSpace.ProductApi</PackageId>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+      <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.5.2" />
+      <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.3.1" />
+      <PackageReference Include="MassTransit.Newtonsoft" Version="8.0.14" />
+      <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.14" />
+      <PackageReference Include="Mediator.Abstractions" Version="2.1.1" />
+      <PackageReference Include="Mediator.SourceGenerator" Version="2.1.1">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.4">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="7.0.5" />
+      <PackageReference Include="Riok.Mapperly" Version="2.7.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\CoffeeSpace.Application\CoffeeSpace.Application.csproj" />
+      <ProjectReference Include="..\CoffeeSpace.Domain\CoffeeSpace.Domain.csproj" />
+      <ProjectReference Include="..\CoffeeSpace.Messages\CoffeeSpace.Messages.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
+    </ItemGroup>
+
+</Project>

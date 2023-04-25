@@ -1,8 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using CoffeeSpace._ViewModels;
 using CoffeeSpace.Application.Models.Orders;
+using CoffeeSpace.Domain.Models.Orders;
 using CoffeeSpace.Messages.Requests;
-using CoffeeSpace.Services;
 using CommunityToolkit.Maui.Core.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -14,13 +14,11 @@ public class CreateOrderRequestHandler : IRequestHandler<CreateOrderRequest>, ID
 {
     private readonly HubConnection _hubConnection;
     private readonly OrderViewModel _orderViewModel;
-    private readonly IServiceDataProvider<Order> _orderServiceData;
 
-    public CreateOrderRequestHandler(HubConnection hubConnection, OrderViewModel orderViewModel, IServiceDataProvider<Order> orderServiceData)
+    public CreateOrderRequestHandler(HubConnection hubConnection, OrderViewModel orderViewModel)
     {
         _hubConnection = hubConnection;
         _orderViewModel = orderViewModel;
-        _orderServiceData = orderServiceData;
     }
 
     public async Task<Unit> Handle(CreateOrderRequest request, CancellationToken cancellationToken)

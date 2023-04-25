@@ -1,35 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="Academy" uuid="bcec336e-7fb0-4b07-b413-e0c282cc4293">
-      <driver-ref>sqlserver.localdb.jb</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>com.jetbrains.jdbc.sqlserver.SqlServerDriver</jdbc-driver>
-      <jdbc-url>Server=(localdb)\MSSQLLocalDB</jdbc-url>
-      <jdbc-additional-properties>
-        <property name="LOCAL_DB_INSTANCE" value="MSSQLLocalDB" />
-      </jdbc-additional-properties>
-      <working-dir>$ProjectFileDir$</working-dir>
-    </data-source>
-    <data-source source="LOCAL" name="ApplicationDb.sqlite3" uuid="d6dac122-7e3a-4831-b6af-cf69e6941ed6">
-      <driver-ref>sqlite.xerial</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:D:\Visual Studio Projects\C#\Projects\CoffeeSpace\CoffeeSpace.Data\Files\ApplicationDb.sqlite3</jdbc-url>
-      <working-dir>$ProjectFileDir$</working-dir>
-    </data-source>
-    <data-source source="LOCAL" name="ApplicationDb@localhost" uuid="c2141d28-7ef0-4310-b956-db09a8c697b1">
+    <data-source source="LOCAL" name="ProductsDb" uuid="b1420e44-f15f-4704-a6e9-922203df6398">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
-      <jdbc-driver>com.mysql.cj.jdbc.NonRegisteringDriver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://address=(protocol=tcp)(host=localhost)(port=33060)/ApplicationDb</jdbc-url>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://localhost:33060</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="CustomersDb@localhost" uuid="e07bf3cd-71d1-4992-8f97-1d0929a66e05">
+    <data-source source="LOCAL" name="OrderingDb" uuid="bdcb75b6-7bd7-4dea-ab8b-551731a31ad4">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
-      <jdbc-driver>com.mysql.cj.jdbc.NonRegisteringDriver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://address=(protocol=tcp)(host=localhost)(port=33061)/CustomersDb</jdbc-url>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://localhost:33061</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="OrderStates" uuid="d328c5ed-c37c-440a-993c-cfc6a67c8f2f">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://localhost:33070</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="PaymentDb" uuid="4963ba01-161a-481e-abb9-f8b61ece2939">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5432/postgres</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="IdentityDb" uuid="49f7549f-22d6-4dde-8ded-823729b5372e">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5433/postgres</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>
