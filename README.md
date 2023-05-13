@@ -1,5 +1,6 @@
 
 # CoffeeSpace
+[![Qodana](https://github.com/Marsik424/CoffeeSpace/actions/workflows/code_quality.yml/badge.svg)](https://github.com/Marsik424/CoffeeSpace/actions/workflows/code_quality.yml) [![Build](https://github.com/Marsik424/CoffeeSpace/actions/workflows/build.yml/badge.svg)](https://github.com/Marsik424/CoffeeSpace/actions/workflows/build.yml)
 
 MAUI client with simple coffee ordering system
 
