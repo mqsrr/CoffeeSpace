@@ -23,3 +23,115 @@ jobs:
       
     - name: Build and test
       run: dotnet build --configuration Release CoffeeSpace.OrderingApi/CoffeeSpace.OrderingApi.csproj
+
+  ProductsApi:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '7.0.x'
+    - name: Restore dependencies
+      run: dotnet restore CoffeeSpace.ProductApi/CoffeeSpace.ProductApi.csproj
+      
+    - name: Build and test
+      run: dotnet build --configuration Release CoffeeSpace.ProductApi/CoffeeSpace.ProductApi.csproj
+
+  IdentityApi:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '7.0.x'
+    - name: Restore dependencies
+      run: dotnet restore CoffeeSpace.IdentityApi/CoffeeSpace.IdentityApi.csproj
+      
+    - name: Build and test
+      run: dotnet build --configuration Release CoffeeSpace.IdentityApi/CoffeeSpace.IdentityApi.csproj
+
+  PaymentService:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '7.0.x'
+    - name: Restore dependencies
+      run: dotnet restore CoffeeSpace.PaymentService/CoffeeSpace.PaymentService.csproj
+      
+    - name: Build and test
+      run: dotnet build --configuration Release CoffeeSpace.PaymentService/CoffeeSpace.PaymentService.csproj
+  
+  ShipmentService:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '7.0.x'
+    - name: Restore dependencies
+      run: dotnet restore CoffeeSpace.ShipmentService/CoffeeSpace.ShipmentService.csproj
+      
+    - name: Build and test
+      run: dotnet build --configuration Release CoffeeSpace.ShipmentService/CoffeeSpace.ShipmentService.csproj
+      
+  ApiGateway:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '7.0.x'
+    - name: Restore dependencies
+      run: dotnet restore CoffeeSpace.ApiGateway/CoffeeSpace.ApiGateway.csproj
+      
+    - name: Build and test
+      run: dotnet build --configuration Release CoffeeSpace.ApiGateway/CoffeeSpace.ApiGateway.csproj
+  
+  Application-Library:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '7.0.x'
+    - name: Restore dependencies
+      run: dotnet restore CoffeeSpace.Application/CoffeeSpace.Application.csproj
+      
+    - name: Build and test
+      run: dotnet build --configuration Release CoffeeSpace.Application/CoffeeSpace.Application.csproj
+      
+  Messages-Library:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '7.0.x'
+    - name: Restore dependencies
+      run: dotnet restore CoffeeSpace.Messages/CoffeeSpace.Messages.csproj
+      
+    - name: Build and test
+      run: dotnet build --configuration Release CoffeeSpace.Messages/CoffeeSpace.Messages.csproj
+
+  Domain-Library:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '7.0.x'
+    - name: Restore dependencies
+      run: dotnet restore CoffeeSpace.Domain/CoffeeSpace.Domain.csproj
+      
+    - name: Build and test
+      run: dotnet build --configuration Release CoffeeSpace.Domain/CoffeeSpace.Domain.csproj
