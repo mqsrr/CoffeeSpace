@@ -19,7 +19,7 @@ jobs:
       with:
         dotnet-version: '7.0.x'
     - name: Restore dependencies
-      run: dotnet restore CoffeeSpace.OrderingApi/CoffeeSpace.OrderingApi.csproj --no-restore
+      run: dotnet restore CoffeeSpace.OrderingApi/CoffeeSpace.OrderingApi.csproj
       
     - name: Build and test
-      run: dotnet build --configuration Release CoffeeSpace.OrderingApi/CoffeeSpace.OrderingApi.csproj --no-restore
+      run: dotnet build --configuration Release CoffeeSpace.OrderingApi/CoffeeSpace.OrderingApi.csproj
