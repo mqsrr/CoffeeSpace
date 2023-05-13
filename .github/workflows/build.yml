@@ -1,4 +1,4 @@
-﻿name: Build CoffeeSpace project
+﻿name: Build
 
 on:
   push:
