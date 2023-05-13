@@ -11,10 +11,11 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using MassTransit;
 using Microsoft.AspNetCore.RateLimiting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration.AddAzureKeyVault();
 
 builder.Services.AddControllers();
 
@@ -34,18 +35,17 @@ builder.Services.AddRateLimiter(options =>
     });
 });
 
-builder.Services.AddDbContext<ApplicationUsersDbContext>(options => 
-    options.UseNpgsql(builder.Configuration["IdentityDb:ConnectionString"]));
+builder.Services.AddNpgsql<ApplicationUsersDbContext>("Server=localhost;Port=5433;Database=IdentityDb;User Id=sa;Password=identity-manager;");
 
 builder.Services.AddApplicationService<IAuthService<ApplicationUser>>();
 builder.Services.AddApplicationService<ITokenWriter<ApplicationUser>>();
 
 builder.Services.AddOptions<JwtSettings>()
-    .BindConfiguration("Jwt")
+    .Bind(builder.Configuration.GetRequiredSection("Jwt"))
     .ValidateOnStart();
 
 builder.Services.AddOptions<RabbitMqSettings>()
-    .BindConfiguration("RabbitMq")
+    .Bind(builder.Configuration.GetRequiredSection("RabbitMq"))
     .ValidateOnStart();
 
 builder.Services.AddFluentValidationAutoValidation()

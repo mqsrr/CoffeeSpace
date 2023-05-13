@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-service
+  labels:
+    app: payment-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: payment-service
+  template:
+    metadata:
+      name: payment-service
+      labels:
+        app: payment-service
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9090"
+        sidecar.opentelemetry.io/inject: "true"
+    spec:
+      containers:
+        - name: payment-service
+          image: mqsr/coffeespace-payment-service:1.0.1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          env:
+            - name: "ASPNETCORE_ENVIRONMENT"
+              value: "Development"
+            - name: "AZURE_CLIENT_ID"
+              valueFrom:
+                secretKeyRef:
+                  key: "azure-client-id"
+                  name: "azure-key-vault"
+            - name: "AZURE_CLIENT_SECRET"
+              valueFrom:
+                secretKeyRef:
+                  key: "azure-client-secret"
+                  name: "azure-key-vault"
+            - name: "AZURE_TENANT_ID"
+              valueFrom:
+                secretKeyRef:
+                  key: "azure-tenant-id"
+                  name: "azure-key-vault"
+            - name: "AZURE_VAULT_NAME"
+              valueFrom:
+                secretKeyRef:
+                  key: "azure-vault-name"
+                  name: "azure-key-vault"
+      restartPolicy: Always
+      

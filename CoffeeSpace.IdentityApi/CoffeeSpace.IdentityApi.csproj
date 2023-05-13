@@ -6,7 +6,6 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <RootNamespace>CoffeeSpace.IdentityApi</RootNamespace>
-        <UserSecretsId>b73b7485-a45f-4737-a876-eef3b1e4108d</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>

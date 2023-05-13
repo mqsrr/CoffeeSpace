@@ -1,9 +1,18 @@
+using CoffeeSpace.Application.Extensions;
+using CoffeeSpace.Application.Settings;
 using CoffeeSpace.ShipmentService.Consumers;
 using MassTransit;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddAzureKeyVault();
+
 builder.Services.AddControllers();
+
+builder.Services.AddOptions<RabbitMqSettings>()
+    .Bind(builder.Configuration.GetRequiredSection("RabbitMq"))
+    .ValidateOnStart();
 
 builder.Services.AddMassTransit(x =>
 {
@@ -12,11 +21,11 @@ builder.Services.AddMassTransit(x =>
     
     x.UsingRabbitMq((context, config) =>
     {
-        var rabbitSection = builder.Configuration.GetRequiredSection("RabbitMq");
-        config.Host(rabbitSection["Host"], "/", hostConfig =>
+        var rabbitMqSettings = context.GetRequiredService<IOptions<RabbitMqSettings>>().Value;
+        config.Host(rabbitMqSettings.Host, "/", hostConfig =>
         {
-            hostConfig.Username(rabbitSection["Username"]);
-            hostConfig.Password(rabbitSection["Password"]);
+            hostConfig.Username(rabbitMqSettings.Username);
+            hostConfig.Password(rabbitMqSettings.Password);
         });
 
         config.UseNewtonsoftJsonSerializer();

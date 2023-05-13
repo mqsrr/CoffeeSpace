@@ -17,7 +17,9 @@ using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.AddJwtBearer();
+builder.Configuration.AddAzureKeyVault();
+
+builder.Configuration.AddJwtBearer(builder);
 
 builder.Services.AddControllers();
 builder.Services.AddMediator();
@@ -48,12 +50,12 @@ builder.Services.AddApplicationService(typeof(ICacheService<>));
 
 builder.Services.Decorate<IProductRepository, CachedProductRepository>();
 
-builder.Services.AddOptions<RabbitMqSettings>()
-    .Bind(builder.Configuration.GetSection("RabbitMq"))
-    .ValidateOnStart();
-
 builder.Services.AddFluentValidationAutoValidation()
     .AddValidatorsFromAssemblyContaining<CreateProductRequestValidator>(ServiceLifetime.Singleton, includeInternalTypes: true);
+
+builder.Services.AddOptions<RabbitMqSettings>()
+    .Bind(builder.Configuration.GetRequiredSection("RabbitMq"))
+    .ValidateOnStart();
 
 builder.Services.AddMassTransit(x =>
 {

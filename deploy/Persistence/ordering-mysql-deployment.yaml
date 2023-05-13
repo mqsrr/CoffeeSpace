@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ordering-mysql
+  labels:
+    app: ordering-mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ordering-mysql
+  template:
+    metadata:
+      name: ordering-mysql
+      labels:
+        app: ordering-mysql
+    spec:
+      containers:
+        - name: ordering-mysql
+          image: mysql:8.0.33-oracle
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3306
+          env:
+            - name: "MYSQL_RANDOM_ROOT_PASSWORD"
+              value: "YES"
+            - name: "MYSQL_DATABASE"
+              value: "OrderingDb"
+            - name: "MYSQL_USER"
+              value: "user"
+            - name: "MYSQL_PASSWORD"
+              value: "orderHunter"
+      restartPolicy: Always
+      

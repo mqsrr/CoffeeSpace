@@ -88,7 +88,7 @@ services:
 
   coffeespace.identityservice:
     container_name: identity-api
-    image: coffeespace.identityapi:1.0.0
+    image: mqsr/coffeespace-identity-api:1.0.0
     build:
       context: .
       dockerfile: CoffeeSpace.IdentityApi/Dockerfile
@@ -102,7 +102,7 @@ services:
   
   coffeespace.ordering-api:
     container_name: ordering-api
-    image: coffeespace.orderingapi:1.0.0
+    image: mqsr/coffeespace-ordering-api:1.0.0
     build:
       context: .
       dockerfile: CoffeeSpace.OrderingApi/Dockerfile
@@ -119,7 +119,7 @@ services:
 
   coffeespace.paymentservice:
     container_name: payment-service
-    image: coffeespace.paymentservice:1.0.0
+    image: mqsr/coffeespace-payment-service:1.0.0
     build:
       context: .
       dockerfile: CoffeeSpace.PaymentService/Dockerfile
@@ -133,7 +133,7 @@ services:
 
   coffeespace.productsapi:
     container_name: products-api
-    image: coffeespace.productsapi:1.0.0
+    image: mqsr/coffeespace-products-api:1.0.0
     build:
       context: .
       dockerfile: CoffeeSpace.ProductApi/Dockerfile 
@@ -148,7 +148,7 @@ services:
 
   coffeespace.shipmentservice:
     container_name: shipment-service
-    image: coffeespace.shipmentservice:1.0.0
+    image: mqsr/coffeespace-shipment-service:1.0.0
     build:
       context: .
       dockerfile: CoffeeSpace.ShipmentService/Dockerfile
@@ -160,7 +160,7 @@ services:
       - message-broker
 
   coffeespace.apigateway:
-    image: coffeespace.apigateway:1.0.0
+    image: mqsr/coffeespace-apigateway:1.0.0
     container_name: api-gateway
     build:
       context: .

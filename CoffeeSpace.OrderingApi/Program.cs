@@ -19,10 +19,15 @@ using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.AddJwtBearer();
+builder.Configuration.AddAzureKeyVault();
+
+builder.Configuration.AddJwtBearer(builder);
+
+builder.Services.AddControllers();
 
 builder.Services.AddHttpClient();
-builder.Services.AddControllers();
+
+builder.Services.AddMediator();
 
 builder.Services.AddRateLimiter(options =>
 {
@@ -37,8 +42,6 @@ builder.Services.AddRateLimiter(options =>
         limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
     });
 });
-
-builder.Services.AddMediator();
 
 builder.Services.AddApplicationDb<IOrderingDbContext, OrderingDbContext>(builder.Configuration["OrderingDb:ConnectionString"]!);
 

@@ -1,5 +1,5 @@
-﻿using CoffeeSpace.Domain.Ordering.BuyerInfo;
-using CoffeeSpace.Domain.Ordering.CustomerInfo;
+﻿using CoffeeSpace.Application.Extensions;
+using CoffeeSpace.Domain.Ordering.BuyerInfo;
 using CoffeeSpace.OrderingApi.Application.Extensions;
 using CoffeeSpace.OrderingApi.Application.Repositories.Abstractions;
 using CoffeeSpace.OrderingApi.Persistence.Abstractions;

@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: identity-postgres
+  labels:
+    app: identity-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: identity-postgres
+  template:
+    metadata:
+      name: identity-postgres
+      labels:
+        app: identity-postgres
+    spec:
+      containers:
+        - name: identity-postgres
+          image: postgres:15.2-alpine
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5432
+          env:
+            - name: "POSTGRES_PASSWORD"
+              value: "identity-manager"
+            - name: "POSTGRES_USER"
+              value: "sa"
+      restartPolicy: Always
+      

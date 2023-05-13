@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: identity-postgres
+spec:
+  selector:
+    app: identity-postgres
+  ports:
+    - protocol: TCP
+      port: 5433
+      targetPort: 5432
+  type: LoadBalancer

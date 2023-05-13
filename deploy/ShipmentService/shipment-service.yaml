@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: shipment-service
+spec:
+  selector:
+    app: shipment-service
+  ports:
+    - protocol: TCP
+      port: 8071
+      targetPort: 80
+  type: ClusterIP
+  

@@ -1,18 +1,25 @@
+using CoffeeSpace.Application.Extensions;
+using CoffeeSpace.Application.Settings;
 using CoffeeSpace.PaymentService.Consumers;
 using CoffeeSpace.PaymentService.Persistence;
 using CoffeeSpace.PaymentService.Repositories;
 using CoffeeSpace.PaymentService.Repositories.Abstractions;
 using MassTransit;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddAzureKeyVault();
+
 builder.Services.AddControllers();
 
-builder.Services.AddDbContext<PaymentDbContext>(options => 
-    options.UseNpgsql(builder.Configuration["PaymentDb:ConnectionString"]!));
+builder.Services.AddNpgsql<PaymentDbContext>(builder.Configuration["PaymentDb:ConnectionString"]!);
 
 builder.Services.AddScoped<IPaymentHistoryRepository, PaymentHistoryRepository>();
+
+builder.Services.AddOptions<RabbitMqSettings>()
+    .Bind(builder.Configuration.GetRequiredSection("RabbitMq"))
+    .ValidateOnStart();
 
 builder.Services.AddMassTransit(x =>
 {
@@ -21,11 +28,11 @@ builder.Services.AddMassTransit(x =>
 
     x.UsingRabbitMq((context, config) =>
     {
-        var rabbitMqSettings = builder.Configuration.GetRequiredSection("RabbitMq");
-        config.Host(rabbitMqSettings["Host"], "/", hostConfig =>
+        var rabbitMqSettings = context.GetRequiredService<IOptions<RabbitMqSettings>>().Value;
+        config.Host(rabbitMqSettings.Host, "/", hostConfig =>
         {
-            hostConfig.Username(rabbitMqSettings["Username"]);
-            hostConfig.Password(rabbitMqSettings["Password"]);
+            hostConfig.Username(rabbitMqSettings.Username);
+            hostConfig.Password(rabbitMqSettings.Password);
         });
         config.UseNewtonsoftJsonSerializer();
         config.UseNewtonsoftJsonDeserializer();

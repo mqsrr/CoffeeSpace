@@ -1,4 +1,5 @@
-﻿using CoffeeSpace.Domain.Ordering.Orders;
+﻿using CoffeeSpace.Application.Extensions;
+using CoffeeSpace.Domain.Ordering.Orders;
 using CoffeeSpace.OrderingApi.Application.Extensions;
 using CoffeeSpace.OrderingApi.Application.Repositories.Abstractions;
 using CoffeeSpace.OrderingApi.Persistence.Abstractions;

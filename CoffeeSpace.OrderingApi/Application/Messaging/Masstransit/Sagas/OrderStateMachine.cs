@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using CoffeeSpace.Domain.Ordering.Orders;
 using CoffeeSpace.Messages.Ordering.Events;
 using CoffeeSpace.Messages.Ordering.Responses;
 using CoffeeSpace.Messages.Products.Events;
@@ -112,7 +113,7 @@ internal sealed class OrderStateMachine : MassTransitStateMachine<OrderStateInst
                 {
                     context.Saga.OrderId,
                     context.Saga.BuyerId,
-                    Status = context.Saga.CurrentState - 3
+                    Status = OrderStatus.Shipped
                 }))
                 .TransitionTo(Shipped)
                 .Finalize());

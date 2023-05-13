@@ -15,7 +15,11 @@
       "launchBrowser": false,
       "applicationUrl": "http://localhost:5130",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "AZURE_CLIENT_ID": "d3f53e56-8936-4ddf-88fa-7e50a1e600fb",
+        "AZURE_CLIENT_SECRET": "Pq-8Q~b3A43hDFDLkdtLvk25oZq7~PoQc~pJ7bJn",
+        "AZURE_TENANT_ID": "ad2d89c3-cf74-46f8-9114-4e9e9519fb74",
+        "AZURE_VAULT_NAME": "coffee-space-keyvault"
       }
     },
     "https": {

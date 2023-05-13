@@ -1,6 +1,7 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
@@ -8,7 +9,7 @@ namespace CoffeeSpace.Application.Extensions;
 
 public static class JwtBearerExtensions
 {
-    public static WebApplicationBuilder AddJwtBearer(this WebApplicationBuilder builder)
+    public static IConfigurationBuilder AddJwtBearer(this IConfigurationBuilder config, WebApplicationBuilder builder)
     {
         builder.Services.AddAuthorization(options =>
             {
@@ -39,6 +40,6 @@ public static class JwtBearerExtensions
                 };
             });
 
-        return builder;
+        return builder.Configuration;
     }
 }
