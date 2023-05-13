@@ -1,4 +1,4 @@
-﻿using CoffeeSpace.Domain.Ordering.CustomerInfo;
+﻿using CoffeeSpace.Domain.Ordering.BuyerInfo;
 using CoffeeSpace.Domain.Ordering.Orders;
 
 namespace CoffeeSpace.OrderingApi.Application.Contracts.Responses.Orders;

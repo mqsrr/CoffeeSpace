@@ -3,7 +3,7 @@ using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace CoffeeSpace.OrderingApi.Persistence.EntityTypeConfigurations;
+namespace CoffeeSpace.OrderingApi.Persistence.Configurations;
 
 internal sealed class OrderStateMap : SagaClassMap<OrderStateInstance>
 {

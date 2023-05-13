@@ -1,12 +1,11 @@
-﻿using CoffeeSpace.Domain.Ordering.BuyerInfo.CardInfo;
-using CoffeeSpace.Domain.Ordering.CustomerInfo;
+﻿using CoffeeSpace.Domain.Ordering.BuyerInfo;
+using CoffeeSpace.Domain.Ordering.BuyerInfo.CardInfo;
 using CoffeeSpace.Domain.Ordering.Orders;
 
 namespace CoffeeSpace.OrderingApi.Application.Contracts.Requests.Orders;
 
 public sealed class CreateOrderRequest
 {
-    
     public Guid BuyerId { get; set; }
 
     public required OrderStatus Status { get; init; }

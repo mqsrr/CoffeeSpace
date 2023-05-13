@@ -17,12 +17,10 @@ internal sealed class ProductRepository : IProductRepository
     public async Task<IEnumerable<Product>> GetAllProductsAsync(CancellationToken cancellationToken)
     {
         var isNotEmpty = await _productDbContext.Products.AnyAsync(cancellationToken);
-        if (!isNotEmpty)
-        {
-            return Enumerable.Empty<Product>();
-        }
-
-        return _productDbContext.Products;
+        
+        return !isNotEmpty
+            ? Enumerable.Empty<Product>()
+            : _productDbContext.Products;
     }
 
     public async Task<Product?> GetProductByIdAsync(string id, CancellationToken cancellationToken)

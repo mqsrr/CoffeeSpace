@@ -66,7 +66,7 @@ internal sealed class OrderService : IOrderService
     {
         var result = await _sender.Send(new UpdateOrderCommand
         {
-            Order = order,
+            Order = order
         }, cancellationToken);
 
         if (result is not null)

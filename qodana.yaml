@@ -1,0 +1,32 @@
+version: "1.0"
+linter: jetbrains/qodana-dotnet:2023.1-eap
+dot-net: 
+  solution: CoffeeSpace.sln
+include:
+  - name: CppThisArgMemberFuncDelegateCtorIsUnsuportedByDotNetCore
+  - name: ClassCanBeSealed.Global
+  - name: ClassCanBeSealed.Local
+  - name: DuplicatePropertyInspection
+  - name: LoopCanBePartlyConvertedToQuery
+exclude:
+  - name: UnusedAutoPropertyAccessor.Global
+  - name: UnusedAutoPropertyAccessor.Local
+  - name: All
+    paths:
+      - CoffeeSpace
+      - CoffeeSpace.Application/Settings
+      - CoffeeSpace.Application/Attributes
+      - CoffeeSpace.IdentityApi/Contracts
+      - CoffeeSpace.Domain
+      - CoffeeSpace.IdentityApi/Models
+      - CoffeeSpace.IdentityApi/Persistence/Migrations
+      - CoffeeSpace.IdentityApi/Validators
+      - CoffeeSpace.Messages
+      - CoffeeSpace.OrderingApi/Application/Contracts
+      - CoffeeSpace.OrderingApi/Persistence/Migrations
+      - CoffeeSpace.OrderingApi/Application/Validators
+      - CoffeeSpace.PaymentService/Models
+      - CoffeeSpace.PaymentService/Persistence/Migrations
+      - CoffeeSpace.ProductApi/Application/Contracts
+      - CoffeeSpace.ProductApi/Application/Validators
+      - CoffeeSpace.ProductApi/Persistence/Migrations

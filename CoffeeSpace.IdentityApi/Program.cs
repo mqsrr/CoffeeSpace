@@ -1,7 +1,7 @@
 using System.Threading.RateLimiting;
 using CoffeeSpace.Application.Extensions;
 using CoffeeSpace.Application.Settings;
-using CoffeeSpace.IdentityApi.Extenstions;
+using CoffeeSpace.IdentityApi.Extensions;
 using CoffeeSpace.IdentityApi.Messages.Consumers;
 using CoffeeSpace.IdentityApi.Models;
 using CoffeeSpace.IdentityApi.Persistence;

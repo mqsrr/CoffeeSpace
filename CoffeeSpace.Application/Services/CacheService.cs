@@ -22,24 +22,22 @@ public sealed class CacheService<TEntity> : ICacheService<TEntity>
 
     public async Task<IEnumerable<TEntity>> GetAllAsync(string key, CancellationToken cancellationToken)
     {
-        string? cachedOrderItem = await _distributedCache.GetStringAsync(key, cancellationToken);
-        if (cachedOrderItem is null)
-        {
-            return Enumerable.Empty<TEntity>();
-        }
+        var cachedOrderItem = await _distributedCache.GetStringAsync(key, cancellationToken);
+        
+        return cachedOrderItem is null
+            ? Enumerable.Empty<TEntity>()
+            : JsonConvert.DeserializeObject<IEnumerable<TEntity>>(cachedOrderItem)!;
 
-        return JsonConvert.DeserializeObject<IEnumerable<TEntity>>(cachedOrderItem)!;
     }
 
     public async Task<TEntity?> GetAsync(string key, CancellationToken cancellationToken)
     {
-        string? cachedOrderItem = await _distributedCache.GetStringAsync(key, cancellationToken);
-        if (cachedOrderItem is null)
-        {
-            return null;
-        }
+        var cachedOrderItem = await _distributedCache.GetStringAsync(key, cancellationToken);
+        
+        return cachedOrderItem is null
+            ? null
+            : JsonConvert.DeserializeObject<TEntity>(cachedOrderItem);
 
-        return JsonConvert.DeserializeObject<TEntity>(cachedOrderItem);
     }
 
     public Task SetAsync(string key, string jsonEntity, CancellationToken cancellationToken)

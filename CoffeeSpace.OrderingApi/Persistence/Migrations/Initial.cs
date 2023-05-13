@@ -1,19 +1,19 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿#nullable disable
 
-#nullable disable
+using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace CoffeeSpace.OrderingApi.Persistance.Migrations
+namespace CoffeeSpace.OrderingApi.Persistence.Migrations;
+
+/// <inheritdoc />
+public partial class Initial : Migration
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.AlterDatabase()
-                .Annotation("MySql:CharSet", "utf8mb4");
+        migrationBuilder.AlterDatabase()
+            .Annotation("MySql:CharSet", "utf8mb4");
 
-            migrationBuilder.CreateTable(
+        migrationBuilder.CreateTable(
                 name: "Addresses",
                 columns: table => new
                 {
@@ -30,9 +30,9 @@ namespace CoffeeSpace.OrderingApi.Persistance.Migrations
                 {
                     table.PrimaryKey("PK_Addresses", x => x.Id);
                 })
-                .Annotation("MySql:CharSet", "utf8mb4");
+            .Annotation("MySql:CharSet", "utf8mb4");
 
-            migrationBuilder.CreateTable(
+        migrationBuilder.CreateTable(
                 name: "Buyers",
                 columns: table => new
                 {
@@ -47,9 +47,9 @@ namespace CoffeeSpace.OrderingApi.Persistance.Migrations
                 {
                     table.PrimaryKey("PK_Buyers", x => x.Id);
                 })
-                .Annotation("MySql:CharSet", "utf8mb4");
+            .Annotation("MySql:CharSet", "utf8mb4");
 
-            migrationBuilder.CreateTable(
+        migrationBuilder.CreateTable(
                 name: "Payments",
                 columns: table => new
                 {
@@ -67,9 +67,9 @@ namespace CoffeeSpace.OrderingApi.Persistance.Migrations
                 {
                     table.PrimaryKey("PK_Payments", x => x.Id);
                 })
-                .Annotation("MySql:CharSet", "utf8mb4");
+            .Annotation("MySql:CharSet", "utf8mb4");
 
-            migrationBuilder.CreateTable(
+        migrationBuilder.CreateTable(
                 name: "Orders",
                 columns: table => new
                 {
@@ -105,9 +105,9 @@ namespace CoffeeSpace.OrderingApi.Persistance.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
-                .Annotation("MySql:CharSet", "utf8mb4");
+            .Annotation("MySql:CharSet", "utf8mb4");
 
-            migrationBuilder.CreateTable(
+        migrationBuilder.CreateTable(
                 name: "OrderItems",
                 columns: table => new
                 {
@@ -132,67 +132,66 @@ namespace CoffeeSpace.OrderingApi.Persistance.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
-                .Annotation("MySql:CharSet", "utf8mb4");
+            .Annotation("MySql:CharSet", "utf8mb4");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Buyers_Id",
-                table: "Buyers",
-                column: "Id",
-                unique: true,
-                descending: new bool[0]);
+        migrationBuilder.CreateIndex(
+            name: "IX_Buyers_Id",
+            table: "Buyers",
+            column: "Id",
+            unique: true,
+            descending: new bool[0]);
 
-            migrationBuilder.CreateIndex(
-                name: "IX_OrderItems_Id",
-                table: "OrderItems",
-                column: "Id",
-                unique: true);
+        migrationBuilder.CreateIndex(
+            name: "IX_OrderItems_Id",
+            table: "OrderItems",
+            column: "Id",
+            unique: true);
 
-            migrationBuilder.CreateIndex(
-                name: "IX_OrderItems_OrderId",
-                table: "OrderItems",
-                column: "OrderId");
+        migrationBuilder.CreateIndex(
+            name: "IX_OrderItems_OrderId",
+            table: "OrderItems",
+            column: "OrderId");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Orders_AddressId",
-                table: "Orders",
-                column: "AddressId",
-                unique: true);
+        migrationBuilder.CreateIndex(
+            name: "IX_Orders_AddressId",
+            table: "Orders",
+            column: "AddressId",
+            unique: true);
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Orders_BuyerId",
-                table: "Orders",
-                column: "BuyerId");
+        migrationBuilder.CreateIndex(
+            name: "IX_Orders_BuyerId",
+            table: "Orders",
+            column: "BuyerId");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Orders_Id",
-                table: "Orders",
-                column: "Id",
-                unique: true);
+        migrationBuilder.CreateIndex(
+            name: "IX_Orders_Id",
+            table: "Orders",
+            column: "Id",
+            unique: true);
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Orders_PaymentInfoId",
-                table: "Orders",
-                column: "PaymentInfoId",
-                unique: true);
-        }
+        migrationBuilder.CreateIndex(
+            name: "IX_Orders_PaymentInfoId",
+            table: "Orders",
+            column: "PaymentInfoId",
+            unique: true);
+    }
 
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropTable(
-                name: "OrderItems");
+    /// <inheritdoc />
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.DropTable(
+            name: "OrderItems");
 
-            migrationBuilder.DropTable(
-                name: "Orders");
+        migrationBuilder.DropTable(
+            name: "Orders");
 
-            migrationBuilder.DropTable(
-                name: "Addresses");
+        migrationBuilder.DropTable(
+            name: "Addresses");
 
-            migrationBuilder.DropTable(
-                name: "Buyers");
+        migrationBuilder.DropTable(
+            name: "Buyers");
 
-            migrationBuilder.DropTable(
-                name: "Payments");
-        }
+        migrationBuilder.DropTable(
+            name: "Payments");
     }
 }

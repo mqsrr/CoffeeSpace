@@ -1,4 +1,4 @@
-using CoffeeSpace.OrderingApi.Persistence.EntityTypeConfigurations;
+using CoffeeSpace.OrderingApi.Persistence.Configurations;
 using MassTransit.EntityFrameworkCoreIntegration;
 using Microsoft.EntityFrameworkCore;
 

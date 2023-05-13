@@ -1,7 +1,5 @@
 using System.Linq.Expressions;
-using MassTransit.Internals;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace CoffeeSpace.OrderingApi.Application.Extensions;
 

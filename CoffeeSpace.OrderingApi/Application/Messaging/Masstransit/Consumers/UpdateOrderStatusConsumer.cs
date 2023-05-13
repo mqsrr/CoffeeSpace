@@ -1,4 +1,3 @@
-using CoffeeSpace.Domain.Ordering.Orders;
 using CoffeeSpace.Messages.Ordering.Events;
 using CoffeeSpace.OrderingApi.Application.Repositories.Abstractions;
 using MassTransit;

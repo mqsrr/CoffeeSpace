@@ -1,6 +1,5 @@
 ﻿using CoffeeSpace.Domain.Ordering.BuyerInfo;
 using CoffeeSpace.Domain.Ordering.BuyerInfo.CardInfo;
-using CoffeeSpace.Domain.Ordering.CustomerInfo;
 using Newtonsoft.Json;
 
 namespace CoffeeSpace.Domain.Ordering.Orders;

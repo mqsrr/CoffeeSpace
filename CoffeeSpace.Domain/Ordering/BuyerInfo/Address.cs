@@ -1,4 +1,4 @@
-﻿namespace CoffeeSpace.Domain.Ordering.CustomerInfo;
+﻿namespace CoffeeSpace.Domain.Ordering.BuyerInfo;
 
 public sealed class Address
 {
