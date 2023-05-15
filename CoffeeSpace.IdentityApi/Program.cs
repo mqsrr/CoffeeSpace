@@ -1,4 +1,4 @@
-using System.Threading.RateLimiting;
+using Asp.Versioning;
 using CoffeeSpace.Application.Extensions;
 using CoffeeSpace.Application.Settings;
 using CoffeeSpace.IdentityApi.Extensions;
@@ -10,7 +10,6 @@ using CoffeeSpace.IdentityApi.Validators;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MassTransit;
-using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,21 +20,11 @@ builder.Services.AddControllers();
 
 builder.Services.AddMediator();
 
-builder.Services.AddRateLimiter(options =>
-{
-    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
-    
-    options.AddTokenBucketLimiter("TokenBucket", limiterOptions =>
-    {
-        limiterOptions.TokenLimit = 20;
-        limiterOptions.ReplenishmentPeriod = TimeSpan.FromSeconds(5);
-        limiterOptions.TokensPerPeriod = 5;
-        limiterOptions.QueueLimit = 3;
-        limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-    });
-});
+builder.Services.AddBucketRateLimiter(StatusCodes.Status429TooManyRequests);
 
-builder.Services.AddNpgsql<ApplicationUsersDbContext>("Server=localhost;Port=5433;Database=IdentityDb;User Id=sa;Password=identity-manager;");
+builder.Services.AddApiVersioning(new MediaTypeApiVersionReader("api-version"));
+
+builder.Services.AddNpgsql<ApplicationUsersDbContext>(builder.Configuration["IdentityDb:ConnectionString"]);
 
 builder.Services.AddApplicationService<IAuthService<ApplicationUser>>();
 builder.Services.AddApplicationService<ITokenWriter<ApplicationUser>>();

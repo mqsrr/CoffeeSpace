@@ -5,26 +5,26 @@ using MassTransit;
 
 namespace CoffeeSpace.ProductApi.Application.Messages.Consumers;
 
-internal sealed class AwaitProductsValidationConsumer : IConsumer<AwaitProductsValidation>
+internal sealed class OrderStockValidationConsumer : IConsumer<OrderStockValidation>
 {
     private readonly IProductRepository _productRepository;
 
-    public AwaitProductsValidationConsumer(IProductRepository productRepository)
+    public OrderStockValidationConsumer(IProductRepository productRepository)
     {
         _productRepository = productRepository;
     }
 
-    public async Task Consume(ConsumeContext<AwaitProductsValidation> context)
+    public async Task Consume(ConsumeContext<OrderStockValidation> context)
     {
         var products = await _productRepository.GetAllProductsAsync(context.CancellationToken);
         var isValid = context.Message
             .Products
             .All(x => products.Any(product => product.Title == x.Title));
         
-        Thread.Sleep(TimeSpan.FromSeconds(4));
+        Thread.Sleep(TimeSpan.FromSeconds(5));
         if (!isValid)
         {
-            await context.RespondAsync<Fault<AwaitProductsValidation>>(context.Message);
+            await context.RespondAsync<Fault<OrderStockValidation>>(context.Message);
             return;
         }
         

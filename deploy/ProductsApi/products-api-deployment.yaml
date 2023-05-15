@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: products-api
-          image: mqsr/coffeespace-products-api:1.0.3
+          image: mqsr/coffeespace-products-api:1.0.4
           imagePullPolicy: Always
           env:
             - name: "ASPNETCORE_ENVIRONMENT"
@@ -42,5 +42,13 @@ spec:
                 secretKeyRef:
                   key: "azure-vault-name"
                   name: "azure-key-vault"
+          volumeMounts:
+            - name: ca-volume
+              mountPath: app/DigiCertGlobalRootCA.crt.pem
+              subPath: DigiCertGlobalRootCA.crt.pem
+              readOnly: true
       restartPolicy: Always
-      
+      volumes:
+        - name: ca-volume
+          configMap:
+            name: ca-config

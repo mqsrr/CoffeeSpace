@@ -1,3 +1,5 @@
+using Asp.Versioning;
+using CoffeeSpace.Application.Extensions;
 using CoffeeSpace.ProductApi.Application.Contracts.Requests;
 using CoffeeSpace.ProductApi.Application.Helpers;
 using CoffeeSpace.ProductApi.Application.Mapping;
@@ -8,9 +10,10 @@ using Microsoft.AspNetCore.RateLimiting;
 
 namespace CoffeeSpace.ProductApi.Controllers;
 
-[ApiController]
 [Authorize]
-[EnableRateLimiting("TokenBucket")]
+[ApiController]
+[ApiVersion(1.0)]
+[EnableRateLimiting(RateLimiterExtensions.BucketName)]
 public sealed class ProductsController : ControllerBase
 {
     private readonly IProductService _productService;

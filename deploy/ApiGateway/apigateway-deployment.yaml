@@ -18,7 +18,7 @@ spec:
       serviceAccountName: apigateway
       containers:
         - name: apigateway
-          image: mqsr/coffeespace-apigateway:1.0.9
+          image: mqsr/coffeespace-apigateway:1.1.0
           imagePullPolicy: Always
           ports:
             - containerPort: 80

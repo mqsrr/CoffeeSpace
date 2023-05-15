@@ -3,7 +3,7 @@ using CoffeeSpace.Domain.Products;
 
 namespace CoffeeSpace.Messages.Products.Events;
 
-public interface AwaitProductsValidation
+public interface OrderStockValidation
 {
     Order Order { get; }
     

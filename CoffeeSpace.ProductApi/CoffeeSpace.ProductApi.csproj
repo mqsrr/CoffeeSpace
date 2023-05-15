@@ -10,6 +10,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Asp.Versioning.Mvc" Version="7.0.0" />
       <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
       <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.5.2" />
       <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.3.1" />

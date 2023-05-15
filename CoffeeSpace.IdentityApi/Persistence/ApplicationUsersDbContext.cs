@@ -10,9 +10,4 @@ internal sealed class ApplicationUsersDbContext : IdentityDbContext<ApplicationU
     {
         
     }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        Database.EnsureCreated();
-    }
 }

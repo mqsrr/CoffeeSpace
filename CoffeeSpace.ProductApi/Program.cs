@@ -1,4 +1,5 @@
 using System.Threading.RateLimiting;
+using Asp.Versioning;
 using CoffeeSpace.Application.Extensions;
 using CoffeeSpace.Application.Services.Abstractions;
 using CoffeeSpace.Application.Settings;
@@ -17,26 +18,16 @@ using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.AddAzureKeyVault();
+ builder.Configuration.AddAzureKeyVault();
 
 builder.Configuration.AddJwtBearer(builder);
 
 builder.Services.AddControllers();
 builder.Services.AddMediator();
 
-builder.Services.AddRateLimiter(options =>
-{
-    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
-    
-    options.AddTokenBucketLimiter("TokenBucket", limiterOptions =>
-    {
-        limiterOptions.TokenLimit = 20;
-        limiterOptions.ReplenishmentPeriod = TimeSpan.FromSeconds(5);
-        limiterOptions.TokensPerPeriod = 5;
-        limiterOptions.QueueLimit = 3;
-        limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-    });
-});
+builder.Services.AddBucketRateLimiter(StatusCodes.Status429TooManyRequests);
+
+builder.Services.AddApiVersioning(new MediaTypeApiVersionReader("api-version"));
 
 builder.Services.AddStackExchangeRedisCache(x => 
     x.Configuration = builder.Configuration["Redis:ConnectionString"]);
@@ -60,7 +51,7 @@ builder.Services.AddOptions<RabbitMqSettings>()
 builder.Services.AddMassTransit(x =>
 {
     x.SetKebabCaseEndpointNameFormatter();
-    x.AddConsumer<AwaitProductsValidationConsumer>();
+    x.AddConsumer<OrderStockValidationConsumer>();
     
     x.UsingRabbitMq((context, config) =>
     {

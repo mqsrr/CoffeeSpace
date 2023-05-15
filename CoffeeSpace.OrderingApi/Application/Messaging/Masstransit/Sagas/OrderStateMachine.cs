@@ -35,14 +35,14 @@ internal sealed class OrderStateMachine : MassTransitStateMachine<OrderStateInst
             x.CorrelateById(context => Guid.Parse(context.Message.Order.Id)));
 
         Request(() => RequestOrderStockValidation, x =>
-            x.Timeout = TimeSpan.Zero);
+            x.Timeout = TimeSpan.FromSeconds(10));
                
         Request(() => RequestOrderPaymentValidation, x => 
-            x.Timeout = TimeSpan.Zero);
+            x.Timeout = TimeSpan.FromSeconds(10));
                 
         Request(() => RequestOrderShipment, x => 
-            x.Timeout = TimeSpan.Zero);
-        
+            x.Timeout = TimeSpan.FromSeconds(10));
+
         InstanceState(x => x.CurrentState, 
             Submitted,
             StockConfirmed,
@@ -60,7 +60,7 @@ internal sealed class OrderStateMachine : MassTransitStateMachine<OrderStateInst
                     context.Saga.StockValidationSuccess = false;
                     context.Saga.PaymentSuccess = false;
                 })
-                .Request(RequestOrderStockValidation,context => context.Init<AwaitProductsValidation>(new
+                .Request(RequestOrderStockValidation,context => context.Init<OrderStockValidation>(new
                 {
                     context.Message.Order,
                     Products = context.Message.Order.OrderItems.Select(x => x.ToProduct())
@@ -82,13 +82,21 @@ internal sealed class OrderStateMachine : MassTransitStateMachine<OrderStateInst
                         }))));
 
         WhenEnter(Canceled, binder => binder.Finalize());
-        
+
         DuringAny(
             When(RequestOrderStockValidation!.Faulted)
                 .TransitionTo(Canceled),
             When(RequestOrderPaymentValidation!.Faulted)
                 .TransitionTo(Canceled),
             When(RequestOrderShipment!.Faulted)
+                .TransitionTo(Canceled));
+
+        DuringAny(
+            When(RequestOrderStockValidation.TimeoutExpired)
+                .TransitionTo(Canceled),
+            When(RequestOrderPaymentValidation.TimeoutExpired)
+                .TransitionTo(Canceled),
+            When(RequestOrderShipment.TimeoutExpired)
                 .TransitionTo(Canceled));
 
         DuringAny(
@@ -124,11 +132,11 @@ internal sealed class OrderStateMachine : MassTransitStateMachine<OrderStateInst
     public Event<SubmitOrder> SubmitOrder { get; private set; }
     
     public Event<CancelOrder> CancelOrder { get; private set; }
+    
 
-    public Request<OrderStateInstance, AwaitProductsValidation, OrderStockValidationResult> RequestOrderStockValidation { get; private set; }
+    public Request<OrderStateInstance, OrderStockValidation, OrderStockValidationResult> RequestOrderStockValidation { get; private set; }
 
     public Request<OrderStateInstance, OrderPaymentValidation, OrderPaymentValidationResult> RequestOrderPaymentValidation { get; private set; }
     
     public Request<OrderStateInstance, RequestOrderShipment, OrderShipmentResponse> RequestOrderShipment { get; private set; }
-    
 }

@@ -1,3 +1,5 @@
+using Asp.Versioning;
+using CoffeeSpace.Application.Extensions;
 using CoffeeSpace.IdentityApi.Contracts.Requests.Login;
 using CoffeeSpace.IdentityApi.Contracts.Requests.Register;
 using CoffeeSpace.IdentityApi.Helpers;
@@ -10,7 +12,8 @@ using Microsoft.AspNetCore.RateLimiting;
 namespace CoffeeSpace.IdentityApi.Controllers;
 
 [ApiController]
-[EnableRateLimiting("TokenBucket")]
+[ApiVersion(1.0)]
+[EnableRateLimiting(RateLimiterExtensions.BucketName)]
 public sealed class AuthController : ControllerBase
 {
     private readonly ISender _sender;

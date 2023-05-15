@@ -1,4 +1,4 @@
-using System.Threading.RateLimiting;
+using Asp.Versioning;
 using CoffeeSpace.Application.Extensions;
 using CoffeeSpace.Application.Services.Abstractions;
 using CoffeeSpace.Application.Settings;
@@ -13,9 +13,9 @@ using CoffeeSpace.OrderingApi.Persistence.Abstractions;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MassTransit;
-using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Quartz;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,19 +29,12 @@ builder.Services.AddHttpClient();
 
 builder.Services.AddMediator();
 
-builder.Services.AddRateLimiter(options =>
-{
-    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
-    
-    options.AddTokenBucketLimiter("TokenBucket", limiterOptions =>
-    {
-        limiterOptions.TokenLimit = 20;
-        limiterOptions.ReplenishmentPeriod = TimeSpan.FromSeconds(5);
-        limiterOptions.TokensPerPeriod = 5;
-        limiterOptions.QueueLimit = 3;
-        limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-    });
-});
+builder.Services.AddBucketRateLimiter(StatusCodes.Status429TooManyRequests);
+
+builder.Services.AddApiVersioning(new MediaTypeApiVersionReader("api-version"));
+
+builder.Services.AddStackExchangeRedisCache(x =>
+    x.Configuration = builder.Configuration["Redis:ConnectionString"]);
 
 builder.Services.AddApplicationDb<IOrderingDbContext, OrderingDbContext>(builder.Configuration["OrderingDb:ConnectionString"]!);
 
@@ -62,6 +55,8 @@ builder.Services.AddFluentValidationAutoValidation()
 
 builder.Services.AddDbContextOptions<OrderStateSagaDbContext>(builder.Configuration["OrderStateSagaDb:ConnectionString"]!);
 
+builder.Services.AddQuartz(x => x.UseMicrosoftDependencyInjectionJobFactory());
+
 builder.Services.AddMassTransit(x =>
 {
     x.SetKebabCaseEndpointNameFormatter();
@@ -70,6 +65,9 @@ builder.Services.AddMassTransit(x =>
 
     x.AddInMemoryInboxOutbox();
     
+    x.AddQuartzConsumers();
+    x.AddPublishMessageScheduler();
+
     x.AddSagaStateMachine<OrderStateMachine, OrderStateInstance>()
         .EntityFrameworkRepository(configurator =>
         {
@@ -92,15 +90,14 @@ builder.Services.AddMassTransit(x =>
             hostConfig.Password(rabbitMqSettings.Password);
         });
         
+        config.UsePublishMessageScheduler();
+
         config.UseNewtonsoftJsonSerializer();
         config.UseNewtonsoftJsonSerializer();
         
         config.ConfigureEndpoints(context);
     });
 });
-
-builder.Services.AddStackExchangeRedisCache(x =>
-    x.Configuration = builder.Configuration["Redis:ConnectionString"]!);
 
 var app = builder.Build();
 
