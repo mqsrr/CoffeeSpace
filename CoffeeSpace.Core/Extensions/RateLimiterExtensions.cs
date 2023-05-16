@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CoffeeSpace.Application.Extensions;
+namespace CoffeeSpace.Core.Extensions;
 
 public static class RateLimiterExtensions
 {

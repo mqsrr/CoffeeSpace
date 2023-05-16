@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: shipment-service
-          image: mqsr/coffeespace-shipment-service:1.0.3
+          image: mqsr/coffeespace-shipment-service:1.0.4
           imagePullPolicy: Always
           env:
           - name: "ASPNETCORE_ENVIRONMENT"

@@ -1,9 +1,8 @@
-using Azure.Extensions.AspNetCore.Configuration.Secrets;
 using Azure.Identity;
-using CoffeeSpace.Application.Services;
+using CoffeeSpace.Core.Services;
 using Microsoft.Extensions.Configuration;
 
-namespace CoffeeSpace.Application.Extensions;
+namespace CoffeeSpace.Core.Extensions;
 
 public static class AzureKeyVaultExtensions
 {

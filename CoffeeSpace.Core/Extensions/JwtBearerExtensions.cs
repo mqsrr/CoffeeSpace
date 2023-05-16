@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
-namespace CoffeeSpace.Application.Extensions;
+namespace CoffeeSpace.Core.Extensions;
 
 public static class JwtBearerExtensions
 {

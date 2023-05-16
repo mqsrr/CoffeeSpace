@@ -7,9 +7,9 @@ namespace CoffeeSpace.PaymentService.Repositories;
 
 internal sealed class PaymentHistoryRepository : IPaymentHistoryRepository
 {
-    private readonly PaymentDbContext _paymentDbContext;
+    private readonly IPaymentDbContext _paymentDbContext;
 
-    public PaymentHistoryRepository(PaymentDbContext paymentDbContext)
+    public PaymentHistoryRepository(IPaymentDbContext paymentDbContext)
     {
         _paymentDbContext = paymentDbContext;
     }

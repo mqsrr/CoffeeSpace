@@ -1,7 +1,7 @@
-using CoffeeSpace.Application.Attributes;
+using CoffeeSpace.Core.Attributes;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CoffeeSpace.Application.Extensions;
+namespace CoffeeSpace.Core.Extensions;
 
 public static class ApplicationServiceExtensions
 {

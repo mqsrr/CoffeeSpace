@@ -1,8 +1,8 @@
-using CoffeeSpace.Application.Services.Abstractions;
+using CoffeeSpace.Core.Services.Abstractions;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
 
-namespace CoffeeSpace.Application.Services;
+namespace CoffeeSpace.Core.Services;
 
 public sealed class CacheService<TEntity> : ICacheService<TEntity>
     where TEntity : class, new()

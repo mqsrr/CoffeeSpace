@@ -35,6 +35,23 @@
       }
     },
     {
+      "UpstreamPathTemplate": "/auth/_health",
+      "UpstreamHttpMethod": [ "GET" ],
+
+      "DownstreamPathTemplate": "/_health",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity-api",
+          "Port": 8080
+        }
+      ],
+
+      "LoadBalancerOptions": {
+        "Type": "RoundRobin"
+      }
+    },
+    {
       "UpstreamPathTemplate": "/products",
       "UpstreamHttpMethod": [ "GET", "POST" ],
 
@@ -78,6 +95,22 @@
         "ExceptionsAllowedBeforeBreaking": 3,
         "DurationOfBreak": 1000,
         "TimeoutValue": 3500
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/products/_health",
+      "UpstreamHttpMethod": [ "GET" ],
+
+      "DownstreamPathTemplate": "/_health",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "products-api",
+          "Port": 8082
+        }
+      ],
+      "LoadBalancerOptions": {
+        "Type": "RoundRobin"
       }
     },
     {
@@ -199,6 +232,22 @@
       },
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/ordering/_health",
+      "UpstreamHttpMethod": [ "GET" ],
+      
+      "DownstreamPathTemplate": "/_health",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ordering-api",
+          "Port": 8081
+        }
+      ],
+      "LoadBalancerOptions": {
+        "Type": "RoundRobin"
       }
     }
   ],

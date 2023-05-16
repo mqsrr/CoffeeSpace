@@ -1,7 +1,7 @@
 using Asp.Versioning;
-using CoffeeSpace.Application.Extensions;
-using CoffeeSpace.Application.Services.Abstractions;
-using CoffeeSpace.Application.Settings;
+using CoffeeSpace.Core.Extensions;
+using CoffeeSpace.Core.Services.Abstractions;
+using CoffeeSpace.Core.Settings;
 using CoffeeSpace.OrderingApi.Application.Extensions;
 using CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Consumers;
 using CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Sagas;
@@ -53,7 +53,7 @@ builder.Services.AddOptions<RabbitMqSettings>()
 builder.Services.AddFluentValidationAutoValidation()
     .AddValidatorsFromAssemblyContaining<IValidatorMarker>(ServiceLifetime.Singleton, includeInternalTypes: true);
 
-builder.Services.AddDbContextOptions<OrderStateSagaDbContext>(builder.Configuration["OrderStateSagaDb:ConnectionString"]!);
+builder.Services.AddMySqlDbContextOptions<OrderStateSagaDbContext>(builder.Configuration["OrderStateSagaDb:ConnectionString"]!);
 
 builder.Services.AddQuartz(x => x.UseMicrosoftDependencyInjectionJobFactory());
 
@@ -76,7 +76,7 @@ builder.Services.AddMassTransit(x =>
             configurator.UseMySql();
             configurator.AddDbContext<DbContext, OrderStateSagaDbContext>((services, optionsBuilder) =>
             {
-                var dbSettings = services.GetRequiredService<IOptions<MySqlDbContextSettings<OrderStateSagaDbContext>>>().Value;
+                var dbSettings = services.GetRequiredService<IOptions<CoffeeSpace.OrderingApi.Application.Settings.MySqlDbContextSettings<OrderStateSagaDbContext>>>().Value;
                 optionsBuilder.UseMySql(dbSettings.ConnectionString, dbSettings.ServerVersion);
             });
         });
@@ -99,7 +99,11 @@ builder.Services.AddMassTransit(x =>
     });
 });
 
+builder.Services.AddServiceHealthChecks(builder);
+
 var app = builder.Build();
+
+app.UseHealthChecks("/_health");
 
 app.UseRateLimiter();
 

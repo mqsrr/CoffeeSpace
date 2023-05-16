@@ -1,4 +1,4 @@
-namespace CoffeeSpace.Application.Services.Abstractions;
+namespace CoffeeSpace.Core.Services.Abstractions;
 
 public interface ICacheService<TEntity>
     where TEntity : class

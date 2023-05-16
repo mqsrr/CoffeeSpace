@@ -2,7 +2,7 @@ using Azure.Extensions.AspNetCore.Configuration.Secrets;
 using Azure.Security.KeyVault.Secrets;
 using Microsoft.Extensions.Configuration;
 
-namespace CoffeeSpace.Application.Services;
+namespace CoffeeSpace.Core.Services;
 
 public sealed class PrefixKeyVaultSecretManager : KeyVaultSecretManager
 {

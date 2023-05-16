@@ -1,4 +1,4 @@
-using CoffeeSpace.Application.Services.Abstractions;
+using CoffeeSpace.Core.Services.Abstractions;
 using CoffeeSpace.Domain.Ordering.Orders;
 using CoffeeSpace.OrderingApi.Application.Helpers;
 using CoffeeSpace.OrderingApi.Application.Messaging.Mediator.Commands.Orders;

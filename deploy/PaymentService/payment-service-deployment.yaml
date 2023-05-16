@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: payment-service
-          image: mqsr/coffeespace-payment-service:1.0.1
+          image: mqsr/coffeespace-payment-service:1.0.2
           imagePullPolicy: Always
           ports:
             - containerPort: 80

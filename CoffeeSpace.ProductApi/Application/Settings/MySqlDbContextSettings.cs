@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace CoffeeSpace.Application.Settings;
+namespace CoffeeSpace.ProductApi.Application.Settings;
 
 public sealed class MySqlDbContextSettings<TDbContext>
     where TDbContext : DbContext

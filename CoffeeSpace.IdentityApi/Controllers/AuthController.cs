@@ -1,5 +1,5 @@
 using Asp.Versioning;
-using CoffeeSpace.Application.Extensions;
+using CoffeeSpace.Core.Extensions;
 using CoffeeSpace.IdentityApi.Contracts.Requests.Login;
 using CoffeeSpace.IdentityApi.Contracts.Requests.Register;
 using CoffeeSpace.IdentityApi.Helpers;

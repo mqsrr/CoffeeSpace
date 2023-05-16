@@ -4,7 +4,7 @@
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>CoffeeSpace.Application</RootNamespace>
+        <RootNamespace>CoffeeSpace.Core</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -21,7 +21,6 @@
       <PackageReference Include="Azure.Identity" Version="1.9.0" />
       <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.5" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-      <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0" />
       <PackageReference Include="Scrutor.AspNetCore" Version="3.3.0" />
     </ItemGroup>
 

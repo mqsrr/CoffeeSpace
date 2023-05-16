@@ -1,5 +1,5 @@
-using CoffeeSpace.Application.Extensions;
-using CoffeeSpace.Application.Settings;
+using CoffeeSpace.Core.Extensions;
+using CoffeeSpace.Core.Settings;
 using CoffeeSpace.ShipmentService.Consumers;
 using MassTransit;
 using Microsoft.Extensions.Options;
@@ -7,8 +7,6 @@ using Microsoft.Extensions.Options;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddAzureKeyVault();
-
-builder.Services.AddControllers();
 
 builder.Services.AddOptions<RabbitMqSettings>()
     .Bind(builder.Configuration.GetRequiredSection("RabbitMq"))
@@ -35,8 +33,10 @@ builder.Services.AddMassTransit(x =>
     });
 });
 
+builder.Services.AddHealthChecks();
+
 var app = builder.Build();
 
-app.MapControllers();
+app.UseHealthChecks("/_health");
 
 app.Run();

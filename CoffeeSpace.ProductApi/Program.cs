@@ -1,8 +1,7 @@
-using System.Threading.RateLimiting;
 using Asp.Versioning;
-using CoffeeSpace.Application.Extensions;
-using CoffeeSpace.Application.Services.Abstractions;
-using CoffeeSpace.Application.Settings;
+using CoffeeSpace.Core.Extensions;
+using CoffeeSpace.Core.Services.Abstractions;
+using CoffeeSpace.Core.Settings;
 using CoffeeSpace.ProductApi.Application.Extensions;
 using CoffeeSpace.ProductApi.Application.Messages.Consumers;
 using CoffeeSpace.ProductApi.Application.Repositories;
@@ -13,16 +12,16 @@ using CoffeeSpace.ProductApi.Persistence;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MassTransit;
-using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
- builder.Configuration.AddAzureKeyVault();
+builder.Configuration.AddAzureKeyVault();
 
 builder.Configuration.AddJwtBearer(builder);
 
 builder.Services.AddControllers();
+
 builder.Services.AddMediator();
 
 builder.Services.AddBucketRateLimiter(StatusCodes.Status429TooManyRequests);
@@ -52,7 +51,7 @@ builder.Services.AddMassTransit(x =>
 {
     x.SetKebabCaseEndpointNameFormatter();
     x.AddConsumer<OrderStockValidationConsumer>();
-    
+
     x.UsingRabbitMq((context, config) =>
     {
         var rabbitMqSettings = context.GetRequiredService<IOptions<RabbitMqSettings>>().Value;
@@ -69,7 +68,13 @@ builder.Services.AddMassTransit(x =>
     });
 });
 
+builder.Services.AddServiceHealthChecks(builder);
+
 var app = builder.Build();
+
+app.UseHealthChecks("/_health");
+
+app.UseRouting();
 
 app.UseRateLimiter();
 

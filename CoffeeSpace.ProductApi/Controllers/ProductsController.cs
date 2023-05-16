@@ -1,5 +1,5 @@
 using Asp.Versioning;
-using CoffeeSpace.Application.Extensions;
+using CoffeeSpace.Core.Extensions;
 using CoffeeSpace.ProductApi.Application.Contracts.Requests;
 using CoffeeSpace.ProductApi.Application.Helpers;
 using CoffeeSpace.ProductApi.Application.Mapping;

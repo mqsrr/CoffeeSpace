@@ -1,4 +1,4 @@
-namespace CoffeeSpace.Application.Settings;
+namespace CoffeeSpace.Core.Settings;
 
 public sealed class RabbitMqSettings
 {

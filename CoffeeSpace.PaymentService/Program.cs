@@ -1,6 +1,7 @@
-using CoffeeSpace.Application.Extensions;
-using CoffeeSpace.Application.Settings;
+using CoffeeSpace.Core.Extensions;
+using CoffeeSpace.Core.Settings;
 using CoffeeSpace.PaymentService.Consumers;
+using CoffeeSpace.PaymentService.Extensions;
 using CoffeeSpace.PaymentService.Persistence;
 using CoffeeSpace.PaymentService.Repositories;
 using CoffeeSpace.PaymentService.Repositories.Abstractions;
@@ -11,9 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddAzureKeyVault();
 
-builder.Services.AddControllers();
-
-builder.Services.AddNpgsql<PaymentDbContext>(builder.Configuration["PaymentDb:ConnectionString"]!);
+builder.Services.AddApplicationDb<IPaymentDbContext, PaymentDbContext>(builder.Configuration["PaymentDb:ConnectionString"]!);
 
 builder.Services.AddScoped<IPaymentHistoryRepository, PaymentHistoryRepository>();
 
@@ -41,8 +40,10 @@ builder.Services.AddMassTransit(x =>
     });
 });
 
+builder.Services.AddServiceHealthChecks(builder);
+
 var app = builder.Build();
 
-app.MapControllers();
+app.UseHealthChecks("/_health");
 
 app.Run();

@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: products-api
-          image: mqsr/coffeespace-products-api:1.0.4
+          image: mqsr/coffeespace-products-api:1.0.5
           imagePullPolicy: Always
           env:
             - name: "ASPNETCORE_ENVIRONMENT"
