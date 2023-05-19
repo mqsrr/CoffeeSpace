@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
-
 namespace CoffeeSpace.ProductApi.Application.Contracts.Requests;
 
 public sealed class UpdateProductRequest

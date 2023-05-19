@@ -1,21 +1,24 @@
 using CoffeeSpace.ApiGateway.Extensions;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
-using Ocelot.Provider.Docker;
+using Ocelot.Provider.Kubernetes;
 using Ocelot.Provider.Polly;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Host.UseSerilog((context, configuration) =>
+    configuration.ReadFrom.Configuration(context.Configuration));
+
 builder.Configuration
     .AddJsonFile("ocelot.json", false, true)
-    .AddEnvironmentVariables();
-
-builder.AddJwtBearer();
+    .AddAzureKeyVault()
+    .AddJwtBearer(builder);
 
 builder.Services
     .AddOcelot(builder.Configuration)
     .AddPolly()
-    .AddDocker();
+    .AddKubernetes();
 
 var app = builder.Build();
 

@@ -1,7 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using CoffeeSpace.Application.Settings;
+using CoffeeSpace.Core.Settings;
 using CoffeeSpace.IdentityApi.Models;
 using CoffeeSpace.IdentityApi.Services.Abstractions;
 using Microsoft.AspNetCore.Identity;

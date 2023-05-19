@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: identity-api
+  labels:
+    app: identity-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: identity-api
+  template:
+    metadata:
+      name: identity-api
+      labels:
+        app: identity-api
+    spec:
+      containers:
+        - name: identity-api
+          image: mqsr/coffeespace-identity-api:2.0.0
+          imagePullPolicy: Always
+          env:
+          - name: "ASPNETCORE_ENVIRONMENT"
+            value: "Production"
+          - name: "AZURE_CLIENT_ID"
+            valueFrom:
+              secretKeyRef:
+                key: "azure-client-id"
+                name: "azure-key-vault"
+          - name: "AZURE_CLIENT_SECRET"
+            valueFrom:
+              secretKeyRef:
+                key: "azure-client-secret"
+                name: "azure-key-vault"
+          - name: "AZURE_TENANT_ID"
+            valueFrom:
+              secretKeyRef:
+                key: "azure-tenant-id"
+                name: "azure-key-vault"
+          - name: "AZURE_VAULT_NAME"
+            valueFrom:
+              secretKeyRef:
+                key: "azure-vault-name"
+                name: "azure-key-vault"
+      restartPolicy: Always

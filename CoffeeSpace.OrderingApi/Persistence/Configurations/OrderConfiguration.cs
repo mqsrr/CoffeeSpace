@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace CoffeeSpace.OrderingApi.Persistence.EntityTypeConfigurations;
+namespace CoffeeSpace.OrderingApi.Persistence.Configurations;
 
 public sealed class OrderConfiguration : IEntityTypeConfiguration<Order>
 {

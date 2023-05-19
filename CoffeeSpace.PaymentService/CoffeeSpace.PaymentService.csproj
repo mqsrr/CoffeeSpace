@@ -5,19 +5,21 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        <UserSecretsId>d4428d54-2515-42bb-bf0d-9708abed4ad6</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="6.0.2" />
+      <PackageReference Include="AspNetCore.HealthChecks.Redis" Version="6.0.4" />
+      <PackageReference Include="MassTransit.AmazonSQS" Version="8.0.15" />
       <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.3.1" />
-      <PackageReference Include="MassTransit.Newtonsoft" Version="8.0.14" />
-      <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.14" />
+      <PackageReference Include="MassTransit.Newtonsoft" Version="8.0.15" />
+      <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.15" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.5">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.3" />
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
     </ItemGroup>
 
     <ItemGroup>
@@ -25,6 +27,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\CoffeeSpace.Core\CoffeeSpace.Core.csproj" />
       <ProjectReference Include="..\CoffeeSpace.Messages\CoffeeSpace.Messages.csproj" />
     </ItemGroup>
 

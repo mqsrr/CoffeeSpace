@@ -1,0 +1,1658 @@
+{
+	"info": {
+		"_postman_id": "163513e8-373b-40e3-849f-3b967c73bde2",
+		"name": "CoffeeSpace",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24006774"
+	},
+	"item": [
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Get All products",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const products = pm.response.json();",
+									"const productId = products[0].id;",
+									"pm.collectionVariables.set(\"productId\", productId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{products-url}}/api/products",
+							"host": [
+								"{{products-url}}"
+							],
+							"path": [
+								"api",
+								"products"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get All products",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{products-url}}/api/products",
+									"host": [
+										"{{products-url}}"
+									],
+									"path": [
+										"api",
+										"products"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 14 Apr 2023 13:17:26 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": \"68bc015f-a2f0-4024-8fce-6a992cad1e0d\",\n        \"title\": \"Capuch\",\n        \"description\": \"Hello there\",\n        \"unitPrice\": 2.3,\n        \"discount\": 0,\n        \"quantity\": 1,\n        \"total\": 2.3\n    },\n    {\n        \"id\": \"adb9550e-3660-4b39-aa06-4614e96bb3f1\",\n        \"title\": \"Capuch\",\n        \"description\": \"Hello there\",\n        \"unitPrice\": 2.3,\n        \"discount\": 0,\n        \"quantity\": 1,\n        \"total\": 2.3\n    },\n    {\n        \"id\": \"eba8c57f-5f61-4eab-bf74-125dc6b73856\",\n        \"title\": \"Capuch\",\n        \"description\": \"Hello there\",\n        \"unitPrice\": 2.3,\n        \"discount\": 0,\n        \"quantity\": 1,\n        \"total\": 2.3\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "Get Product By id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{products-url}}/api/products/{{productId}}",
+							"host": [
+								"{{products-url}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"{{productId}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Product By id",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{products-url}}/api/products/{{productId}}",
+									"host": [
+										"{{products-url}}"
+									],
+									"path": [
+										"api",
+										"products",
+										"{{productId}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 14 Apr 2023 13:56:25 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"68bc015f-a2f0-4024-8fce-6a992cad1e0d\",\n    \"title\": \"Latter1\",\n    \"description\": \"old one\",\n    \"unitPrice\": 5.3,\n    \"discount\": 0,\n    \"quantity\": 1,\n    \"total\": 5.3\n}"
+						}
+					]
+				},
+				{
+					"name": "Create Product Item",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const productId = pm.response.json().id;",
+									"pm.collectionVariables.set(\"productId\", productId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhabGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6WyJmYzM3YjlkOS0wOTg3LTQxNjItYjJkMC01NzBmZWViZTU1ZGIiLCJmYzM3YjlkOS0wOTg3LTQxNjItYjJkMC01NzBmZWViZTU1ZGIiXSwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6WyJhZG1pbiIsImFkbWluIl0sImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6WyJ0ZXN0QGdtYWlsLmNvbSIsInRlc3RAZ21haWwuY29tIl0sIkFzcE5ldC5JZGVudGl0eS5TZWN1cml0eVN0YW1wIjpbIlpYN1hFSFdISTJXSDJKU1hMSUtBTVpGSVgzRlZQWUdJIiwiWlg3WEVIV0hJMldIMkpTWExJS0FNWkZJWDNGVlBZR0kiXSwibmJmIjoxNjgyMzI5NDAzLCJleHAiOjE2ODIzMzMwMDMsImlzcyI6IkNvZmZlZVNwYWNlLlNlcnZpY2UuY29tIiwiYXVkIjoiQ29mZmVlU3BhY2UuY29tIn0.KvF4XAW1fQBEbFVEsnKQYJy8594t-X58St_jMn8CYzM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"Title\": \"Capuch\",\n    \"Description\": \"Hello there\",\n    \"UnitPrice\": 2.3,\n    \"Discount\": 0.0,\n    \"Quantity\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{products-url}}/api/products",
+							"host": [
+								"{{products-url}}"
+							],
+							"path": [
+								"api",
+								"products"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Create Product Item",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"Title\": \"Capuch\",\n    \"Description\": \"Hello there\",\n    \"UnitPrice\": 2.3,\n    \"Discount\": 0.0,\n    \"Quantity\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{products-url}}/api/products",
+									"host": [
+										"{{products-url}}"
+									],
+									"path": [
+										"api",
+										"products"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 14 Apr 2023 13:06:04 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Location",
+									"value": "http://localhost:5183/api/products/adb9550e-3660-4b39-aa06-4614e96bb3f1"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"adb9550e-3660-4b39-aa06-4614e96bb3f1\",\n    \"title\": \"Capuch\",\n    \"description\": \"Hello there\",\n    \"unitPrice\": 2.3,\n    \"discount\": 0,\n    \"quantity\": 1,\n    \"total\": 2.3\n}"
+						}
+					]
+				},
+				{
+					"name": "Update Product Item",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"Title\": \"Latter\",\n    \"Description\": \"old one\",\n    \"UnitPrice\": 5.3,\n    \"Discount\": 0.0,\n    \"Quantity\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{products-url}}/api/products/{{productId}}",
+							"host": [
+								"{{products-url}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"{{productId}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Update Product Item",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"Title\": \"Latter1\",\n    \"Description\": \"old one\",\n    \"UnitPrice\": 5.3,\n    \"Discount\": 0.0,\n    \"Quantity\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{products-url}}/api/products/{{productId}}",
+									"host": [
+										"{{products-url}}"
+									],
+									"path": [
+										"api",
+										"products",
+										"{{productId}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 14 Apr 2023 13:56:13 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"68bc015f-a2f0-4024-8fce-6a992cad1e0d\",\n    \"title\": \"Latter1\",\n    \"description\": \"old one\",\n    \"unitPrice\": 5.3,\n    \"discount\": 0,\n    \"quantity\": 1,\n    \"total\": 5.3\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Product Item",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{products-url}}/api/products/{{productId}}",
+							"host": [
+								"{{products-url}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"{{productId}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Delete Product Item",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{products-url}}/api/products/{{productId}}",
+									"host": [
+										"{{products-url}}"
+									],
+									"path": [
+										"api",
+										"products",
+										"{{productId}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Length",
+									"value": "0"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 14 Apr 2023 13:53:47 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								}
+							],
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "Health check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{products-url}}/_health",
+							"host": [
+								"{{products-url}}"
+							],
+							"path": [
+								"_health"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Ordering",
+			"item": [
+				{
+					"name": "Orders",
+					"item": [
+						{
+							"name": "Get all orders by buyer id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const orderResponse = pm.response.json();",
+											"const orderId = orderResponse[0].id;",
+											"pm.collectionVariables.set(\"orderId\", orderId);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{ordering-url}}/api/buyers/{{buyerId}}/orders",
+									"host": [
+										"{{ordering-url}}"
+									],
+									"path": [
+										"api",
+										"buyers",
+										"{{buyerId}}",
+										"orders"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get order by buyer id and id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{ordering-url}}/api/buyers/{{buyerId}}/orders/{{orderId}}",
+									"host": [
+										"{{ordering-url}}"
+									],
+									"path": [
+										"api",
+										"buyers",
+										"{{buyerId}}",
+										"orders",
+										"{{orderId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create order",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const orderResponse = pm.response.json();",
+											"const orderId = orderResponse.id;",
+											"pm.collectionVariables.set(\"orderId\", orderId);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"Status\": 0,\n    \"Address\": {\n        \"City\": \"AnyCity\",\n        \"Country\": \"someCountry\",\n        \"Street\": \"test-street\"\n    },\n    \"PaymentInfo\": {\n        \"Cardtype\": 0,\n        \"CardNumber\": \"123324325435\",\n        \"SecurityNumber\": \"123\",\n        \"ExpirationYear\": \"2019\",\n        \"ExpirationMonth\": \"04\"\n    },\n    \"Orderitems\": [\n            {\n                \"title\": \"Capuchino\",\n                \"description\": \"Tasty one\",\n                \"unitPrice\": 1.5,\n                \"discount\": 0,\n                \"quantity\": 1\n            }\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{ordering-url}}/api/buyers/{{buyerId}}/orders",
+									"host": [
+										"{{ordering-url}}"
+									],
+									"path": [
+										"api",
+										"buyers",
+										"{{buyerId}}",
+										"orders"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update order",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"Status\": 1,\n    \"Address\": {\n        \"Id\": \"3f24daba-bee9-438f-a732-82cb86260db5\",\n        \"City\": \"NewCityHere\",\n        \"Country\": \"someCountry\",\n        \"Street\": \"test-street\"\n    },\n    \"PaymentInfo\": {\n        \"Id\": \"c1df27d6-031c-4c42-9652-84b2d23e62cb\",\n        \"Cardtype\": 0,\n        \"CardNumber\": \"123324325435\",\n        \"SecurityNumber\": \"123\",\n        \"ExpirationYear\": \"2019\",\n        \"ExpirationMonth\": \"04\"\n    },\n    \"Orderitems\": [\n        {\n            \"Id\": \"116beb8e-867e-4436-9abf-24aceb4fdc3f\",\n                \"Title\": \"Capuch\",\n                \"Description\": \"Hello there\",\n                \"UnitPrice\": 2.3,\n                \"Discount\": 0.0,\n                \"Quantity\": 1\n        }\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{ordering-url}}/api/buyers/{{buyerId}}/orders/{{orderId}}",
+									"host": [
+										"{{ordering-url}}"
+									],
+									"path": [
+										"api",
+										"buyers",
+										"{{buyerId}}",
+										"orders",
+										"{{orderId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete order by id",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{ordering-url}}/api/buyers/{{buyerId}}/orders/{{orderId}}",
+									"host": [
+										"{{ordering-url}}"
+									],
+									"path": [
+										"api",
+										"buyers",
+										"{{buyerId}}",
+										"orders",
+										"{{orderId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Buyers",
+					"item": [
+						{
+							"name": "Create buyer",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"Name\": \"Nikitos\",\n    \"Email\": \"some@gmail.com\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{ordering-url}}/api/buyers",
+									"host": [
+										"{{ordering-url}}"
+									],
+									"path": [
+										"api",
+										"buyers"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get buyer by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{ordering-url}}/api/buyers/{{buyerId}}",
+									"host": [
+										"{{ordering-url}}"
+									],
+									"path": [
+										"api",
+										"buyers",
+										"{{buyerId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get buyer by email",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const buyer = pm.response.json();",
+											"const buyerId = buyer.id;",
+											"pm.collectionVariables.set(\"buyerId\", buyerId);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6WyIyM2IyNzYyZC05M2JjLTQzYjktODY1MS0zOTMwMzI0NTQzNWIiLCIyM2IyNzYyZC05M2JjLTQzYjktODY1MS0zOTMwMzI0NTQzNWIiXSwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6WyJhZG1pbiIsImFkbWluIl0sImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6WyJhZG1pbkBnbWFpbC5jb20iLCJhZG1pbkBnbWFpbC5jb20iXSwiQXNwTmV0LklkZW50aXR5LlNlY3VyaXR5U3RhbXAiOlsiRlRJTlJYR1I2V00yRjJSQzVBUkVNSlBZS0hZT1lVWUkiLCJGVElOUlhHUjZXTTJGMlJDNUFSRU1KUFlLSFlPWVVZSSJdLCJuYmYiOjE2ODQxNTY2NzUsImV4cCI6MTY4NDE2MDI3NSwiaXNzIjoiQ29mZmVlU3BhY2UuU2VydmljZS5jb20iLCJhdWQiOiJDb2ZmZWVTcGFjZS5jb20ifQ.Yd0VXhtKUsfhncAO133JN2IRJQq8gOfUQNMAy7gNWqs",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{ordering-url}}/api/buyers/admin@gmail.com",
+									"host": [
+										"{{ordering-url}}"
+									],
+									"path": [
+										"api",
+										"buyers",
+										"admin@gmail.com"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update buyer",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{ordering-url}}/api/buyers/{{buyerId}}",
+									"host": [
+										"{{ordering-url}}"
+									],
+									"path": [
+										"api",
+										"buyers",
+										"{{buyerId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete buyer",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{ordering-url}}/api/buyers/{{buyerId}}",
+									"host": [
+										"{{ordering-url}}"
+									],
+									"path": [
+										"api",
+										"buyers",
+										"{{buyerId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Health check",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Identity",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"Username\": \"admin\",\n    \"Password\": \"Pass1234!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{identity-url}}/api/auth/login",
+							"host": [
+								"{{identity-url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"Name\": \"Nikitos\",\n    \"LastName\": \"Nikitos22\",\n    \"Username\": \"Marsikos\",\n    \"Email\": \"any@gmail.com\",\n    \"Password\": \"Pass1234!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{identity-url}}/api/auth/register",
+							"host": [
+								"{{identity-url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Health check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{identity-url}}/_health",
+							"host": [
+								"{{identity-url}}"
+							],
+							"path": [
+								"_health"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Gateway",
+			"item": [
+				{
+					"name": "Products",
+					"item": [
+						{
+							"name": "Get All products",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const products = pm.response.json();",
+											"const productId = products[0].id;",
+											"pm.collectionVariables.set(\"productId\", productId);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway-url}}/products",
+									"host": [
+										"{{gateway-url}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Get All products",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{products-url}}/api/products",
+											"host": [
+												"{{products-url}}"
+											],
+											"path": [
+												"api",
+												"products"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Date",
+											"value": "Fri, 14 Apr 2023 13:17:26 GMT"
+										},
+										{
+											"key": "Server",
+											"value": "Kestrel"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										}
+									],
+									"cookie": [],
+									"body": "[\n    {\n        \"id\": \"68bc015f-a2f0-4024-8fce-6a992cad1e0d\",\n        \"title\": \"Capuch\",\n        \"description\": \"Hello there\",\n        \"unitPrice\": 2.3,\n        \"discount\": 0,\n        \"quantity\": 1,\n        \"total\": 2.3\n    },\n    {\n        \"id\": \"adb9550e-3660-4b39-aa06-4614e96bb3f1\",\n        \"title\": \"Capuch\",\n        \"description\": \"Hello there\",\n        \"unitPrice\": 2.3,\n        \"discount\": 0,\n        \"quantity\": 1,\n        \"total\": 2.3\n    },\n    {\n        \"id\": \"eba8c57f-5f61-4eab-bf74-125dc6b73856\",\n        \"title\": \"Capuch\",\n        \"description\": \"Hello there\",\n        \"unitPrice\": 2.3,\n        \"discount\": 0,\n        \"quantity\": 1,\n        \"total\": 2.3\n    }\n]"
+								}
+							]
+						},
+						{
+							"name": "Get Product By id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway-url}}/products/{{productId}}",
+									"host": [
+										"{{gateway-url}}"
+									],
+									"path": [
+										"products",
+										"{{productId}}"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Get Product By id",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{products-url}}/api/products/{{productId}}",
+											"host": [
+												"{{products-url}}"
+											],
+											"path": [
+												"api",
+												"products",
+												"{{productId}}"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Date",
+											"value": "Fri, 14 Apr 2023 13:56:25 GMT"
+										},
+										{
+											"key": "Server",
+											"value": "Kestrel"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"68bc015f-a2f0-4024-8fce-6a992cad1e0d\",\n    \"title\": \"Latter1\",\n    \"description\": \"old one\",\n    \"unitPrice\": 5.3,\n    \"discount\": 0,\n    \"quantity\": 1,\n    \"total\": 5.3\n}"
+								}
+							]
+						},
+						{
+							"name": "Create Product Item",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const productId = pm.response.json().id;",
+											"console.log(productId);",
+											"pm.collectionVariables.set(\"productId\", productId);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6WyIyNzkyZDBhMC1lYTAyLTRlM2MtYWMwNy1mNmE4OTJmOTcxNTIiLCIyNzkyZDBhMC1lYTAyLTRlM2MtYWMwNy1mNmE4OTJmOTcxNTIiXSwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6WyJNYXJzaWtvcyIsIk1hcnNpa29zIl0sImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6WyJhbnlAZ21haWwuY29tIiwiYW55QGdtYWlsLmNvbSJdLCJBc3BOZXQuSWRlbnRpdHkuU2VjdXJpdHlTdGFtcCI6WyJKUDVXTExVN1hLRjJGRlpDUVI2SE1YRVNJTDQ0TDdSMyIsIkpQNVdMTFU3WEtGMkZGWkNRUjZITVhFU0lMNDRMN1IzIl0sIm5iZiI6MTY4Mzc5Nzc0MSwiZXhwIjoxNjgzODAxMzQxLCJpc3MiOiJDb2ZmZWVTcGFjZS5TZXJ2aWNlLmNvbSIsImF1ZCI6IkNvZmZlZVNwYWNlLmNvbSJ9.CSu8jQQPqGRVZPmWDFv_eURz2YI1Gyjp1pOc9fXs4lQ",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"Title\": \"Latte\",\n    \"Description\": \"Tasty one\",\n    \"UnitPrice\": 5.3,\n    \"Discount\": 0.0,\n    \"Quantity\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway-url}}/products",
+									"host": [
+										"{{gateway-url}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Create Product Item",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"Title\": \"Capuch\",\n    \"Description\": \"Hello there\",\n    \"UnitPrice\": 2.3,\n    \"Discount\": 0.0,\n    \"Quantity\": 1\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{products-url}}/api/products",
+											"host": [
+												"{{products-url}}"
+											],
+											"path": [
+												"api",
+												"products"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Date",
+											"value": "Fri, 14 Apr 2023 13:06:04 GMT"
+										},
+										{
+											"key": "Server",
+											"value": "Kestrel"
+										},
+										{
+											"key": "Location",
+											"value": "http://localhost:5183/api/products/adb9550e-3660-4b39-aa06-4614e96bb3f1"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"adb9550e-3660-4b39-aa06-4614e96bb3f1\",\n    \"title\": \"Capuch\",\n    \"description\": \"Hello there\",\n    \"unitPrice\": 2.3,\n    \"discount\": 0,\n    \"quantity\": 1,\n    \"total\": 2.3\n}"
+								}
+							]
+						},
+						{
+							"name": "Update Product Item",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"Title\": \"Latter\",\n    \"Description\": \"old one\",\n    \"UnitPrice\": 5.3,\n    \"Discount\": 0.0,\n    \"Quantity\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway-url}}//products/{{productId}}",
+									"host": [
+										"{{gateway-url}}"
+									],
+									"path": [
+										"",
+										"products",
+										"{{productId}}"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Update Product Item",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"Title\": \"Latter1\",\n    \"Description\": \"old one\",\n    \"UnitPrice\": 5.3,\n    \"Discount\": 0.0,\n    \"Quantity\": 1\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{products-url}}/api/products/{{productId}}",
+											"host": [
+												"{{products-url}}"
+											],
+											"path": [
+												"api",
+												"products",
+												"{{productId}}"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Date",
+											"value": "Fri, 14 Apr 2023 13:56:13 GMT"
+										},
+										{
+											"key": "Server",
+											"value": "Kestrel"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"68bc015f-a2f0-4024-8fce-6a992cad1e0d\",\n    \"title\": \"Latter1\",\n    \"description\": \"old one\",\n    \"unitPrice\": 5.3,\n    \"discount\": 0,\n    \"quantity\": 1,\n    \"total\": 5.3\n}"
+								}
+							]
+						},
+						{
+							"name": "Delete Product Item",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{gateway-url}}/products/{{productId}}",
+									"host": [
+										"{{gateway-url}}"
+									],
+									"path": [
+										"products",
+										"{{productId}}"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Delete Product Item",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{products-url}}/api/products/{{productId}}",
+											"host": [
+												"{{products-url}}"
+											],
+											"path": [
+												"api",
+												"products",
+												"{{productId}}"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "plain",
+									"header": [
+										{
+											"key": "Content-Length",
+											"value": "0"
+										},
+										{
+											"key": "Date",
+											"value": "Fri, 14 Apr 2023 13:53:47 GMT"
+										},
+										{
+											"key": "Server",
+											"value": "Kestrel"
+										}
+									],
+									"cookie": [],
+									"body": null
+								}
+							]
+						},
+						{
+							"name": "Health check",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway-url}}/products/_health",
+									"host": [
+										"{{gateway-url}}"
+									],
+									"path": [
+										"products",
+										"_health"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Ordering",
+					"item": [
+						{
+							"name": "Orders",
+							"item": [
+								{
+									"name": "Get all orders by buyer id",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const orderResponse = pm.response.json();",
+													"const orderId = orderResponse[0].id;",
+													"pm.collectionVariables.set(\"orderId\", orderId);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{gateway-url}}/buyers/{{buyerId}}/orders",
+											"host": [
+												"{{gateway-url}}"
+											],
+											"path": [
+												"buyers",
+												"{{buyerId}}",
+												"orders"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get order by buyer id and order id",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{gateway-url}}/buyers/{{buyerId}}/orders/{{orderId}}",
+											"host": [
+												"{{gateway-url}}"
+											],
+											"path": [
+												"buyers",
+												"{{buyerId}}",
+												"orders",
+												"{{orderId}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create order",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const orderResponse = pm.response.json();",
+													"const orderId = orderResponse.id;",
+													"pm.collectionVariables.set(\"orderId\", orderId);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"Status\": 0,\n    \"Address\": {\n        \"City\": \"AnyCity\",\n        \"Country\": \"someCountry\",\n        \"Street\": \"test-street\"\n    },\n    \"PaymentInfo\": {\n        \"Cardtype\": 0,\n        \"CardNumber\": \"123324325435\",\n        \"SecurityNumber\": \"123\",\n        \"ExpirationYear\": \"2019\",\n        \"ExpirationMonth\": \"04\"\n    },\n    \"Orderitems\": [\n        {\n            \"title\": \"Capuchino\",\n            \"description\": \"Tasty one\",\n            \"unitPrice\": 1.5,\n            \"discount\": 0,\n            \"quantity\": 2\n        }\n    ]\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{gateway-url}}/buyers/{{buyerId}}/orders",
+											"host": [
+												"{{gateway-url}}"
+											],
+											"path": [
+												"buyers",
+												"{{buyerId}}",
+												"orders"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update order",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"Status\": 1,\n    \"Address\": {\n        \"Id\": \"3f24daba-bee9-438f-a732-82cb86260db5\",\n        \"City\": \"NewCityHere\",\n        \"Country\": \"someCountry\",\n        \"Street\": \"test-street\"\n    },\n    \"PaymentInfo\": {\n        \"Id\": \"c1df27d6-031c-4c42-9652-84b2d23e62cb\",\n        \"Cardtype\": 0,\n        \"CardNumber\": \"123324325435\",\n        \"SecurityNumber\": \"123\",\n        \"ExpirationYear\": \"2019\",\n        \"ExpirationMonth\": \"04\"\n    },\n    \"Orderitems\": [\n        {\n            \"Id\": \"116beb8e-867e-4436-9abf-24aceb4fdc3f\",\n                \"Title\": \"Capuch\",\n                \"Description\": \"Hello there\",\n                \"UnitPrice\": 2.3,\n                \"Discount\": 0.0,\n                \"Quantity\": 1\n        }\n    ]\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{gateway-url}}/buyers/{{buyerId}}/orders/{{orderId}}",
+											"host": [
+												"{{gateway-url}}"
+											],
+											"path": [
+												"buyers",
+												"{{buyerId}}",
+												"orders",
+												"{{orderId}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete order by id",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{gateway-url}}/buyers/{{buyerId}}/orders/{{orderId}}",
+											"host": [
+												"{{gateway-url}}"
+											],
+											"path": [
+												"buyers",
+												"{{buyerId}}",
+												"orders",
+												"{{orderId}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Buyers",
+							"item": [
+								{
+									"name": "Create buyer",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"Name\": \"Nikitos\",\n    \"Email\": \"some@gmail.com\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{gateway-url}}/buyers",
+											"host": [
+												"{{gateway-url}}"
+											],
+											"path": [
+												"buyers"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get buyer by id",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{gateway-url}}/buyers/14abddeb-f9c7-4b76-8ae9-159f84cc17aa",
+											"host": [
+												"{{gateway-url}}"
+											],
+											"path": [
+												"buyers",
+												"14abddeb-f9c7-4b76-8ae9-159f84cc17aa"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get buyer by email",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const buyer = pm.response.json();",
+													"const buyerId = buyer.id;",
+													"pm.collectionVariables.set(\"buyerId\", buyerId);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{gateway-url}}/buyers/any@gmail.com",
+											"host": [
+												"{{gateway-url}}"
+											],
+											"path": [
+												"buyers",
+												"any@gmail.com"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update buyer",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"url": {
+											"raw": "{{gateway-url}}/buyers/{{buyerId}}",
+											"host": [
+												"{{gateway-url}}"
+											],
+											"path": [
+												"buyers",
+												"{{buyerId}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete buyer",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{gateway-url}}/buyers/{{buyerId}}",
+											"host": [
+												"{{gateway-url}}"
+											],
+											"path": [
+												"buyers",
+												"{{buyerId}}"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Health check",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway-url}}/ordering/_health",
+									"host": [
+										"{{gateway-url}}"
+									],
+									"path": [
+										"ordering",
+										"_health"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Auth",
+					"item": [
+						{
+							"name": "Login",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"Username\": \"admin\",\n    \"Password\": \"Pass1234!\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway-url}}/auth/login",
+									"host": [
+										"{{gateway-url}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Register",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"Name\": \"Nikitos\",\n    \"LastName\": \"Nikitos22\",\n    \"Username\": \"Marsikos\",\n    \"Email\": \"any@gmail.com\",\n    \"Password\": \"Pass1234!\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway-url}}/auth/register",
+									"host": [
+										"{{gateway-url}}"
+									],
+									"path": [
+										"auth",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Health check",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway-url}}/auth/_health",
+									"host": [
+										"{{gateway-url}}"
+									],
+									"path": [
+										"auth",
+										"_health"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6WyIyYTZiMDc4OS00MGMyLTRmNTQtYTU2Yy1hMDIwNGVmMDVlNzYiLCIyYTZiMDc4OS00MGMyLTRmNTQtYTU2Yy1hMDIwNGVmMDVlNzYiXSwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6WyJhZG1pbiIsImFkbWluIl0sImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6WyJhbnlAZ21haWwuY29tIiwiYW55QGdtYWlsLmNvbSJdLCJBc3BOZXQuSWRlbnRpdHkuU2VjdXJpdHlTdGFtcCI6WyJPVUszTFZMSkNCVVhFQUNHQVNURFNFNjVMUjdQSTNTUiIsIk9VSzNMVkxKQ0JVWEVBQ0dBU1REU0U2NUxSN1BJM1NSIl0sIm5iZiI6MTY4NDQ5OTIxMiwiZXhwIjoxNjg0NTAyODEyLCJpc3MiOiJDb2ZmZWVTcGFjZS5TZXJ2aWNlLmNvbSIsImF1ZCI6IkNvZmZlZVNwYWNlLmNvbSJ9.tvAk5owSZx90ojWH7CTqpbikRow4m401LM8nOByrUro",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "products-url",
+			"value": "http://localhost:5183"
+		},
+		{
+			"key": "productId",
+			"value": "adb9550e-3660-4b39-aa06-4614e96bb3f1"
+		},
+		{
+			"key": "ordering-url",
+			"value": "http://localhost:5245"
+		},
+		{
+			"key": "identity-url",
+			"value": " http://localhost:5130"
+		},
+		{
+			"key": "gateway-url",
+			"value": "http://localhost:8085"
+		},
+		{
+			"key": "buyerId",
+			"value": "c5832f69-8765-442d-9172-9fc1023882f2"
+		},
+		{
+			"key": "orderId",
+			"value": "4a8ba806-52fa-454b-8c96-218cd40049b3"
+		}
+	]
+}

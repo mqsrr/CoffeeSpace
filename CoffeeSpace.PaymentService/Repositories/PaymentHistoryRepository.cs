@@ -7,9 +7,9 @@ namespace CoffeeSpace.PaymentService.Repositories;
 
 internal sealed class PaymentHistoryRepository : IPaymentHistoryRepository
 {
-    private readonly PaymentDbContext _paymentDbContext;
+    private readonly IPaymentDbContext _paymentDbContext;
 
-    public PaymentHistoryRepository(PaymentDbContext paymentDbContext)
+    public PaymentHistoryRepository(IPaymentDbContext paymentDbContext)
     {
         _paymentDbContext = paymentDbContext;
     }
@@ -17,12 +17,10 @@ internal sealed class PaymentHistoryRepository : IPaymentHistoryRepository
     public async Task<IEnumerable<PaymentHistory>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         var isNotEmpty = await _paymentDbContext.PaymentHistories.AnyAsync(cancellationToken);
-        if (!isNotEmpty)
-        {
-            return Enumerable.Empty<PaymentHistory>();
-        }
-
-        return _paymentDbContext.PaymentHistories;
+        
+        return !isNotEmpty
+            ? Enumerable.Empty<PaymentHistory>()
+            : _paymentDbContext.PaymentHistories;
     }
 
     public async Task<PaymentHistory?> GetByIdAsync(string id, CancellationToken cancellationToken = default)

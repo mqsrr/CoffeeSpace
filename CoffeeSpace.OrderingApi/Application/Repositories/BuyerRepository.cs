@@ -1,5 +1,4 @@
 ﻿using CoffeeSpace.Domain.Ordering.BuyerInfo;
-using CoffeeSpace.Domain.Ordering.CustomerInfo;
 using CoffeeSpace.OrderingApi.Application.Extensions;
 using CoffeeSpace.OrderingApi.Application.Repositories.Abstractions;
 using CoffeeSpace.OrderingApi.Persistence.Abstractions;
@@ -50,14 +49,9 @@ internal sealed class BuyerRepository : IBuyerRepository
         var buyer = await _orderingDbContext.Buyers.FirstOrDefaultAsync(c => c.Email == email, cancellationToken);
         if (buyer is not null)
         {
-            await _orderingDbContext.Buyers
-                .LoadDataAsync(buyer, x => x.Orders!);
-
-            await _orderingDbContext.Orders
-                .LoadDataAsync(buyer.Orders!, x => x.OrderItems);
-        
-            await _orderingDbContext.Orders
-                .LoadDataAsync(buyer.Orders!, x => x.Address!);
+            await _orderingDbContext.Buyers.LoadDataAsync(buyer, x => x.Orders!);
+            await _orderingDbContext.Orders.LoadDataAsync(buyer.Orders!, x => x.OrderItems);
+            await _orderingDbContext.Orders.LoadDataAsync(buyer.Orders!, x => x.Address!);
         }
 
         return buyer;

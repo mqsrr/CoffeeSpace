@@ -8,6 +8,7 @@ WORKDIR /src
 COPY ["CoffeeSpace.PaymentService/CoffeeSpace.PaymentService.csproj", "CoffeeSpace.PaymentService/"]
 COPY ["CoffeeSpace.Domain/CoffeeSpace.Domain.csproj", "CoffeeSpace.Domain/"]
 COPY ["CoffeeSpace.Messages/CoffeeSpace.Messages.csproj", "CoffeeSpace.Messages/"]
+COPY ["CoffeeSpace.Core/CoffeeSpace.Core.csproj", "CoffeeSpace.Core/"]
 RUN dotnet restore "CoffeeSpace.PaymentService/CoffeeSpace.PaymentService.csproj"
 COPY . .
 WORKDIR "/src/CoffeeSpace.PaymentService"

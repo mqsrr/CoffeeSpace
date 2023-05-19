@@ -1,7 +1,7 @@
-using System.Threading.RateLimiting;
-using CoffeeSpace.Application.Extensions;
-using CoffeeSpace.Application.Services.Abstractions;
-using CoffeeSpace.Application.Settings;
+using Asp.Versioning;
+using CoffeeSpace.Core.Extensions;
+using CoffeeSpace.Core.Services.Abstractions;
+using CoffeeSpace.Core.Settings;
 using CoffeeSpace.ProductApi.Application.Extensions;
 using CoffeeSpace.ProductApi.Application.Messages.Consumers;
 using CoffeeSpace.ProductApi.Application.Repositories;
@@ -12,29 +12,22 @@ using CoffeeSpace.ProductApi.Persistence;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MassTransit;
-using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Options;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.AddJwtBearer();
+builder.Host.UseSerilog((context, configuration) => 
+    configuration.ReadFrom.Configuration(context.Configuration));
+
+builder.Configuration.AddAzureKeyVault();
+builder.Configuration.AddJwtBearer(builder);
 
 builder.Services.AddControllers();
 builder.Services.AddMediator();
 
-builder.Services.AddRateLimiter(options =>
-{
-    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
-    
-    options.AddTokenBucketLimiter("TokenBucket", limiterOptions =>
-    {
-        limiterOptions.TokenLimit = 20;
-        limiterOptions.ReplenishmentPeriod = TimeSpan.FromSeconds(5);
-        limiterOptions.TokensPerPeriod = 5;
-        limiterOptions.QueueLimit = 3;
-        limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-    });
-});
+builder.Services.AddBucketRateLimiter(StatusCodes.Status429TooManyRequests);
+builder.Services.AddApiVersioning(new MediaTypeApiVersionReader("api-version"));
 
 builder.Services.AddStackExchangeRedisCache(x => 
     x.Configuration = builder.Configuration["Redis:ConnectionString"]);
@@ -48,25 +41,25 @@ builder.Services.AddApplicationService(typeof(ICacheService<>));
 
 builder.Services.Decorate<IProductRepository, CachedProductRepository>();
 
-builder.Services.AddOptions<RabbitMqSettings>()
-    .Bind(builder.Configuration.GetSection("RabbitMq"))
-    .ValidateOnStart();
-
 builder.Services.AddFluentValidationAutoValidation()
     .AddValidatorsFromAssemblyContaining<CreateProductRequestValidator>(ServiceLifetime.Singleton, includeInternalTypes: true);
+
+builder.Services.AddOptions<AwsMessagingSettings>()
+    .Bind(builder.Configuration.GetRequiredSection("AWS"))
+    .ValidateOnStart();
 
 builder.Services.AddMassTransit(x =>
 {
     x.SetKebabCaseEndpointNameFormatter();
-    x.AddConsumer<AwaitProductsValidationConsumer>();
-    
-    x.UsingRabbitMq((context, config) =>
+    x.AddConsumer<OrderStockValidationConsumer>();
+
+    x.UsingAmazonSqs((context, config) =>
     {
-        var rabbitMqSettings = context.GetRequiredService<IOptions<RabbitMqSettings>>().Value;
-        config.Host(rabbitMqSettings.Host, "/", hostConfig =>
+        var awsSettings = context.GetRequiredService<IOptions<AwsMessagingSettings>>().Value;
+        config.Host(awsSettings.Region, hostConfig =>
         {
-            hostConfig.Username(rabbitMqSettings.Username);
-            hostConfig.Password(rabbitMqSettings.Password);
+            hostConfig.AccessKey(awsSettings.AccessKey);
+            hostConfig.SecretKey(awsSettings.SecretKey);
         });
         
         config.UseNewtonsoftJsonSerializer();
@@ -76,7 +69,15 @@ builder.Services.AddMassTransit(x =>
     });
 });
 
+builder.Services.AddServiceHealthChecks(builder);
+
 var app = builder.Build();
+
+app.UseSerilogRequestLogging();
+
+app.UseHealthChecks("/_health");
+
+app.UseRouting();
 
 app.UseRateLimiter();
 

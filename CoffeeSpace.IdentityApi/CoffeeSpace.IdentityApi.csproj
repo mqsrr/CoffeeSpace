@@ -6,13 +6,17 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <RootNamespace>CoffeeSpace.IdentityApi</RootNamespace>
-        <UserSecretsId>b73b7485-a45f-4737-a876-eef3b1e4108d</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Asp.Versioning.Mvc" Version="7.0.0" />
+        <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="6.0.2" />
+        <PackageReference Include="AspNetCore.HealthChecks.Redis" Version="6.0.4" />
         <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+        <PackageReference Include="MassTransit.AmazonSQS" Version="8.0.15" />
         <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.3.1" />
-        <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.14" />
+        <PackageReference Include="MassTransit.Newtonsoft" Version="8.0.15" />
+        <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.15" />
         <PackageReference Include="Mediator.Abstractions" Version="2.1.1" />
         <PackageReference Include="Mediator.SourceGenerator" Version="2.1.1">
           <PrivateAssets>all</PrivateAssets>
@@ -23,8 +27,8 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.3" />
-        <PackageReference Include="Riok.Mapperly" Version="2.7.0" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
+        <PackageReference Include="Riok.Mapperly" Version="2.8.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -32,7 +36,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\CoffeeSpace.Application\CoffeeSpace.Application.csproj" />
+      <ProjectReference Include="..\CoffeeSpace.Core\CoffeeSpace.Core.csproj" />
       <ProjectReference Include="..\CoffeeSpace.Messages\CoffeeSpace.Messages.csproj" />
     </ItemGroup>
 

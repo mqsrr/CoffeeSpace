@@ -1,5 +1,5 @@
-using CoffeeSpace.Application.Attributes;
-using CoffeeSpace.Application.Services.Abstractions;
+using CoffeeSpace.Core.Attributes;
+using CoffeeSpace.Core.Services.Abstractions;
 using CoffeeSpace.Domain.Products;
 using CoffeeSpace.ProductApi.Application.Helpers;
 using CoffeeSpace.ProductApi.Application.Repositories.Abstractions;

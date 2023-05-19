@@ -1,15 +1,15 @@
-using CoffeeSpace.Application.Extensions;
+using CoffeeSpace.Core.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeSpace.OrderingApi.Application.Extensions;
 
-internal static class ApplicationDbExtensions
+public static class ApplicationDbExtensions
 {
     public static IServiceCollection AddApplicationDb<TDbContext>(this IServiceCollection services, string connectionString)
         where TDbContext : DbContext
     {
         services.AddMySql<TDbContext>(connectionString, ServerVersion.AutoDetect(connectionString));
-        services.AddDbContextOptions<TDbContext>(connectionString);
+        services.AddMySqlDbContextOptions<TDbContext>(connectionString);
         
         return services;
     }
@@ -18,7 +18,7 @@ internal static class ApplicationDbExtensions
         where TDbContext : DbContext, TDbInterface where TDbInterface : class
     {
         services.AddMySql<TDbContext>(connectionString, ServerVersion.AutoDetect(connectionString));
-        services.AddDbContextOptions<TDbContext>(connectionString);
+        services.AddMySqlDbContextOptions<TDbContext>(connectionString);
 
         services.AddApplicationService<TDbInterface>(services.Single(x 
             => x.ImplementationType == typeof(TDbContext)).Lifetime);

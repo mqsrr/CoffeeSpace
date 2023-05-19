@@ -45,7 +45,7 @@ namespace CoffeeSpace.OrderingApi.Persistence.Migrations.SagaDbContext
 
                     b.HasKey("CorrelationId");
 
-                    b.ToTable("OrderStateInstance");
+                    b.ToTable("OrderStateInstance", (string)null);
                 });
 #pragma warning restore 612, 618
         }

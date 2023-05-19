@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeSpace.PaymentService.Persistence;
 
-internal sealed class PaymentDbContext : DbContext
+internal sealed class PaymentDbContext : DbContext, IPaymentDbContext
 {
     public required DbSet<PaymentHistory> PaymentHistories { get; init; }
     

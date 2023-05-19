@@ -6,7 +6,6 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <RootNamespace>CoffeeSpace.OrderingApi</RootNamespace>
-        <UserSecretsId>732d9872-6f65-48d7-a75d-6b3db430b79e</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
@@ -17,11 +16,16 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Asp.Versioning.Mvc" Version="7.0.0" />
+      <PackageReference Include="AspNetCore.HealthChecks.MySql" Version="6.0.2" />
+      <PackageReference Include="AspNetCore.HealthChecks.Redis" Version="6.0.4" />
       <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+      <PackageReference Include="MassTransit.AmazonSQS" Version="8.0.15" />
       <PackageReference Include="MassTransit.AspNetCore" Version="7.3.1" />
-      <PackageReference Include="MassTransit.EntityFrameworkCore" Version="8.0.14" />
-      <PackageReference Include="MassTransit.Newtonsoft" Version="8.0.14" />
-      <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.14" />
+      <PackageReference Include="MassTransit.EntityFrameworkCore" Version="8.0.15" />
+      <PackageReference Include="MassTransit.Newtonsoft" Version="8.0.15" />
+      <PackageReference Include="MassTransit.Quartz" Version="8.0.15" />
+      <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.15" />
       <PackageReference Include="Mediator.Abstractions" Version="2.1.1" />
       <PackageReference Include="Mediator.SourceGenerator" Version="2.1.1">
         <PrivateAssets>all</PrivateAssets>
@@ -32,11 +36,12 @@
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
       <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="7.0.5" />
-      <PackageReference Include="Riok.Mapperly" Version="2.7.0" />
+      <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0" />
+      <PackageReference Include="Riok.Mapperly" Version="2.8.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\CoffeeSpace.Application\CoffeeSpace.Application.csproj" />
+      <ProjectReference Include="..\CoffeeSpace.Core\CoffeeSpace.Core.csproj" />
       <ProjectReference Include="..\CoffeeSpace.Domain\CoffeeSpace.Domain.csproj" />
       <ProjectReference Include="..\CoffeeSpace.Messages\CoffeeSpace.Messages.csproj" />
     </ItemGroup>

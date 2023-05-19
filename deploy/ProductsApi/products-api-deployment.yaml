@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: products-api
+  labels:
+    app: products-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: products-api
+  template:
+    metadata:
+      name: products-api
+      labels:
+        app: products-api
+    spec:
+      containers:
+        - name: products-api
+          image: mqsr/coffeespace-products-api:2.0.0
+          imagePullPolicy: Always
+          env:
+            - name: "ASPNETCORE_ENVIRONMENT"
+              value: "Production"
+            - name: "AZURE_CLIENT_ID"
+              valueFrom:
+                secretKeyRef:
+                  key: "azure-client-id"
+                  name: "azure-key-vault"
+            - name: "AZURE_CLIENT_SECRET"
+              valueFrom:
+                secretKeyRef:
+                  key: "azure-client-secret"
+                  name: "azure-key-vault"
+            - name: "AZURE_TENANT_ID"
+              valueFrom:
+                secretKeyRef:
+                  key: "azure-tenant-id"
+                  name: "azure-key-vault"
+            - name: "AZURE_VAULT_NAME"
+              valueFrom:
+                secretKeyRef:
+                  key: "azure-vault-name"
+                  name: "azure-key-vault"
+          volumeMounts:
+            - name: ca-volume
+              mountPath: app/DigiCertGlobalRootCA.crt.pem
+              subPath: DigiCertGlobalRootCA.crt.pem
+              readOnly: true
+      restartPolicy: Always
+      volumes:
+        - name: ca-volume
+          configMap:
+            name: ca-config

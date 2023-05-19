@@ -9,9 +9,12 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "identity-api",
-          "Port": 80
+          "Port": 8080
         }
-      ]
+      ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
     },
     {
       "UpstreamPathTemplate": "/auth/register",
@@ -22,9 +25,28 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "identity-api",
-          "Port": 80
+          "Port": 8080
         }
-      ]
+      ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/auth/_health",
+      "UpstreamHttpMethod": [ "GET" ],
+
+      "DownstreamPathTemplate": "/_health",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity-api",
+          "Port": 8080
+        }
+      ],
+      "LoadBalancerOptions": {
+        "Type": "RoundRobin"
+      }
     },
     {
       "UpstreamPathTemplate": "/products",
@@ -35,7 +57,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "products-api",
-          "Port": 80
+          "Port": 8082
         }
       ],
       "AuthenticationOptions": {
@@ -45,7 +67,7 @@
       "QoSOptions": {
         "ExceptionsAllowedBeforeBreaking": 3,
         "DurationOfBreak": 1000,
-        "TimeoutValue": 3500
+        "TimeoutValue": 6500
       }
     },
     {
@@ -57,7 +79,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "products-api",
-          "Port": 80
+          "Port": 8082
         }
       ],
       "AuthenticationOptions": {
@@ -67,7 +89,23 @@
       "QoSOptions": {
         "ExceptionsAllowedBeforeBreaking": 3,
         "DurationOfBreak": 1000,
-        "TimeoutValue": 3500
+        "TimeoutValue": 6500
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/product/_health",
+      "UpstreamHttpMethod": [ "GET" ],
+
+      "DownstreamPathTemplate": "/_health",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "products-api",
+          "Port": 8082
+        }
+      ],
+      "LoadBalancerOptions": {
+        "Type": "RoundRobin"
       }
     },
     {
@@ -79,7 +117,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "ordering-api",
-          "Port": 80
+          "Port": 8081
         }
       ],
       "AuthenticationOptions": {
@@ -89,7 +127,7 @@
       "QoSOptions": {
         "ExceptionsAllowedBeforeBreaking": 3,
         "DurationOfBreak": 1000,
-        "TimeoutValue": 3500
+        "TimeoutValue": 6500
       }
     },
     {
@@ -101,7 +139,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "ordering-api",
-          "Port": 80
+          "Port": 8081
         }
       ],
       "AuthenticationOptions": {
@@ -111,7 +149,7 @@
       "QoSOptions": {
         "ExceptionsAllowedBeforeBreaking": 3,
         "DurationOfBreak": 1500,
-        "TimeoutValue": 3500
+        "TimeoutValue": 6500
       }
     },
     {
@@ -123,7 +161,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "ordering-api",
-          "Port": 80
+          "Port": 8081
         }
       ],
       "AuthenticationOptions": {
@@ -133,7 +171,7 @@
       "QoSOptions": {
         "ExceptionsAllowedBeforeBreaking": 3,
         "DurationOfBreak": 1000,
-        "TimeoutValue": 3500
+        "TimeoutValue": 6500
       }
     },
     {
@@ -145,7 +183,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "ordering-api",
-          "Port": 80
+          "Port": 8081
         }
       ],
       "AuthenticationOptions": {
@@ -155,7 +193,10 @@
       "QoSOptions": {
         "ExceptionsAllowedBeforeBreaking": 3,
         "DurationOfBreak": 1000,
-        "TimeoutValue": 3500
+        "TimeoutValue": 6500
+      },
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
       }
     },
     {
@@ -164,11 +205,10 @@
 
       "DownstreamPathTemplate": "/api/buyers/{buyerId:guid}/orders/{id:guid}",
       "DownstreamScheme": "http",
-      "ServiceName": "ordering-api",
       "DownstreamHostAndPorts": [
         {
           "Host": "ordering-api",
-          "Port": 80
+          "Port": 8081
         }
       ],
       "AuthenticationOptions": {
@@ -178,11 +218,34 @@
       "QoSOptions": {
         "ExceptionsAllowedBeforeBreaking": 3,
         "DurationOfBreak": 1000,
-        "TimeoutValue": 3500
+        "TimeoutValue": 6500
+      },
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/ordering/_health",
+      "UpstreamHttpMethod": [ "GET" ],
+      
+      "DownstreamPathTemplate": "/_health",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ordering-api",
+          "Port": 8081
+        }
+      ],
+      "LoadBalancerOptions": {
+        "Type": "RoundRobin"
       }
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "http://localhost:8085"
+    "ServiceDiscoveryProvider": {
+      "Namespace": "default",
+      "Type": "KubernetesServiceDiscoveryProvider",
+      "Host": "https://kubernetes.default.svc"
+    }
   }
 }

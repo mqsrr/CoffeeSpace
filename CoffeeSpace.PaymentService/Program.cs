@@ -1,31 +1,41 @@
+using CoffeeSpace.Core.Extensions;
+using CoffeeSpace.Core.Settings;
 using CoffeeSpace.PaymentService.Consumers;
+using CoffeeSpace.PaymentService.Extensions;
 using CoffeeSpace.PaymentService.Persistence;
 using CoffeeSpace.PaymentService.Repositories;
 using CoffeeSpace.PaymentService.Repositories.Abstractions;
 using MassTransit;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Host.UseSerilog((context, configuration) => 
+    configuration.ReadFrom.Configuration(context.Configuration));
 
-builder.Services.AddDbContext<PaymentDbContext>(options => 
-    options.UseNpgsql(builder.Configuration["PaymentDb:ConnectionString"]!));
+builder.Configuration.AddAzureKeyVault();
 
-builder.Services.AddScoped<IPaymentHistoryRepository, PaymentHistoryRepository>();
+builder.Services.AddApplicationDb<IPaymentDbContext, PaymentDbContext>(builder.Configuration["PaymentDb:ConnectionString"]!);
+
+builder.Services.AddApplicationService<IPaymentHistoryRepository>();
+
+builder.Services.AddOptions<AwsMessagingSettings>()
+    .Bind(builder.Configuration.GetRequiredSection("AWS"))
+    .ValidateOnStart();
 
 builder.Services.AddMassTransit(x =>
 {
     x.SetKebabCaseEndpointNameFormatter();
     x.AddConsumer<OrderPaymentValidationConsumer>();
 
-    x.UsingRabbitMq((context, config) =>
+    x.UsingAmazonSqs((context, config) =>
     {
-        var rabbitMqSettings = builder.Configuration.GetRequiredSection("RabbitMq");
-        config.Host(rabbitMqSettings["Host"], "/", hostConfig =>
+        var awsSettings = context.GetRequiredService<IOptions<AwsMessagingSettings>>().Value;
+        config.Host(awsSettings.Region, hostConfig =>
         {
-            hostConfig.Username(rabbitMqSettings["Username"]);
-            hostConfig.Password(rabbitMqSettings["Password"]);
+            hostConfig.AccessKey(awsSettings.AccessKey);
+            hostConfig.SecretKey(awsSettings.SecretKey);
         });
         config.UseNewtonsoftJsonSerializer();
         config.UseNewtonsoftJsonDeserializer();
@@ -34,8 +44,10 @@ builder.Services.AddMassTransit(x =>
     });
 });
 
+builder.Services.AddServiceHealthChecks(builder);
+
 var app = builder.Build();
 
-app.MapControllers();
+app.UseHealthChecks("/_health");
 
 app.Run();

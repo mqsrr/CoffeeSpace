@@ -1,11 +1,9 @@
 using System.Linq.Expressions;
-using MassTransit.Internals;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace CoffeeSpace.OrderingApi.Application.Extensions;
 
-internal static class DbContextExtensions
+public static class DbContextExtensions
 {
     public static Task LoadDataAsync<TEntity, TProperty>(this DbSet<TEntity> dbSet, TEntity entity,
         Expression<Func<TEntity, TProperty?>> expression)

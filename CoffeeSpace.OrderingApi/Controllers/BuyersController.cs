@@ -1,3 +1,5 @@
+using Asp.Versioning;
+using CoffeeSpace.Core.Extensions;
 using CoffeeSpace.OrderingApi.Application.Contracts.Requests.Buyers;
 using CoffeeSpace.OrderingApi.Application.Helpers;
 using CoffeeSpace.OrderingApi.Application.Services.Abstractions;
@@ -8,9 +10,10 @@ using Microsoft.AspNetCore.RateLimiting;
 
 namespace CoffeeSpace.OrderingApi.Controllers;
 
-[ApiController]
 [Authorize]
-[EnableRateLimiting("TokenBucket")]
+[ApiController]
+[ApiVersion(1.0)]
+[EnableRateLimiting(RateLimiterExtensions.BucketName)]
 public sealed class BuyersController : ControllerBase
 {
     private readonly IBuyerService _buyerService;

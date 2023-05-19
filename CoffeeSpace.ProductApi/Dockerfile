@@ -6,9 +6,9 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["CoffeeSpace.ProductApi/CoffeeSpace.ProductApi.csproj", "CoffeeSpace.ProductApi/"]
+COPY ["CoffeeSpace.Core/CoffeeSpace.Core.csproj", "CoffeeSpace.Core/"]
 COPY ["CoffeeSpace.Domain/CoffeeSpace.Domain.csproj", "CoffeeSpace.Domain/"]
 COPY ["CoffeeSpace.Messages/CoffeeSpace.Messages.csproj", "CoffeeSpace.Messages/"]
-COPY ["CoffeeSpace.Application/CoffeeSpace.Application.csproj", "CoffeeSpace.Application/"]
 RUN dotnet restore "CoffeeSpace.ProductApi/CoffeeSpace.ProductApi.csproj"
 COPY . .
 WORKDIR "/src/CoffeeSpace.ProductApi"
