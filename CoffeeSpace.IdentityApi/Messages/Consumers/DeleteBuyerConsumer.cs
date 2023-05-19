@@ -16,12 +16,11 @@ internal sealed class DeleteBuyerConsumer : IConsumer<DeleteBuyer>
 
     public async Task Consume(ConsumeContext<DeleteBuyer> context)
     {
-        var user = await _userManager.FindByEmailAsync(context.Message.Email) 
-                   ?? await _userManager.FindByNameAsync(context.Message.Name);
-
+        var user = await _userManager.FindByEmailAsync(context.Message.Email);
         if (user is not null)
         {
             await _userManager.DeleteAsync(user);
+            _userManager.Logger.LogInformation("{@Username} has been deleted from the identity store", user.UserName);
         }
     }
 }

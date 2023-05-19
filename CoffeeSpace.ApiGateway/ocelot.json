@@ -12,7 +12,6 @@
           "Port": 8080
         }
       ],
-
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
       }
@@ -29,7 +28,6 @@
           "Port": 8080
         }
       ],
-      
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
       }
@@ -46,7 +44,6 @@
           "Port": 8080
         }
       ],
-
       "LoadBalancerOptions": {
         "Type": "RoundRobin"
       }
@@ -63,7 +60,6 @@
           "Port": 8082
         }
       ],
-
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
@@ -71,7 +67,7 @@
       "QoSOptions": {
         "ExceptionsAllowedBeforeBreaking": 3,
         "DurationOfBreak": 1000,
-        "TimeoutValue": 4500
+        "TimeoutValue": 6500
       }
     },
     {
@@ -86,7 +82,6 @@
           "Port": 8082
         }
       ],
-
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
@@ -94,11 +89,11 @@
       "QoSOptions": {
         "ExceptionsAllowedBeforeBreaking": 3,
         "DurationOfBreak": 1000,
-        "TimeoutValue": 3500
+        "TimeoutValue": 6500
       }
     },
     {
-      "UpstreamPathTemplate": "/products/_health",
+      "UpstreamPathTemplate": "/product/_health",
       "UpstreamHttpMethod": [ "GET" ],
 
       "DownstreamPathTemplate": "/_health",
@@ -125,7 +120,6 @@
           "Port": 8081
         }
       ],
-
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
@@ -133,7 +127,7 @@
       "QoSOptions": {
         "ExceptionsAllowedBeforeBreaking": 3,
         "DurationOfBreak": 1000,
-        "TimeoutValue": 3500
+        "TimeoutValue": 6500
       }
     },
     {
@@ -148,7 +142,6 @@
           "Port": 8081
         }
       ],
-
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
@@ -156,7 +149,7 @@
       "QoSOptions": {
         "ExceptionsAllowedBeforeBreaking": 3,
         "DurationOfBreak": 1500,
-        "TimeoutValue": 3500
+        "TimeoutValue": 6500
       }
     },
     {
@@ -171,7 +164,6 @@
           "Port": 8081
         }
       ],
-      
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
@@ -179,7 +171,7 @@
       "QoSOptions": {
         "ExceptionsAllowedBeforeBreaking": 3,
         "DurationOfBreak": 1000,
-        "TimeoutValue": 3500
+        "TimeoutValue": 6500
       }
     },
     {
@@ -194,7 +186,6 @@
           "Port": 8081
         }
       ],
-      
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
@@ -202,7 +193,7 @@
       "QoSOptions": {
         "ExceptionsAllowedBeforeBreaking": 3,
         "DurationOfBreak": 1000,
-        "TimeoutValue": 3500
+        "TimeoutValue": 6500
       },
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
@@ -220,7 +211,6 @@
           "Port": 8081
         }
       ],
-
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
@@ -228,7 +218,7 @@
       "QoSOptions": {
         "ExceptionsAllowedBeforeBreaking": 3,
         "DurationOfBreak": 1000,
-        "TimeoutValue": 3500
+        "TimeoutValue": 6500
       },
       "LoadBalancerOptions": {
         "Type": "LeastConnection"

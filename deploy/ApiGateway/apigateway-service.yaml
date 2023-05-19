@@ -10,9 +10,3 @@ spec:
       port: 8085
       targetPort: 80
   type: LoadBalancer
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: apigateway
-automountServiceAccountToken: true

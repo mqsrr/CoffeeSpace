@@ -8,26 +8,29 @@ namespace CoffeeSpace.ProductApi.Application.Messages.Consumers;
 internal sealed class OrderStockValidationConsumer : IConsumer<OrderStockValidation>
 {
     private readonly IProductRepository _productRepository;
+    private readonly ILogger<OrderStockValidationConsumer> _logger;
 
-    public OrderStockValidationConsumer(IProductRepository productRepository)
+    public OrderStockValidationConsumer(IProductRepository productRepository, ILogger<OrderStockValidationConsumer> logger)
     {
         _productRepository = productRepository;
+        _logger = logger;
     }
 
     public async Task Consume(ConsumeContext<OrderStockValidation> context)
     {
         var products = await _productRepository.GetAllProductsAsync(context.CancellationToken);
-        var isValid = context.Message
-            .Products
-            .All(x => products.Any(product => product.Title == x.Title));
+        var isValid = context.Message.Products.All(x => 
+            products.Any(product => product.Title.Equals(x.Title, StringComparison.Ordinal)));
         
-        Thread.Sleep(TimeSpan.FromSeconds(5));
         if (!isValid)
         {
+            _logger.LogInformation("The order with ID {OrderId} has invalid products, which are no longer acceptable or out of stock", context.Message.Order.Id);
             await context.RespondAsync<Fault<OrderStockValidation>>(context.Message);
+            
             return;
         }
         
+        _logger.LogInformation("The order with ID {OrderId} has successfully completed product validation", context.Message.Order.Id);
         await context.RespondAsync<OrderStockValidationResult>(new
         {
             context.Message.Order,

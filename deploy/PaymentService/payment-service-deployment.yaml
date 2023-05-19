@@ -5,7 +5,7 @@ metadata:
   labels:
     app: payment-service
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: payment-service
@@ -14,20 +14,16 @@ spec:
       name: payment-service
       labels:
         app: payment-service
-      annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "9090"
-        sidecar.opentelemetry.io/inject: "true"
     spec:
       containers:
         - name: payment-service
-          image: mqsr/coffeespace-payment-service:1.0.2
+          image: mqsr/coffeespace-payment-service:2.0.0
           imagePullPolicy: Always
           ports:
             - containerPort: 80
           env:
             - name: "ASPNETCORE_ENVIRONMENT"
-              value: "Development"
+              value: "Production"
             - name: "AZURE_CLIENT_ID"
               valueFrom:
                 secretKeyRef:

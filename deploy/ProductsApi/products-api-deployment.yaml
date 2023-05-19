@@ -5,7 +5,7 @@ metadata:
   labels:
     app: products-api
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: products-api
@@ -17,11 +17,11 @@ spec:
     spec:
       containers:
         - name: products-api
-          image: mqsr/coffeespace-products-api:1.0.5
+          image: mqsr/coffeespace-products-api:2.0.0
           imagePullPolicy: Always
           env:
             - name: "ASPNETCORE_ENVIRONMENT"
-              value: "Development"
+              value: "Production"
             - name: "AZURE_CLIENT_ID"
               valueFrom:
                 secretKeyRef:

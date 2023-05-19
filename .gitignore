@@ -350,7 +350,6 @@ MigrationBackup/
 .ionide/
 
 *.DS_Store
-
 DigiCertGlobalRootCA.crt.pem
 
 /.idea

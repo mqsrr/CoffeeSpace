@@ -8,14 +8,17 @@ namespace CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Consumers;
 internal sealed class RegisterNewBuyerConsumer : IConsumer<RegisterNewBuyer>
 {
     private readonly IBuyerService _buyerService;
+    private readonly ILogger<RegisterNewBuyerConsumer> _logger;
     
-    public RegisterNewBuyerConsumer(IBuyerService buyerService)
+    public RegisterNewBuyerConsumer(IBuyerService buyerService, ILogger<RegisterNewBuyerConsumer> logger)
     {
         _buyerService = buyerService;
+        _logger = logger;
     }
 
     public Task Consume(ConsumeContext<RegisterNewBuyer> context)
     {
+        _logger.LogInformation("{@Email} was added to the ordering database", context.Message.Email);
         return _buyerService.CreateAsync(new Buyer
         {
             Name = context.Message.Name,
