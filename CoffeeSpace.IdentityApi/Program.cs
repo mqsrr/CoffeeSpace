@@ -11,17 +11,19 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using MassTransit;
 using Microsoft.Extensions.Options;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((context, configuration) => 
+    configuration.ReadFrom.Configuration(context.Configuration));
 
 builder.Configuration.AddAzureKeyVault();
 
 builder.Services.AddControllers();
-
 builder.Services.AddMediator();
 
 builder.Services.AddBucketRateLimiter(StatusCodes.Status429TooManyRequests);
-
 builder.Services.AddApiVersioning(new MediaTypeApiVersionReader("api-version"));
 
 builder.Services.AddApplicationDb<ApplicationUsersDbContext>(builder.Configuration["IdentityDb:ConnectionString"]!);
@@ -33,8 +35,8 @@ builder.Services.AddOptions<JwtSettings>()
     .Bind(builder.Configuration.GetRequiredSection("Jwt"))
     .ValidateOnStart();
 
-builder.Services.AddOptions<RabbitMqSettings>()
-    .Bind(builder.Configuration.GetRequiredSection("RabbitMq"))
+builder.Services.AddOptions<AwsMessagingSettings>()
+    .Bind(builder.Configuration.GetRequiredSection("AWS"))
     .ValidateOnStart();
 
 builder.Services.AddFluentValidationAutoValidation()
@@ -43,26 +45,32 @@ builder.Services.AddFluentValidationAutoValidation()
 builder.Services.AddMassTransit(x =>
 {
     x.SetKebabCaseEndpointNameFormatter();
-    x.AddConsumer<DeleteBuyerConsumer>();
     
-    x.UsingRabbitMq((context, config) =>
+    x.AddConsumer<DeleteBuyerConsumer>();
+    x.AddConsumer<UpdateBuyerConsumer>();
+    
+    x.UsingAmazonSqs((context, config) =>
     {
-        var rabbitMqSettings = context.GetRequiredService<IOptions<RabbitMqSettings>>().Value;
-        config.Host(rabbitMqSettings.Host, "/", hostConfig =>
+        var awsSettings = context.GetRequiredService<IOptions<AwsMessagingSettings>>().Value;
+        config.Host(awsSettings.Region, hostConfig =>
         {
-            hostConfig.Username(rabbitMqSettings.Username);
-            hostConfig.Password(rabbitMqSettings.Password);
+            hostConfig.AccessKey(awsSettings.AccessKey);
+            hostConfig.SecretKey(awsSettings.SecretKey);
         });
 
         config.ConfigureEndpoints(context);
+        
+        config.UseNewtonsoftJsonSerializer();
+        config.UseNewtonsoftJsonDeserializer();
     });
 });
 
 builder.Services.AddIdentityConfiguration();
-
 builder.Services.AddServiceHealthChecks(builder);
 
 var app = builder.Build();
+
+app.UseSerilogRequestLogging();
 
 app.UseHealthChecks("/_health");
 

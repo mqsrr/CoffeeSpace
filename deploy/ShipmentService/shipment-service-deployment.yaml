@@ -17,11 +17,11 @@ spec:
     spec:
       containers:
         - name: shipment-service
-          image: mqsr/coffeespace-shipment-service:1.0.4
+          image: mqsr/coffeespace-shipment-service:2.0.0
           imagePullPolicy: Always
           env:
           - name: "ASPNETCORE_ENVIRONMENT"
-            value: "Development"
+            value: "Production"
           - name: "AZURE_CLIENT_ID"
             valueFrom:
               secretKeyRef:

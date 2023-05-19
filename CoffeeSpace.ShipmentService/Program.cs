@@ -3,29 +3,32 @@ using CoffeeSpace.Core.Settings;
 using CoffeeSpace.ShipmentService.Consumers;
 using MassTransit;
 using Microsoft.Extensions.Options;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Host.UseSerilog((context, configuration) => 
+    configuration.ReadFrom.Configuration(context.Configuration));
+
 builder.Configuration.AddAzureKeyVault();
 
-builder.Services.AddOptions<RabbitMqSettings>()
-    .Bind(builder.Configuration.GetRequiredSection("RabbitMq"))
-    .ValidateOnStart();
+ builder.Services.AddOptions<AwsMessagingSettings>()
+     .Bind(builder.Configuration.GetRequiredSection("AWS"))
+     .ValidateOnStart();
 
 builder.Services.AddMassTransit(x =>
 {
     x.SetKebabCaseEndpointNameFormatter();
     x.AddConsumer<RequestOrderShipmentConsumer>();
     
-    x.UsingRabbitMq((context, config) =>
+    x.UsingAmazonSqs((context, config) =>
     {
-        var rabbitMqSettings = context.GetRequiredService<IOptions<RabbitMqSettings>>().Value;
-        config.Host(rabbitMqSettings.Host, "/", hostConfig =>
+        var awsSettings = context.GetRequiredService<IOptions<AwsMessagingSettings>>().Value;
+        config.Host(awsSettings.Region, hostConfig =>
         {
-            hostConfig.Username(rabbitMqSettings.Username);
-            hostConfig.Password(rabbitMqSettings.Password);
-        });
-
+            hostConfig.AccessKey(awsSettings.AccessKey);
+            hostConfig.SecretKey(awsSettings.SecretKey);
+        });   
         config.UseNewtonsoftJsonSerializer();
         config.UseNewtonsoftJsonDeserializer();
 

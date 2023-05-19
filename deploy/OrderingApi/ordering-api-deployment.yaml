@@ -17,13 +17,13 @@ spec:
     spec:
       containers:
         - name: ordering-api
-          image: mqsr/coffeespace-ordering-api:1.0.5
+          image: mqsr/coffeespace-ordering-api:2.0.0
           imagePullPolicy: Always
           ports:
             - containerPort: 80
           env:
           - name: "ASPNETCORE_ENVIRONMENT"
-            value: "Development"
+            value: "Production"
           - name: "AZURE_CLIENT_ID"
             valueFrom:
               secretKeyRef:
@@ -53,7 +53,4 @@ spec:
       volumes:
           - name: ca-volume
             configMap:
-              name: ca-config
-              
-          
-          
+              name: ca-config   

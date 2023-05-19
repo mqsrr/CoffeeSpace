@@ -7,6 +7,7 @@ using CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Consumers;
 using CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Sagas;
 using CoffeeSpace.OrderingApi.Application.Repositories.Abstractions;
 using CoffeeSpace.OrderingApi.Application.Services.Abstractions;
+using CoffeeSpace.OrderingApi.Application.Settings;
 using CoffeeSpace.OrderingApi.Application.Validators;
 using CoffeeSpace.OrderingApi.Persistence;
 using CoffeeSpace.OrderingApi.Persistence.Abstractions;
@@ -16,21 +17,20 @@ using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Quartz;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.AddAzureKeyVault();
+builder.Host.UseSerilog((context, configuration) => 
+    configuration.ReadFrom.Configuration(context.Configuration));
 
+builder.Configuration.AddAzureKeyVault();
 builder.Configuration.AddJwtBearer(builder);
 
 builder.Services.AddControllers();
-
-builder.Services.AddHttpClient();
-
 builder.Services.AddMediator();
 
 builder.Services.AddBucketRateLimiter(StatusCodes.Status429TooManyRequests);
-
 builder.Services.AddApiVersioning(new MediaTypeApiVersionReader("api-version"));
 
 builder.Services.AddStackExchangeRedisCache(x =>
@@ -46,8 +46,8 @@ builder.Services.AddApplicationService<IOrderRepository>();
 builder.Services.AddApplicationService<IBuyerService>();
 builder.Services.AddApplicationService<IBuyerRepository>();
 
-builder.Services.AddOptions<RabbitMqSettings>()
-    .Bind(builder.Configuration.GetSection("RabbitMq"))
+builder.Services.AddOptions<AwsMessagingSettings>()
+    .Bind(builder.Configuration.GetSection("AWS"))
     .ValidateOnStart();
 
 builder.Services.AddFluentValidationAutoValidation()
@@ -76,18 +76,18 @@ builder.Services.AddMassTransit(x =>
             configurator.UseMySql();
             configurator.AddDbContext<DbContext, OrderStateSagaDbContext>((services, optionsBuilder) =>
             {
-                var dbSettings = services.GetRequiredService<IOptions<CoffeeSpace.OrderingApi.Application.Settings.MySqlDbContextSettings<OrderStateSagaDbContext>>>().Value;
+                var dbSettings = services.GetRequiredService<IOptions<MySqlDbContextSettings<OrderStateSagaDbContext>>>().Value;
                 optionsBuilder.UseMySql(dbSettings.ConnectionString, dbSettings.ServerVersion);
             });
         });
     
-    x.UsingRabbitMq((context, config) =>
+    x.UsingAmazonSqs((context, config) =>
     {
-        var rabbitMqSettings = context.GetRequiredService<IOptions<RabbitMqSettings>>().Value;
-        config.Host(rabbitMqSettings.Host, "/", hostConfig =>
+        var awsSettings = context.GetRequiredService<IOptions<AwsMessagingSettings>>().Value;
+        config.Host(awsSettings.Region, hostConfig =>
         {
-            hostConfig.Username(rabbitMqSettings.Username);
-            hostConfig.Password(rabbitMqSettings.Password);
+            hostConfig.AccessKey(awsSettings.AccessKey);
+            hostConfig.SecretKey(awsSettings.SecretKey);
         });
         
         config.UsePublishMessageScheduler();
@@ -102,6 +102,8 @@ builder.Services.AddMassTransit(x =>
 builder.Services.AddServiceHealthChecks(builder);
 
 var app = builder.Build();
+
+app.UseSerilogRequestLogging();
 
 app.UseHealthChecks("/_health");
 

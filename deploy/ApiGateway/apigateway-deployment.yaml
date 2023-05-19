@@ -5,7 +5,7 @@ metadata:
   labels:
     app: apigateway
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: apigateway
@@ -18,13 +18,13 @@ spec:
       serviceAccountName: apigateway
       containers:
         - name: apigateway
-          image: mqsr/coffeespace-apigateway:1.1.1
+          image: mqsr/coffeespace-apigateway:1.1.2
           imagePullPolicy: Always
           ports:
             - containerPort: 80
           env:
             - name: "ASPNETCORE_ENVIRONMENT"
-              value: "Development"
+              value: "Production"
             - name: "AZURE_CLIENT_ID"
               valueFrom:
                 secretKeyRef:

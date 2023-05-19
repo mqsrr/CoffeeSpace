@@ -14,8 +14,8 @@ exclude:
   - name: All
     paths:
       - CoffeeSpace
-      - CoffeeSpace.Application/Settings
-      - CoffeeSpace.Application/Attributes
+      - CoffeeSpace.Core/Settings
+      - CoffeeSpace.Core/Attributes
       - CoffeeSpace.IdentityApi/Contracts
       - CoffeeSpace.Domain
       - CoffeeSpace.IdentityApi/Models

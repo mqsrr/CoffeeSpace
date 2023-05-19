@@ -35,13 +35,13 @@ internal sealed class OrderStateMachine : MassTransitStateMachine<OrderStateInst
             x.CorrelateById(context => Guid.Parse(context.Message.Order.Id)));
 
         Request(() => RequestOrderStockValidation, x =>
-            x.Timeout = TimeSpan.FromSeconds(10));
+            x.Timeout = TimeSpan.FromSeconds(45));
                
         Request(() => RequestOrderPaymentValidation, x => 
-            x.Timeout = TimeSpan.FromSeconds(10));
+            x.Timeout = TimeSpan.FromSeconds(45));
                 
         Request(() => RequestOrderShipment, x => 
-            x.Timeout = TimeSpan.FromSeconds(10));
+            x.Timeout = TimeSpan.FromSeconds(45));
 
         InstanceState(x => x.CurrentState, 
             Submitted,
@@ -69,17 +69,18 @@ internal sealed class OrderStateMachine : MassTransitStateMachine<OrderStateInst
         
         WhenEnterAny(binder => 
             binder.Then(context => 
-                logger.LogInformation("{OrderId}-Order has been entered in a new state-{State}", 
+                logger.LogDebug("The order with ID {OrderId} has entered a new state: {State}", 
                     context.Saga.OrderId,
-                    context.Saga.CurrentState))
+                    context.Saga.CurrentState.ToString()))
+                
                 .If(context => context.Saga.CurrentState > 2,
-                    activityBinder => 
-                        activityBinder.PublishAsync(context => context.Init<UpdateOrderStatus>(new
-                        {
-                            context.Saga.OrderId,
-                            context.Saga.BuyerId,
-                            Status = context.Saga.CurrentState - 3
-                        }))));
+                    activityBinder => activityBinder.PublishAsync(context => 
+                        context.Init<UpdateOrderStatus>(new
+                            {
+                                context.Saga.OrderId,
+                                context.Saga.BuyerId,
+                                Status = context.Saga.CurrentState - 3
+                            }))));
 
         WhenEnter(Canceled, binder => binder.Finalize());
 
@@ -93,10 +94,13 @@ internal sealed class OrderStateMachine : MassTransitStateMachine<OrderStateInst
 
         DuringAny(
             When(RequestOrderStockValidation.TimeoutExpired)
+                .Then(context => logger.LogWarning("The order with ID {OrderId} has reached the timeout value for product validation", context.Saga.OrderId))
                 .TransitionTo(Canceled),
             When(RequestOrderPaymentValidation.TimeoutExpired)
+                .Then(context => logger.LogWarning("The order with ID {OrderId} has reached the timeout value for payment validation", context.Saga.OrderId))
                 .TransitionTo(Canceled),
             When(RequestOrderShipment.TimeoutExpired)
+                .Then(context => logger.LogWarning("The order with ID {OrderId} has reached the timeout value for shipment request", context.Saga.OrderId))
                 .TransitionTo(Canceled));
 
         DuringAny(
@@ -132,7 +136,6 @@ internal sealed class OrderStateMachine : MassTransitStateMachine<OrderStateInst
     public Event<SubmitOrder> SubmitOrder { get; private set; }
     
     public Event<CancelOrder> CancelOrder { get; private set; }
-    
 
     public Request<OrderStateInstance, OrderStockValidation, OrderStockValidationResult> RequestOrderStockValidation { get; private set; }
 

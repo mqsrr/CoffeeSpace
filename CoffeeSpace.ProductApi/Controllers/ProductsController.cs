@@ -27,8 +27,8 @@ public sealed class ProductsController : ControllerBase
     public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
         var products = await _productService.GetAllProductsAsync(cancellationToken);
-
         var response = products.Select(x => x.ToResponse());
+        
         return Ok(response);
     }
     
@@ -36,7 +36,7 @@ public sealed class ProductsController : ControllerBase
     public async Task<IActionResult> GetById([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var product = await _productService.GetProductByIdAsync(id.ToString(), cancellationToken);
-
+        
         return product is not null
             ? Ok(product)
             : NotFound();
