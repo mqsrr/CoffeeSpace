@@ -1,19 +1,16 @@
 using Asp.Versioning;
-using CoffeeSpace.Core.Extensions;
 using CoffeeSpace.OrderingApi.Application.Contracts.Requests.Orders;
 using CoffeeSpace.OrderingApi.Application.Helpers;
+using CoffeeSpace.OrderingApi.Application.Mapping;
 using CoffeeSpace.OrderingApi.Application.Services.Abstractions;
-using CoffeeSpace.OrderingApi.Mapping;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.RateLimiting;
 
 namespace CoffeeSpace.OrderingApi.Controllers;
 
 [Authorize]
 [ApiController]
 [ApiVersion(1.0)]
-[EnableRateLimiting(RateLimiterExtensions.BucketName)]
 public sealed class OrdersController : ControllerBase
 {
     private readonly IOrderService _orderService;
@@ -27,8 +24,8 @@ public sealed class OrdersController : ControllerBase
     public async Task<IActionResult> GetAllOrdersByBuyerId([FromRoute] Guid buyerId, CancellationToken cancellationToken)
     {
         var orders = await _orderService.GetAllByBuyerIdAsync(buyerId.ToString(), cancellationToken);
-
         var response = orders.Select(x => x.ToResponse());
+        
         return Ok(response);
     }
     
@@ -45,9 +42,7 @@ public sealed class OrdersController : ControllerBase
     [HttpPost(ApiEndpoints.Orders.Create)]
     public async Task<IActionResult> CreateOrder([FromRoute] Guid buyerId, [FromBody] CreateOrderRequest request, CancellationToken cancellationToken)
     {
-        request.BuyerId = buyerId;
-        
-        var order = request.ToOrder();
+        var order = request.ToOrder(buyerId);
         var created = await _orderService.CreateAsync(order, cancellationToken);
 
         return created
@@ -58,11 +53,7 @@ public sealed class OrdersController : ControllerBase
     [HttpPut(ApiEndpoints.Orders.Update)]
     public async Task<IActionResult> UpdateOrder([FromRoute] Guid buyerId, [FromRoute] Guid id, [FromBody] UpdateOrderRequest request, CancellationToken cancellationToken)
     {
-        request.Id = id;
-        request.BuyerId = buyerId;
-        
-        var order = request.ToOrder();
-        var updatedOrder = await _orderService.UpdateAsync(order, cancellationToken);
+        var updatedOrder = await _orderService.UpdateAsync(request.ToOrder(id, buyerId), cancellationToken);
 
         return updatedOrder is not null
             ? Ok(updatedOrder.ToResponse())

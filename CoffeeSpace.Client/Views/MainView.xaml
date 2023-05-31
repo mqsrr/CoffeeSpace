@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModel="clr-namespace:CoffeeSpace.Client._ViewModels"
+             xmlns:data="clr-namespace:CoffeeSpace.Domain.Products;assembly=CoffeeSpace.Domain"
+             x:DataType="viewModel:MainViewModel"
+             x:Class="CoffeeSpace.Client.Views.MainView">
+
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,1" EndPoint="1,0">
+            <GradientStop Color="#C33764" Offset="0.2" />
+            <GradientStop Color="#1D2671" Offset="1.0" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
+
+    <ScrollView>
+        <FlexLayout BindableLayout.ItemsSource="{Binding Products}"
+                    Style="{OnPlatform iOS={StaticResource MainViewFlexLayoutAndroid}, MacCatalyst={StaticResource MainViewFlexLayoutWindows}}">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate x:DataType="data:Product">
+                    <Frame
+                        Style="{OnPlatform iOS={StaticResource MainViewOrderItemFrameAndroid},MacCatalyst={StaticResource MainViewOrderItemFrameWindows}}">
+                        <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,120"
+                              ColumnDefinitions="50,Auto,Auto,Auto,Auto,Auto,120">
+
+                            <Label Grid.Row="1" Grid.Column="0"
+                                   Text="{Binding Title}" TextColor="Black"
+                                   VerticalOptions="Start" HorizontalOptions="Start" />
+
+                            <Label Grid.Row="1" Grid.Column="2"
+                                   Text="Price:" TextColor="Black"
+                                   VerticalOptions="Center" HorizontalOptions="Center"
+                                   Margin="0,0,10,0" />
+
+                            <Label Grid.Row="1" Grid.Column="3"
+                                   Text="{Binding UnitPrice}" TextColor="Black"
+                                   VerticalOptions="End" HorizontalOptions="End" />
+
+                            <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                                   MaximumWidthRequest="230"
+                                   Text="{Binding Description}" TextColor="Black"
+                                   VerticalOptions="Center" HorizontalOptions="Start"
+                                   HorizontalTextAlignment="Start" VerticalTextAlignment="Center"
+                                   LineBreakMode="CharacterWrap" LineHeight="1.8" MaxLines="2" />
+
+                            <Button Grid.Row="2" Grid.Column="1" Grid.RowSpan="2"
+                                    Text="Place in Cart" CharacterSpacing="1"
+                                    VerticalOptions="Center" HorizontalOptions="Center"
+                                    Margin="10,50,0,0"
+                                    Command="{Binding Source={RelativeSource Mode=FindAncestorBindingContext, AncestorType={x:Type viewModel:MainViewModel}}, Path=AddToCartCommand}"
+                                    CommandParameter="{Binding}" />
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </FlexLayout>
+    </ScrollView>
+</ContentPage>

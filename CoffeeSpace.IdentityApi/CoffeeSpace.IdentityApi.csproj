@@ -5,6 +5,10 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <AWSProjectType>Lambda</AWSProjectType>
+        <PublishReadyToRun>true</PublishReadyToRun>
         <RootNamespace>CoffeeSpace.IdentityApi</RootNamespace>
     </PropertyGroup>
 

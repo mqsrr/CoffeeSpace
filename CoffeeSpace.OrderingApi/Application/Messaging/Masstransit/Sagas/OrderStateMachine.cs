@@ -6,8 +6,8 @@ using CoffeeSpace.Messages.Products.Events;
 using CoffeeSpace.Messages.Products.Responses;
 using CoffeeSpace.Messages.Shipment.Events;
 using CoffeeSpace.Messages.Shipment.Responses;
-using CoffeeSpace.OrderingApi.Mapping;
 using MassTransit;
+using OrderItemMappingProfile = CoffeeSpace.OrderingApi.Application.Mapping.OrderItemMappingProfile;
 
 #pragma warning disable CS8618
 
@@ -63,7 +63,7 @@ internal sealed class OrderStateMachine : MassTransitStateMachine<OrderStateInst
                 .Request(RequestOrderStockValidation,context => context.Init<OrderStockValidation>(new
                 {
                     context.Message.Order,
-                    Products = context.Message.Order.OrderItems.Select(x => x.ToProduct())
+                    Products = context.Message.Order.OrderItems.Select(x => OrderItemMappingProfile.ToProduct(x))
                 }))
                 .TransitionTo(Submitted));
         

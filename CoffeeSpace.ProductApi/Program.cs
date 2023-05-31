@@ -26,7 +26,6 @@ builder.Configuration.AddJwtBearer(builder);
 builder.Services.AddControllers();
 builder.Services.AddMediator();
 
-builder.Services.AddBucketRateLimiter(StatusCodes.Status429TooManyRequests);
 builder.Services.AddApiVersioning(new MediaTypeApiVersionReader("api-version"));
 
 builder.Services.AddStackExchangeRedisCache(x => 
@@ -74,12 +73,7 @@ builder.Services.AddServiceHealthChecks(builder);
 var app = builder.Build();
 
 app.UseSerilogRequestLogging();
-
 app.UseHealthChecks("/_health");
-
-app.UseRouting();
-
-app.UseRateLimiter();
 
 app.UseAuthentication();
 app.UseAuthorization();

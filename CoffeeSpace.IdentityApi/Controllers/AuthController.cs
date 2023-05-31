@@ -1,5 +1,4 @@
 using Asp.Versioning;
-using CoffeeSpace.Core.Extensions;
 using CoffeeSpace.IdentityApi.Contracts.Requests.Login;
 using CoffeeSpace.IdentityApi.Contracts.Requests.Register;
 using CoffeeSpace.IdentityApi.Helpers;
@@ -7,13 +6,11 @@ using CoffeeSpace.IdentityApi.Messages.Commands;
 using CoffeeSpace.IdentityApi.Messages.Queries;
 using Mediator;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.RateLimiting;
 
 namespace CoffeeSpace.IdentityApi.Controllers;
 
 [ApiController]
 [ApiVersion(1.0)]
-[EnableRateLimiting(RateLimiterExtensions.BucketName)]
 public sealed class AuthController : ControllerBase
 {
     private readonly ISender _sender;

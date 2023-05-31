@@ -13,4 +13,11 @@ internal static partial class ProductMappingConfig
     public static partial Product ToProduct(this CreateProductRequest request);
  
     public static partial Product ToProduct(this UpdateProductRequest request);
+
+    public static Product ToProduct(this UpdateProductRequest request, Guid id)
+    {
+        request.Id = id;
+
+        return request.ToProduct();
+    }
 }

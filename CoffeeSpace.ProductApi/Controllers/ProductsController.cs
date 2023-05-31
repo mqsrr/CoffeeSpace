@@ -1,19 +1,16 @@
 using Asp.Versioning;
-using CoffeeSpace.Core.Extensions;
 using CoffeeSpace.ProductApi.Application.Contracts.Requests;
 using CoffeeSpace.ProductApi.Application.Helpers;
 using CoffeeSpace.ProductApi.Application.Mapping;
 using CoffeeSpace.ProductApi.Application.Services.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.RateLimiting;
 
 namespace CoffeeSpace.ProductApi.Controllers;
 
 [Authorize]
 [ApiController]
 [ApiVersion(1.0)]
-[EnableRateLimiting(RateLimiterExtensions.BucketName)]
 public sealed class ProductsController : ControllerBase
 {
     private readonly IProductService _productService;
@@ -56,10 +53,7 @@ public sealed class ProductsController : ControllerBase
     [HttpPut(ApiEndpoints.Products.Update)]
     public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateProductRequest request, CancellationToken cancellationToken)
     {
-        request.Id = id;
-        
-        var product = request.ToProduct();
-        var updatedProduct = await _productService.UpdateProductAsync(product, cancellationToken);
+        var updatedProduct = await _productService.UpdateProductAsync(request.ToProduct(id), cancellationToken);
 
         return updatedProduct is not null
             ? Ok(updatedProduct.ToResponse())

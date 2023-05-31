@@ -13,7 +13,8 @@ exclude:
   - name: UnusedAutoPropertyAccessor.Local
   - name: All
     paths:
-      - CoffeeSpace
+      - CoffeeSpace.Client/Contracts
+      - CoffeeSpace.Client/Platforms
       - CoffeeSpace.Core/Settings
       - CoffeeSpace.Core/Attributes
       - CoffeeSpace.IdentityApi/Contracts

@@ -3,7 +3,6 @@ using CoffeeSpace.Core.Settings;
 using CoffeeSpace.PaymentService.Consumers;
 using CoffeeSpace.PaymentService.Extensions;
 using CoffeeSpace.PaymentService.Persistence;
-using CoffeeSpace.PaymentService.Repositories;
 using CoffeeSpace.PaymentService.Repositories.Abstractions;
 using MassTransit;
 using Microsoft.Extensions.Options;

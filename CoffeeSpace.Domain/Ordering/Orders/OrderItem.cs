@@ -10,7 +10,7 @@ public sealed class OrderItem
 
     public required float UnitPrice { get; init; }
 
-    public required int Quantity { get; init; }
+    public required int Quantity { get; set; }
 
     public required float Discount { get; init; }
 
