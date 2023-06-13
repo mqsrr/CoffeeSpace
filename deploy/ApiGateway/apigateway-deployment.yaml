@@ -15,7 +15,6 @@ spec:
       labels:
         app: apigateway
     spec:
-      serviceAccountName: apigateway
       containers:
         - name: apigateway
           image: mqsr/coffeespace-apigateway:1.1.2

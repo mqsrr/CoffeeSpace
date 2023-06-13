@@ -19,7 +19,7 @@ internal sealed class BuyerService : IBuyerService
         _cache = cache;
     }
 
-    public Task<Buyer?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
+    public Task<Buyer?> GetByIdAsync(string id, CancellationToken cancellationToken)
     {
         return _cache.GetOrCreateAsync(CacheKeys.Buyers.Get(id), async () =>
         {
@@ -32,7 +32,7 @@ internal sealed class BuyerService : IBuyerService
         }, cancellationToken);
     }
 
-    public Task<Buyer?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
+    public Task<Buyer?> GetByEmailAsync(string email, CancellationToken cancellationToken)
     {
         return _cache.GetOrCreateAsync(CacheKeys.Buyers.GetByEmail(email), async () =>
         {
@@ -45,7 +45,7 @@ internal sealed class BuyerService : IBuyerService
         }, cancellationToken);
     }
 
-    public async Task<bool> CreateAsync(Buyer buyer, CancellationToken cancellationToken = default)
+    public async Task<bool> CreateAsync(Buyer buyer, CancellationToken cancellationToken)
     {
         var created = await _sender.Send(new CreateBuyerCommand
         {
@@ -61,7 +61,7 @@ internal sealed class BuyerService : IBuyerService
         return created;
     }
 
-    public async Task<Buyer?> UpdateAsync(Buyer buyer, CancellationToken cancellationToken = default)
+    public async Task<Buyer?> UpdateAsync(Buyer buyer, CancellationToken cancellationToken)
     {
         var result = await _sender.Send(new UpdateBuyerCommand
         {
@@ -77,7 +77,7 @@ internal sealed class BuyerService : IBuyerService
         return result;
     }
 
-    public async Task<bool> DeleteByIdAsync(string id, CancellationToken cancellationToken = default)
+    public async Task<bool> DeleteByIdAsync(string id, CancellationToken cancellationToken)
     {
         var deleted = await _sender.Send(new DeleteBuyerByIdCommand
         {

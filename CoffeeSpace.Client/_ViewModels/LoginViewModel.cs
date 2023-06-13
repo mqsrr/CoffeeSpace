@@ -1,4 +1,4 @@
-using CoffeeSpace.Client.Contracts.Login;
+using CoffeeSpace.Client.Contracts.Authentication;
 using CoffeeSpace.Client.Services.Abstractions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -9,12 +9,14 @@ public sealed partial class LoginViewModel : ObservableObject
 {
     private readonly IAuthService _authService;
 
-    [ObservableProperty]
-    private LoginRequest _loginRequest = new LoginRequest();
+    [ObservableProperty] 
+    private LoginRequest _loginRequest;
 
     public LoginViewModel(IAuthService authService)
     {
         _authService = authService;
+
+        _loginRequest = new LoginRequest();
     }
 
     [RelayCommand]
@@ -23,10 +25,9 @@ public sealed partial class LoginViewModel : ObservableObject
         var isSuccess = await _authService.LoginAsync(LoginRequest, cancellationToken);
         if (isSuccess is false)
         {
-            await Shell.Current.DisplayAlert("Authentication error!", "Please check your credentials and try again.", "Ok");
+            await Application.Current!.MainPage!.DisplayAlert("Authentication error!", "Please check your credentials and try again.", "Ok"); ;
             return;
         }
-
         await Shell.Current.GoToAsync("MainPage");
     }
 }

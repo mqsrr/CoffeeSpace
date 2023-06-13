@@ -1,4 +1,4 @@
-﻿using CoffeeSpace.Domain.Ordering.BuyerInfo;
+﻿using CoffeeSpace.Client.Models.Ordering;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 

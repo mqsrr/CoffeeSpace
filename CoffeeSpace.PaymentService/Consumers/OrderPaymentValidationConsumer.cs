@@ -24,7 +24,7 @@ internal sealed class OrderPaymentValidationConsumer : IConsumer<OrderPaymentVal
         {
             Id = Guid.NewGuid().ToString(),
             OrderId = order.Id,
-            PaymentId = order.PaymentInfoId,
+            PaymentId = order.PaymentInfo.Id,
             OrderDate = DateTime.UtcNow,
             TotalPrice = order.OrderItems.Sum(x => x.Total)
         });

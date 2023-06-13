@@ -4,7 +4,7 @@ namespace CoffeeSpace.Domain.Ordering.BuyerInfo;
 
 public sealed class Buyer
 {
-    public string Id { get; init; } = Guid.NewGuid().ToString();
+    public required string Id { get; init; }
     
     public required string Name { get; init; }
     

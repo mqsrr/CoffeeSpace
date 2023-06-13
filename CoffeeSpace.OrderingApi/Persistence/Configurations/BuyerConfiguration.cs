@@ -12,7 +12,7 @@ public sealed class BuyerConfiguration : IEntityTypeConfiguration<Buyer>
             .HasKey(x => x.Id);
 
         builder.HasMany(x => x.Orders)
-            .WithOne(x => x.Buyer)
+            .WithOne()
             .HasForeignKey(x => x.BuyerId);
 
         builder.Property(x => x.Id)

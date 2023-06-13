@@ -33,16 +33,22 @@ internal sealed class ProductRepository : IProductRepository
     public async Task<bool> CreateProductAsync(Product product, CancellationToken cancellationToken)
     {
         await _productDbContext.Products.AddAsync(product, cancellationToken);
-        
         var result = await _productDbContext.SaveChangesAsync(cancellationToken);
+        
         return result > 0;
     }
 
     public async Task<Product?> UpdateProductAsync(Product product, CancellationToken cancellationToken)
     {
-        _productDbContext.Products.Update(product);
+        var isContains = await _productDbContext.Products.ContainsAsync(product, cancellationToken);
+        if (!isContains)
+        {
+            return null;
+        }
         
+        _productDbContext.Products.Update(product);
         var result = await _productDbContext.SaveChangesAsync(cancellationToken);
+        
         return result > 0
             ? product
             : null;
@@ -50,15 +56,10 @@ internal sealed class ProductRepository : IProductRepository
 
     public async Task<bool> DeleteProductByIdAsync(string id, CancellationToken cancellationToken)
     {
-        var product = await _productDbContext.Products.FindAsync(new object[] {id}, cancellationToken);
-        if (product is null)
-        {
-            return false;
-        }
-
-        _productDbContext.Products.Remove(product);
+        var result = await _productDbContext.Products
+            .Where(product => product.Id == id)
+            .ExecuteDeleteAsync(cancellationToken);
         
-        var result = await _productDbContext.SaveChangesAsync(cancellationToken);
         return result > 0;
     }
 }

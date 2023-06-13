@@ -20,11 +20,11 @@ internal sealed class UpdateOrderStatusConsumer : IConsumer<UpdateOrderStatus>
 
     public async Task Consume(ConsumeContext<UpdateOrderStatus> context)
     {
-        var order = await _orderRepository.GetByIdAsync(context.Message.OrderId, context.CancellationToken);
+        var message = context.Message;
         
-        await _orderRepository.UpdateOrderStatusAsync(order!, context.Message.Status, context.CancellationToken);
+        await _orderRepository.UpdateOrderStatusAsync(message.OrderId, context.Message.Status, context.CancellationToken);
         
-        await _cacheService.RemoveAsync(CacheKeys.Order.GetByCustomerId(order!.Id, order.BuyerId), context.CancellationToken);
-        await _cacheService.RemoveAsync(CacheKeys.Order.GetAll(order.BuyerId), context.CancellationToken);
+        await _cacheService.RemoveAsync(CacheKeys.Order.GetByCustomerId(message.OrderId, message.BuyerId), context.CancellationToken);
+        await _cacheService.RemoveAsync(CacheKeys.Order.GetAll(message.BuyerId), context.CancellationToken);
     }
 }

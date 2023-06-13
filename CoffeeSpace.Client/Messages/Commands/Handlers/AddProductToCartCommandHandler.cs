@@ -1,5 +1,4 @@
 using CoffeeSpace.Client._ViewModels;
-using CoffeeSpace.Client.Mapping;
 using Mediator;
 
 namespace CoffeeSpace.Client.Messages.Commands.Handlers;
@@ -15,8 +14,7 @@ public sealed class AddProductToCartCommandHandler : ICommandHandler<AddProductT
 
     public ValueTask<Unit> Handle(AddProductToCartCommand command, CancellationToken cancellationToken)
     {
-        var orderItem = command.Product.ToOrderItem();
-        _cartViewModel.AddOrderItem(orderItem);
+        _cartViewModel.AddProductToCart(command.Product);
 
         return Unit.ValueTask;
     }

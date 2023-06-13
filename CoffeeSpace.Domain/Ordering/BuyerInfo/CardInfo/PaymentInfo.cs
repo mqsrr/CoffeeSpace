@@ -2,7 +2,7 @@
 
 public sealed class PaymentInfo
 {
-    public string Id { get; init; } = Guid.NewGuid().ToString();
+    public required string Id { get; init; }
 
     public required string CardNumber { get; init; }
 
@@ -13,5 +13,4 @@ public sealed class PaymentInfo
     public required int ExpirationYear { get; init; }
 
     public required CardType CardType { get; init; }
-
 }

@@ -1,5 +1,4 @@
-using CoffeeSpace.Client.Contracts.Login;
-using CoffeeSpace.Client.Contracts.Register;
+using CoffeeSpace.Client.Contracts.Authentication;
 
 namespace CoffeeSpace.Client.Services.Abstractions;
 

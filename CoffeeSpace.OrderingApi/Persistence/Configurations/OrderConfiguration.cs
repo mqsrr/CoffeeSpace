@@ -13,21 +13,17 @@ public sealed class OrderConfiguration : IEntityTypeConfiguration<Order>
 
         builder.HasOne(x => x.Address)
             .WithOne()
-            .HasForeignKey<Order>(x => x.AddressId)
+            .HasForeignKey<Order>("AddressId")
             .OnDelete(DeleteBehavior.Cascade);
         
         builder.HasOne(x => x.PaymentInfo)
             .WithOne()
-            .HasForeignKey<Order>(x => x.PaymentInfoId)
+            .HasForeignKey<Order>("PaymentInfoId")
             .OnDelete(DeleteBehavior.Cascade);
         
         builder.HasMany(x => x.OrderItems)
             .WithOne()
-            .OnDelete(DeleteBehavior.Cascade);
-
-        builder.HasOne(x => x.Buyer)
-            .WithMany(x => x.Orders)
-            .HasForeignKey(x => x.BuyerId)
+            .HasForeignKey("OrderId")
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.Property(x => x.Id)

@@ -3,7 +3,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModel="clr-namespace:CoffeeSpace.Client._ViewModels"
-             xmlns:data="clr-namespace:CoffeeSpace.Domain.Products;assembly=CoffeeSpace.Domain"
+             xmlns:products="clr-namespace:CoffeeSpace.Client.Models.Products"
              x:DataType="viewModel:MainViewModel"
              x:Class="CoffeeSpace.Client.Views.MainView">
 
@@ -18,7 +18,7 @@
         <FlexLayout BindableLayout.ItemsSource="{Binding Products}"
                     Style="{OnPlatform iOS={StaticResource MainViewFlexLayoutAndroid}, MacCatalyst={StaticResource MainViewFlexLayoutWindows}}">
             <BindableLayout.ItemTemplate>
-                <DataTemplate x:DataType="data:Product">
+                <DataTemplate x:DataType="products:Product">
                     <Frame
                         Style="{OnPlatform iOS={StaticResource MainViewOrderItemFrameAndroid},MacCatalyst={StaticResource MainViewOrderItemFrameWindows}}">
                         <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,120"

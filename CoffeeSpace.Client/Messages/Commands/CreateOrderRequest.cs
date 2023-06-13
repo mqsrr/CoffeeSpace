@@ -1,4 +1,4 @@
-using CoffeeSpace.Domain.Ordering.Orders;
+using CoffeeSpace.Client.Models.Ordering;
 using Mediator;
 
 namespace CoffeeSpace.Client.Messages.Commands;

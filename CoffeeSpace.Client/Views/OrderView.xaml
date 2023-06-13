@@ -3,7 +3,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModel="clr-namespace:CoffeeSpace.Client._ViewModels"
-             xmlns:data="clr-namespace:CoffeeSpace.Domain.Ordering.Orders;assembly=CoffeeSpace.Domain"
+             xmlns:ordering="clr-namespace:CoffeeSpace.Client.Models.Ordering"
+             xmlns:products="clr-namespace:CoffeeSpace.Client.Models.Products"
              x:DataType="viewModel:OrderViewModel"
              x:Class="CoffeeSpace.Client.Views.OrderView"
              Title="Orders">
@@ -15,82 +16,82 @@
         </LinearGradientBrush>
     </ContentPage.Background>
 
-    <ScrollView>
-        <FlexLayout Wrap="Wrap" JustifyContent="SpaceBetween"
-                    BindableLayout.ItemsSource="{Binding Orders}" AlignItems="Start">
-            <BindableLayout.ItemTemplate>
-                <DataTemplate x:DataType="data:Order">
-                    <Frame BackgroundColor="WhiteSmoke">
-                        <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,10*"
-                              ColumnDefinitions="Auto,Auto,Auto,Auto,300"
-                              RowSpacing="1" ColumnSpacing="2"
-                              Padding="10">
-
-                            <Label Grid.Row="1" Grid.Column="0"
-                                   Text="Name: " TextColor="Black"
-                                   FontSize="Small" />
-
-                            <Label Grid.Row="1" Grid.Column="1"
-                                   Text="{Binding Buyer.Name}" TextColor="Black"
-                                   FontSize="Small" Margin="10,0,0,0" />
-
-                            <Label Grid.Row="2" Grid.Column="0"
-                                   Text="Email: " TextColor="Black"
-                                   FontSize="Small" />
-
-                            <Label Grid.Row="2" Grid.Column="1" Grid.RowSpan="2"
-                                   Text="{Binding Buyer.Email}" TextColor="Black"
-                                   FontSize="Small" Margin="10,0,0,0" />
-
-                            <Label Grid.Row="3" Grid.Column="0"
-                                   Text="Street: " TextColor="Black"
-                                   FontSize="Small" Margin="0,10,0,0" />
-
-                            <Label Grid.Row="3" Grid.Column="1"
-                                   Text="{Binding Address.Street}" TextColor="Black"
-                                   FontSize="Small" Margin="0,10,0,0" />
-
-                            <Label Grid.Row="4" Grid.Column="0"
-                                   Text="Order Items:" TextColor="Black"
-                                   FontSize="Small" Margin="0,10,0,0" />
-
-                            <ListView Grid.Row="4" Grid.Column="1"
-                                      ItemsSource="{Binding OrderItems}">
-                                <ListView.ItemTemplate>
-                                    <DataTemplate x:DataType="data:OrderItem">
-                                        <ViewCell>
-                                            <Grid RowDefinitions="Auto,Auto,Auto"
-                                                  ColumnDefinitions="Auto,Auto,Auto"
-                                                  Padding="1">
-                                                <Label Grid.Row="0" Grid.Column="0"
-                                                       Text="{Binding Title}" TextColor="Black"
-                                                       Margin="2" />
-                                            </Grid>
-                                        </ViewCell>
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
-                            </ListView>
-
-                            <Label Grid.Row="6" Grid.Column="0"
-                                   Text="Order Status:" TextColor="Black"
-                                   TextTransform="Uppercase" FontSize="Small"
-                                   VerticalOptions="End" />
-
-                            <Label Grid.Row="6" Grid.Column="1"
-                                   Text="{Binding Status}" TextColor="Green"
-                                   TextTransform="Uppercase" FontSize="Small"
-                                   Margin="10,0,0,0"
-                                   VerticalOptions="End" />
-
-                            <Button Grid.Row="6" Grid.Column="4"
-                                    Text="Cancel Order"
-                                    Style="{OnPlatform Android={StaticResource OrderViewButtonAndroid}, WinUI={StaticResource OrderViewButtonWindows}}"
-                                    Command="{Binding Source={RelativeSource Mode=FindAncestorBindingContext, AncestorType={x:Type viewModel:OrderViewModel}}, Path=CancelOrderCommand}"
-                                    CommandParameter="{Binding}" />
-                        </Grid>
-                    </Frame>
-                </DataTemplate>
-            </BindableLayout.ItemTemplate>
-        </FlexLayout>
-    </ScrollView>
+    <!-- <ScrollView> -->
+    <!--     <FlexLayout Wrap="Wrap" JustifyContent="SpaceBetween" -->
+    <!--                 BindableLayout.ItemsSource="{Binding Orders}" AlignItems="Start"> -->
+    <!--         <BindableLayout.ItemTemplate> -->
+    <!--             <DataTemplate x:DataType="ordering:Order"> -->
+    <!--                 <Frame BackgroundColor="WhiteSmoke"> -->
+    <!--                     <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,10*" -->
+    <!--                           ColumnDefinitions="Auto,Auto,Auto,Auto,300" -->
+    <!--                           RowSpacing="1" ColumnSpacing="2" -->
+    <!--                           Padding="10"> -->
+    <!-- -->
+    <!--                         <Label Grid.Row="1" Grid.Column="0" -->
+    <!--                                Text="Name: " TextColor="Black" -->
+    <!--                                FontSize="Small" /> -->
+    <!-- -->
+    <!--                         <Label Grid.Row="1" Grid.Column="1" -->
+    <!--                                Text="{Binding Buyer.Name}" TextColor="Black" -->
+    <!--                                FontSize="Small" Margin="10,0,0,0" /> -->
+    <!-- -->
+    <!--                         <Label Grid.Row="2" Grid.Column="0" -->
+    <!--                                Text="Email: " TextColor="Black" -->
+    <!--                                FontSize="Small" /> -->
+    <!-- -->
+    <!--                         <Label Grid.Row="2" Grid.Column="1" Grid.RowSpan="2" -->
+    <!--                                Text="{Binding Buyer.Email}" TextColor="Black" -->
+    <!--                                FontSize="Small" Margin="10,0,0,0" /> -->
+    <!-- -->
+    <!--                         <Label Grid.Row="3" Grid.Column="0" -->
+    <!--                                Text="Street: " TextColor="Black" -->
+    <!--                                FontSize="Small" Margin="0,10,0,0" /> -->
+    <!-- -->
+    <!--                         <Label Grid.Row="3" Grid.Column="1" -->
+    <!--                                Text="{Binding Address.Street}" TextColor="Black" -->
+    <!--                                FontSize="Small" Margin="0,10,0,0" /> -->
+    <!-- -->
+    <!--                         <Label Grid.Row="4" Grid.Column="0" -->
+    <!--                                Text="Order Items:" TextColor="Black" -->
+    <!--                                FontSize="Small" Margin="0,10,0,0" /> -->
+    <!-- -->
+    <!--                         <ListView Grid.Row="4" Grid.Column="1" -->
+    <!--                                   ItemsSource="{Binding OrderItems}"> -->
+    <!--                             <ListView.ItemTemplate> -->
+    <!--                                 <DataTemplate x:DataType="products:Product"> -->
+    <!--                                     <ViewCell> -->
+    <!--                                         <Grid RowDefinitions="Auto,Auto,Auto" -->
+    <!--                                               ColumnDefinitions="Auto,Auto,Auto" -->
+    <!--                                               Padding="1"> -->
+    <!--                                             <Label Grid.Row="0" Grid.Column="0" -->
+    <!--                                                    Text="{Binding Title}" TextColor="Black" -->
+    <!--                                                    Margin="2" /> -->
+    <!--                                         </Grid> -->
+    <!--                                     </ViewCell> -->
+    <!--                                 </DataTemplate> -->
+    <!--                             </ListView.ItemTemplate> -->
+    <!--                         </ListView> -->
+    <!-- -->
+    <!--                         <Label Grid.Row="6" Grid.Column="0" -->
+    <!--                                Text="Order Status:" TextColor="Black" -->
+    <!--                                TextTransform="Uppercase" FontSize="Small" -->
+    <!--                                VerticalOptions="End" /> -->
+    <!-- -->
+    <!--                         <Label Grid.Row="6" Grid.Column="1" -->
+    <!--                                Text="{Binding Status}" TextColor="Green" -->
+    <!--                                TextTransform="Uppercase" FontSize="Small" -->
+    <!--                                Margin="10,0,0,0" -->
+    <!--                                VerticalOptions="End" /> -->
+    <!-- -->
+    <!--                         <Button Grid.Row="6" Grid.Column="4" -->
+    <!--                                 Text="Cancel Order" -->
+    <!--                                 Style="{OnPlatform Android={StaticResource OrderViewButtonAndroid}, WinUI={StaticResource OrderViewButtonWindows}}" -->
+    <!--                                 Command="{Binding Source={RelativeSource Mode=FindAncestorBindingContext, AncestorType={x:Type viewModel:OrderViewModel}}, Path=CancelOrderCommand}" -->
+    <!--                                 CommandParameter="{Binding}" /> -->
+    <!--                     </Grid> -->
+    <!--                 </Frame> -->
+    <!--             </DataTemplate> -->
+    <!--         </BindableLayout.ItemTemplate> -->
+    <!--     </FlexLayout> -->
+    <!-- </ScrollView> -->
 </ContentPage>

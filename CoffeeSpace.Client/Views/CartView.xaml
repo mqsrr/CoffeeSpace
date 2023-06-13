@@ -3,7 +3,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:CoffeeSpace.Client._ViewModels"
-             xmlns:data="clr-namespace:CoffeeSpace.Domain.Ordering.Orders;assembly=CoffeeSpace.Domain"
+             xmlns:products="clr-namespace:CoffeeSpace.Client.Models.Products"
              x:DataType="viewModels:CartViewModel"
              x:Class="CoffeeSpace.Client.Views.CartView"
              Title="Cart">
@@ -18,9 +18,9 @@
     <ScrollView>
         <StackLayout>
             <FlexLayout Wrap="Wrap" AlignItems="Start"
-                        BindableLayout.ItemsSource="{Binding OrderItems}">
+                        BindableLayout.ItemsSource="{Binding Products}">
                 <BindableLayout.ItemTemplate>
-                    <DataTemplate x:DataType="data:OrderItem">
+                    <DataTemplate x:DataType="products:Product">
                         <Frame
                             Style="{OnPlatform Android={StaticResource CartOrderItemFrameAndroid},WinUI={StaticResource CartOrderItemFrameWindows}}">
                             <Grid RowSpacing="1"
@@ -109,7 +109,7 @@
                     HorizontalOptions="Start" VerticalOptions="End"
                     MinimumWidthRequest="1300" Margin="20"
                     Command="{Binding CreateOrderCommand}"
-                    IsVisible="{Binding OrderItems.Count}" />
+                    IsVisible="{Binding Products.Count}" />
         </StackLayout>
     </ScrollView>
 </ContentPage>

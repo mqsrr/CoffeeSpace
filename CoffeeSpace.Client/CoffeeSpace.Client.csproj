@@ -49,7 +49,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
         <PackageReference Include="CommunityToolkit.Maui" Version="5.2.0" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
         <PackageReference Include="Mediator.Abstractions" Version="2.1.1" />
@@ -60,7 +59,8 @@
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
         <PackageReference Include="Refit.HttpClientFactory" Version="6.3.2" />
         <PackageReference Include="Riok.Mapperly" Version="2.8.0" />
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.15.1" />
+        <PackageReference Include="Scrutor" Version="4.2.2" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.31.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -235,7 +235,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\CoffeeSpace.Domain\CoffeeSpace.Domain.csproj" />
+      <Folder Include="Mapping\" />
     </ItemGroup>
 
 </Project>

@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: ordering-api
-          image: mqsr/coffeespace-ordering-api:2.0.0
+          image: mqsr/coffeespace-ordering-api:2.0.1
           imagePullPolicy: Always
           ports:
             - containerPort: 80

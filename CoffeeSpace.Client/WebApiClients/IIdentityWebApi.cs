@@ -1,5 +1,4 @@
-using CoffeeSpace.Client.Contracts.Login;
-using CoffeeSpace.Client.Contracts.Register;
+using CoffeeSpace.Client.Contracts.Authentication;
 using CoffeeSpace.Client.Helpers;
 using Refit;
 

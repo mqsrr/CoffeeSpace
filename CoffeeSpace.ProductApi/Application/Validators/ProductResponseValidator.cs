@@ -21,8 +21,5 @@ internal sealed class ProductResponseValidator : AbstractValidator<ProductRespon
         
         RuleFor(x => x.UnitPrice)
             .NotNull();
-        
-        RuleFor(x => x.Total)
-            .NotNull();
     }
 }

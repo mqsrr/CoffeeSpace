@@ -1,4 +1,4 @@
-namespace CoffeeSpace.Client.Contracts.Login;
+namespace CoffeeSpace.Client.Contracts.Authentication;
 
 public sealed class LoginRequest
 {

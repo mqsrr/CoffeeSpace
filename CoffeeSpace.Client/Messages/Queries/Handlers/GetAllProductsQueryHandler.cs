@@ -1,10 +1,10 @@
-using CoffeeSpace.Client.Contracts.Products;
+using CoffeeSpace.Client.Models.Products;
 using CoffeeSpace.Client.WebApiClients;
 using Mediator;
 
 namespace CoffeeSpace.Client.Messages.Queries.Handlers;
 
-public sealed class GetAllProductsQueryHandler : IQueryHandler<GetAllProductsQuery, IEnumerable<ProductResponse>>
+public sealed class GetAllProductsQueryHandler : IQueryHandler<GetAllProductsQuery, IEnumerable<Product>>
 {
     private readonly IProductsWebApi _productsWebApi;
 
@@ -13,7 +13,7 @@ public sealed class GetAllProductsQueryHandler : IQueryHandler<GetAllProductsQue
         _productsWebApi = productsWebApi;
     }
 
-    public async ValueTask<IEnumerable<ProductResponse>> Handle(GetAllProductsQuery query, CancellationToken cancellationToken)
+    public async ValueTask<IEnumerable<Product>> Handle(GetAllProductsQuery query, CancellationToken cancellationToken)
     {
         var products = await _productsWebApi.GetAllProductsAsync(cancellationToken);
         

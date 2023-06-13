@@ -1,5 +1,5 @@
-using CoffeeSpace.Client.Contracts.Products;
 using CoffeeSpace.Client.Helpers;
+using CoffeeSpace.Client.Models.Products;
 using Refit;
 
 namespace CoffeeSpace.Client.WebApiClients;
@@ -8,8 +8,8 @@ namespace CoffeeSpace.Client.WebApiClients;
 public interface IProductsWebApi
 {
     [Get(ApiEndpoints.Products.GetAll)]
-    Task<IEnumerable<ProductResponse>> GetAllProductsAsync(CancellationToken cancellationToken);
+    Task<IEnumerable<Product>> GetAllProductsAsync(CancellationToken cancellationToken);
 
     [Get(ApiEndpoints.Products.GetById)]
-    Task<ProductResponse> GetProductByIdAsync(Guid id, CancellationToken cancellationToken);
+    Task<Product> GetProductByIdAsync(Guid id, CancellationToken cancellationToken);
 }

@@ -2,7 +2,7 @@ namespace CoffeeSpace.ProductApi.Application.Contracts.Requests;
 
 public sealed class CreateProductRequest
 {
-    public string Id { get; init; } = Guid.NewGuid().ToString();
+    public Guid Id { get; } = Guid.NewGuid();
     
     public required string Title { get; init; }
 

@@ -15,7 +15,7 @@ internal sealed class BuyerRepository : IBuyerRepository
         _orderingDbContext = orderingDbContext;
     }
 
-    public async Task<IEnumerable<Buyer>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<Buyer>> GetAllAsync(CancellationToken cancellationToken)
     {
         var isNotEmpty = await _orderingDbContext.Buyers.AnyAsync(cancellationToken);
         if (!isNotEmpty)
@@ -26,38 +26,33 @@ internal sealed class BuyerRepository : IBuyerRepository
         return _orderingDbContext.Buyers;
     }
 
-    public async Task<Buyer?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
+    public async Task<Buyer?> GetByIdAsync(string id, CancellationToken cancellationToken)
     {
         var buyer = await _orderingDbContext.Buyers.FindAsync(new object?[] {id}, cancellationToken);
-        if (buyer is not null)
-        {
-            await _orderingDbContext.Buyers
-                .LoadDataAsync(buyer, x => x.Orders!);
-
-            await _orderingDbContext.Orders
-                .LoadDataAsync(buyer.Orders!, x => x.OrderItems);
-        
-            await _orderingDbContext.Orders
-                .LoadDataAsync(buyer.Orders!, x => x.Address!);
-        }
-        
-        return buyer;
-    }
-    
-    public async Task<Buyer?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
-    {
-        var buyer = await _orderingDbContext.Buyers.FirstOrDefaultAsync(c => c.Email == email, cancellationToken);
         if (buyer is not null)
         {
             await _orderingDbContext.Buyers.LoadDataAsync(buyer, x => x.Orders!);
             await _orderingDbContext.Orders.LoadDataAsync(buyer.Orders!, x => x.OrderItems);
             await _orderingDbContext.Orders.LoadDataAsync(buyer.Orders!, x => x.Address!);
         }
+        
+        return buyer;
+    }
+    
+    public async Task<Buyer?> GetByEmailAsync(string email, CancellationToken cancellationToken)
+    {
+        var buyer = await _orderingDbContext.Buyers.FirstOrDefaultAsync(c => c.Email == email, cancellationToken);
+        if (buyer is not null)
+        {
+            await _orderingDbContext.Buyers.LoadDataAsync(buyer, x => x.Orders!);
+            await _orderingDbContext.Orders.LoadDataAsync(buyer.Orders!, x => x.OrderItems);
+            await _orderingDbContext.Orders.LoadDataAsync(buyer.Orders!, x => x.Address);
+        }
 
         return buyer;
     }
 
-    public async Task<bool> CreateAsync(Buyer buyer, CancellationToken cancellationToken = default)
+    public async Task<bool> CreateAsync(Buyer buyer, CancellationToken cancellationToken)
     {
         await _orderingDbContext.Buyers.AddAsync(buyer, cancellationToken);
         var result = await _orderingDbContext.SaveChangesAsync(cancellationToken);
@@ -65,7 +60,7 @@ internal sealed class BuyerRepository : IBuyerRepository
         return result > 0;
     }
 
-    public async Task<Buyer?> UpdateAsync(Buyer buyer, CancellationToken cancellationToken = default)
+    public async Task<Buyer?> UpdateAsync(Buyer buyer, CancellationToken cancellationToken)
     {
         var isContains = await _orderingDbContext.Buyers.ContainsAsync(buyer, cancellationToken);
         if (!isContains)
@@ -79,16 +74,11 @@ internal sealed class BuyerRepository : IBuyerRepository
         return buyer;
     }
 
-    public async Task<bool> DeleteByIdAsync(string id, CancellationToken cancellationToken = default)
+    public async Task<bool> DeleteByIdAsync(string id, CancellationToken cancellationToken)
     {
-        var buyer = await _orderingDbContext.Buyers.FindAsync(new object?[] {id}, cancellationToken);
-        if (buyer is null)
-        {
-            return false;
-        }
-
-        _orderingDbContext.Buyers.Remove(buyer);
-        var result = await _orderingDbContext.SaveChangesAsync(cancellationToken);
+        var result = await _orderingDbContext.Buyers
+            .Where(buyer => buyer.Id == id)
+            .ExecuteDeleteAsync(cancellationToken);
 
         return result > 0;
     }

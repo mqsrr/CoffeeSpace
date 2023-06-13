@@ -1,6 +1,6 @@
-namespace CoffeeSpace.Client.Contracts.Products;
+namespace CoffeeSpace.Client.Models.Products;
 
-public sealed class ProductResponse
+public sealed class Product
 {
     public required string Title { get; init; }
 

@@ -53,7 +53,6 @@ builder.Services.AddFluentValidationAutoValidation()
     .AddValidatorsFromAssemblyContaining<IValidatorMarker>(ServiceLifetime.Singleton, includeInternalTypes: true);
 
 builder.Services.AddMySqlDbContextOptions<OrderStateSagaDbContext>(builder.Configuration["OrderStateSagaDb:ConnectionString"]!);
-
 builder.Services.AddQuartz(x => x.UseMicrosoftDependencyInjectionJobFactory());
 
 builder.Services.AddMassTransit(x =>
@@ -62,8 +61,6 @@ builder.Services.AddMassTransit(x =>
     x.AddConsumer<RegisterNewBuyerConsumer>();
     x.AddConsumer<UpdateOrderStatusConsumer>();
 
-    x.AddInMemoryInboxOutbox();
-    
     x.AddQuartzConsumers();
     x.AddPublishMessageScheduler();
 

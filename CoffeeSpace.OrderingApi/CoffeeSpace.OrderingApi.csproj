@@ -12,7 +12,7 @@
       <Folder Include="Application\Messaging\Mediator\Commands\" />
       <Folder Include="Application\Messaging\Mediator\Queries\" />
       <Folder Include="Persistence\Migrations\" />
-      <Folder Include="Persistence\Migrations\SagaDbContext\" />
+      <Folder Include="Persistence\Migrations\SagaDb\" />
     </ItemGroup>
 
     <ItemGroup>
@@ -20,12 +20,12 @@
       <PackageReference Include="AspNetCore.HealthChecks.MySql" Version="6.0.2" />
       <PackageReference Include="AspNetCore.HealthChecks.Redis" Version="6.0.4" />
       <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
-      <PackageReference Include="MassTransit.AmazonSQS" Version="8.0.15" />
+      <PackageReference Include="MassTransit.AmazonSQS" Version="8.0.16" />
       <PackageReference Include="MassTransit.AspNetCore" Version="7.3.1" />
-      <PackageReference Include="MassTransit.EntityFrameworkCore" Version="8.0.15" />
-      <PackageReference Include="MassTransit.Newtonsoft" Version="8.0.15" />
-      <PackageReference Include="MassTransit.Quartz" Version="8.0.15" />
-      <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.15" />
+      <PackageReference Include="MassTransit.EntityFrameworkCore" Version="8.0.16" />
+      <PackageReference Include="MassTransit.Newtonsoft" Version="8.0.16" />
+      <PackageReference Include="MassTransit.Quartz" Version="8.0.16" />
+      <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.16" />
       <PackageReference Include="Mediator.Abstractions" Version="2.1.1" />
       <PackageReference Include="Mediator.SourceGenerator" Version="2.1.1">
         <PrivateAssets>all</PrivateAssets>

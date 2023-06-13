@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿#nullable disable
 
-#nullable disable
+using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace CoffeeSpace.OrderingApi.Persistence.Migrations.SagaDbContext
+namespace CoffeeSpace.OrderingApi.Persistence.Migrations.SagaDb
 {
     /// <inheritdoc />
     public partial class SagaInit : Migration

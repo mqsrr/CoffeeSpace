@@ -2,23 +2,26 @@
 using CoffeeSpace.OrderingApi.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace CoffeeSpace.OrderingApi.Persistance.Migrations
+namespace CoffeeSpace.OrderingApi.Persistence.Migrations.OrderingDb
 {
     [DbContext(typeof(OrderingDbContext))]
-    partial class OrderingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230612165954_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "7.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("CoffeeSpace.OrderingApi.Domain.CustomerInfo.Address", b =>
+            modelBuilder.Entity("CoffeeSpace.Domain.Ordering.BuyerInfo.Address", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("varchar(255)");
@@ -37,10 +40,10 @@ namespace CoffeeSpace.OrderingApi.Persistance.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Addresses", (string)null);
+                    b.ToTable("Addresses");
                 });
 
-            modelBuilder.Entity("CoffeeSpace.OrderingApi.Domain.CustomerInfo.Buyer", b =>
+            modelBuilder.Entity("CoffeeSpace.Domain.Ordering.BuyerInfo.Buyer", b =>
                 {
                     b.Property<string>("Id")
                         .IsUnicode(false)
@@ -67,7 +70,7 @@ namespace CoffeeSpace.OrderingApi.Persistance.Migrations
                     b.ToTable("Buyers", (string)null);
                 });
 
-            modelBuilder.Entity("CoffeeSpace.OrderingApi.Domain.CustomerInfo.CardInfo.PaymentInfo", b =>
+            modelBuilder.Entity("CoffeeSpace.Domain.Ordering.BuyerInfo.CardInfo.PaymentInfo", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("varchar(255)");
@@ -101,7 +104,7 @@ namespace CoffeeSpace.OrderingApi.Persistance.Migrations
                     b.ToTable("Payments", (string)null);
                 });
 
-            modelBuilder.Entity("CoffeeSpace.OrderingApi.Domain.Orders.Order", b =>
+            modelBuilder.Entity("CoffeeSpace.Domain.Ordering.Orders.Order", b =>
                 {
                     b.Property<string>("Id")
                         .IsUnicode(false)
@@ -138,7 +141,7 @@ namespace CoffeeSpace.OrderingApi.Persistance.Migrations
                     b.ToTable("Orders", (string)null);
                 });
 
-            modelBuilder.Entity("CoffeeSpace.OrderingApi.Domain.Orders.OrderItem", b =>
+            modelBuilder.Entity("CoffeeSpace.Domain.Ordering.Orders.OrderItem", b =>
                 {
                     b.Property<string>("Id")
                         .IsUnicode(false)
@@ -176,47 +179,45 @@ namespace CoffeeSpace.OrderingApi.Persistance.Migrations
                     b.ToTable("OrderItems", (string)null);
                 });
 
-            modelBuilder.Entity("CoffeeSpace.OrderingApi.Domain.Orders.Order", b =>
+            modelBuilder.Entity("CoffeeSpace.Domain.Ordering.Orders.Order", b =>
                 {
-                    b.HasOne("CoffeeSpace.OrderingApi.Domain.CustomerInfo.Address", "Address")
+                    b.HasOne("CoffeeSpace.Domain.Ordering.BuyerInfo.Address", "Address")
                         .WithOne()
-                        .HasForeignKey("CoffeeSpace.OrderingApi.Domain.Orders.Order", "AddressId")
+                        .HasForeignKey("CoffeeSpace.Domain.Ordering.Orders.Order", "AddressId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CoffeeSpace.OrderingApi.Domain.CustomerInfo.Buyer", "Buyer")
+                    b.HasOne("CoffeeSpace.Domain.Ordering.BuyerInfo.Buyer", null)
                         .WithMany("Orders")
                         .HasForeignKey("BuyerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CoffeeSpace.OrderingApi.Domain.CustomerInfo.CardInfo.PaymentInfo", "PaymentInfo")
+                    b.HasOne("CoffeeSpace.Domain.Ordering.BuyerInfo.CardInfo.PaymentInfo", "PaymentInfo")
                         .WithOne()
-                        .HasForeignKey("CoffeeSpace.OrderingApi.Domain.Orders.Order", "PaymentInfoId")
+                        .HasForeignKey("CoffeeSpace.Domain.Ordering.Orders.Order", "PaymentInfoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Address");
 
-                    b.Navigation("Buyer");
-
                     b.Navigation("PaymentInfo");
                 });
 
-            modelBuilder.Entity("CoffeeSpace.OrderingApi.Domain.Orders.OrderItem", b =>
+            modelBuilder.Entity("CoffeeSpace.Domain.Ordering.Orders.OrderItem", b =>
                 {
-                    b.HasOne("CoffeeSpace.OrderingApi.Domain.Orders.Order", null)
+                    b.HasOne("CoffeeSpace.Domain.Ordering.Orders.Order", null)
                         .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("CoffeeSpace.OrderingApi.Domain.CustomerInfo.Buyer", b =>
+            modelBuilder.Entity("CoffeeSpace.Domain.Ordering.BuyerInfo.Buyer", b =>
                 {
                     b.Navigation("Orders");
                 });
 
-            modelBuilder.Entity("CoffeeSpace.OrderingApi.Domain.Orders.Order", b =>
+            modelBuilder.Entity("CoffeeSpace.Domain.Ordering.Orders.Order", b =>
                 {
                     b.Navigation("OrderItems");
                 });

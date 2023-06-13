@@ -1,6 +1,6 @@
 using System.Collections.ObjectModel;
-using CoffeeSpace.Client.Contracts.Products;
 using CoffeeSpace.Client.Messages.Commands;
+using CoffeeSpace.Client.Models.Products;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Mediator;
@@ -12,7 +12,7 @@ public sealed partial class MainViewModel : ObservableObject
     private readonly ISender _sender;
 
     [ObservableProperty] 
-    private ObservableCollection<ProductResponse> _products;
+    private IEnumerable<Product> _products;
 
     public MainViewModel(ISender sender)
     {
@@ -20,7 +20,7 @@ public sealed partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task AddToCart(ProductResponse product, CancellationToken cancellationToken)
+    private async Task AddToCart(Product product, CancellationToken cancellationToken)
     {
         await _sender.Send(new AddProductToCartCommand
         {

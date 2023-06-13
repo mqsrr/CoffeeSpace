@@ -13,6 +13,4 @@ public sealed class ProductResponse
     public required float Discount { get; init; }
 
     public  required int Quantity { get; init; }
-
-    public float Total => Quantity * UnitPrice;
 }

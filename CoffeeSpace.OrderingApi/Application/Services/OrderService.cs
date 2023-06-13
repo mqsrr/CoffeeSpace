@@ -75,7 +75,6 @@ internal sealed class OrderService : IOrderService
             await _cache.RemoveAsync(CacheKeys.Order.GetByCustomerId(order.Id, order.BuyerId), cancellationToken);
             
             await _cache.RemoveAsync(CacheKeys.Buyers.Get(order.BuyerId), cancellationToken);
-            await _cache.RemoveAsync(CacheKeys.Buyers.GetByEmail(order.Buyer!.Email), cancellationToken);
         }
 
         return result;

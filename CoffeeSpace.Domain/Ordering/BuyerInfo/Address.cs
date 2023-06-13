@@ -2,7 +2,7 @@
 
 public sealed class Address
 {
-    public string Id { get; init; } = Guid.NewGuid().ToString();
+    public required string Id { get; init; }
 
     public required string Street { get; init; }
 

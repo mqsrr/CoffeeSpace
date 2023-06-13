@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeSpace.OrderingApi.Persistence;
 
-internal sealed class OrderingDbContext : SagaDbContext, IOrderingDbContext
+internal sealed class OrderingDbContext : DbContext, IOrderingDbContext
 {
     public required DbSet<Order> Orders { get; init; }
     
@@ -30,13 +30,4 @@ internal sealed class OrderingDbContext : SagaDbContext, IOrderingDbContext
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
-
-    protected override IEnumerable<ISagaClassMap> Configurations
-    {
-        get
-        {
-            yield return new OrderStateMap();
-        }
-    }
-
 }
