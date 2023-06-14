@@ -7,9 +7,7 @@ MAUI client with simple coffee ordering system
 
 **Please note that the client part of this project is currently in active development.**
 
-The client library, which is being developed to simplify integration with the web API, will utilize both Autofac as the dependency injection (DI) framework and MAUI (Multi-platform App UI) as the cross-platform development framework.
-
-During the active development stage, both Autofac and MAUI will be integrated into the client library, enabling seamless dependency injection and cross-platform functionality. 
+During the active development stage, I will integrate MAUI (Multi-platform App UI) into the client library to simplify integration with the web API. This integration will enable seamless dependency injection and provide cross-platform functionality for the client library.
 
 ## API Overview 
 
