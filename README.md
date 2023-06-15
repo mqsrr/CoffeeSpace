@@ -127,7 +127,35 @@ This API works as a command center for all messages related to creating, updatin
 * Logging
 
 Here is the workflow of the OrderingApi after an order is submitted.
-[![](https://mermaid.ink/img/pako:eNqVVE1vozAQ_StozmxEA4HGh65W2et-SJH2UHFxYdJYAZs1piob5b_vgDGBllSqT8B7897zMPYZMpUjMKjxb4Myw--CP2teptKjVXFtRCYqLo23a2qjStTvkV86Ry3k83vkt1Z5k5kFgLclygVgfxRVNWo5zy8PD86EefvmqRSmf7csXlCdUdlpp-RB6BLzrxbolqsjiSEN83ZHzE62xPv2wkXBn0QhTHut6iQHumMUeIW7NcCzaEMAKz2nT3PYzbscw6v3hxcin6UYk0wZc7hPYuFZEkqXYV3PG30jj-s567vvTTo7XY41s_mpjDi0I0YNKKsCDX7o5_4qsx9vFGFR47hz8rm1-0XhHadRLpa2gnKi0XvYOegcbvzpTziM6m-Ux8lcHMyPVHtF8IHgkoucTuq5A1IwRywxBUaPOdenFFJ5IR5vjNq3MgNmdIM-NFXOjTvVwA6cgvlAZw3YGV6BJas4ieJ1EoVJHEbbTexDCyzarOJgE27iKA7ukvU6vvjwTykSuFuttwHxiRlug_A-2PqANLZK_7AXSX-f9A6PfUEX4_IfFMZduw?type=png)](https://mermaid.live/edit#pako:eNqVVE1vozAQ_StozmxEA4HGh65W2et-SJH2UHFxYdJYAZs1piob5b_vgDGBllSqT8B7897zMPYZMpUjMKjxb4Myw--CP2teptKjVXFtRCYqLo23a2qjStTvkV86Ry3k83vkt1Z5k5kFgLclygVgfxRVNWo5zy8PD86EefvmqRSmf7csXlCdUdlpp-RB6BLzrxbolqsjiSEN83ZHzE62xPv2wkXBn0QhTHut6iQHumMUeIW7NcCzaEMAKz2nT3PYzbscw6v3hxcin6UYk0wZc7hPYuFZEkqXYV3PG30jj-s567vvTTo7XY41s_mpjDi0I0YNKKsCDX7o5_4qsx9vFGFR47hz8rm1-0XhHadRLpa2gnKi0XvYOegcbvzpTziM6m-Ux8lcHMyPVHtF8IHgkoucTuq5A1IwRywxBUaPOdenFFJ5IR5vjNq3MgNmdIM-NFXOjTvVwA6cgvlAZw3YGV6BJas4ieJ1EoVJHEbbTexDCyzarOJgE27iKA7ukvU6vvjwTykSuFuttwHxiRlug_A-2PqANLZK_7AXSX-f9A6PfUEX4_IfFMZduw)
+```mermaid
+sequenceDiagram
+    participant Customer
+    participant Ordering
+    participant Product
+    participant Payment
+    participant Shipping
+    Customer->>Ordering: SubmitOrder
+    alt StockConfirmed?
+        Ordering->>Product: Check Stock Availability
+        alt Product Available
+            Product->>Ordering: Confirm Stock
+            Ordering->>Payment: Check Payment Validity
+            alt Payment Valid
+                Payment->>Ordering: Process Payment
+                Ordering->>Shipping: Ship Order
+                Shipping->>Ordering: Notify Shipping Complete
+                Ordering->>Customer: Order Complete
+            else Payment Not Valid
+                Ordering->>Customer: Cancel Order
+            end
+        else Stock Not Available
+            Ordering->>Customer: Cancel Order
+        end
+    else Stock Not Confirmed
+        Ordering->>Customer: Cancel Order
+    end
+
+```
 
 As you can see, the OrderingApi **can both publish and consume messages from other microservices. It uses the Masstransit StateMachine, which provides great opportunities to manage order state.There are five states: Submitted, StockConfirmed, Paid, Shipped, and Canceled.** When an order receives a new state, the OrderStateMachine changes its state in the database. The OrderingApi has two databases: OrderingDb and OrderStateDb. When an order is submitted, it is saved in the OrderingDb, and then the OrderStateMachine sends all the necessary messages. The OrderStateMachine uses the OrderStateDb as a storage for orders. **When an order reaches the Shipped or Canceled state, it is immediately removed from the database.** With this feature, the OrderStateMachine can easily continue to work with messages after it was stopped.
 
@@ -239,8 +267,32 @@ The IdentityApi allows users to log in or register as new users, using IdentityD
 * Options
 * Api versioning
 * Logging
-
-[![](https://mermaid.ink/img/pako:eNqFU1Fr2zAQ_iuHHvbkZvZsx6keCkmcjgwGJSkMil-EdUlFHSmT5LZpyH-fJLfMrbvlHoyl77vT9510R1IrjoQSg79blDWWgm0121USXOyZtqIWeyYtTIEZmDcCpR2CMw9Ob5bwnVl8YochY-4ZS-6yhT146pBShiKtvfekmlmhJHwJG0qLl259o9Wj4KiH2QufXTLLYG2VxiHh2hMWzxa1ZA2sUT-KGk3H677Ti6urGXWQ5Aa0b4h59TpzyJzCSrUWP0CssbDqNkAY2Cjt8K0wVgfFHcnH3NUoXY0AojbQmjcfPkoHL2gnvsOAOzfv868pLKVLZrU18CTs_b8MYWPwo6xGbcVQT6_h2NfkmvDX4Ptb-brqGQTT1jUiR94v3XVyhWavfDOD1B-_buFWPWBPw8wTp2eIwcv_FGyYaM4fn8UZGMtsa8C_-XMiPqWHppCI7FDvmOBubo4eqIgTt8OKUPfLmX6oSCVPgclaq9YHWRNqdYsRaffuVt-mjNANc-Yi4h4ooUfyTOhFOk5G4-QyifN0ksdFlkTkQGhSjMaTIk_SSZp8S7NJPD5F5EUpVyIZpZfjNCniOE_yIiviIiLIhXtHP7vRDhMezrgLCV7I6Q9EIEPk?type=png)](https://mermaid.live/edit#pako:eNqFU1Fr2zAQ_iuHHvbkZvZsx6keCkmcjgwGJSkMil-EdUlFHSmT5LZpyH-fJLfMrbvlHoyl77vT9510R1IrjoQSg79blDWWgm0121USXOyZtqIWeyYtTIEZmDcCpR2CMw9Ob5bwnVl8YochY-4ZS-6yhT146pBShiKtvfekmlmhJHwJG0qLl259o9Wj4KiH2QufXTLLYG2VxiHh2hMWzxa1ZA2sUT-KGk3H677Ti6urGXWQ5Aa0b4h59TpzyJzCSrUWP0CssbDqNkAY2Cjt8K0wVgfFHcnH3NUoXY0AojbQmjcfPkoHL2gnvsOAOzfv868pLKVLZrU18CTs_b8MYWPwo6xGbcVQT6_h2NfkmvDX4Ptb-brqGQTT1jUiR94v3XVyhWavfDOD1B-_buFWPWBPw8wTp2eIwcv_FGyYaM4fn8UZGMtsa8C_-XMiPqWHppCI7FDvmOBubo4eqIgTt8OKUPfLmX6oSCVPgclaq9YHWRNqdYsRaffuVt-mjNANc-Yi4h4ooUfyTOhFOk5G4-QyifN0ksdFlkTkQGhSjMaTIk_SSZp8S7NJPD5F5EUpVyIZpZfjNCniOE_yIiviIiLIhXtHP7vRDhMezrgLCV7I6Q9EIEPk)
+```mermaid
+sequenceDiagram
+    participant A as Client
+    participant B as API Gateway
+    participant C as Identity API
+    participant D as Authentication & Authorization Provider
+    participant E as Data Store
+    participant F as External Services
+    
+    A->>B: Sends request
+    B->>C: Routes request
+    alt Request is for registration
+        C->>D: Registers user
+        D->>E: Stores user data
+        C->>F: Interacts with External Services
+    else Request is for login
+        C->>D: Authenticates user
+    end
+    alt Authentication/Registration succeeded
+        C-->>B: Responds with JWT Token
+        B-->>A: Responds with JWT Token
+    else Authentication/Registration failed
+        C-->>B: Responds with 404 status code
+        B-->>A: Responds with 404 status code
+    end
+```
 
 **Once a user registers with the IdentityApi, it sends a message to the message provider, and the OrderingApi acts as an external service and receives the message. This process results in the creation of a buyer after registration.**
 ## Services
@@ -252,7 +304,17 @@ In CoffeeSpace, there are two microservices that are referred to as "Services". 
 * ShipmentService
 
 #### PaymentService
-[![](https://mermaid.ink/img/pako:eNp1kk1vwjAMhv9K5dOmFdSWfpEDl3FFQuI29eI1BqLRhKUpWof473NbgUYROVn2-z625ZyhNJJAQE3fDemSlgp3FqtCe_yOaJ0q1RG181ZU17ijtTUnJck-CtbYVqTdhuxJlfS0vkSHn1izYJCMuJPF4u2eJLwNacmoPulVg34w3yv_ea9d2OyMpZtb6Vu4VzWXWo-Fh3vc1Txh4GQ8zLvRW2UrdMpoz2xvuA72bK6OM9pztNUJD0oOzJc-fi00-FARd1KS73PuwAW4PVVUgOBQov0qoNCXXomNM5tWlyCcbciH5si46zVBbPFQc5YPAeIMPyDCNJkmWRqGeZqk8yifZz60nJ7OZ2GcBHkSB9EsjqOLD7_GMCGYZlkUxLMozzIuJnnuA0nFW6-GH9R_pL7FR2_o5rj8AdNDzr4?type=png)](https://mermaid.live/edit#pako:eNp1kk1vwjAMhv9K5dOmFdSWfpEDl3FFQuI29eI1BqLRhKUpWof473NbgUYROVn2-z625ZyhNJJAQE3fDemSlgp3FqtCe_yOaJ0q1RG181ZU17ijtTUnJck-CtbYVqTdhuxJlfS0vkSHn1izYJCMuJPF4u2eJLwNacmoPulVg34w3yv_ea9d2OyMpZtb6Vu4VzWXWo-Fh3vc1Txh4GQ8zLvRW2UrdMpoz2xvuA72bK6OM9pztNUJD0oOzJc-fi00-FARd1KS73PuwAW4PVVUgOBQov0qoNCXXomNM5tWlyCcbciH5si46zVBbPFQc5YPAeIMPyDCNJkmWRqGeZqk8yifZz60nJ7OZ2GcBHkSB9EsjqOLD7_GMCGYZlkUxLMozzIuJnnuA0nFW6-GH9R_pL7FR2_o5rj8AdNDzr4)
+```mermaid
+sequenceDiagram
+    participant MessageProvider
+    participant PaymentService
+    participant PaymentDatabase
+
+    MessageProvider->>+PaymentService: Send payment message
+    PaymentService->>+PaymentDatabase: Store payment in payment history table
+    PaymentDatabase-->>-PaymentService: Confirmation of payment storage
+    PaymentService-->>-MessageProvider: Send payment validation (valid)
+```
 
 **When PaymentService receives a message from the message provider, it adds the payment information from the order to its database (PaymentHistory table). Then, the payment process is initiated and the result of the payment is recorded.**
 
