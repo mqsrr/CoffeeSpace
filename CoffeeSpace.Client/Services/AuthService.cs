@@ -2,6 +2,8 @@ using CoffeeSpace.Client.Contracts.Authentication;
 using CoffeeSpace.Client.Services.Abstractions;
 using CoffeeSpace.Client.WebApiClients;
 using Microsoft.IdentityModel.Tokens;
+using SecureStorage = Xamarin.Essentials.SecureStorage;
+
 
 namespace CoffeeSpace.Client.Services;
 
@@ -33,7 +35,7 @@ public sealed class AuthService : IAuthService
         {
             return false;
         }
-        
+
         await SecureStorage.SetAsync("jwt-token", token);
         return true;
     }

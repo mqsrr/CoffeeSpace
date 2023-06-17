@@ -1,5 +1,6 @@
 using System.Reflection;
 using CoffeeSpace.PaymentService.Models;
+using CoffeeSpace.PaymentService.Persistence.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeSpace.PaymentService.Persistence;

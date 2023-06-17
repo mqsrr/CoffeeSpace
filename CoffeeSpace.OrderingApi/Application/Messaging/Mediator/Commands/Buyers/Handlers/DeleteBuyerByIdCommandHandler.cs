@@ -1,4 +1,4 @@
-using CoffeeSpace.Messages.Buyers.Commands;
+using CoffeeSpace.Messages.Buyers;
 using CoffeeSpace.OrderingApi.Application.Repositories.Abstractions;
 using MassTransit;
 using Mediator;

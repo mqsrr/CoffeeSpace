@@ -7,7 +7,6 @@ using CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Consumers;
 using CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Sagas;
 using CoffeeSpace.OrderingApi.Application.Repositories.Abstractions;
 using CoffeeSpace.OrderingApi.Application.Services.Abstractions;
-using CoffeeSpace.OrderingApi.Application.Settings;
 using CoffeeSpace.OrderingApi.Application.Validators;
 using CoffeeSpace.OrderingApi.Persistence;
 using CoffeeSpace.OrderingApi.Persistence.Abstractions;
@@ -52,7 +51,7 @@ builder.Services.AddOptions<AwsMessagingSettings>()
 builder.Services.AddFluentValidationAutoValidation()
     .AddValidatorsFromAssemblyContaining<IValidatorMarker>(ServiceLifetime.Singleton, includeInternalTypes: true);
 
-builder.Services.AddMySqlDbContextOptions<OrderStateSagaDbContext>(builder.Configuration["OrderStateSagaDb:ConnectionString"]!);
+builder.Services.AddNpgsqlDbContextOptions<OrderStateSagaDbContext>(builder.Configuration["OrderStateSagaDb:ConnectionString"]!);
 builder.Services.AddQuartz(x => x.UseMicrosoftDependencyInjectionJobFactory());
 
 builder.Services.AddMassTransit(x =>
@@ -69,11 +68,11 @@ builder.Services.AddMassTransit(x =>
         {
             configurator.ConcurrencyMode = ConcurrencyMode.Optimistic;
         
-            configurator.UseMySql();
+            configurator.UsePostgres();
             configurator.AddDbContext<DbContext, OrderStateSagaDbContext>((services, optionsBuilder) =>
             {
-                var dbSettings = services.GetRequiredService<IOptions<MySqlDbContextSettings<OrderStateSagaDbContext>>>().Value;
-                optionsBuilder.UseMySql(dbSettings.ConnectionString, dbSettings.ServerVersion);
+                var dbSettings = services.GetRequiredService<IOptions<PostgresDbContextSettings<OrderStateSagaDbContext>>>().Value;
+                optionsBuilder.UseNpgsql(dbSettings.ConnectionString);
             });
         });
     

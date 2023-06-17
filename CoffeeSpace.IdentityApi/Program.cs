@@ -1,12 +1,12 @@
 using Asp.Versioning;
 using CoffeeSpace.Core.Extensions;
 using CoffeeSpace.Core.Settings;
-using CoffeeSpace.IdentityApi.Extensions;
-using CoffeeSpace.IdentityApi.Messages.Consumers;
-using CoffeeSpace.IdentityApi.Models;
+using CoffeeSpace.IdentityApi.Application.Extensions;
+using CoffeeSpace.IdentityApi.Application.Messages.Consumers;
+using CoffeeSpace.IdentityApi.Application.Models;
+using CoffeeSpace.IdentityApi.Application.Services.Abstractions;
+using CoffeeSpace.IdentityApi.Application.Validators;
 using CoffeeSpace.IdentityApi.Persistence;
-using CoffeeSpace.IdentityApi.Services.Abstractions;
-using CoffeeSpace.IdentityApi.Validators;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MassTransit;

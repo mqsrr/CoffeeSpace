@@ -12,11 +12,11 @@ public sealed partial class ProfileViewModel : ObservableObject
     public bool IsPasswordVisible { get; set; }
 
     [RelayCommand]
-    public void ChangePasswordVisibility() => IsPasswordVisible = !IsPasswordVisible;
+    private void ChangePasswordVisibility() => IsPasswordVisible = !IsPasswordVisible;
 
     [RelayCommand]
-    public async Task ChangePassword(CancellationToken cancellationToken)
+    private Task ChangePassword()
     {
-
+        return Task.CompletedTask;
     }
 }

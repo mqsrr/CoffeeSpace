@@ -1,5 +1,6 @@
 using CoffeeSpace.PaymentService.Models;
 using CoffeeSpace.PaymentService.Persistence;
+using CoffeeSpace.PaymentService.Persistence.Abstractions;
 using CoffeeSpace.PaymentService.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
 

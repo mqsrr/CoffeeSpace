@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: identity-api
-          image: mqsr/coffeespace-identity-api:2.0.0
+          image: mqsr/coffeespace-identity-api:2.0.1
           imagePullPolicy: Always
           env:
           - name: "ASPNETCORE_ENVIRONMENT"

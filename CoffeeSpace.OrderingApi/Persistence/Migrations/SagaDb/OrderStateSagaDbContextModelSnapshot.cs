@@ -4,10 +4,11 @@ using CoffeeSpace.OrderingApi.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace CoffeeSpace.OrderingApi.Persistence.Migrations.SagaDbContext
+namespace CoffeeSpace.OrderingApi.Persistence.Migrations.SagaDb
 {
     [DbContext(typeof(OrderStateSagaDbContext))]
     partial class OrderStateSagaDbContextModelSnapshot : ModelSnapshot
@@ -16,36 +17,38 @@ namespace CoffeeSpace.OrderingApi.Persistence.Migrations.SagaDbContext
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.5")
-                .HasAnnotation("Relational:MaxIdentifierLength", 64);
+                .HasAnnotation("ProductVersion", "7.0.7")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Sagas.OrderStateInstance", b =>
                 {
                     b.Property<Guid>("CorrelationId")
-                        .HasColumnType("char(36)");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("BuyerId")
-                        .HasColumnType("longtext");
+                        .HasColumnType("text");
 
                     b.Property<int>("CurrentState")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("OrderId")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("text");
 
                     b.Property<bool>("PaymentSuccess")
-                        .HasColumnType("tinyint(1)");
+                        .HasColumnType("boolean");
 
                     b.Property<bool>("StockValidationSuccess")
-                        .HasColumnType("tinyint(1)");
+                        .HasColumnType("boolean");
 
                     b.Property<string>("UpdateOrderStatudCorrelationId")
-                        .HasColumnType("longtext");
+                        .HasColumnType("text");
 
                     b.HasKey("CorrelationId");
 
-                    b.ToTable("OrderStateInstance", (string)null);
+                    b.ToTable("OrderStateInstance");
                 });
 #pragma warning restore 612, 618
         }

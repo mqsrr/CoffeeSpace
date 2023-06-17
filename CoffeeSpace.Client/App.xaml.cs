@@ -1,13 +1,11 @@
-﻿using CoffeeSpace.Client.Views;
-
-namespace CoffeeSpace.Client;
+﻿namespace CoffeeSpace.Client;
 
 public partial class App : Microsoft.Maui.Controls.Application
 {
-    public App(LoginView loginView)
+    public App()
     {
         InitializeComponent();
 
-        MainPage = new NavigationPage(loginView);
+        MainPage = new AppShell();
     }
 }

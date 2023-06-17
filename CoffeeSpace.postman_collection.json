@@ -559,33 +559,6 @@
 					"name": "Buyers",
 					"item": [
 						{
-							"name": "Create buyer",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"Name\": \"Nikitos\",\n    \"Email\": \"some@gmail.com\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{ordering-url}}/api/buyers",
-									"host": [
-										"{{ordering-url}}"
-									],
-									"path": [
-										"api",
-										"buyers"
-									]
-								}
-							},
-							"response": []
-						},
-						{
 							"name": "Get buyer by id",
 							"request": {
 								"method": "GET",
@@ -641,6 +614,45 @@
 										"api",
 										"buyers",
 										"admin@gmail.com"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create buyer",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const buyerId = pm.response.json().id;",
+											"pm.collectionVariables.set(\"buyerId\", buyerId);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"Name\": \"Nikitos\",\n    \"Email\": \"some@gmail.com\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{ordering-url}}/api/buyers",
+									"host": [
+										"{{ordering-url}}"
+									],
+									"path": [
+										"api",
+										"buyers"
 									]
 								}
 							},
@@ -789,6 +801,14 @@
 								"_health"
 							]
 						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": []
 					},
 					"response": []
 				}
@@ -952,7 +972,7 @@
 									"bearer": [
 										{
 											"key": "token",
-											"value": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6WyIyNzkyZDBhMC1lYTAyLTRlM2MtYWMwNy1mNmE4OTJmOTcxNTIiLCIyNzkyZDBhMC1lYTAyLTRlM2MtYWMwNy1mNmE4OTJmOTcxNTIiXSwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6WyJNYXJzaWtvcyIsIk1hcnNpa29zIl0sImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6WyJhbnlAZ21haWwuY29tIiwiYW55QGdtYWlsLmNvbSJdLCJBc3BOZXQuSWRlbnRpdHkuU2VjdXJpdHlTdGFtcCI6WyJKUDVXTExVN1hLRjJGRlpDUVI2SE1YRVNJTDQ0TDdSMyIsIkpQNVdMTFU3WEtGMkZGWkNRUjZITVhFU0lMNDRMN1IzIl0sIm5iZiI6MTY4Mzc5Nzc0MSwiZXhwIjoxNjgzODAxMzQxLCJpc3MiOiJDb2ZmZWVTcGFjZS5TZXJ2aWNlLmNvbSIsImF1ZCI6IkNvZmZlZVNwYWNlLmNvbSJ9.CSu8jQQPqGRVZPmWDFv_eURz2YI1Gyjp1pOc9fXs4lQ",
+											"value": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6WyJlYjU5OGM1NS02M2QyLTQxNWUtYTA4Ny1hYzIxOWQ0ZDFhYWMiLCJlYjU5OGM1NS02M2QyLTQxNWUtYTA4Ny1hYzIxOWQ0ZDFhYWMiXSwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6WyJhZG1pbiIsImFkbWluIl0sImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6WyJhbnlAZ21haWwuY29tIiwiYW55QGdtYWlsLmNvbSJdLCJBc3BOZXQuSWRlbnRpdHkuU2VjdXJpdHlTdGFtcCI6WyJMSDRKR1dVNU1RUklPWVlOV05DUTdYVFVVWEhWSE5HQyIsIkxINEpHV1U1TVFSSU9ZWU5XTkNRN1hUVVVYSFZITkdDIl0sIm5iZiI6MTY4Njk5OTE2NCwiZXhwIjoxNjg3MDAyNzY0LCJpc3MiOiJDb2ZmZWVTcGFjZS5TZXJ2aWNlLmNvbSIsImF1ZCI6IkNvZmZlZVNwYWNlLmNvbSJ9.LdQMLBi1IhuxrCD7PzS4thSvnD7I-Xnf_vk8VDE_fU0",
 											"type": "string"
 										}
 									]
@@ -1049,12 +1069,11 @@
 									}
 								},
 								"url": {
-									"raw": "{{gateway-url}}//products/{{productId}}",
+									"raw": "{{gateway-url}}/products/{{productId}}",
 									"host": [
 										"{{gateway-url}}"
 									],
 									"path": [
-										"",
 										"products",
 										"{{productId}}"
 									]
@@ -1287,7 +1306,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"Status\": 0,\n    \"Address\": {\n        \"City\": \"AnyCity\",\n        \"Country\": \"someCountry\",\n        \"Street\": \"test-street\"\n    },\n    \"PaymentInfo\": {\n        \"Cardtype\": 0,\n        \"CardNumber\": \"123324325435\",\n        \"SecurityNumber\": \"123\",\n        \"ExpirationYear\": \"2019\",\n        \"ExpirationMonth\": \"04\"\n    },\n    \"Orderitems\": [\n        {\n            \"title\": \"Capuchino\",\n            \"description\": \"Tasty one\",\n            \"unitPrice\": 1.5,\n            \"discount\": 0,\n            \"quantity\": 2\n        }\n    ]\n}",
+											"raw": "{\n    \"Status\": 0,\n    \"Address\": {\n        \"City\": \"AnyCity\",\n        \"Country\": \"someCountry\",\n        \"Street\": \"test-street\"\n    },\n    \"PaymentInfo\": {\n        \"Cardtype\": 0,\n        \"CardNumber\": \"123324325435\",\n        \"SecurityNumber\": \"123\",\n        \"ExpirationYear\": \"2019\",\n        \"ExpirationMonth\": \"04\"\n    },\n    \"Orderitems\": [\n        {\n            \"title\": \"Latte\",\n            \"description\": \"Tasty one\",\n            \"unitPrice\": 5.3,\n            \"discount\": 0,\n            \"quantity\": 2\n        }\n    ]\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -1600,7 +1619,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6WyIyYTZiMDc4OS00MGMyLTRmNTQtYTU2Yy1hMDIwNGVmMDVlNzYiLCIyYTZiMDc4OS00MGMyLTRmNTQtYTU2Yy1hMDIwNGVmMDVlNzYiXSwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6WyJhZG1pbiIsImFkbWluIl0sImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6WyJhbnlAZ21haWwuY29tIiwiYW55QGdtYWlsLmNvbSJdLCJBc3BOZXQuSWRlbnRpdHkuU2VjdXJpdHlTdGFtcCI6WyJPVUszTFZMSkNCVVhFQUNHQVNURFNFNjVMUjdQSTNTUiIsIk9VSzNMVkxKQ0JVWEVBQ0dBU1REU0U2NUxSN1BJM1NSIl0sIm5iZiI6MTY4NDQ5OTIxMiwiZXhwIjoxNjg0NTAyODEyLCJpc3MiOiJDb2ZmZWVTcGFjZS5TZXJ2aWNlLmNvbSIsImF1ZCI6IkNvZmZlZVNwYWNlLmNvbSJ9.tvAk5owSZx90ojWH7CTqpbikRow4m401LM8nOByrUro",
+				"value": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6WyJlYjU5OGM1NS02M2QyLTQxNWUtYTA4Ny1hYzIxOWQ0ZDFhYWMiLCJlYjU5OGM1NS02M2QyLTQxNWUtYTA4Ny1hYzIxOWQ0ZDFhYWMiXSwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6WyJhZG1pbiIsImFkbWluIl0sImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6WyJhbnlAZ21haWwuY29tIiwiYW55QGdtYWlsLmNvbSJdLCJBc3BOZXQuSWRlbnRpdHkuU2VjdXJpdHlTdGFtcCI6WyJMSDRKR1dVNU1RUklPWVlOV05DUTdYVFVVWEhWSE5HQyIsIkxINEpHV1U1TVFSSU9ZWU5XTkNRN1hUVVVYSFZITkdDIl0sIm5iZiI6MTY4NzAwOTg1NSwiZXhwIjoxNjg3MDEzNDU1LCJpc3MiOiJDb2ZmZWVTcGFjZS5TZXJ2aWNlLmNvbSIsImF1ZCI6IkNvZmZlZVNwYWNlLmNvbSJ9.j8_0Wgq1hLlra6kGf4jZP-hRXrL_GMBxulK8DBuwapE",
 				"type": "string"
 			}
 		]

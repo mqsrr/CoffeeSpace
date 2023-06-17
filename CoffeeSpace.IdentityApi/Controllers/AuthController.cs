@@ -1,9 +1,9 @@
 using Asp.Versioning;
-using CoffeeSpace.IdentityApi.Contracts.Requests.Login;
-using CoffeeSpace.IdentityApi.Contracts.Requests.Register;
-using CoffeeSpace.IdentityApi.Helpers;
-using CoffeeSpace.IdentityApi.Messages.Commands;
-using CoffeeSpace.IdentityApi.Messages.Queries;
+using CoffeeSpace.IdentityApi.Application.Contracts.Requests.Login;
+using CoffeeSpace.IdentityApi.Application.Contracts.Requests.Register;
+using CoffeeSpace.IdentityApi.Application.Helpers;
+using CoffeeSpace.IdentityApi.Application.Messages.Commands;
+using CoffeeSpace.IdentityApi.Application.Messages.Queries;
 using Mediator;
 using Microsoft.AspNetCore.Mvc;
 

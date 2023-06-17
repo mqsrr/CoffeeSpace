@@ -6,9 +6,9 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["CoffeeSpace.IdentityApi/CoffeeSpace.IdentityApi.csproj", "CoffeeSpace.IdentityApi/"]
-COPY ["CoffeeSpace.Domain/CoffeeSpace.Domain.csproj", "CoffeeSpace.Domain/"]
 COPY ["CoffeeSpace.Core/CoffeeSpace.Core.csproj", "CoffeeSpace.Core/"]
 COPY ["CoffeeSpace.Messages/CoffeeSpace.Messages.csproj", "CoffeeSpace.Messages/"]
+COPY ["CoffeeSpace.Domain/CoffeeSpace.Domain.csproj", "CoffeeSpace.Domain/"]
 RUN dotnet restore "CoffeeSpace.IdentityApi/CoffeeSpace.IdentityApi.csproj"
 COPY . .
 WORKDIR "/src/CoffeeSpace.IdentityApi"

@@ -25,7 +25,7 @@ public sealed partial class LoginViewModel : ObservableObject
         var isSuccess = await _authService.LoginAsync(LoginRequest, cancellationToken);
         if (isSuccess is false)
         {
-            await Application.Current!.MainPage!.DisplayAlert("Authentication error!", "Please check your credentials and try again.", "Ok"); ;
+            await Shell.Current.DisplayAlert("Authentication error!", "Please check your credentials and try again.", "Ok"); ;
             return;
         }
         await Shell.Current.GoToAsync("MainPage");

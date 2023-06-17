@@ -25,4 +25,15 @@ public static class ApiEndpoints
         public const string GetById = $"{Base}/{{id}}";
         public const string GetByEmail = $"{Base}/{{email}}";
     }
+    
+    public static class Orders
+    {
+        private const string Base = "/buyers/{{buyerId}}/orders";
+
+        public const string Create = Base;
+        public const string GetAll = Base;
+        public const string Get = $"{Base}/{{id}}";
+        public const string Update = $"{Base}/{{id}}";
+        public const string Delete = $"{Base}/{{id}}";
+    }
 }

@@ -1,5 +1,6 @@
 ﻿using CoffeeSpace.Client._ViewModels;
 using CoffeeSpace.Client.Extensions;
+using CoffeeSpace.Client.Handlers;
 using CoffeeSpace.Client.Services.Abstractions;
 using CoffeeSpace.Client.Views;
 using CoffeeSpace.Client.WebApiClients;
@@ -29,13 +30,15 @@ public static class MauiProgram
         builder.Services.AddMediator(settings =>
             settings.ServiceLifetime = ServiceLifetime.Scoped);
         
-        builder.Services
-            .AddWebApiClient<IIdentityWebApi>()
-            .AddAuthenticationWebApiClient<IBuyersWebApi>()
-            .AddAuthenticationWebApiClient<IProductsWebApi>();
-
         builder.Services.AddApplicationService<IAuthService>();
+        builder.Services.AddApplicationService<AuthHeaderHandler>(ServiceLifetime.Transient);
 
+        builder.Services
+            .AddWebApiClient<IIdentityWebApi>(requiresAuthorization: false)
+            .AddWebApiClient<IBuyersWebApi>(requiresAuthorization: true)
+            .AddWebApiClient<IProductsWebApi>(requiresAuthorization: true)
+            .AddWebApiClient<IOrderingWebApi>(requiresAuthorization: true);
+        
 #if DEBUG
         builder.Logging.AddDebug();
 #endif

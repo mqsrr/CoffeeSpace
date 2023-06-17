@@ -5,22 +5,22 @@ namespace CoffeeSpace.Client.Extensions;
 
 public static class RefitClientExtensions
 {
-    public static IServiceCollection AddWebApiClient<TClient>(this IServiceCollection services)
+    private static IHttpClientBuilder AddUnauthorizedApiClient<TClient>(this IServiceCollection services)
         where TClient : class
     {
-        services.AddRefitClient<TClient>()
+        return services.AddRefitClient<TClient>()
             .ConfigureHttpClient(config => config.BaseAddress = new Uri("http://localhost:8085"));
-
-        return services;
     }
     
-    public static IServiceCollection AddAuthenticationWebApiClient<TClient>(this IServiceCollection services)
+    public static IServiceCollection AddWebApiClient<TClient>(this IServiceCollection services, bool requiresAuthorization)
         where TClient : class
     {
-        services.AddRefitClient<TClient>()
-            .ConfigureHttpClient(config => config.BaseAddress = new Uri("http://localhost:8085"))
-            .AddHttpMessageHandler<AuthHeaderHandler>();
-
+        var httpClientBuilder = services.AddUnauthorizedApiClient<TClient>();
+        if (requiresAuthorization)
+        {
+            httpClientBuilder.AddHttpMessageHandler<AuthHeaderHandler>();
+        }
+        
         return services;
     }
 }

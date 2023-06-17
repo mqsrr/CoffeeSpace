@@ -1,5 +1,5 @@
 using CoffeeSpace.Domain.Ordering.BuyerInfo;
-using CoffeeSpace.Messages.Buyers.Commands;
+using CoffeeSpace.Messages.Buyers;
 using CoffeeSpace.OrderingApi.Application.Services.Abstractions;
 using MassTransit;
 

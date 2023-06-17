@@ -1,6 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using CoffeeSpace.Client.Models.Products;
-using CoffeeSpace.Client.WebApiClients;
+﻿using CoffeeSpace.Client.Models.Products;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Mediator;
@@ -10,24 +8,17 @@ namespace CoffeeSpace.Client._ViewModels;
 public sealed partial class CartViewModel : ObservableObject
 {
     private readonly ISender _sender;
-    private readonly IBuyersWebApi _buyersWebApi;
 
     [ObservableProperty]
     private ICollection<Product> _products;
     
-    public CartViewModel(ISender sender, IBuyersWebApi buyersWebApi)
+    public CartViewModel(ISender sender)
     {
         _sender = sender;
-        _buyersWebApi = buyersWebApi;
-    }
 
-    [RelayCommand]
-    private void ClearCart()
-    {
-        Products.AsParallel().ForAll(x => x.Quantity = 0);
-        Products.Clear();
+        _products = new List<Product>();
     }
-
+    
     [RelayCommand]
     internal void AddProductToCart(Product product)
     {
@@ -38,18 +29,21 @@ public sealed partial class CartViewModel : ObservableObject
             return;
         }
 
-        RefreshOrderItem(product);
+        RefreshProduct(product);
     }
+    
+    [RelayCommand]
+    private void ClearCart()
+    {
+        foreach (var product in Products)
+        {
+            product.Quantity = 0;
+        }
 
-     [RelayCommand]
-     private async Task CreateOrder(CancellationToken cancellationToken)
-     {
-         
-         
-         ClearCart();
-     }
-
-    private void RefreshOrderItem(Product product)
+        Products.Clear();
+    }
+    
+    private void RefreshProduct(Product product)
     {
         Products.Remove(product);
         Products.Add(product);

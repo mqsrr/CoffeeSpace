@@ -10,8 +10,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		docker-compose.yml = docker-compose.yml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeSpace.OrderingApi", "CoffeeSpace.OrderingApi\CoffeeSpace.OrderingApi.csproj", "{E40665F3-9B61-4074-9B0C-DB39077EA3FA}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeSpace.Messages", "CoffeeSpace.Messages\CoffeeSpace.Messages.csproj", "{465BBFE7-CE95-4ECE-952F-1126A558C4FF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeSpace.Domain", "CoffeeSpace.Domain\CoffeeSpace.Domain.csproj", "{DF2E6168-2CC1-42A7-9304-5DD8C2F6A5DD}"
@@ -28,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeSpace.Core", "CoffeeS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeSpace.Client", "CoffeeSpace.Client\CoffeeSpace.Client.csproj", "{AD268D7C-13EB-4A08-BF1C-0B9A36F06BEC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeSpace.OrderingApi", "CoffeeSpace.OrderingApi\CoffeeSpace.OrderingApi.csproj", "{C2EE61A8-FEDC-4B0C-A42C-A9851E668722}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,10 +38,6 @@ Global
 		{03065897-727D-44D5-A3AB-B934A24F0449}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{03065897-727D-44D5-A3AB-B934A24F0449}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{03065897-727D-44D5-A3AB-B934A24F0449}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E40665F3-9B61-4074-9B0C-DB39077EA3FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E40665F3-9B61-4074-9B0C-DB39077EA3FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E40665F3-9B61-4074-9B0C-DB39077EA3FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E40665F3-9B61-4074-9B0C-DB39077EA3FA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{465BBFE7-CE95-4ECE-952F-1126A558C4FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{465BBFE7-CE95-4ECE-952F-1126A558C4FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{465BBFE7-CE95-4ECE-952F-1126A558C4FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -74,6 +70,10 @@ Global
 		{AD268D7C-13EB-4A08-BF1C-0B9A36F06BEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD268D7C-13EB-4A08-BF1C-0B9A36F06BEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AD268D7C-13EB-4A08-BF1C-0B9A36F06BEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2EE61A8-FEDC-4B0C-A42C-A9851E668722}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2EE61A8-FEDC-4B0C-A42C-A9851E668722}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2EE61A8-FEDC-4B0C-A42C-A9851E668722}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2EE61A8-FEDC-4B0C-A42C-A9851E668722}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

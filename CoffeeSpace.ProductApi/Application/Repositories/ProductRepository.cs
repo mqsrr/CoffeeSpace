@@ -1,6 +1,7 @@
 using CoffeeSpace.Domain.Products;
 using CoffeeSpace.ProductApi.Application.Repositories.Abstractions;
 using CoffeeSpace.ProductApi.Persistence;
+using CoffeeSpace.ProductApi.Persistence.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeSpace.ProductApi.Application.Repositories;

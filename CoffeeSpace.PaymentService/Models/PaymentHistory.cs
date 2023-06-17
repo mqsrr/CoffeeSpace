@@ -1,6 +1,6 @@
 namespace CoffeeSpace.PaymentService.Models;
 
-internal sealed class PaymentHistory
+public sealed class PaymentHistory
 {
     public required string Id { get; init; }
     

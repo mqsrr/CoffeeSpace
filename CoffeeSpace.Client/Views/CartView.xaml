@@ -105,11 +105,6 @@
                     </DataTemplate>
                 </BindableLayout.ItemTemplate>
             </FlexLayout>
-            <Button Text="Place Order" TextColor="Black"
-                    HorizontalOptions="Start" VerticalOptions="End"
-                    MinimumWidthRequest="1300" Margin="20"
-                    Command="{Binding CreateOrderCommand}"
-                    IsVisible="{Binding Products.Count}" />
         </StackLayout>
     </ScrollView>
 </ContentPage>

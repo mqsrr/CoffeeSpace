@@ -1,5 +1,5 @@
-﻿using CoffeeSpace.Domain.Ordering.BuyerInfo;
-using CoffeeSpace.OrderingApi.Application.Extensions;
+﻿using CoffeeSpace.Core.Extensions;
+using CoffeeSpace.Domain.Ordering.BuyerInfo;
 using CoffeeSpace.OrderingApi.Application.Repositories.Abstractions;
 using CoffeeSpace.OrderingApi.Persistence.Abstractions;
 using Microsoft.EntityFrameworkCore;
@@ -33,7 +33,7 @@ internal sealed class BuyerRepository : IBuyerRepository
         {
             await _orderingDbContext.Buyers.LoadDataAsync(buyer, x => x.Orders!);
             await _orderingDbContext.Orders.LoadDataAsync(buyer.Orders!, x => x.OrderItems);
-            await _orderingDbContext.Orders.LoadDataAsync(buyer.Orders!, x => x.Address!);
+            await _orderingDbContext.Orders.LoadDataAsync(buyer.Orders!, x => x.Address);
         }
         
         return buyer;

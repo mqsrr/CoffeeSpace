@@ -17,6 +17,8 @@ public sealed partial class MainViewModel : ObservableObject
     public MainViewModel(ISender sender)
     {
         _sender = sender;
+
+        _products = new List<Product>();
     }
 
     [RelayCommand]

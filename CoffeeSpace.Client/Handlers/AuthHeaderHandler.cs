@@ -1,4 +1,5 @@
 using System.Net.Http.Headers;
+using SecureStorage = Xamarin.Essentials.SecureStorage;
 
 namespace CoffeeSpace.Client.Handlers;
 

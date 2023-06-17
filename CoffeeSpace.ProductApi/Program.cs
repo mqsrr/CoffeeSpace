@@ -9,6 +9,7 @@ using CoffeeSpace.ProductApi.Application.Repositories.Abstractions;
 using CoffeeSpace.ProductApi.Application.Services.Abstractions;
 using CoffeeSpace.ProductApi.Application.Validators;
 using CoffeeSpace.ProductApi.Persistence;
+using CoffeeSpace.ProductApi.Persistence.Abstractions;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MassTransit;

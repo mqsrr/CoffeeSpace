@@ -6,8 +6,8 @@ using CoffeeSpace.Messages.Products.Events;
 using CoffeeSpace.Messages.Products.Responses;
 using CoffeeSpace.Messages.Shipment.Events;
 using CoffeeSpace.Messages.Shipment.Responses;
+using CoffeeSpace.OrderingApi.Application.Mapping;
 using MassTransit;
-using OrderItemMappingProfile = CoffeeSpace.OrderingApi.Application.Mapping.OrderItemMappingProfile;
 
 #pragma warning disable CS8618
 
@@ -30,20 +30,20 @@ internal sealed class OrderStateMachine : MassTransitStateMachine<OrderStateInst
     {
         Event(() => SubmitOrder, x =>
             x.CorrelateById(context => Guid.Parse(context.Message.Order.Id)));
-        
-        Event(() => CancelOrder, x => 
+
+        Event(() => CancelOrder, x =>
             x.CorrelateById(context => Guid.Parse(context.Message.Order.Id)));
 
         Request(() => RequestOrderStockValidation, x =>
             x.Timeout = TimeSpan.FromSeconds(45));
-               
-        Request(() => RequestOrderPaymentValidation, x => 
-            x.Timeout = TimeSpan.FromSeconds(45));
-                
-        Request(() => RequestOrderShipment, x => 
+
+        Request(() => RequestOrderPaymentValidation, x =>
             x.Timeout = TimeSpan.FromSeconds(45));
 
-        InstanceState(x => x.CurrentState, 
+        Request(() => RequestOrderShipment, x =>
+            x.Timeout = TimeSpan.FromSeconds(45));
+
+        InstanceState(x => x.CurrentState,
             Submitted,
             StockConfirmed,
             Paid,
@@ -60,27 +60,28 @@ internal sealed class OrderStateMachine : MassTransitStateMachine<OrderStateInst
                     context.Saga.StockValidationSuccess = false;
                     context.Saga.PaymentSuccess = false;
                 })
-                .Request(RequestOrderStockValidation,context => context.Init<OrderStockValidation>(new
+                .Request(RequestOrderStockValidation, context => context.Init<OrderStockValidation>(new
                 {
                     context.Message.Order,
-                    Products = context.Message.Order.OrderItems.Select(x => OrderItemMappingProfile.ToProduct(x))
+                    Products = context.Message.Order.OrderItems.Select(x => x.ToProduct())
                 }))
                 .TransitionTo(Submitted));
-        
-        WhenEnterAny(binder => 
-            binder.Then(context => 
-                logger.LogDebug("The order with ID {OrderId} has entered a new state: {State}", 
-                    context.Saga.OrderId,
-                    context.Saga.CurrentState.ToString()))
-                
-                .If(context => context.Saga.CurrentState > 2,
-                    activityBinder => activityBinder.PublishAsync(context => 
+
+        WhenEnterAny(binder =>
+            binder.Then(context =>
+                {
+                    logger.LogDebug("The order with ID {OrderId} has entered a new state: {State}",
+                        context.Saga.OrderId,
+                        context.Saga.CurrentState.ToString());
+                })
+                .If(context => context.Saga.CurrentState > 2, activityBinder =>
+                    activityBinder.PublishAsync(context =>
                         context.Init<UpdateOrderStatus>(new
-                            {
-                                context.Saga.OrderId,
-                                context.Saga.BuyerId,
-                                Status = context.Saga.CurrentState - 3
-                            }))));
+                        {
+                            context.Saga.OrderId,
+                            context.Saga.BuyerId,
+                            Status = context.Saga.CurrentState - 3
+                        }))));
 
         WhenEnter(Canceled, binder => binder.Finalize());
 
@@ -102,24 +103,26 @@ internal sealed class OrderStateMachine : MassTransitStateMachine<OrderStateInst
             When(RequestOrderShipment.TimeoutExpired)
                 .Then(context => logger.LogWarning("The order with ID {OrderId} has reached the timeout value for shipment request", context.Saga.OrderId))
                 .TransitionTo(Canceled));
-
-        DuringAny(
+            
+        During(Submitted,
             When(RequestOrderStockValidation.Completed)
                 .Request(RequestOrderPaymentValidation, context => context.Init<OrderPaymentValidation>(new
                 {
                     context.Message.Order
                 }))
                 .Then(context => context.Saga.StockValidationSuccess = true)
-                .TransitionTo(StockConfirmed),
-            
+                .TransitionTo(StockConfirmed));
+
+        During(StockConfirmed,
             When(RequestOrderPaymentValidation.Completed)
                 .Request(RequestOrderShipment, context => context.Init<RequestOrderShipment>(new
                 {
                     context.Message.Order
                 }))
                 .Then(context => context.Saga.PaymentSuccess = true)
-                .TransitionTo(Paid),
-            
+                .TransitionTo(Paid));
+
+        During(Paid,
             When(RequestOrderShipment.Completed)
                 .PublishAsync(context => context.Init<UpdateOrderStatus>(new
                 {
@@ -129,6 +132,7 @@ internal sealed class OrderStateMachine : MassTransitStateMachine<OrderStateInst
                 }))
                 .TransitionTo(Shipped)
                 .Finalize());
+
 
         SetCompletedWhenFinalized();
     }

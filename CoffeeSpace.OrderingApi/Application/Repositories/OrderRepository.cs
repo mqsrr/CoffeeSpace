@@ -1,5 +1,5 @@
-﻿using CoffeeSpace.Domain.Ordering.Orders;
-using CoffeeSpace.OrderingApi.Application.Extensions;
+﻿using CoffeeSpace.Core.Extensions;
+using CoffeeSpace.Domain.Ordering.Orders;
 using CoffeeSpace.OrderingApi.Application.Repositories.Abstractions;
 using CoffeeSpace.OrderingApi.Persistence.Abstractions;
 using Microsoft.EntityFrameworkCore;
@@ -44,7 +44,7 @@ internal sealed class OrderRepository : IOrderRepository
     
     public async Task<Order?> GetByIdAsync(string id, CancellationToken cancellationToken)
     {
-        var order = await _orderingDbContext.Orders.FindAsync(new object?[] { id},  cancellationToken);
+        var order = await _orderingDbContext.Orders.FindAsync(new object?[] {id},  cancellationToken);
         if (order is not null)
         {
             await _orderingDbContext.Orders.LoadDataAsync(order, x => x.OrderItems);
