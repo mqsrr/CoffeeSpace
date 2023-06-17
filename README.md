@@ -109,7 +109,7 @@ This API works as a command center for all messages related to creating, updatin
 * Masstransit
 * Fluent Validation
 * Scrutor
-* Pomelo (MySql)
+* Npgsql (Postgres)
 * Newtonsoft.Json
 * Mediator
 * Mapperly
@@ -120,7 +120,6 @@ This API works as a command center for all messages related to creating, updatin
 
 #### Features
 * Masstransit Saga StateMachine
-* RateLimiter
 * Options
 * Caching
 * Api versioning
@@ -171,7 +170,7 @@ This has less functionality than the OrderingApi, but is still important because
 * Masstransit
 * Fluent Validation
 * Scrutor
-* Pomelo (MySql)
+* Npgsql (Postgres)
 * Newtonsoft.Json
 * Mediator
 * Mapperly
@@ -179,7 +178,6 @@ This has less functionality than the OrderingApi, but is still important because
 * RabbitMq/AWS
 
 #### Features
-* RateLimiter
 * Options
 * Caching
 * Decorator
@@ -263,7 +261,6 @@ The IdentityApi allows users to log in or register as new users, using IdentityD
 * Serilog
 
 #### Features
-* RateLimiter
 * Options
 * Api versioning
 * Logging
