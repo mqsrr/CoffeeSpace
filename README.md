@@ -56,7 +56,7 @@ builder.Services.AddApplicationService(typeof(ICacheService<>));
 builder.Services.AddApplicationService<IOrderService>();
 ``` 
 
-**ICacheService is coming from the Coffeespace.Application class library. There are generic services and settings which can be used across microservices.**
+**ICacheService is coming from the Coffeespace.Core class library. There are generic services and settings which can be used across microservices.**
 
 However, you can find that all APIs can have the same libraries and references, but it still doesn't look the same. For example, let's look at the OrderingAPI and ProductsAPI.
 ```cs
@@ -158,7 +158,7 @@ sequenceDiagram
 
 As you can see, the OrderingApi **can both publish and consume messages from other microservices. It uses the Masstransit StateMachine, which provides great opportunities to manage order state.There are five states: Submitted, StockConfirmed, Paid, Shipped, and Canceled.** When an order receives a new state, the OrderStateMachine changes its state in the database. The OrderingApi has two databases: OrderingDb and OrderStateDb. When an order is submitted, it is saved in the OrderingDb, and then the OrderStateMachine sends all the necessary messages. The OrderStateMachine uses the OrderStateDb as a storage for orders. **When an order reaches the Shipped or Canceled state, it is immediately removed from the database.** With this feature, the OrderStateMachine can easily continue to work with messages after it was stopped.
 
-Furthermore, the OrderingApi has one message for the IdentityApi. Basically,** when someone deletes a buyer, it sends a message to the IdentityApi to remove the buyer from its database. It also has a consumer that creates a new buyer if someone completes registration.**
+Furthermore, the OrderingApi has one message for the IdentityApi. Basically,**when someone deletes a buyer, it sends a message to the IdentityApi to remove the buyer from its database. It also has a consumer that creates a new buyer if someone completes registration.**
 
 > Note: All requests have a timeout value. If a request exceeds this timeout value, it will automatically be moved into a canceled state.
 
@@ -251,14 +251,13 @@ The IdentityApi allows users to log in or register as new users, using IdentityD
 #### Libraries
 * Masstransit
 * Fluent Validation
-* Scrutorx
+* Scrutor
 * Npgsql (Postgres)
 * Newtonsoft.Json
 * Mediator
 * Mapperly
 * Serilog
 * RabbitMq/AWS
-* Serilog
 
 #### Features
 * Options
@@ -377,6 +376,8 @@ To run the microservices in Docker, follow these steps:
 * RabbitMQ/AWS: Login Credentials 
 * OrderingDb: Connection String
 * OrderStateDb: Connection String
+* ProductDb: ConnectionString
+* PaymentDb: ConnectionString
 * Redis: Connection String
 * JWT Settings
 
@@ -459,4 +460,6 @@ Also, I recommend discussing your ideas and changes by creating an issue, so I c
 I was inspired by this project
 
 [eshopOnContainers](https://github.com/dotnet-architecture/eShopOnContainers)
+
+
 
