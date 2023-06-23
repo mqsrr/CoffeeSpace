@@ -4,14 +4,14 @@ namespace CoffeeSpace.OrderingApi.Application.Services.Abstractions;
 
 public interface IOrderService
 {
-    Task<IEnumerable<Order>> GetAllByBuyerIdAsync(string buyerId, CancellationToken cancellationToken);
+    Task<IEnumerable<Order>> GetAllByBuyerIdAsync(Guid buyerId, CancellationToken cancellationToken);
     
-    Task<Order?> GetByIdAsync(string id, string buyerId, CancellationToken cancellationToken);
+    Task<Order?> GetByIdAsync(Guid id, Guid buyerId, CancellationToken cancellationToken);
     
     Task<bool> CreateAsync(Order order, CancellationToken cancellationToken);
     
     Task<Order?> UpdateAsync(Order order, CancellationToken cancellationToken);
     
-    Task<bool> DeleteByIdAsync(string id, string buyerId, CancellationToken cancellationToken);
+    Task<bool> DeleteByIdAsync(Guid id, Guid buyerId, CancellationToken cancellationToken);
 
 }

@@ -1,64 +1,51 @@
 using CoffeeSpace.Domain.Products;
-using CoffeeSpace.ProductApi.Application.Messages.Commands;
-using CoffeeSpace.ProductApi.Application.Messages.Queries;
+using CoffeeSpace.ProductApi.Application.Contracts.Requests;
+using CoffeeSpace.ProductApi.Application.Repositories.Abstractions;
 using CoffeeSpace.ProductApi.Application.Services.Abstractions;
-using Mediator;
 
 namespace CoffeeSpace.ProductApi.Application.Services;
 
 internal sealed class ProductService : IProductService
 {
-    private readonly ISender _sender;
+    private readonly IProductRepository _productRepository;
 
-    public ProductService(ISender sender)
+    public ProductService(IProductRepository productRepository)
     {
-        _sender = sender;
+        _productRepository = productRepository;
     }
 
-    public async Task<IEnumerable<Product>> GetAllProductsAsync(CancellationToken cancellationToken)
+    public Task<int> GetCountAsync(CancellationToken cancellationToken)
     {
-        var products = await _sender.Send(new GetAllProductsQuery(), cancellationToken);
+        return _productRepository.GetCountAsync(cancellationToken);
+    }
 
+    public Task<IEnumerable<Product>> GetAllProductsAsync(GetAllProductsRequest request, CancellationToken cancellationToken)
+    {
+        var products = _productRepository.GetAllProductsAsync(request, cancellationToken);
         return products;
     }
 
-    public async Task<Product?> GetProductByIdAsync(string id, CancellationToken cancellationToken)
+    public Task<Product?> GetProductByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        var product = await _sender.Send(new GetProductByIdQuery
-        {
-            Id = id
-        }, cancellationToken);
-
+        var product = _productRepository.GetProductByIdAsync(id.ToString(), cancellationToken);
         return product;
     }
 
-    public async Task<bool> CreateProductAsync(Product product, CancellationToken cancellationToken)
+    public Task<bool> CreateProductAsync(Product product, CancellationToken cancellationToken)
     {
-        var created = await _sender.Send(new CreateProductCommand
-        {
-            Product = product
-        }, cancellationToken);
-
+        var created = _productRepository.CreateProductAsync(product, cancellationToken);
         return created;
     }
 
-    public async Task<Product?> UpdateProductAsync(Product product, CancellationToken cancellationToken)
+    public Task<Product?> UpdateProductAsync(Product product, CancellationToken cancellationToken)
     {
-        var updateProduct = await _sender.Send(new UpdateProductCommand
-        {
-            Product = product
-        }, cancellationToken);
-
-        return updateProduct;
+        var updatedProduct = _productRepository.UpdateProductAsync(product, cancellationToken);
+        return updatedProduct;
     }
 
-    public async Task<bool> DeleteProductByIdAsync(string id, CancellationToken cancellationToken)
+    public Task<bool> DeleteProductByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        var deleted = await _sender.Send(new DeleteProductByIdCommand
-        {
-            Id = id
-        }, cancellationToken);
-
+        var deleted = _productRepository.DeleteProductByIdAsync(id.ToString(), cancellationToken);
         return deleted;
     }
 }

@@ -17,7 +17,7 @@ public sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
             .IsRequired();
         
         builder.Property(x => x.Description)
-            .HasMaxLength(64)
+            .HasMaxLength(184)
             .IsUnicode(false)
             .IsRequired();
         

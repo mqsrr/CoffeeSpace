@@ -27,7 +27,7 @@ internal sealed class OrderPaymentValidationConsumer : IConsumer<OrderPaymentVal
             PaymentId = order.PaymentInfo.Id,
             OrderDate = DateTime.UtcNow,
             TotalPrice = order.OrderItems.Sum(x => x.Total)
-        });
+        }, context.CancellationToken);
 
         await Task.Delay(TimeSpan.FromSeconds(3));
         _logger.LogInformation("The payment for the order with ID {OrderId} has been stored", order.Id);

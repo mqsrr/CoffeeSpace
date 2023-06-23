@@ -4,7 +4,6 @@ internal static class CacheKeys
 {
     public static class Buyers
     {
-        public static string GetAll => "buyers-all";
         public static string Get(string id) => $"buyers-{id}";
         public static string GetByEmail(string email) => $"buyers-email-{email}";
     }   

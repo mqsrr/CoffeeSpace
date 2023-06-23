@@ -21,7 +21,7 @@ public static class ApplicationServiceExtensions
 
         return services;
     }
-
+    
     public static IServiceCollection AddApplicationService(
         this IServiceCollection services,
         Type interfaceType,
@@ -29,6 +29,25 @@ public static class ApplicationServiceExtensions
     {
         services.Scan(scan => scan
             .FromAssembliesOf(interfaceType)
+            .AddClasses(classes =>
+            {
+                classes.AssignableTo(interfaceType)
+                    .WithoutAttribute<Decorator>();
+            })
+            .AsImplementedInterfaces()
+            .WithLifetime(serviceLifetime));
+
+        return services;
+    }
+    
+    public static IServiceCollection AddApplicationService(
+        this IServiceCollection services,
+        Type interfaceType,
+        Type assemblyOf,
+        ServiceLifetime serviceLifetime = ServiceLifetime.Scoped)
+    {
+        services.Scan(scan => scan
+            .FromAssembliesOf(assemblyOf)
             .AddClasses(classes =>
             {
                 classes.AssignableTo(interfaceType)

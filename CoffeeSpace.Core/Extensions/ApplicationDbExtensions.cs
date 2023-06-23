@@ -8,7 +8,7 @@ public static class ApplicationDbExtensions
     public static IServiceCollection AddApplicationDb<TDbContext>(this IServiceCollection services, string connectionString)
         where TDbContext : DbContext
     {
-        services.AddNpgsql<TDbContext>(connectionString);
+        services.AddNpgsql<TDbContext>(connectionString, builder => builder.MinBatchSize(1));
         services.AddNpgsqlDbContextOptions<TDbContext>(connectionString);
         
         return services;
@@ -18,7 +18,7 @@ public static class ApplicationDbExtensions
         where TDbContext : DbContext, TDbInterface 
         where TDbInterface : class
     {
-        services.AddNpgsql<TDbContext>(connectionString);
+        services.AddNpgsql<TDbContext>(connectionString, builder => builder.MinBatchSize(1));
         services.AddNpgsqlDbContextOptions<TDbContext>(connectionString);
 
         services.AddApplicationService<TDbInterface>(services.Single(x =>

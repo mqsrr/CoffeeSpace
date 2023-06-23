@@ -28,7 +28,7 @@ builder.Services.AddMassTransit(x =>
 {
     x.SetKebabCaseEndpointNameFormatter();
     x.AddConsumer<OrderPaymentValidationConsumer>();
-
+    
     x.UsingAmazonSqs((context, config) =>
     {
         var awsSettings = context.GetRequiredService<IOptions<AwsMessagingSettings>>().Value;

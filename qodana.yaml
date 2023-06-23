@@ -1,6 +1,6 @@
 version: "1.0"
 linter: jetbrains/qodana-dotnet:2023.1-eap
-dot-net: 
+dot-net:
   solution: CoffeeSpace.sln
 include:
   - name: CppThisArgMemberFuncDelegateCtorIsUnsuportedByDotNetCore
@@ -31,3 +31,11 @@ exclude:
       - CoffeeSpace.ProductApi/Application/Contracts
       - CoffeeSpace.ProductApi/Application/Validators
       - CoffeeSpace.ProductApi/Persistence/Migrations
+      - CoffeeSpace.ApiGateway/Extensions
+      - CoffeeSpace.Core/Extensions
+      - CoffeeSpace.Client
+  - name: UnusedMemberInSuper.Global
+  - name: UnusedType.Global
+  - name: UnusedMethodReturnValue.Global
+  - name: ClassNeverInstantiated.Global
+  - name: InvertIf

@@ -21,18 +21,18 @@ public sealed class OrdersController : ControllerBase
     }
 
     [HttpGet(ApiEndpoints.Orders.GetAll)]
-    public async Task<IActionResult> GetAllOrdersByBuyerId([FromRoute] Guid buyerId, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAllOrdersByBuyerId([FromRoute] GetAllOrdersByBuyerIdRequest request, CancellationToken cancellationToken)
     {
-        var orders = await _orderService.GetAllByBuyerIdAsync(buyerId.ToString(), cancellationToken);
+        var orders = await _orderService.GetAllByBuyerIdAsync(request.BuyerId, cancellationToken);
         var response = orders.Select(x => x.ToResponse());
         
         return Ok(response);
     }
     
     [HttpGet(ApiEndpoints.Orders.Get)]
-    public async Task<IActionResult> GetOrderByBuyerId([FromRoute] Guid buyerId, [FromRoute] Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetOrderByBuyerId([FromRoute] GetOrderByIdRequest request, CancellationToken cancellationToken)
     {
-        var order = await _orderService.GetByIdAsync(id.ToString(), buyerId.ToString(), cancellationToken);
+        var order = await _orderService.GetByIdAsync(request.Id, request.BuyerId, cancellationToken);
 
         return order is not null
             ? Ok(order.ToResponse())
@@ -61,9 +61,9 @@ public sealed class OrdersController : ControllerBase
     }
     
     [HttpDelete(ApiEndpoints.Orders.Delete)]
-    public async Task<IActionResult> DeleteOrder([FromRoute] Guid buyerId, [FromRoute] Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> DeleteOrder([FromRoute] DeleteOrderRequest request, CancellationToken cancellationToken)
     {
-        var deleted = await _orderService.DeleteByIdAsync(id.ToString(), buyerId.ToString(), cancellationToken);
+        var deleted = await _orderService.DeleteByIdAsync(request.Id, request.BuyerId, cancellationToken);
 
         return deleted
             ? Ok()

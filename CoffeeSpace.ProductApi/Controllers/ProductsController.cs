@@ -1,5 +1,6 @@
 using Asp.Versioning;
 using CoffeeSpace.ProductApi.Application.Contracts.Requests;
+using CoffeeSpace.ProductApi.Application.Extensions;
 using CoffeeSpace.ProductApi.Application.Helpers;
 using CoffeeSpace.ProductApi.Application.Mapping;
 using CoffeeSpace.ProductApi.Application.Services.Abstractions;
@@ -21,18 +22,19 @@ public sealed class ProductsController : ControllerBase
     }
 
     [HttpGet(ApiEndpoints.Products.GetAll)]
-    public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAll([FromQuery] GetAllProductsRequest request, CancellationToken cancellationToken)
     {
-        var products = await _productService.GetAllProductsAsync(cancellationToken);
-        var response = products.Select(x => x.ToResponse());
-        
+        var products = await _productService.GetAllProductsAsync(request, cancellationToken);
+        var count = await _productService.GetCountAsync(cancellationToken);
+
+        var response = products.Select(x => x.ToResponse()).ToPagedList(request.Page, request.PageSize, count);
         return Ok(response);
     }
     
     [HttpGet(ApiEndpoints.Products.Get)]
-    public async Task<IActionResult> GetById([FromRoute] Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetById([FromRoute] GetProductByIdRequest request, CancellationToken cancellationToken)
     {
-        var product = await _productService.GetProductByIdAsync(id.ToString(), cancellationToken);
+        var product = await _productService.GetProductByIdAsync(request.Id, cancellationToken);
         
         return product is not null
             ? Ok(product)
@@ -61,9 +63,9 @@ public sealed class ProductsController : ControllerBase
     }
     
     [HttpDelete(ApiEndpoints.Products.Delete)]
-    public async Task<IActionResult> Delete([FromRoute] Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> Delete([FromRoute] DeleteProductByIdRequest request, CancellationToken cancellationToken)
     {
-        var deleted = await _productService.DeleteProductByIdAsync(id.ToString(), cancellationToken);
+        var deleted = await _productService.DeleteProductByIdAsync(request.Id, cancellationToken);
 
         return deleted
             ? Ok()

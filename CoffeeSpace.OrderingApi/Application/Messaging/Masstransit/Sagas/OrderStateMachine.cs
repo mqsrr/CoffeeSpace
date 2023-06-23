@@ -35,13 +35,13 @@ internal sealed class OrderStateMachine : MassTransitStateMachine<OrderStateInst
             x.CorrelateById(context => Guid.Parse(context.Message.Order.Id)));
 
         Request(() => RequestOrderStockValidation, x =>
-            x.Timeout = TimeSpan.FromSeconds(45));
+            x.Timeout = TimeSpan.FromSeconds(60));
 
         Request(() => RequestOrderPaymentValidation, x =>
-            x.Timeout = TimeSpan.FromSeconds(45));
+            x.Timeout = TimeSpan.FromSeconds(60));
 
         Request(() => RequestOrderShipment, x =>
-            x.Timeout = TimeSpan.FromSeconds(45));
+            x.Timeout = TimeSpan.FromSeconds(60));
 
         InstanceState(x => x.CurrentState,
             Submitted,

@@ -20,9 +20,9 @@ public sealed class BuyersController : ControllerBase
     }
 
     [HttpGet(ApiEndpoints.Buyer.Get)]
-    public async Task<IActionResult> GetBuyerById([FromRoute] Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetBuyerById([FromRoute] GetBuyerByIdRequest request, CancellationToken cancellationToken)
     {
-        var buyer = await _buyerService.GetByIdAsync(id.ToString(), cancellationToken);
+        var buyer = await _buyerService.GetByIdAsync(request.Id, cancellationToken);
 
         return buyer is not null
             ? Ok(buyer.ToResponse())
@@ -30,9 +30,9 @@ public sealed class BuyersController : ControllerBase
     }
     
     [HttpGet(ApiEndpoints.Buyer.GetWithEmail)]
-    public async Task<IActionResult> GetBuyerByEmail([FromRoute] string email, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetBuyerByEmail([FromRoute] GetBuyerByEmailRequest request, CancellationToken cancellationToken)
     {
-        var buyer = await _buyerService.GetByEmailAsync(email, cancellationToken);
+        var buyer = await _buyerService.GetByEmailAsync(request.Email, cancellationToken);
 
         return buyer is not null
             ? Ok(buyer.ToResponse())
@@ -61,9 +61,9 @@ public sealed class BuyersController : ControllerBase
     }
 
     [HttpDelete(ApiEndpoints.Buyer.Delete)]
-    public async Task<IActionResult> DeleteBuyerById([FromRoute] Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> DeleteBuyerById([FromRoute] DeleteBuyerByIdRequest request, CancellationToken cancellationToken)
     {
-        var deleted = await _buyerService.DeleteByIdAsync(id.ToString(), cancellationToken);
+        var deleted = await _buyerService.DeleteByIdAsync(request.Id, cancellationToken);
 
         return deleted
             ? Ok()

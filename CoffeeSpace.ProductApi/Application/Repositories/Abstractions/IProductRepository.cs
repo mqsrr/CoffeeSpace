@@ -1,10 +1,15 @@
 using CoffeeSpace.Domain.Products;
+using CoffeeSpace.ProductApi.Application.Contracts.Requests;
 
 namespace CoffeeSpace.ProductApi.Application.Repositories.Abstractions;
 
 internal interface IProductRepository
 {
+    Task<int> GetCountAsync(CancellationToken cancellationToken);
+
     Task<IEnumerable<Product>> GetAllProductsAsync(CancellationToken cancellationToken);
+    
+    Task<IEnumerable<Product>> GetAllProductsAsync(GetAllProductsRequest request, CancellationToken cancellationToken);
     
     Task<Product?> GetProductByIdAsync(string id, CancellationToken cancellationToken);
     

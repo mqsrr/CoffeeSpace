@@ -22,5 +22,12 @@
       <jdbc-url>jdbc:postgresql://coffeespace-postgres.postgres.database.azure.com:5432/orderingdb</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="ProductDb" uuid="4906fb33-84c4-4e59-b5ec-14576b29b99b">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://coffeespace-postgres.postgres.database.azure.com:5432/productdb</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

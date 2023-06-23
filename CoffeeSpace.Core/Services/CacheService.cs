@@ -15,7 +15,7 @@ public sealed class CacheService<TEntity> : ICacheService<TEntity>
         _distributedCache = distributedCache;
         _options = new DistributedCacheEntryOptions
         {
-            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10),
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5),
             SlidingExpiration = TimeSpan.FromMinutes(3)
         };
     }
@@ -78,7 +78,7 @@ public sealed class CacheService<TEntity> : ICacheService<TEntity>
         CancellationToken cancellationToken)
     {
         var cachedEntity = await GetAllAsync(key, cancellationToken);
-        if (cachedEntity.TryGetNonEnumeratedCount(out int count) && count > 0)
+        if (cachedEntity.TryGetNonEnumeratedCount(out var count) && count > 0)
         {
             return cachedEntity;
         }

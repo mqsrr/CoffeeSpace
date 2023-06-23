@@ -12,7 +12,7 @@ internal static partial class BuyerMappingProfile
     
     public static partial Buyer ToBuyer(this CreateBuyerRequest request);
 
-    public static partial Buyer ToBuyer(this UpdateBuyerRequest request);
+    private static partial Buyer ToBuyer(this UpdateBuyerRequest request);
     
     public static Buyer ToBuyer(this UpdateBuyerRequest request, Guid id)
     {

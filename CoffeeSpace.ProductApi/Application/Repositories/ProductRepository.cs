@@ -1,6 +1,6 @@
 using CoffeeSpace.Domain.Products;
+using CoffeeSpace.ProductApi.Application.Contracts.Requests;
 using CoffeeSpace.ProductApi.Application.Repositories.Abstractions;
-using CoffeeSpace.ProductApi.Persistence;
 using CoffeeSpace.ProductApi.Persistence.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +15,12 @@ internal sealed class ProductRepository : IProductRepository
         _productDbContext = productDbContext;
     }
 
+    public Task<int> GetCountAsync(CancellationToken cancellationToken)
+    {
+        var count = _productDbContext.Products.CountAsync(cancellationToken);
+        return count;
+    }
+
     public async Task<IEnumerable<Product>> GetAllProductsAsync(CancellationToken cancellationToken)
     {
         var isNotEmpty = await _productDbContext.Products.AnyAsync(cancellationToken);
@@ -23,11 +29,27 @@ internal sealed class ProductRepository : IProductRepository
             ? Enumerable.Empty<Product>()
             : _productDbContext.Products;
     }
+    
+    public async Task<IEnumerable<Product>> GetAllProductsAsync(GetAllProductsRequest request, CancellationToken cancellationToken)
+    {
+        var isNotEmpty = await _productDbContext.Products.AnyAsync(cancellationToken);
+        if (!isNotEmpty)
+        {
+            return Enumerable.Empty<Product>();
+        }
+
+        var products = _productDbContext.Products
+            .OrderBy(product => product.Title)
+            .Skip((request.Page - 1) * request.PageSize)
+            .Take(request.PageSize)
+            .AsEnumerable();
+
+        return products;
+    }
 
     public async Task<Product?> GetProductByIdAsync(string id, CancellationToken cancellationToken)
     {
         var product = await _productDbContext.Products.FindAsync(new object?[]{ id }, cancellationToken: cancellationToken);
-
         return product;
     }
 

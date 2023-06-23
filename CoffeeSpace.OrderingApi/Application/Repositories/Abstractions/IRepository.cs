@@ -2,8 +2,6 @@
 
 internal interface IRepository<TEntity> where TEntity : class
 {
-    Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken cancellationToken);
-    
     Task<TEntity?> GetByIdAsync(string id, CancellationToken cancellationToken);
     
     Task<bool> CreateAsync(TEntity entity, CancellationToken cancellationToken);

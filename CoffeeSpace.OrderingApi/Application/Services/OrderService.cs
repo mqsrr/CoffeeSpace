@@ -1,6 +1,4 @@
-using CoffeeSpace.Core.Services.Abstractions;
 using CoffeeSpace.Domain.Ordering.Orders;
-using CoffeeSpace.OrderingApi.Application.Helpers;
 using CoffeeSpace.OrderingApi.Application.Messaging.Mediator.Commands.Orders;
 using CoffeeSpace.OrderingApi.Application.Messaging.Mediator.Queries.Orders;
 using CoffeeSpace.OrderingApi.Application.Services.Abstractions;
@@ -11,87 +9,61 @@ namespace CoffeeSpace.OrderingApi.Application.Services;
 internal sealed class OrderService : IOrderService
 {
     private readonly ISender _sender;
-    private readonly ICacheService<Order> _cache;
 
-    public OrderService(ISender sender, ICacheService<Order> cache)
+    public OrderService(ISender sender)
     {
         _sender = sender;
-        _cache = cache;
     }
 
-    public Task<IEnumerable<Order>> GetAllByBuyerIdAsync(string buyerId, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<Order>> GetAllByBuyerIdAsync(Guid buyerId, CancellationToken cancellationToken)
     {
-        return _cache.GetAllOrCreateAsync(CacheKeys.Order.GetAll(buyerId), async () =>
+        var orders = await _sender.Send(new GetAllOrdersByBuyerIdQuery
         {
-            var orders = await _sender.Send(new GetAllOrdersByBuyerIdQuery
-            {
-                BuyerId = buyerId
-            }, cancellationToken);
-
-            return orders;
+            BuyerId = buyerId.ToString()
         }, cancellationToken);
+
+        return orders;
     }
 
-    public Task<Order?> GetByIdAsync(string id, string buyerId, CancellationToken cancellationToken = default)
+    public async Task<Order?> GetByIdAsync(Guid id, Guid buyerId, CancellationToken cancellationToken)
     {
-        return _cache.GetOrCreateAsync(CacheKeys.Order.GetByCustomerId(id, buyerId), async () =>
-        {
-            var order = await _sender.Send(new GetOrderByIdQuery
-            {
-                BuyerId = buyerId,
-                Id = id
-            }, cancellationToken);
 
-            return order;
+        var order = await _sender.Send(new GetOrderByIdQuery
+        {
+            BuyerId = buyerId.ToString(),
+            Id = id.ToString()
         }, cancellationToken);
+
+        return order;
     }
 
-    public async Task<bool> CreateAsync(Order order, CancellationToken cancellationToken = default)
+    public async Task<bool> CreateAsync(Order order, CancellationToken cancellationToken)
     {
         var created = await _sender.Send(new CreateOrderCommand
         {
             Order = order
         }, cancellationToken);
 
-        if (created)
-        {
-            await _cache.RemoveAsync(CacheKeys.Order.GetAll(order.BuyerId), cancellationToken);
-            await _cache.RemoveAsync(CacheKeys.Buyers.Get(order.BuyerId), cancellationToken);
-        }
-
         return created;
     }
 
-    public async Task<Order?> UpdateAsync(Order order, CancellationToken cancellationToken = default)
+    public async Task<Order?> UpdateAsync(Order order, CancellationToken cancellationToken)
     {
         var result = await _sender.Send(new UpdateOrderCommand
         {
             Order = order
         }, cancellationToken);
 
-        if (result is not null)
-        {
-            await _cache.RemoveAsync(CacheKeys.Order.GetAll(order.BuyerId), cancellationToken);
-            await _cache.RemoveAsync(CacheKeys.Order.GetByCustomerId(order.Id, order.BuyerId), cancellationToken);
-            
-            await _cache.RemoveAsync(CacheKeys.Buyers.Get(order.BuyerId), cancellationToken);
-        }
-
         return result;
     }
 
-    public async Task<bool> DeleteByIdAsync(string id, string buyerId, CancellationToken cancellationToken = default)
+    public async Task<bool> DeleteByIdAsync(Guid id, Guid buyerId, CancellationToken cancellationToken)
     {
         var deleted = await _sender.Send(new DeleteOrderByIdCommand
         {
-            Id = id
+            Id = id.ToString(),
+            BuyerId = buyerId.ToString()
         }, cancellationToken);
-
-        if (deleted)
-        {
-            await _cache.RemoveAsync(CacheKeys.Order.GetAll(buyerId), cancellationToken);
-            await _cache.RemoveAsync(CacheKeys.Order.GetByCustomerId(id, buyerId), cancellationToken);
-        }
 
         return deleted;
     }

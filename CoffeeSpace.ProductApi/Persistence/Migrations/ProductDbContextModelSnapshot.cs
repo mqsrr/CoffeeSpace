@@ -28,9 +28,9 @@ namespace CoffeeSpace.ProductApi.Persistence.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(64)
+                        .HasMaxLength(184)
                         .IsUnicode(false)
-                        .HasColumnType("character varying(64)");
+                        .HasColumnType("character varying(184)");
 
                     b.Property<float>("Discount")
                         .IsUnicode(false)

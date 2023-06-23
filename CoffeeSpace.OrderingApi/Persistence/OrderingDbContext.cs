@@ -3,8 +3,6 @@ using CoffeeSpace.Domain.Ordering.BuyerInfo;
 using CoffeeSpace.Domain.Ordering.BuyerInfo.CardInfo;
 using CoffeeSpace.Domain.Ordering.Orders;
 using CoffeeSpace.OrderingApi.Persistence.Abstractions;
-using CoffeeSpace.OrderingApi.Persistence.Configurations;
-using MassTransit.EntityFrameworkCoreIntegration;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeSpace.OrderingApi.Persistence;
@@ -29,5 +27,8 @@ internal sealed class OrderingDbContext : DbContext, IOrderingDbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        
+        base.OnModelCreating(modelBuilder);
     }
+    
 }

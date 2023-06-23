@@ -10,7 +10,7 @@ internal static partial class OrderMappingProfile
 {
     public static partial OrderResponse ToResponse(this Order order);
     
-    public static partial Order ToOrder(this CreateOrderRequest request);
+    private static partial Order ToOrder(this CreateOrderRequest request);
     
     public static Order ToOrder(this CreateOrderRequest request, Guid buyerId)
     {
@@ -19,7 +19,7 @@ internal static partial class OrderMappingProfile
         return request.ToOrder();
     }
     
-    public static partial Order ToOrder(this UpdateOrderRequest request);
+    private static partial Order ToOrder(this UpdateOrderRequest request);
     
     public static Order ToOrder(this UpdateOrderRequest request, Guid id, Guid buyerId)
     {

@@ -15,38 +15,27 @@ internal sealed class BuyerRepository : IBuyerRepository
         _orderingDbContext = orderingDbContext;
     }
 
-    public async Task<IEnumerable<Buyer>> GetAllAsync(CancellationToken cancellationToken)
-    {
-        var isNotEmpty = await _orderingDbContext.Buyers.AnyAsync(cancellationToken);
-        if (!isNotEmpty)
-        {
-            return Enumerable.Empty<Buyer>();
-        }
-
-        return _orderingDbContext.Buyers;
-    }
-
     public async Task<Buyer?> GetByIdAsync(string id, CancellationToken cancellationToken)
     {
         var buyer = await _orderingDbContext.Buyers.FindAsync(new object?[] {id}, cancellationToken);
         if (buyer is not null)
         {
-            await _orderingDbContext.Buyers.LoadDataAsync(buyer, x => x.Orders!);
-            await _orderingDbContext.Orders.LoadDataAsync(buyer.Orders!, x => x.OrderItems);
-            await _orderingDbContext.Orders.LoadDataAsync(buyer.Orders!, x => x.Address);
+            await _orderingDbContext.Buyers.LoadDataAsync(buyer, b => b.Orders!);
+            await _orderingDbContext.Orders.LoadDataAsync(buyer.Orders!, o => o.OrderItems);
+            await _orderingDbContext.Orders.LoadDataAsync(buyer.Orders!, o => o.Address);
         }
         
         return buyer;
     }
-    
+
     public async Task<Buyer?> GetByEmailAsync(string email, CancellationToken cancellationToken)
     {
         var buyer = await _orderingDbContext.Buyers.FirstOrDefaultAsync(c => c.Email == email, cancellationToken);
         if (buyer is not null)
         {
-            await _orderingDbContext.Buyers.LoadDataAsync(buyer, x => x.Orders!);
-            await _orderingDbContext.Orders.LoadDataAsync(buyer.Orders!, x => x.OrderItems);
-            await _orderingDbContext.Orders.LoadDataAsync(buyer.Orders!, x => x.Address);
+            await _orderingDbContext.Buyers.LoadDataAsync(buyer, b => b.Orders!);
+            await _orderingDbContext.Orders.LoadDataAsync(buyer.Orders!, o => o.OrderItems);
+            await _orderingDbContext.Orders.LoadDataAsync(buyer.Orders!, o => o.Address);
         }
 
         return buyer;

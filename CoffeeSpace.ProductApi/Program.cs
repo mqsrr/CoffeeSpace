@@ -25,7 +25,6 @@ builder.Configuration.AddAzureKeyVault();
 builder.Configuration.AddJwtBearer(builder);
 
 builder.Services.AddControllers();
-builder.Services.AddMediator();
 
 builder.Services.AddApiVersioning(new MediaTypeApiVersionReader("api-version"));
 
@@ -53,6 +52,8 @@ builder.Services.AddMassTransit(x =>
     x.SetKebabCaseEndpointNameFormatter();
     x.AddConsumer<OrderStockValidationConsumer>();
 
+    x.AddInMemoryInboxOutbox();
+    
     x.UsingAmazonSqs((context, config) =>
     {
         var awsSettings = context.GetRequiredService<IOptions<AwsMessagingSettings>>().Value;

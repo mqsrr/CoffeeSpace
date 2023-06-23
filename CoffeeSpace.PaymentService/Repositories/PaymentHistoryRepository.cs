@@ -1,5 +1,4 @@
 using CoffeeSpace.PaymentService.Models;
-using CoffeeSpace.PaymentService.Persistence;
 using CoffeeSpace.PaymentService.Persistence.Abstractions;
 using CoffeeSpace.PaymentService.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +14,7 @@ internal sealed class PaymentHistoryRepository : IPaymentHistoryRepository
         _paymentDbContext = paymentDbContext;
     }
 
-    public async Task<IEnumerable<PaymentHistory>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<PaymentHistory>> GetAllAsync(CancellationToken cancellationToken)
     {
         var isNotEmpty = await _paymentDbContext.PaymentHistories.AnyAsync(cancellationToken);
         
@@ -24,13 +23,13 @@ internal sealed class PaymentHistoryRepository : IPaymentHistoryRepository
             : _paymentDbContext.PaymentHistories;
     }
 
-    public async Task<PaymentHistory?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
+    public async Task<PaymentHistory?> GetByIdAsync(string id, CancellationToken cancellationToken)
     {
         var paymentHistory = await _paymentDbContext.PaymentHistories.FindAsync(new object?[] {id}, cancellationToken);
         return paymentHistory;
     }
 
-    public async Task<bool> CreateAsync(PaymentHistory paymentHistory, CancellationToken cancellationToken = default)
+    public async Task<bool> CreateAsync(PaymentHistory paymentHistory, CancellationToken cancellationToken)
     {
         await _paymentDbContext.PaymentHistories.AddAsync(paymentHistory, cancellationToken);
         var result = await _paymentDbContext.SaveChangesAsync(cancellationToken);
@@ -38,32 +37,25 @@ internal sealed class PaymentHistoryRepository : IPaymentHistoryRepository
         return result > 0;
     }
 
-    public async Task<PaymentHistory?> UpdateAsync(PaymentHistory paymentHistory, CancellationToken cancellationToken = default)
+    public async Task<PaymentHistory?> UpdateAsync(PaymentHistory paymentHistory, CancellationToken cancellationToken)
     {
-        try
-        {
-            _paymentDbContext.PaymentHistories.Update(paymentHistory);
-            await _paymentDbContext.SaveChangesAsync(cancellationToken);
-        }
-        catch (Exception)
-        {
-            return null;
-        }
-
-        return paymentHistory;
+        var result = await _paymentDbContext.PaymentHistories
+            .Where(payment => payment.Id == paymentHistory.Id)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(payment => payment.OrderDate, paymentHistory.OrderDate)
+                .SetProperty(payment => payment.TotalPrice, paymentHistory.TotalPrice), cancellationToken);
+        
+        return result > 0
+            ? paymentHistory
+            : null;
     }
 
-    public async Task<bool> DeleteByIdAsync(string id, CancellationToken cancellationToken = default)
+    public async Task<bool> DeleteByIdAsync(string id, CancellationToken cancellationToken)
     {
-        var paymentHistory = await _paymentDbContext.PaymentHistories.FindAsync(new object[] { id }, cancellationToken);
-        if (paymentHistory is null)
-        {
-            return false;
-        }
-        
-        _paymentDbContext.PaymentHistories.Remove(paymentHistory);
-        await _paymentDbContext.SaveChangesAsync(cancellationToken);
+        var result = await _paymentDbContext.PaymentHistories
+            .Where(payment => payment.Id == id)
+            .ExecuteDeleteAsync(cancellationToken);
 
-        return true;
+        return result > 0;
     }
 }

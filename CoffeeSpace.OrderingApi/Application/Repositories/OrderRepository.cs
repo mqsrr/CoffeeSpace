@@ -14,18 +14,7 @@ internal sealed class OrderRepository : IOrderRepository
     {
         _orderingDbContext = orderingDbContext;
     }
-
-    public async Task<IEnumerable<Order>> GetAllAsync(CancellationToken cancellationToken)
-    {
-        var isNotEmpty = await _orderingDbContext.Orders.AnyAsync(cancellationToken);
-        if (!isNotEmpty)
-        {
-            return Enumerable.Empty<Order>();
-        }
-
-        return _orderingDbContext.Orders;
-    }
-
+    
     public async Task<IEnumerable<Order>> GetAllByBuyerIdAsync(string buyerId, CancellationToken cancellationToken)
     {
         var isNotEmpty = await _orderingDbContext.Orders.AnyAsync(cancellationToken);
@@ -47,8 +36,8 @@ internal sealed class OrderRepository : IOrderRepository
         var order = await _orderingDbContext.Orders.FindAsync(new object?[] {id},  cancellationToken);
         if (order is not null)
         {
-            await _orderingDbContext.Orders.LoadDataAsync(order, x => x.OrderItems);
-            await _orderingDbContext.Orders.LoadDataAsync(order, x => x.Address);
+            await _orderingDbContext.Orders.LoadDataAsync(order, o => o.OrderItems);
+            await _orderingDbContext.Orders.LoadDataAsync(order, o => o.Address);
         }
         
         return order;
@@ -75,7 +64,7 @@ internal sealed class OrderRepository : IOrderRepository
         {
             return null;
         }
-
+        
         _orderingDbContext.Orders.Update(order);
         await _orderingDbContext.SaveChangesAsync(cancellationToken);
         

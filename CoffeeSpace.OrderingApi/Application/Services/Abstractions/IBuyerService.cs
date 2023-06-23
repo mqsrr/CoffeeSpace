@@ -4,7 +4,7 @@ namespace CoffeeSpace.OrderingApi.Application.Services.Abstractions;
 
 public interface IBuyerService
 {
-    Task<Buyer?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<Buyer?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
     
     Task<Buyer?> GetByEmailAsync(string email, CancellationToken cancellationToken);
     
@@ -12,5 +12,5 @@ public interface IBuyerService
     
     Task<Buyer?> UpdateAsync(Buyer buyer, CancellationToken cancellationToken);
     
-    Task<bool> DeleteByIdAsync(string id, CancellationToken cancellationToken);
+    Task<bool> DeleteByIdAsync(Guid id, CancellationToken cancellationToken);
 }
