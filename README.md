@@ -3,8 +3,11 @@
 [![Qodana](https://github.com/Marsik424/CoffeeSpace/actions/workflows/code_quality.yml/badge.svg)](https://github.com/Marsik424/CoffeeSpace/actions/workflows/code_quality.yml) [![Build](https://github.com/Marsik424/CoffeeSpace/actions/workflows/build.yml/badge.svg)](https://github.com/Marsik424/CoffeeSpace/actions/workflows/build.yml)
 
 MAUI client with simple coffee ordering system
+## Client Implementation
 
+**Please note that the client part of this project is currently in active development.**
 
+During the active development stage, I will integrate MAUI (Multi-platform App UI) into the client library to simplify integration with the web API. This integration will enable seamless dependency injection and provide cross-platform functionality for the client library.
 
 ## API Overview 
 
@@ -14,7 +17,7 @@ As you might have seen, Coffeespace uses a microservices approach to respond to 
 
 |      API       |    Libraries     |   Services     |
 | :------------: |  :-----------:   |  :-----------: |    
-|  OrderingAPI   |    Application   | PaymentService |
+|  OrderingAPI   |       Core       | PaymentService |
 |  ProductsAPI   |     Messages     | ShipmentService|
 |  IdentityAPI   |      Domain      |
 
@@ -53,7 +56,7 @@ builder.Services.AddApplicationService(typeof(ICacheService<>));
 builder.Services.AddApplicationService<IOrderService>();
 ``` 
 
-**ICacheService is coming from the Coffeespace.Application class library. There are generic services and settings which can be used across microservices.**
+**`ICacheService` is coming from the Coffeespace.Core class library. There are generic services and settings which can be used across microservices.**
 
 However, you can find that all APIs can have the same libraries and references, but it still doesn't look the same. For example, let's look at the OrderingAPI and ProductsAPI.
 ```cs
@@ -70,7 +73,7 @@ However, you can find that all APIs can have the same libraries and references, 
         }, cancellationToken);
     }
 ```
-This code comes from IOrderService, which is in the OrderingAPI. As you can see, it's just managing caching and creating queries (or commands, depending on the method). On the other hand, we have IProductService in ProductsAPI.
+This code comes from `IOrderService`, which is in the OrderingAPI. As you can see, it's just managing caching and creating queries (or commands, depending on the method). On the other hand, we have IProductService in ProductsAPI.
 
 ```cs
     public async Task<IEnumerable<Product>> GetAllProductsAsync(CancellationToken cancellationToken)
@@ -80,7 +83,7 @@ This code comes from IOrderService, which is in the OrderingAPI. As you can see,
         return products;
     }
 ```
-And yes, it's only creating queries and commands. Most of the caching is implemented in IProductRepository.
+And yes, it's only creating queries and commands. Most of the caching is implemented in `IProductRepository`.
 ```cs
 public Task<IEnumerable<Product>> GetAllProductsAsync(CancellationToken cancellationToken)
     {
@@ -92,39 +95,124 @@ public Task<IEnumerable<Product>> GetAllProductsAsync(CancellationToken cancella
     }
 ```
 
-The same caching strategy is here, but it is implemented in CachedProductRepository, which is just a decorator to IProductRepository.
+The same caching strategy is here, but it is implemented in `CachedProductRepository`, which is just a decorator to `IProductRepository`.
 
 *All APIs are using the same services from Coffeespace.Application, but with different implementations.*
 
-
+The OrderingApi and ProductApi recently underwent a migration of their database from `MySQL` to `PostgreSQL`. This migration was prompted by the desire to leverage the robust feature set, scalability, and strong data integrity guarantees offered by `PostgreSQL`. The transition was meticulously carried out to ensure a smooth transfer of data and to preserve compatibility with the existing infrastructure
   
 ### OrderingApi 
 
-This API works as a command center for all messages related to creating, updating, and deleting orders. It publishes events to a message provider that can then be consumed by other microservices. 
+This API works as a command center for all messages related to creating, updating, scheduling and deleting orders. It publishes events to a message provider that can then be consumed by other microservices. 
 
 #### Libraries
 * Masstransit
 * Fluent Validation
 * Scrutor
-* Pomelo (MySql)
+* Npgsql (Postgres)
 * Newtonsoft.Json
 * Mediator
 * Mapperly
+* Serilog
+* RabbitMq/AWS
+* Quartz
 
 
 #### Features
 * Masstransit Saga StateMachine
-* RateLimiter
 * Options
-* JWT Authentication
 * Caching
+* Api versioning
+* Logging
+* Transactional Outbox
 
 Here is the workflow of the OrderingApi after an order is submitted.
-[![](https://mermaid.ink/img/pako:eNqVVE1vozAQ_StozmxEA4HGh65W2et-SJH2UHFxYdJYAZs1piob5b_vgDGBllSqT8B7897zMPYZMpUjMKjxb4Myw--CP2teptKjVXFtRCYqLo23a2qjStTvkV86Ry3k83vkt1Z5k5kFgLclygVgfxRVNWo5zy8PD86EefvmqRSmf7csXlCdUdlpp-RB6BLzrxbolqsjiSEN83ZHzE62xPv2wkXBn0QhTHut6iQHumMUeIW7NcCzaEMAKz2nT3PYzbscw6v3hxcin6UYk0wZc7hPYuFZEkqXYV3PG30jj-s567vvTTo7XY41s_mpjDi0I0YNKKsCDX7o5_4qsx9vFGFR47hz8rm1-0XhHadRLpa2gnKi0XvYOegcbvzpTziM6m-Ux8lcHMyPVHtF8IHgkoucTuq5A1IwRywxBUaPOdenFFJ5IR5vjNq3MgNmdIM-NFXOjTvVwA6cgvlAZw3YGV6BJas4ieJ1EoVJHEbbTexDCyzarOJgE27iKA7ukvU6vvjwTykSuFuttwHxiRlug_A-2PqANLZK_7AXSX-f9A6PfUEX4_IfFMZduw?type=png)](https://mermaid.live/edit#pako:eNqVVE1vozAQ_StozmxEA4HGh65W2et-SJH2UHFxYdJYAZs1piob5b_vgDGBllSqT8B7897zMPYZMpUjMKjxb4Myw--CP2teptKjVXFtRCYqLo23a2qjStTvkV86Ry3k83vkt1Z5k5kFgLclygVgfxRVNWo5zy8PD86EefvmqRSmf7csXlCdUdlpp-RB6BLzrxbolqsjiSEN83ZHzE62xPv2wkXBn0QhTHut6iQHumMUeIW7NcCzaEMAKz2nT3PYzbscw6v3hxcin6UYk0wZc7hPYuFZEkqXYV3PG30jj-s567vvTTo7XY41s_mpjDi0I0YNKKsCDX7o5_4qsx9vFGFR47hz8rm1-0XhHadRLpa2gnKi0XvYOegcbvzpTziM6m-Ux8lcHMyPVHtF8IHgkoucTuq5A1IwRywxBUaPOdenFFJ5IR5vjNq3MgNmdIM-NFXOjTvVwA6cgvlAZw3YGV6BJas4ieJ1EoVJHEbbTexDCyzarOJgE27iKA7ukvU6vvjwTykSuFuttwHxiRlug_A-2PqANLZK_7AXSX-f9A6PfUEX4_IfFMZduw)
+```mermaid
+sequenceDiagram
+    participant Customer
+    participant Ordering
+    participant Product
+    participant Payment
+    participant Shipping
+    Customer->>Ordering: SubmitOrder
+    alt StockConfirmed?
+        Ordering->>Product: Check Stock Availability
+        alt Product Available
+            Product->>Ordering: Confirm Stock
+            Ordering->>Payment: Check Payment Validity
+            alt Payment Valid
+                Payment->>Ordering: Process Payment
+                Ordering->>Shipping: Ship Order
+                Shipping->>Ordering: Notify Shipping Complete
+                Ordering->>Customer: Order Complete
+            else Payment Not Valid
+                Ordering->>Customer: Cancel Order
+            end
+        else Stock Not Available
+            Ordering->>Customer: Cancel Order
+        end
+    else Stock Not Confirmed
+        Ordering->>Customer: Cancel Order
+    end
 
-As you can see, the OrderingApi **can both publish and consume messages from other microservices. It uses the Masstransit StateMachine, which provides great opportunities to manage order state.There are five states: Submitted, StockConfirmed, Paid, Shipped, and Canceled.** When an order receives a new state, the OrderStateMachine changes its state in the database. The OrderingApi has two databases: OrderingDb and OrderStateDb. When an order is submitted, it is saved in the OrderingDb, and then the OrderStateMachine sends all the necessary messages. The OrderStateMachine uses the OrderStateDb as a storage for orders. **When an order reaches the Shipped or Canceled state, it is immediately removed from the database.** With this feature, the OrderStateMachine can easily continue to work with messages after it was stopped.
+```
 
-Furthermore, the OrderingApi has one message for the IdentityApi. Basically,** when someone deletes a buyer, it sends a message to the IdentityApi to remove the buyer from its database. It also has a consumer that creates a new buyer if someone completes registration.**
+As you can see, the OrderingApi **can both publish and consume messages from other microservices. It uses the Masstransit StateMachine, which provides great opportunities to manage order state. There are five states: `Submitted`, `StockConfirmed`, `Paid`, `Shipped`, and `Canceled`.** When an order receives a new state, the OrderStateMachine changes its state in the database. The OrderingApi has two databases: OrderingDb and OrderStateDb. When an order is submitted, it is saved in the OrderingDb, and then the OrderStateMachine sends all the necessary messages. The OrderStateMachine uses the OrderStateDb as a storage for orders. **When an order reaches the Shipped or Canceled state, it is immediately removed from the database.** With this feature, the OrderStateMachine can easily continue to work with messages after it was stopped.
+
+Furthermore, the OrderingApi has one message for the IdentityApi. Basically,**when someone deletes a buyer, it sends a message to the IdentityApi to remove the buyer from its database. It also has a consumer that creates a new buyer if someone completes registration.**
+
+In addition to its message publishing and consuming capabilities, the OrderingApi also implements the transactional outbox pattern to ensure reliable message delivery. This pattern involves storing messages in a separate Outbox table within the OrderingDb database. When an order is submitted or its state changes, the OrderStateMachine writes the corresponding messages to the Outbox table within the same database transaction. This approach guarantees that the messages are persisted atomically with the database changes, ensuring transactional consistency.
+
+```mermaid
+sequenceDiagram
+    participant OrderingApi
+    participant OrderStateMachine
+    participant OrderingDb
+    participant OutboxTable
+    participant MessageBroker
+
+    OrderingApi->>OrderStateMachine: Submit Order
+    activate OrderStateMachine
+    OrderStateMachine->>OutboxTable: Write Messages
+    activate OutboxTable
+    OutboxTable->>OrderingDb: Store Messages
+    activate OrderingDb
+    OrderingDb-->>OutboxTable: Messages Stored
+    deactivate OrderingDb
+    OutboxTable-->>OrderStateMachine: Messages Written
+    deactivate OutboxTable
+    OrderStateMachine->>OrderingDb: Commit Transaction
+    activate OrderingDb
+    OrderingDb-->>OrderStateMachine: Transaction Committed
+    deactivate OrderingDb
+    OrderStateMachine->>MessageBroker: Publish Messages
+    activate MessageBroker
+    MessageBroker-->>OrderStateMachine: Messages Published
+    deactivate MessageBroker
+    deactivate OrderStateMachine
+    OrderingApi->>OrderStateMachine: Change Order State
+    activate OrderStateMachine
+    OrderStateMachine->>OutboxTable: Write Messages
+    activate OutboxTable
+    OutboxTable->>OrderingDb: Store Messages
+    activate OrderingDb
+    OrderingDb-->>OutboxTable: Messages Stored
+    deactivate OrderingDb
+    OutboxTable-->>OrderStateMachine: Messages Written
+    deactivate OutboxTable
+    OrderStateMachine->>OrderingDb: Commit Transaction
+    activate OrderingDb
+    OrderingDb-->>OrderStateMachine: Transaction Committed
+    deactivate OrderingDb
+    OrderStateMachine->>MessageBroker: Publish Messages
+    activate MessageBroker
+    MessageBroker-->>OrderStateMachine: Messages Published
+    deactivate MessageBroker
+    deactivate OrderStateMachine
+
+```
+
+> Note: All requests have a timeout value. If a request exceeds this timeout value, it will automatically be moved into a canceled state.
 
 ### ProductApi
 
@@ -134,23 +222,26 @@ This has less functionality than the OrderingApi, but is still important because
 * Masstransit
 * Fluent Validation
 * Scrutor
-* Pomelo (MySql)
+* Npgsql (Postgres)
 * Newtonsoft.Json
 * Mediator
 * Mapperly
+* Serilog
+* RabbitMq/AWS
 
 #### Features
-* RateLimiter
 * Options
-* JWT Authentication
 * Caching
 * Decorator
+* Api versioning
+* Logging
+* In Memory Transactional Outbox
 
 There is no such difficult logic, it simply implements CRUD operation for products, but still has some features, which I would like to show.
 
 The ProductApi provides CRUD operations for managing products, and it is responsible for verifying the stock of orders.**If the order item's title is not found in the ProductApi database, the product cannot be fulfilled, and the order is moved to the cancel state.**
 
-**ProductApi is designed to be used by clients for product retrieval and creation.** To modify the behavior of the IProductRepository, **the decorator pattern is implemented. With Scrutor, decorators can be added to an existing implementation of interface without altering the original code.** The CachedProductRepository is an example of such a decorator, which implements caching functionality to improve performance.
+**ProductApi is designed to be used by clients for product retrieval and creation.** To modify the behavior of the `IProductRepository`, **the decorator pattern is implemented. With Scrutor, decorators can be added to an existing implementation of interface without altering the original code.** The `CachedProductRepository` is an example of such a decorator, which implements caching functionality to improve performance.
 
 ```cs
 internal sealed class ProductRepository : IProductRepository
@@ -197,15 +288,15 @@ internal sealed class CachedProductRepository : IProductRepository
     }
 ```
 
-No big changes, just added IProductRepository as an argument for CachedProductRepository. Yeah, no big deal. But if you do this without Scrutor, you will get an exception.
+No big changes, just added `IProductRepository` as an argument for `CachedProductRepository`. Yeah, no big deal. But if you do this without Scrutor, you will get an exception.
 
-*[Decorator] attribute tells Scrutor to not map this class as implementation for IProductRepository.*
+*[Decorator] attribute tells Scrutor to not map this class as implementation for `IProductRepository`.*
 
 ```cs
 builder.Services.Decorate<IProductRepository, CachedProductRepository>();
 ```
 
-Overall, the ProductApi provides useful features, such as rate limiting, options, JWT authentication, and caching, among others.
+Overall, the ProductApi provides useful features, such as rate limiting, options, JWT authentication, and caching.
 ### IdentityApi
 
 The IdentityApi allows users to log in or register as new users, using IdentityDbContext for authentication and identity storage purposes. 
@@ -213,17 +304,46 @@ The IdentityApi allows users to log in or register as new users, using IdentityD
 #### Libraries
 * Masstransit
 * Fluent Validation
-* Scrutorx
+* Scrutor
 * Npgsql (Postgres)
 * Newtonsoft.Json
 * Mediator
 * Mapperly
+* Serilog
+* RabbitMq/AWS
 
 #### Features
-* RateLimiter
 * Options
-* JWT Authentication
-[![](https://mermaid.ink/img/pako:eNqFU1Fr2zAQ_iuHHvbkZvZsx6keCkmcjgwGJSkMil-EdUlFHSmT5LZpyH-fJLfMrbvlHoyl77vT9510R1IrjoQSg79blDWWgm0121USXOyZtqIWeyYtTIEZmDcCpR2CMw9Ob5bwnVl8YochY-4ZS-6yhT146pBShiKtvfekmlmhJHwJG0qLl259o9Wj4KiH2QufXTLLYG2VxiHh2hMWzxa1ZA2sUT-KGk3H677Ti6urGXWQ5Aa0b4h59TpzyJzCSrUWP0CssbDqNkAY2Cjt8K0wVgfFHcnH3NUoXY0AojbQmjcfPkoHL2gnvsOAOzfv868pLKVLZrU18CTs_b8MYWPwo6xGbcVQT6_h2NfkmvDX4Ptb-brqGQTT1jUiR94v3XVyhWavfDOD1B-_buFWPWBPw8wTp2eIwcv_FGyYaM4fn8UZGMtsa8C_-XMiPqWHppCI7FDvmOBubo4eqIgTt8OKUPfLmX6oSCVPgclaq9YHWRNqdYsRaffuVt-mjNANc-Yi4h4ooUfyTOhFOk5G4-QyifN0ksdFlkTkQGhSjMaTIk_SSZp8S7NJPD5F5EUpVyIZpZfjNCniOE_yIiviIiLIhXtHP7vRDhMezrgLCV7I6Q9EIEPk?type=png)](https://mermaid.live/edit#pako:eNqFU1Fr2zAQ_iuHHvbkZvZsx6keCkmcjgwGJSkMil-EdUlFHSmT5LZpyH-fJLfMrbvlHoyl77vT9510R1IrjoQSg79blDWWgm0121USXOyZtqIWeyYtTIEZmDcCpR2CMw9Ob5bwnVl8YochY-4ZS-6yhT146pBShiKtvfekmlmhJHwJG0qLl259o9Wj4KiH2QufXTLLYG2VxiHh2hMWzxa1ZA2sUT-KGk3H677Ti6urGXWQ5Aa0b4h59TpzyJzCSrUWP0CssbDqNkAY2Cjt8K0wVgfFHcnH3NUoXY0AojbQmjcfPkoHL2gnvsOAOzfv868pLKVLZrU18CTs_b8MYWPwo6xGbcVQT6_h2NfkmvDX4Ptb-brqGQTT1jUiR94v3XVyhWavfDOD1B-_buFWPWBPw8wTp2eIwcv_FGyYaM4fn8UZGMtsa8C_-XMiPqWHppCI7FDvmOBubo4eqIgTt8OKUPfLmX6oSCVPgclaq9YHWRNqdYsRaffuVt-mjNANc-Yi4h4ooUfyTOhFOk5G4-QyifN0ksdFlkTkQGhSjMaTIk_SSZp8S7NJPD5F5EUpVyIZpZfjNCniOE_yIiviIiLIhXtHP7vRDhMezrgLCV7I6Q9EIEPk)
+* Api versioning
+* Logging
+
+
+```mermaid
+sequenceDiagram
+    participant A as Client
+    participant B as API Gateway
+    participant C as Identity API
+    participant D as Authentication & Authorization Provider
+    participant E as Data Store
+    participant F as External Services
+    
+    A->>B: Sends request
+    B->>C: Routes request
+    alt Request is for registration
+        C->>D: Registers user
+        D->>E: Stores user data
+        C->>F: Interacts with External Services
+    else Request is for login
+        C->>D: Authenticates user
+    end
+    alt Authentication/Registration succeeded
+        C-->>B: Responds with JWT Token
+        B-->>A: Responds with JWT Token
+    else Authentication/Registration failed
+        C-->>B: Responds with 404 status code
+        B-->>A: Responds with 404 status code
+    end
+```
 
 **Once a user registers with the IdentityApi, it sends a message to the message provider, and the OrderingApi acts as an external service and receives the message. This process results in the creation of a buyer after registration.**
 ## Services
@@ -235,109 +355,136 @@ In CoffeeSpace, there are two microservices that are referred to as "Services". 
 * ShipmentService
 
 #### PaymentService
-[![](https://mermaid.ink/img/pako:eNp1kk1vwjAMhv9K5dOmFdSWfpEDl3FFQuI29eI1BqLRhKUpWof473NbgUYROVn2-z625ZyhNJJAQE3fDemSlgp3FqtCe_yOaJ0q1RG181ZU17ijtTUnJck-CtbYVqTdhuxJlfS0vkSHn1izYJCMuJPF4u2eJLwNacmoPulVg34w3yv_ea9d2OyMpZtb6Vu4VzWXWo-Fh3vc1Txh4GQ8zLvRW2UrdMpoz2xvuA72bK6OM9pztNUJD0oOzJc-fi00-FARd1KS73PuwAW4PVVUgOBQov0qoNCXXomNM5tWlyCcbciH5si46zVBbPFQc5YPAeIMPyDCNJkmWRqGeZqk8yifZz60nJ7OZ2GcBHkSB9EsjqOLD7_GMCGYZlkUxLMozzIuJnnuA0nFW6-GH9R_pL7FR2_o5rj8AdNDzr4?type=png)](https://mermaid.live/edit#pako:eNp1kk1vwjAMhv9K5dOmFdSWfpEDl3FFQuI29eI1BqLRhKUpWof473NbgUYROVn2-z625ZyhNJJAQE3fDemSlgp3FqtCe_yOaJ0q1RG181ZU17ijtTUnJck-CtbYVqTdhuxJlfS0vkSHn1izYJCMuJPF4u2eJLwNacmoPulVg34w3yv_ea9d2OyMpZtb6Vu4VzWXWo-Fh3vc1Txh4GQ8zLvRW2UrdMpoz2xvuA72bK6OM9pztNUJD0oOzJc-fi00-FARd1KS73PuwAW4PVVUgOBQov0qoNCXXomNM5tWlyCcbciH5si46zVBbPFQc5YPAeIMPyDCNJkmWRqGeZqk8yifZz60nJ7OZ2GcBHkSB9EsjqOLD7_GMCGYZlkUxLMozzIuJnnuA0nFW6-GH9R_pL7FR2_o5rj8AdNDzr4)
+```mermaid
+sequenceDiagram
+    participant MessageProvider
+    participant PaymentService
+    participant PaymentDatabase
+
+    MessageProvider->>+PaymentService: Send payment message
+    PaymentService->>+PaymentDatabase: Store payment in payment history table
+    PaymentDatabase-->>-PaymentService: Confirmation of payment storage
+    PaymentService-->>-MessageProvider: Send payment validation (valid)
+```
 
 **When PaymentService receives a message from the message provider, it adds the payment information from the order to its database (PaymentHistory table). Then, the payment process is initiated and the result of the payment is recorded.**
 
 #### ShipmentService
 
 The ShipmentService is a simple service that returns a successful result. However, in a real-world scenario, it would redirect to an external shipment service to handle the actual shipment.
-## Getting started
 
-This project requires docker. **Be assure that you have docker running localy on your machine.** 
+## Environment Variables
+In order to run this project, you need to configure the following environment variables in your secrets:
 
-It's worth noting that each of the microservices, except for Gateway, requires RabbitMQ credentials, including the host, username, and password. You can use user-secrets as a secret store for these credentials. To initialize user-secrets, you can run the following command:
+* **`AZURE_CLIENT_ID`**: The client ID of your Azure application.
+* **`AZURE_CLIENT_SECRET`**: The client secret of your Azure application.
+* **`AZURE_TENANT_ID`**: The ID of your Azure tenant.
+* **`AZURE_VAULT_NAME`**: The name of your Azure Key Vault.
 
-You can use user-secrets as secrets store.
-```sh
-dotnet user-secrets init
+These environment variables are necessary for authentication and accessing the Azure Key Vault in the project. Make sure to set the values of these variables appropriately in your secret management system or environment configuration.
+
+### Configure for local running
+To configure each of the microservices manually for local running, follow these steps:
+
+1. Change **AwsMessagingSettings** to **RabbitMqSettings** by updating the code as shown below:
+
+```cs
+builder.Services.AddOptions<RabbitMqSettings>()
+    .Bind(builder.Configuration.GetRequiredSection("RabbitMq"))
+    .ValidateOnStart();
 ```
 
-Afterwards, you can add your RabbitMQ credentials using the dotnet user-secrets set command, like so:
-```sh
-dotnet user-secrets set "RabbitMQ:Host" "<your_RabbitMQ_host>"
-dotnet user-secrets set "RabbitMQ:UserName" "<your_RabbitMQ_username>"
-dotnet user-secrets set "RabbitMQ:Password" "<your_RabbitMQ_password>"
+> Note: Note: For simplicity, settings were created for each of the message providers. Replace the code above with the provided code snippet.
+
+2. Configure Masstransit as follows:
+
+```cs
+x.UsingRabbitMq((context, config) =>
+    {
+        var rabbitMqSettings = context.GetRequiredService<IOptions<RabbitMqSettings>>().Value;
+        config.Host(rabbitMqSettings.Host, "/", hostConfig =>
+        {
+            hostConfig.Username(rabbitMqSettings.Username);
+            hostConfig.Password(rabbitMqSettings.Password);
+        });
+
+        config.ConfigureEndpoints(context);
+        
+        config.UseNewtonsoftJsonSerializer();
+        config.UseNewtonsoftJsonDeserializer();
+    });
 ```
-**You can find all the necessary credentials for each microservice in the docker-compose.yaml file.** However, note that this method of providing secrets has its limitations and may not be suitable for all scenarios. In future commits, efforts will be made to streamline the process of providing and managing secrets.
+Repeat these steps for each of the microservices.
 
-### OrderingAPI
-* RabbitMQ
-* OrderingDb
-* OrderStateDb
-* Redis
+### Running in Docker
+
+To run the microservices in Docker, follow these steps:
+
+1. Use the following link to access the Docker images: https://hub.docker.com/u/mqsr.
+2. Two versions of tags are available: 1.X.X and 2.X.X. Tags starting with 1.X.X use RabbitMq as the default message provider.
+3. Update the image tags in the deployment configurations accordingly.
+
+>Note: The ApiGateway does not have version 2.X.X as it does not implement any messaging logic.
+
+
+### Configuration settings
+* RabbitMQ/AWS: Login Credentials 
+* OrderingDb: Connection String
+* OrderStateDb: Connection String
+* ProductDb: ConnectionString
+* PaymentDb: ConnectionString
+* Redis: Connection String
 * JWT Settings
 
-### ProductsAPI
-* RabbitMQ
-* ProductsDb
-* Redis
-* JWT Settings
+## Running CoffeeSpace Locally
 
-### IdentityAPI
-* RabbitMQ
-* IdentityDb
-* JWT Settings
+To run CoffeeSpace on your local machine, please follow the steps outlined below:
 
-### PaymentService
-* RabbitMQ
-* PaymentDb
-
-### ShipmentService
-* RabbitMQ
-
-### Gateway
-* JWT Settings
-## Run Locally
-
-To run CoffeeSpace on your local machine, you need to follow the steps mentioned below:
-
-1. Clone the repository from GitHub by running the following command:
+1. Clone the repository from GitHub by executing the following command in your terminal:
 
 ```sh
   git clone https://github.com/Marsik424/CoffeeSpace.git
 ```
-2. Navigate to the "Getting started" section and set up user secrets for each microservice as per the instructions provided there.
+2. Set up the required environment variables by creating a .env file or utilizing Kubernetes secrets. Refer to the "Environment Variables" section for more information on the specific variables needed.
 
-3. Open the command prompt or terminal and navigate to the project directory.
+3. Open a command prompt or terminal and navigate to the project directory.
 
-4. Run the following command to start the deployment of the microservices to Docker:
-
-```sh
-docker-compose up
-```
-
-> Note: During the initialization, you may encounter a situation where the OrderingApi and ProductsApi containers are in the "Exited" state. In such cases, wait for approximately 10 seconds for the MySQL databases to initialize.
-
-**Mysql containers are very slow to initialise, to be honest, I tried to fix this but it didn't help. If this problem still exists in a future version of CoffeeSpace, Mysql containers will be removed and replaced with Postgres containers.**
-
-5. After the successful initialization of the containers, you need to manually apply all database migrations by running the following command:
+4. Start the deployment of the microservices to Kubernetes by running the following command:
 
 ```sh
-dotnet ef database update
+kubectl apply -R -f ./deploy
 ```
 
-> Note: If the project contains more than one DbContext, use the --context parameter.
+> Note: Previously, there were issues with the MySQL database, resulting in slow startup times, especially on local machines. Consequently, all SQL databases have been migrated to Azure flexible servers.
 
-**Do not forget to update the server and port in the user-secrets as shown below:**
-```json
-"ConnectionString: Server:{container-name};Port:{internal-port}; --> ConnectionString: Server:localhost;Port:{external-port};"
+5. To delete all pods, execute the following command in your terminal:
+
+```sh
+kubectl delete -R -f ./deploy
 ```
 
 **All requests should be made to the API Gateway, which will eventually redirect them to the appropriate controller.**
 
-By following these steps, you should be able to run CoffeeSpace locally on your machine.
+By following these steps, you will be able to run CoffeeSpace locally on your machine.
 
+## Postman Configuration
+
+You will find the Postman collection file named ["CoffeeSpace.postman_collection" ](https://github.com/Marsik424/CoffeeSpace/blob/main/CoffeeSpace.postman_collection.json)in the root of the project. This file contains the collection of API endpoints and associated requests that can be imported into Postman for testing and interacting with the project's APIs.
+
+To import the Postman collection:
+
+1. Launch Postman.
+2. Click on the "Import" button located in the top-left corner.
+3. Select the option to "Import File" and choose the ["CoffeeSpace.postman_collection"](https://github.com/Marsik424/CoffeeSpace/blob/main/CoffeeSpace.postman_collection.json) file from the project's root directory.
+4. Postman will import the collection, and you will be able to see the available requests and their associated details.
+
+After importing the collection, you can explore the endpoints, customize the request parameters, and execute the requests against the project's APIs directly from Postman. This allows you to easily test and interact with the functionality provided by the project.
 
 ## FAQ
 
 #### Why is Redis not part of each microservice?
 
-Redis was designed as a high-performance in-memory data structure store. Therefore, there should not be any issues with caching. Additionally, it is easy to create new Redis containers when needed.
-
-#### Can I skip the installation phase if I want to run the project locally?
-
-No, currently, all microservices depend on the secrets store, so you must set up the user-secrets and provide the required credentials for each microservice to run the project successfully. In the future, the plan is to move most of the secrets to the cloud and reduce the setup requirements.
+Centralizing Redis allows for optimized deployment and scaling based on the system's needs. Additionally, managing multiple Redis instances across microservices can be complex; centralizing Redis reduces maintenance overhead.
 
 #### Why don't the controllers have external ports in containers?
 
@@ -368,4 +515,6 @@ Also, I recommend discussing your ideas and changes by creating an issue, so I c
 I was inspired by this project
 
 [eshopOnContainers](https://github.com/dotnet-architecture/eShopOnContainers)
+
+
 
