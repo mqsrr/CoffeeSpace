@@ -56,7 +56,7 @@ builder.Services.AddApplicationService(typeof(ICacheService<>));
 builder.Services.AddApplicationService<IOrderService>();
 ``` 
 
-**ICacheService is coming from the Coffeespace.Core class library. There are generic services and settings which can be used across microservices.**
+**`ICacheService` is coming from the Coffeespace.Core class library. There are generic services and settings which can be used across microservices.**
 
 However, you can find that all APIs can have the same libraries and references, but it still doesn't look the same. For example, let's look at the OrderingAPI and ProductsAPI.
 ```cs
@@ -73,7 +73,7 @@ However, you can find that all APIs can have the same libraries and references, 
         }, cancellationToken);
     }
 ```
-This code comes from IOrderService, which is in the OrderingAPI. As you can see, it's just managing caching and creating queries (or commands, depending on the method). On the other hand, we have IProductService in ProductsAPI.
+This code comes from `IOrderService`, which is in the OrderingAPI. As you can see, it's just managing caching and creating queries (or commands, depending on the method). On the other hand, we have IProductService in ProductsAPI.
 
 ```cs
     public async Task<IEnumerable<Product>> GetAllProductsAsync(CancellationToken cancellationToken)
@@ -83,7 +83,7 @@ This code comes from IOrderService, which is in the OrderingAPI. As you can see,
         return products;
     }
 ```
-And yes, it's only creating queries and commands. Most of the caching is implemented in IProductRepository.
+And yes, it's only creating queries and commands. Most of the caching is implemented in `IProductRepository`.
 ```cs
 public Task<IEnumerable<Product>> GetAllProductsAsync(CancellationToken cancellationToken)
     {
@@ -95,11 +95,11 @@ public Task<IEnumerable<Product>> GetAllProductsAsync(CancellationToken cancella
     }
 ```
 
-The same caching strategy is here, but it is implemented in CachedProductRepository, which is just a decorator to IProductRepository.
+The same caching strategy is here, but it is implemented in `CachedProductRepository`, which is just a decorator to `IProductRepository`.
 
 *All APIs are using the same services from Coffeespace.Application, but with different implementations.*
 
-
+The OrderingApi and ProductApi recently underwent a migration of their database from `MySQL` to `PostgreSQL`. This migration was prompted by the desire to leverage the robust feature set, scalability, and strong data integrity guarantees offered by `PostgreSQL`. The transition was meticulously carried out to ensure a smooth transfer of data and to preserve compatibility with the existing infrastructure
   
 ### OrderingApi 
 
@@ -124,6 +124,7 @@ This API works as a command center for all messages related to creating, updatin
 * Caching
 * Api versioning
 * Logging
+* Transactional Outbox
 
 Here is the workflow of the OrderingApi after an order is submitted.
 ```mermaid
@@ -156,9 +157,60 @@ sequenceDiagram
 
 ```
 
-As you can see, the OrderingApi **can both publish and consume messages from other microservices. It uses the Masstransit StateMachine, which provides great opportunities to manage order state.There are five states: Submitted, StockConfirmed, Paid, Shipped, and Canceled.** When an order receives a new state, the OrderStateMachine changes its state in the database. The OrderingApi has two databases: OrderingDb and OrderStateDb. When an order is submitted, it is saved in the OrderingDb, and then the OrderStateMachine sends all the necessary messages. The OrderStateMachine uses the OrderStateDb as a storage for orders. **When an order reaches the Shipped or Canceled state, it is immediately removed from the database.** With this feature, the OrderStateMachine can easily continue to work with messages after it was stopped.
+As you can see, the OrderingApi **can both publish and consume messages from other microservices. It uses the Masstransit StateMachine, which provides great opportunities to manage order state. There are five states: `Submitted`, `StockConfirmed`, `Paid`, `Shipped`, and `Canceled`.** When an order receives a new state, the OrderStateMachine changes its state in the database. The OrderingApi has two databases: OrderingDb and OrderStateDb. When an order is submitted, it is saved in the OrderingDb, and then the OrderStateMachine sends all the necessary messages. The OrderStateMachine uses the OrderStateDb as a storage for orders. **When an order reaches the Shipped or Canceled state, it is immediately removed from the database.** With this feature, the OrderStateMachine can easily continue to work with messages after it was stopped.
 
 Furthermore, the OrderingApi has one message for the IdentityApi. Basically,**when someone deletes a buyer, it sends a message to the IdentityApi to remove the buyer from its database. It also has a consumer that creates a new buyer if someone completes registration.**
+
+In addition to its message publishing and consuming capabilities, the OrderingApi also implements the transactional outbox pattern to ensure reliable message delivery. This pattern involves storing messages in a separate Outbox table within the OrderingDb database. When an order is submitted or its state changes, the OrderStateMachine writes the corresponding messages to the Outbox table within the same database transaction. This approach guarantees that the messages are persisted atomically with the database changes, ensuring transactional consistency.
+
+```mermaid
+sequenceDiagram
+    participant OrderingApi
+    participant OrderStateMachine
+    participant OrderingDb
+    participant OutboxTable
+    participant MessageBroker
+
+    OrderingApi->>OrderStateMachine: Submit Order
+    activate OrderStateMachine
+    OrderStateMachine->>OutboxTable: Write Messages
+    activate OutboxTable
+    OutboxTable->>OrderingDb: Store Messages
+    activate OrderingDb
+    OrderingDb-->>OutboxTable: Messages Stored
+    deactivate OrderingDb
+    OutboxTable-->>OrderStateMachine: Messages Written
+    deactivate OutboxTable
+    OrderStateMachine->>OrderingDb: Commit Transaction
+    activate OrderingDb
+    OrderingDb-->>OrderStateMachine: Transaction Committed
+    deactivate OrderingDb
+    OrderStateMachine->>MessageBroker: Publish Messages
+    activate MessageBroker
+    MessageBroker-->>OrderStateMachine: Messages Published
+    deactivate MessageBroker
+    deactivate OrderStateMachine
+    OrderingApi->>OrderStateMachine: Change Order State
+    activate OrderStateMachine
+    OrderStateMachine->>OutboxTable: Write Messages
+    activate OutboxTable
+    OutboxTable->>OrderingDb: Store Messages
+    activate OrderingDb
+    OrderingDb-->>OutboxTable: Messages Stored
+    deactivate OrderingDb
+    OutboxTable-->>OrderStateMachine: Messages Written
+    deactivate OutboxTable
+    OrderStateMachine->>OrderingDb: Commit Transaction
+    activate OrderingDb
+    OrderingDb-->>OrderStateMachine: Transaction Committed
+    deactivate OrderingDb
+    OrderStateMachine->>MessageBroker: Publish Messages
+    activate MessageBroker
+    MessageBroker-->>OrderStateMachine: Messages Published
+    deactivate MessageBroker
+    deactivate OrderStateMachine
+
+```
 
 > Note: All requests have a timeout value. If a request exceeds this timeout value, it will automatically be moved into a canceled state.
 
@@ -183,12 +235,13 @@ This has less functionality than the OrderingApi, but is still important because
 * Decorator
 * Api versioning
 * Logging
+* In Memory Transactional Outbox
 
 There is no such difficult logic, it simply implements CRUD operation for products, but still has some features, which I would like to show.
 
 The ProductApi provides CRUD operations for managing products, and it is responsible for verifying the stock of orders.**If the order item's title is not found in the ProductApi database, the product cannot be fulfilled, and the order is moved to the cancel state.**
 
-**ProductApi is designed to be used by clients for product retrieval and creation.** To modify the behavior of the IProductRepository, **the decorator pattern is implemented. With Scrutor, decorators can be added to an existing implementation of interface without altering the original code.** The CachedProductRepository is an example of such a decorator, which implements caching functionality to improve performance.
+**ProductApi is designed to be used by clients for product retrieval and creation.** To modify the behavior of the `IProductRepository`, **the decorator pattern is implemented. With Scrutor, decorators can be added to an existing implementation of interface without altering the original code.** The `CachedProductRepository` is an example of such a decorator, which implements caching functionality to improve performance.
 
 ```cs
 internal sealed class ProductRepository : IProductRepository
@@ -235,9 +288,9 @@ internal sealed class CachedProductRepository : IProductRepository
     }
 ```
 
-No big changes, just added IProductRepository as an argument for CachedProductRepository. Yeah, no big deal. But if you do this without Scrutor, you will get an exception.
+No big changes, just added `IProductRepository` as an argument for `CachedProductRepository`. Yeah, no big deal. But if you do this without Scrutor, you will get an exception.
 
-*[Decorator] attribute tells Scrutor to not map this class as implementation for IProductRepository.*
+*[Decorator] attribute tells Scrutor to not map this class as implementation for `IProductRepository`.*
 
 ```cs
 builder.Services.Decorate<IProductRepository, CachedProductRepository>();
@@ -263,6 +316,8 @@ The IdentityApi allows users to log in or register as new users, using IdentityD
 * Options
 * Api versioning
 * Logging
+
+
 ```mermaid
 sequenceDiagram
     participant A as Client
