@@ -18,25 +18,29 @@ internal sealed class BuyerRepository : IBuyerRepository
     public async Task<Buyer?> GetByIdAsync(string id, CancellationToken cancellationToken)
     {
         var buyer = await _orderingDbContext.Buyers.FindAsync(new object?[] {id}, cancellationToken);
-        if (buyer is not null)
+        if (buyer is null)
         {
-            await _orderingDbContext.Buyers.LoadDataAsync(buyer, b => b.Orders!);
-            await _orderingDbContext.Orders.LoadDataAsync(buyer.Orders!, o => o.OrderItems);
-            await _orderingDbContext.Orders.LoadDataAsync(buyer.Orders!, o => o.Address);
+            return buyer;
         }
-        
+
+        await _orderingDbContext.Buyers.LoadDataAsync(buyer, b => b.Orders!);
+        await _orderingDbContext.Orders.LoadDataAsync(buyer.Orders!, o => o.OrderItems);
+        await _orderingDbContext.Orders.LoadDataAsync(buyer.Orders!, o => o.Address);
+
         return buyer;
     }
 
     public async Task<Buyer?> GetByEmailAsync(string email, CancellationToken cancellationToken)
     {
         var buyer = await _orderingDbContext.Buyers.FirstOrDefaultAsync(c => c.Email == email, cancellationToken);
-        if (buyer is not null)
+        if (buyer is null)
         {
-            await _orderingDbContext.Buyers.LoadDataAsync(buyer, b => b.Orders!);
-            await _orderingDbContext.Orders.LoadDataAsync(buyer.Orders!, o => o.OrderItems);
-            await _orderingDbContext.Orders.LoadDataAsync(buyer.Orders!, o => o.Address);
+            return buyer;
         }
+
+        await _orderingDbContext.Buyers.LoadDataAsync(buyer, b => b.Orders!);
+        await _orderingDbContext.Orders.LoadDataAsync(buyer.Orders!, o => o.OrderItems);
+        await _orderingDbContext.Orders.LoadDataAsync(buyer.Orders!, o => o.Address);
 
         return buyer;
     }
@@ -44,15 +48,15 @@ internal sealed class BuyerRepository : IBuyerRepository
     public async Task<bool> CreateAsync(Buyer buyer, CancellationToken cancellationToken)
     {
         await _orderingDbContext.Buyers.AddAsync(buyer, cancellationToken);
-        var result = await _orderingDbContext.SaveChangesAsync(cancellationToken);
+        int result = await _orderingDbContext.SaveChangesAsync(cancellationToken);
 
         return result > 0;
     }
 
     public async Task<Buyer?> UpdateAsync(Buyer buyer, CancellationToken cancellationToken)
     {
-        var isContains = await _orderingDbContext.Buyers.ContainsAsync(buyer, cancellationToken);
-        if (!isContains)
+        var buyerToUpdate = await _orderingDbContext.Buyers.FindAsync(new object[]{buyer.Id}, cancellationToken);
+        if (buyerToUpdate is null)
         {
             return null;
         }
@@ -65,7 +69,8 @@ internal sealed class BuyerRepository : IBuyerRepository
 
     public async Task<bool> DeleteByIdAsync(string id, CancellationToken cancellationToken)
     {
-        var result = await _orderingDbContext.Buyers
+        
+        int result = await _orderingDbContext.Buyers
             .Where(buyer => buyer.Id == id)
             .ExecuteDeleteAsync(cancellationToken);
 

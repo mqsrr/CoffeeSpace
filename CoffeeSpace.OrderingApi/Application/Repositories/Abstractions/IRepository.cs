@@ -1,6 +1,6 @@
 ﻿namespace CoffeeSpace.OrderingApi.Application.Repositories.Abstractions;
 
-internal interface IRepository<TEntity> where TEntity : class
+public interface IRepository<TEntity> where TEntity : class
 {
     Task<TEntity?> GetByIdAsync(string id, CancellationToken cancellationToken);
     

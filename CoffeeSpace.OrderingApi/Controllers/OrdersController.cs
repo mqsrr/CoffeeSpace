@@ -10,7 +10,7 @@ namespace CoffeeSpace.OrderingApi.Controllers;
 
 [Authorize]
 [ApiController]
-[ApiVersion(1.0)]
+[ApiVersion(1.1)]
 public sealed class OrdersController : ControllerBase
 {
     private readonly IOrderService _orderService;
@@ -47,16 +47,6 @@ public sealed class OrdersController : ControllerBase
 
         return created
             ? CreatedAtAction(nameof(GetOrderByBuyerId), new {buyerId, order.Id}, order.ToResponse())
-            : BadRequest();
-    }
-
-    [HttpPut(ApiEndpoints.Orders.Update)]
-    public async Task<IActionResult> UpdateOrder([FromRoute] Guid buyerId, [FromRoute] Guid id, [FromBody] UpdateOrderRequest request, CancellationToken cancellationToken)
-    {
-        var updatedOrder = await _orderService.UpdateAsync(request.ToOrder(id, buyerId), cancellationToken);
-
-        return updatedOrder is not null
-            ? Ok(updatedOrder.ToResponse())
             : BadRequest();
     }
     

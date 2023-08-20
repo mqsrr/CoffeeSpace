@@ -37,7 +37,7 @@ internal sealed class BuyerService : IBuyerService
 
     public async Task<bool> CreateAsync(Buyer buyer, CancellationToken cancellationToken)
     {
-        var created = await _sender.Send(new CreateBuyerCommand
+        bool created = await _sender.Send(new CreateBuyerCommand
         {
             Buyer = buyer
         }, cancellationToken);
@@ -57,7 +57,7 @@ internal sealed class BuyerService : IBuyerService
 
     public async Task<bool> DeleteByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        var deleted = await _sender.Send(new DeleteBuyerByIdCommand
+        bool deleted = await _sender.Send(new DeleteBuyerByIdCommand
         {
             Id = id.ToString()
         }, cancellationToken);

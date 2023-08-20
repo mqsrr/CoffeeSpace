@@ -17,7 +17,7 @@ internal sealed class OrderRepository : IOrderRepository
     
     public async Task<IEnumerable<Order>> GetAllByBuyerIdAsync(string buyerId, CancellationToken cancellationToken)
     {
-        var isNotEmpty = await _orderingDbContext.Orders.AnyAsync(cancellationToken);
+        bool isNotEmpty = await _orderingDbContext.Orders.AnyAsync(cancellationToken);
         if (!isNotEmpty)
         {
             return Enumerable.Empty<Order>();
@@ -34,12 +34,14 @@ internal sealed class OrderRepository : IOrderRepository
     public async Task<Order?> GetByIdAsync(string id, CancellationToken cancellationToken)
     {
         var order = await _orderingDbContext.Orders.FindAsync(new object?[] {id},  cancellationToken);
-        if (order is not null)
+        if (order is null)
         {
-            await _orderingDbContext.Orders.LoadDataAsync(order, o => o.OrderItems);
-            await _orderingDbContext.Orders.LoadDataAsync(order, o => o.Address);
+            return order;
         }
-        
+
+        await _orderingDbContext.Orders.LoadDataAsync(order, o => o.OrderItems);
+        await _orderingDbContext.Orders.LoadDataAsync(order, o => o.Address);
+
         return order;
     }
     
@@ -52,15 +54,15 @@ internal sealed class OrderRepository : IOrderRepository
         }
         
         await _orderingDbContext.Orders.AddAsync(order, cancellationToken);
-        var result = await _orderingDbContext.SaveChangesAsync(cancellationToken);
+        int result = await _orderingDbContext.SaveChangesAsync(cancellationToken);
 
         return result > 0;
     }
 
     public async Task<Order?> UpdateAsync(Order order, CancellationToken cancellationToken)
     {
-        var isContains = await _orderingDbContext.Orders.ContainsAsync(order, cancellationToken);
-        if (!isContains)
+        var orderToUpdate = await _orderingDbContext.Orders.FindAsync(new object[] {order.Id}, cancellationToken);
+        if (orderToUpdate is null)
         {
             return null;
         }
@@ -73,7 +75,7 @@ internal sealed class OrderRepository : IOrderRepository
 
     public async Task<bool> UpdateOrderStatusAsync(string id, OrderStatus orderStatus, CancellationToken cancellationToken)
     {
-        var result = await _orderingDbContext.Orders
+        int result = await _orderingDbContext.Orders
             .Where(order => order.Id == id)
             .ExecuteUpdateAsync(setters => setters
                 .SetProperty(order => order.Status, orderStatus), cancellationToken);
@@ -83,7 +85,7 @@ internal sealed class OrderRepository : IOrderRepository
 
     public async Task<bool> DeleteByIdAsync(string id, CancellationToken cancellationToken)
     {
-        var result = await _orderingDbContext.Orders
+        int result = await _orderingDbContext.Orders
             .Where(order => order.Id == id)
             .ExecuteDeleteAsync(cancellationToken);
 

@@ -2,7 +2,7 @@
 
 namespace CoffeeSpace.PaymentService.Repositories.Abstractions;
 
-internal interface IPaymentHistoryRepository
+public interface IPaymentHistoryRepository
 {
     Task<IEnumerable<PaymentHistory>> GetAllAsync(CancellationToken cancellationToken);
     

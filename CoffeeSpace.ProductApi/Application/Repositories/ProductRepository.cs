@@ -23,7 +23,7 @@ internal sealed class ProductRepository : IProductRepository
 
     public async Task<IEnumerable<Product>> GetAllProductsAsync(CancellationToken cancellationToken)
     {
-        var isNotEmpty = await _productDbContext.Products.AnyAsync(cancellationToken);
+        bool isNotEmpty = await _productDbContext.Products.AnyAsync(cancellationToken);
         
         return !isNotEmpty
             ? Enumerable.Empty<Product>()
@@ -32,7 +32,7 @@ internal sealed class ProductRepository : IProductRepository
     
     public async Task<IEnumerable<Product>> GetAllProductsAsync(GetAllProductsRequest request, CancellationToken cancellationToken)
     {
-        var isNotEmpty = await _productDbContext.Products.AnyAsync(cancellationToken);
+        bool isNotEmpty = await _productDbContext.Products.AnyAsync(cancellationToken);
         if (!isNotEmpty)
         {
             return Enumerable.Empty<Product>();
@@ -56,21 +56,21 @@ internal sealed class ProductRepository : IProductRepository
     public async Task<bool> CreateProductAsync(Product product, CancellationToken cancellationToken)
     {
         await _productDbContext.Products.AddAsync(product, cancellationToken);
-        var result = await _productDbContext.SaveChangesAsync(cancellationToken);
+        int result = await _productDbContext.SaveChangesAsync(cancellationToken);
         
         return result > 0;
     }
 
     public async Task<Product?> UpdateProductAsync(Product product, CancellationToken cancellationToken)
     {
-        var isContains = await _productDbContext.Products.ContainsAsync(product, cancellationToken);
-        if (!isContains)
+        var productToUpdate = await _productDbContext.Products.FindAsync(new object[] {product.Id}, cancellationToken);
+        if (productToUpdate is null)
         {
             return null;
         }
         
         _productDbContext.Products.Update(product);
-        var result = await _productDbContext.SaveChangesAsync(cancellationToken);
+        int result = await _productDbContext.SaveChangesAsync(cancellationToken);
         
         return result > 0
             ? product
@@ -79,7 +79,7 @@ internal sealed class ProductRepository : IProductRepository
 
     public async Task<bool> DeleteProductByIdAsync(string id, CancellationToken cancellationToken)
     {
-        var result = await _productDbContext.Products
+        int result = await _productDbContext.Products
             .Where(product => product.Id == id)
             .ExecuteDeleteAsync(cancellationToken);
         

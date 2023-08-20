@@ -18,14 +18,4 @@ internal static partial class OrderMappingProfile
         
         return request.ToOrder();
     }
-    
-    private static partial Order ToOrder(this UpdateOrderRequest request);
-    
-    public static Order ToOrder(this UpdateOrderRequest request, Guid id, Guid buyerId)
-    {
-        request.Id = id;
-        request.BuyerId = buyerId;
-        
-        return request.ToOrder();
-    }
 }

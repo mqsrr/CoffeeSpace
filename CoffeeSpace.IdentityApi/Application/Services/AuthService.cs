@@ -47,7 +47,7 @@ internal sealed class AuthService : IAuthService<ApplicationUser>
         var claims = await _signInManager.CreateUserPrincipalAsync(user);
         await _signInManager.UserManager.AddClaimsAsync(user, claims.Claims);
         
-        var token = await _tokenWriter.WriteTokenAsync(user, cancellationToken);
+        string token = await _tokenWriter.WriteTokenAsync(user, cancellationToken);
         return token;
     }
 
@@ -66,7 +66,7 @@ internal sealed class AuthService : IAuthService<ApplicationUser>
         }
 
         var applicationUser = await _signInManager.UserManager.FindByNameAsync(username);
-        var token = await _tokenWriter.WriteTokenAsync(applicationUser!, cancellationToken);
+        string token = await _tokenWriter.WriteTokenAsync(applicationUser!, cancellationToken);
         
         return token;
     }

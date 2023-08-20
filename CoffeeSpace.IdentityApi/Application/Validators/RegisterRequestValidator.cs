@@ -8,19 +8,24 @@ internal sealed class RegisterRequestValidator : AbstractValidator<RegisterReque
     public RegisterRequestValidator()
     {
         RuleFor(x => x.Name)
+            .NotEmpty()
             .NotNull();
 
         RuleFor(x => x.LastName)
+            .NotEmpty()
             .NotNull();
 
         RuleFor(x => x.UserName)
+            .NotEmpty()
             .NotNull();
         
         RuleFor(x => x.Email)
+            .NotEmpty()
             .NotNull()
             .EmailAddress();
 
         RuleFor(x => x.Password)
+            .NotEmpty()
             .NotNull()
             .Matches(@"^(?=[^a-z]*[a-z])(?=[^A-Z]*[A-Z])(?=\D*\d)(?=[^!#%]*[!#%])[A-Za-z0-9!#%]{6,32}$");        
     }

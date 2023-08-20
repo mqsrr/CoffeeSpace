@@ -3,7 +3,7 @@ using CoffeeSpace.ProductApi.Application.Contracts.Requests;
 
 namespace CoffeeSpace.ProductApi.Application.Repositories.Abstractions;
 
-internal interface IProductRepository
+public interface IProductRepository
 {
     Task<int> GetCountAsync(CancellationToken cancellationToken);
 

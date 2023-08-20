@@ -9,6 +9,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <InternalsVisibleTo Include="CoffeeSpace.OrderingApi.Tests"/>
+    </ItemGroup>
+    
+    <ItemGroup>
       <Folder Include="Application\Messaging\Mediator\Commands\" />
       <Folder Include="Application\Messaging\Mediator\Queries\" />
       <Folder Include="Persistence\Migrations\" />
@@ -17,28 +21,28 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Asp.Versioning.Mvc" Version="7.0.0" />
-      <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="6.0.2" />
-      <PackageReference Include="AspNetCore.HealthChecks.Redis" Version="6.0.4" />
+      <PackageReference Include="Asp.Versioning.Mvc" Version="7.0.1" />
+      <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="7.0.0" />
+      <PackageReference Include="AspNetCore.HealthChecks.Redis" Version="7.0.0" />
       <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
-      <PackageReference Include="MassTransit.AmazonSQS" Version="8.0.16" />
+      <PackageReference Include="MassTransit.AmazonSQS" Version="8.1.0" />
       <PackageReference Include="MassTransit.AspNetCore" Version="7.3.1" />
-      <PackageReference Include="MassTransit.EntityFrameworkCore" Version="8.0.16" />
-      <PackageReference Include="MassTransit.Newtonsoft" Version="8.0.16" />
-      <PackageReference Include="MassTransit.Quartz" Version="8.0.16" />
-      <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.16" />
+      <PackageReference Include="MassTransit.EntityFrameworkCore" Version="8.1.0" />
+      <PackageReference Include="MassTransit.Newtonsoft" Version="8.1.0" />
+      <PackageReference Include="MassTransit.Quartz" Version="8.1.0" />
+      <PackageReference Include="MassTransit.RabbitMQ" Version="8.1.0" />
       <PackageReference Include="Mediator.Abstractions" Version="2.1.5" />
       <PackageReference Include="Mediator.SourceGenerator" Version="2.1.5">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.8">
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.10">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
-      <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="7.0.8" />
+      <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="7.0.10" />
       <PackageReference Include="Microsoft.ML.Recommender" Version="0.20.1" />
-      <PackageReference Include="Riok.Mapperly" Version="2.8.0" />
+      <PackageReference Include="Riok.Mapperly" Version="3.1.0" />
     </ItemGroup>
 
     <ItemGroup>

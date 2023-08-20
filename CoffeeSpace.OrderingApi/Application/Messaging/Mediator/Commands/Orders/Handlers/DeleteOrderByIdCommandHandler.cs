@@ -14,7 +14,7 @@ internal sealed class DeleteOrderByIdCommandHandler : ICommandHandler<DeleteOrde
 
     public async ValueTask<bool> Handle(DeleteOrderByIdCommand command, CancellationToken cancellationToken)
     {
-        var deleted = await _orderRepository.DeleteByIdAsync(command.Id, cancellationToken);
+        bool deleted = await _orderRepository.DeleteByIdAsync(command.Id, cancellationToken);
 
         return deleted;
     }

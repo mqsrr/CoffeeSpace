@@ -24,7 +24,7 @@ internal sealed class TokenWriter : ITokenWriter<ApplicationUser>
     public async Task<string> WriteTokenAsync(ApplicationUser user, CancellationToken cancellationToken)
     {
         var claimsPrincipal = await _principalFactory.CreateAsync(user);
-        var token = await WriteTokenAsync(claimsPrincipal, cancellationToken);
+        string token = await WriteTokenAsync(claimsPrincipal, cancellationToken);
 
         return token;
     }

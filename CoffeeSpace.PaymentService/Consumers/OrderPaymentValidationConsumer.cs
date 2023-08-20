@@ -20,7 +20,7 @@ internal sealed class OrderPaymentValidationConsumer : IConsumer<OrderPaymentVal
     public async Task Consume(ConsumeContext<OrderPaymentValidation> context)
     {
         var order = context.Message.Order;
-        var isValid = await _historyRepository.CreateAsync(new PaymentHistory
+        bool isValid = await _historyRepository.CreateAsync(new PaymentHistory
         {
             Id = Guid.NewGuid().ToString(),
             OrderId = order.Id,

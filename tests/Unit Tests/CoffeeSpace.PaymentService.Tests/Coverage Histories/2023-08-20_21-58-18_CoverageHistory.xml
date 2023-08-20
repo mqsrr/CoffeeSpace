@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<coverage version="1.0" date="2023-08-20_21-58-18" tag="">
+  <assembly name="CoffeeSpace.Domain">
+    <class name="CoffeeSpace.Domain.Ordering.BuyerInfo.Address" coveredlines="4" coverablelines="4" totallines="12" coveredbranches="0" totalbranches="0" coveredcodeelements="4" totalcodeelements="4" />
+    <class name="CoffeeSpace.Domain.Ordering.BuyerInfo.Buyer" coveredlines="0" coverablelines="4" totallines="14" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="4" />
+    <class name="CoffeeSpace.Domain.Ordering.BuyerInfo.CardInfo.PaymentInfo" coveredlines="6" coverablelines="6" totallines="16" coveredbranches="0" totalbranches="0" coveredcodeelements="6" totalcodeelements="6" />
+    <class name="CoffeeSpace.Domain.Ordering.Orders.Order" coveredlines="6" coverablelines="6" totallines="19" coveredbranches="0" totalbranches="0" coveredcodeelements="6" totalcodeelements="6" />
+    <class name="CoffeeSpace.Domain.Ordering.Orders.OrderItem" coveredlines="7" coverablelines="7" totallines="18" coveredbranches="0" totalbranches="0" coveredcodeelements="7" totalcodeelements="7" />
+    <class name="CoffeeSpace.Domain.Products.Product" coveredlines="0" coverablelines="7" totallines="18" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="7" />
+  </assembly>
+  <assembly name="CoffeeSpace.Messages">
+    <class name="CoffeeSpace.Messages.Buyers.DeleteBuyer" coveredlines="0" coverablelines="2" totallines="8" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="2" />
+    <class name="CoffeeSpace.Messages.Buyers.RegisterNewBuyer" coveredlines="0" coverablelines="2" totallines="8" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="2" />
+    <class name="CoffeeSpace.Messages.Buyers.UpdateBuyer" coveredlines="0" coverablelines="1" totallines="8" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="1" />
+  </assembly>
+  <assembly name="CoffeeSpace.PaymentService">
+    <class name="CoffeeSpace.PaymentService.Consumers.OrderPaymentValidationConsumer" coveredlines="23" coverablelines="23" totallines="41" coveredbranches="0" totalbranches="0" coveredcodeelements="2" totalcodeelements="2" />
+    <class name="CoffeeSpace.PaymentService.Extensions.HealthChecksExtensions" coveredlines="0" coverablelines="5" totallines="11" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="1" />
+    <class name="CoffeeSpace.PaymentService.Models.PaymentHistory" coveredlines="5" coverablelines="5" totallines="14" coveredbranches="0" totalbranches="0" coveredcodeelements="5" totalcodeelements="5" />
+    <class name="CoffeeSpace.PaymentService.Persistence.Configurations.PaymentHistoryConfigurations" coveredlines="0" coverablelines="17" totallines="31" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="1" />
+    <class name="CoffeeSpace.PaymentService.Persistence.Migrations.Init" coveredlines="0" coverablelines="61" totallines="103" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="3" />
+    <class name="CoffeeSpace.PaymentService.Persistence.Migrations.PaymentDbContextModelSnapshot" coveredlines="0" coverablelines="36" totallines="58" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="1" />
+    <class name="CoffeeSpace.PaymentService.Persistence.PaymentDbContext" coveredlines="0" coverablelines="7" totallines="21" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="3" />
+    <class name="CoffeeSpace.PaymentService.Repositories.PaymentHistoryRepository" coveredlines="19" coverablelines="35" totallines="61" coveredbranches="1" totalbranches="4" coveredcodeelements="4" totalcodeelements="6" />
+    <class name="Program" coveredlines="0" coverablelines="32" totallines="53" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="1" />
+  </assembly>
+</coverage>

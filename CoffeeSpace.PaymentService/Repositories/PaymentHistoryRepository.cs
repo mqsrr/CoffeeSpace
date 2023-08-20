@@ -16,7 +16,7 @@ internal sealed class PaymentHistoryRepository : IPaymentHistoryRepository
 
     public async Task<IEnumerable<PaymentHistory>> GetAllAsync(CancellationToken cancellationToken)
     {
-        var isNotEmpty = await _paymentDbContext.PaymentHistories.AnyAsync(cancellationToken);
+        bool isNotEmpty = await _paymentDbContext.PaymentHistories.AnyAsync(cancellationToken);
         
         return !isNotEmpty
             ? Enumerable.Empty<PaymentHistory>()
@@ -52,7 +52,7 @@ internal sealed class PaymentHistoryRepository : IPaymentHistoryRepository
 
     public async Task<bool> DeleteByIdAsync(string id, CancellationToken cancellationToken)
     {
-        var result = await _paymentDbContext.PaymentHistories
+        int result = await _paymentDbContext.PaymentHistories
             .Where(payment => payment.Id == id)
             .ExecuteDeleteAsync(cancellationToken);
 

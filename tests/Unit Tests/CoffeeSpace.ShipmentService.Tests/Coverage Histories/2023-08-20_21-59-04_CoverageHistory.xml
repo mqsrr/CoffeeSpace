@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<coverage version="1.0" date="2023-08-20_21-59-04" tag="">
+  <assembly name="CoffeeSpace.Domain">
+    <class name="CoffeeSpace.Domain.Ordering.BuyerInfo.Address" coveredlines="4" coverablelines="4" totallines="12" coveredbranches="0" totalbranches="0" coveredcodeelements="4" totalcodeelements="4" />
+    <class name="CoffeeSpace.Domain.Ordering.BuyerInfo.Buyer" coveredlines="0" coverablelines="4" totallines="14" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="4" />
+    <class name="CoffeeSpace.Domain.Ordering.BuyerInfo.CardInfo.PaymentInfo" coveredlines="6" coverablelines="6" totallines="16" coveredbranches="0" totalbranches="0" coveredcodeelements="6" totalcodeelements="6" />
+    <class name="CoffeeSpace.Domain.Ordering.Orders.Order" coveredlines="6" coverablelines="6" totallines="19" coveredbranches="0" totalbranches="0" coveredcodeelements="6" totalcodeelements="6" />
+    <class name="CoffeeSpace.Domain.Ordering.Orders.OrderItem" coveredlines="7" coverablelines="7" totallines="18" coveredbranches="0" totalbranches="0" coveredcodeelements="7" totalcodeelements="7" />
+    <class name="CoffeeSpace.Domain.Products.Product" coveredlines="0" coverablelines="7" totallines="18" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="7" />
+  </assembly>
+  <assembly name="CoffeeSpace.Messages">
+    <class name="CoffeeSpace.Messages.Buyers.DeleteBuyer" coveredlines="0" coverablelines="2" totallines="8" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="2" />
+    <class name="CoffeeSpace.Messages.Buyers.RegisterNewBuyer" coveredlines="0" coverablelines="2" totallines="8" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="2" />
+    <class name="CoffeeSpace.Messages.Buyers.UpdateBuyer" coveredlines="0" coverablelines="1" totallines="8" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="1" />
+  </assembly>
+  <assembly name="CoffeeSpace.ShipmentService">
+    <class name="CoffeeSpace.ShipmentService.Consumers.RequestOrderShipmentConsumer" coveredlines="13" coverablelines="13" totallines="28" coveredbranches="0" totalbranches="0" coveredcodeelements="2" totalcodeelements="2" />
+    <class name="Program" coveredlines="0" coverablelines="30" totallines="45" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="1" />
+  </assembly>
+</coverage>

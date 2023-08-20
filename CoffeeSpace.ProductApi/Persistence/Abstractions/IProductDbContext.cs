@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeSpace.ProductApi.Persistence.Abstractions;
 
-internal interface IProductDbContext
+public interface IProductDbContext
 {
     public DbSet<Product> Products { get; init; }
 

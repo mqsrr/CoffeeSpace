@@ -39,7 +39,7 @@ internal sealed class OrderService : IOrderService
 
     public async Task<bool> CreateAsync(Order order, CancellationToken cancellationToken)
     {
-        var created = await _sender.Send(new CreateOrderCommand
+        bool created = await _sender.Send(new CreateOrderCommand
         {
             Order = order
         }, cancellationToken);
@@ -59,7 +59,7 @@ internal sealed class OrderService : IOrderService
 
     public async Task<bool> DeleteByIdAsync(Guid id, Guid buyerId, CancellationToken cancellationToken)
     {
-        var deleted = await _sender.Send(new DeleteOrderByIdCommand
+        bool deleted = await _sender.Send(new DeleteOrderByIdCommand
         {
             Id = id.ToString(),
             BuyerId = buyerId.ToString()

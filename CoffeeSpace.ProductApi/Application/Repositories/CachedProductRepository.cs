@@ -50,7 +50,7 @@ internal sealed class CachedProductRepository : IProductRepository
 
     public async Task<bool> CreateProductAsync(Product product, CancellationToken cancellationToken)
     {
-        var created = await _productRepository.CreateProductAsync(product, cancellationToken);
+        bool created = await _productRepository.CreateProductAsync(product, cancellationToken);
         if (created)
         {
             await _cacheService.RemoveAsync(CacheKeys.Products.GetAll, cancellationToken);
@@ -73,7 +73,7 @@ internal sealed class CachedProductRepository : IProductRepository
 
     public async Task<bool> DeleteProductByIdAsync(string id, CancellationToken cancellationToken)
     {
-        var deleted = await _productRepository.DeleteProductByIdAsync(id, cancellationToken);
+        bool deleted = await _productRepository.DeleteProductByIdAsync(id, cancellationToken);
         if (deleted)
         {
             await _cacheService.RemoveAsync(CacheKeys.Products.GetAll, cancellationToken);

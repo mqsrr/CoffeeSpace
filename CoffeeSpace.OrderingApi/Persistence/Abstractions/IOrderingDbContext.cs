@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeSpace.OrderingApi.Persistence.Abstractions;
 
-internal interface IOrderingDbContext
+public interface IOrderingDbContext
 {
     DbSet<Order> Orders { get; init; }
 

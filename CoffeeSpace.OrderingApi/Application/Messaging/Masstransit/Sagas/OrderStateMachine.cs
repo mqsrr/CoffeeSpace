@@ -9,21 +9,15 @@ using CoffeeSpace.Messages.Shipment.Responses;
 using CoffeeSpace.OrderingApi.Application.Mapping;
 using MassTransit;
 
-#pragma warning disable CS8618
 
 namespace CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Sagas;
 
-[SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
 internal sealed class OrderStateMachine : MassTransitStateMachine<OrderStateInstance>
 {
     public State Submitted { get; private set; }
-    
     public State StockConfirmed { get; private set; }
-    
     public State Paid { get; private set; }
-    
     public State Shipped { get; private set; }
-    
     public State Canceled { get; private set; }
 
     public OrderStateMachine(ILogger<OrderStateMachine> logger)

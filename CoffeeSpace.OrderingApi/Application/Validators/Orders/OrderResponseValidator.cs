@@ -8,15 +8,18 @@ internal sealed class OrderResponseValidator : AbstractValidator<OrderResponse>
     public OrderResponseValidator()
     {
         RuleFor(x => x.Id)
+            .NotNull()
             .NotEmpty();
 
         RuleFor(x => x.Address)
+            .NotNull()
             .NotEmpty();
         
         RuleFor(x => x.Status)
             .NotEmpty();
             
         RuleFor(x => x.OrderItems)
+            .NotEmpty()
             .NotNull()
             .ForEach(x => x.NotNull());
     }

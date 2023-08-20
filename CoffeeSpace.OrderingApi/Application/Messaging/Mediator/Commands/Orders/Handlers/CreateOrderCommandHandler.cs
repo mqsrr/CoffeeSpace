@@ -18,7 +18,7 @@ internal sealed class CreateOrderCommandHandler : ICommandHandler<CreateOrderCom
 
     public async ValueTask<bool> Handle(CreateOrderCommand command, CancellationToken cancellationToken)
     {
-        var created = await _orderRepository.CreateAsync(command.Order, cancellationToken);
+        bool created = await _orderRepository.CreateAsync(command.Order, cancellationToken);
         if (created)
         {
             await _publishEndpoint.Publish<SubmitOrder>(new

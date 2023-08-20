@@ -8,9 +8,11 @@ internal sealed class CreateBuyerRequestValidator : AbstractValidator<CreateBuye
     public CreateBuyerRequestValidator()
     {
         RuleFor(x => x.Name)
+            .NotNull()
             .NotEmpty();
 
         RuleFor(x => x.Email)
+            .NotNull()
             .NotEmpty()
             .EmailAddress();
     }

@@ -11,15 +11,18 @@ internal sealed class CreateOrderRequestValidator : AbstractValidator<CreateOrde
             .Empty();
         
         RuleFor(x => x.Address)
+            .NotNull()
             .NotEmpty();
             
         RuleFor(x => x.PaymentInfo)
+            .NotNull()
             .NotEmpty();
         
         RuleFor(x => x.Status)
             .IsInEnum();
         
         RuleFor(x => x.OrderItems)
+            .NotEmpty()
             .NotNull();
 
         RuleForEach(x => x.OrderItems)
