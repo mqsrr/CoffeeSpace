@@ -25,7 +25,7 @@ public sealed class ProductsController : ControllerBase
     public async Task<IActionResult> GetAll([FromQuery] GetAllProductsRequest request, CancellationToken cancellationToken)
     {
         var products = await _productService.GetAllProductsAsync(request, cancellationToken);
-        var count = await _productService.GetCountAsync(cancellationToken);
+        int count = await _productService.GetCountAsync(cancellationToken);
 
         var response = products.Select(x => x.ToResponse()).ToPagedList(request.Page, request.PageSize, count);
         return Ok(response);
@@ -65,8 +65,7 @@ public sealed class ProductsController : ControllerBase
     [HttpDelete(ApiEndpoints.Products.Delete)]
     public async Task<IActionResult> Delete([FromRoute] DeleteProductByIdRequest request, CancellationToken cancellationToken)
     {
-        var deleted = await _productService.DeleteProductByIdAsync(request.Id, cancellationToken);
-
+        bool deleted = await _productService.DeleteProductByIdAsync(request.Id, cancellationToken);
         return deleted
             ? Ok()
             : NotFound();

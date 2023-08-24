@@ -5,6 +5,7 @@ using CoffeeSpace.ProductApi.Application.Repositories;
 using CoffeeSpace.ProductApi.Persistence.Abstractions;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using MockQueryable.NSubstitute;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
@@ -49,18 +50,6 @@ public sealed class ProductRepositoryTests
     
     [Fact]
     public async Task GetAllAsync_ShouldReturnAllProducts()
-    {
-        // Arrange
-        
-        // Act
-        var result = await _productRepository.GetAllProductsAsync(CancellationToken.None);
-
-        // Assert   
-        result.Should().BeEquivalentTo(_products);
-    }
-    
-    [Fact]
-    public async Task GetAllWithRequestAsync_ShouldReturnPagedProducts()
     {
         // Arrange
         

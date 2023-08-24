@@ -54,11 +54,14 @@ builder.Services.AddOptions<AwsMessagingSettings>()
     .Bind(builder.Configuration.GetSection("AWS"))
     .ValidateOnStart();
 
+builder.Services.AddOptions<JwtSettings>()
+    .Bind(builder.Configuration.GetSection("Jwt"))
+    .ValidateOnStart();
+
 builder.Services.AddFluentValidationAutoValidation()
     .AddValidatorsFromAssemblyContaining<IValidatorMarker>(ServiceLifetime.Singleton, includeInternalTypes: true);
 
 builder.Services.AddQuartz(x => x.UseMicrosoftDependencyInjectionJobFactory());
-
 builder.Services.AddMassTransit(x =>
 {
     x.SetKebabCaseEndpointNameFormatter();

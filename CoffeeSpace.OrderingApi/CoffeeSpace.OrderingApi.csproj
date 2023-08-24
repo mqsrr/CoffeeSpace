@@ -10,6 +10,7 @@
 
     <ItemGroup>
         <InternalsVisibleTo Include="CoffeeSpace.OrderingApi.Tests"/>
+        <InternalsVisibleTo Include="CoffeeSpace.OrderingApi.Tests.Integration"/>
     </ItemGroup>
     
     <ItemGroup>

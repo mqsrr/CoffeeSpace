@@ -1,0 +1,211 @@
+﻿{
+  response: {
+    Version: 1.1,
+    Content: {
+      Headers: [
+        {
+          Expires: [
+            Thu, 01 Jan 1970 00:00:00 GMT
+          ]
+        },
+        {
+          Content-Type: [
+            text/plain; charset=utf-8; api-version=1.0
+          ]
+        }
+      ]
+    },
+    StatusCode: OK,
+    ReasonPhrase: OK,
+    Headers: [
+      {},
+      {
+        Cache-Control: [
+          no-store, no-cache
+        ]
+      },
+      {
+        Pragma: [
+          no-cache
+        ]
+      },
+      {
+        api-supported-versions: [
+          1.0
+        ]
+      }
+    ],
+    TrailingHeaders: [],
+    RequestMessage: {
+      Version: 1.1,
+      Content: {
+        Headers: [
+          {
+            Content-Type: [
+              application/json; charset=utf-8
+            ]
+          },
+          {
+            Content-Length: [
+              117
+            ]
+          }
+        ]
+      },
+      Method: {
+        Method: POST
+      },
+      RequestUri: http://localhost/api/auth/register,
+      Headers: []
+    },
+    IsSuccessStatusCode: true
+  },
+  _testHarness: {
+    Messages: [
+      {
+        Sent: RegisterNewBuyer,
+        MessageId: Guid_1,
+        ConversationId: Guid_2,
+        DestinationAddress: register-new-buyer,
+        Message: {
+          Name: Jailyn_Orn,
+          Email: Jorge.Murray@yahoo.com
+        }
+      },
+      {
+        Sent: RegisterNewBuyer,
+        MessageId: Guid_3,
+        ConversationId: Guid_4,
+        DestinationAddress: register-new-buyer,
+        Message: {
+          Name: Izaiah49,
+          Email: Amy.Zulauf51@hotmail.com
+        }
+      }
+    ]
+  },
+  sqlLogs: [
+    {
+      Type: ReaderExecutedAsync,
+      HasTransaction: false,
+      Text:
+SELECT a."Id", a."AccessFailedCount", a."ConcurrencyStamp", a."Email", a."EmailConfirmed", a."LastName", a."LockoutEnabled", a."LockoutEnd", a."Name", a."NormalizedEmail", a."NormalizedUserName", a."Password", a."PasswordHash", a."PhoneNumber", a."PhoneNumberConfirmed", a."SecurityStamp", a."TwoFactorEnabled", a."UserName"
+FROM "AspNetUsers" AS a
+WHERE a."NormalizedUserName" = @__normalizedUserName_0
+LIMIT 1
+    },
+    {
+      Type: ReaderExecutedAsync,
+      HasTransaction: false,
+      Text:
+SELECT a."Id", a."AccessFailedCount", a."ConcurrencyStamp", a."Email", a."EmailConfirmed", a."LastName", a."LockoutEnabled", a."LockoutEnd", a."Name", a."NormalizedEmail", a."NormalizedUserName", a."Password", a."PasswordHash", a."PhoneNumber", a."PhoneNumberConfirmed", a."SecurityStamp", a."TwoFactorEnabled", a."UserName"
+FROM "AspNetUsers" AS a
+WHERE a."NormalizedEmail" = @__normalizedEmail_0
+LIMIT 2
+    },
+    {
+      Type: ReaderExecutedAsync,
+      HasTransaction: false,
+      Text:
+INSERT INTO "AspNetUsers" ("Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LastName", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "Password", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName")
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, @p10, @p11, @p12, @p13, @p14, @p15, @p16, @p17);
+    },
+    {
+      Type: ReaderExecutedAsync,
+      HasTransaction: false,
+      Text:
+SELECT a."Id", a."AccessFailedCount", a."ConcurrencyStamp", a."Email", a."EmailConfirmed", a."LastName", a."LockoutEnabled", a."LockoutEnd", a."Name", a."NormalizedEmail", a."NormalizedUserName", a."Password", a."PasswordHash", a."PhoneNumber", a."PhoneNumberConfirmed", a."SecurityStamp", a."TwoFactorEnabled", a."UserName"
+FROM "AspNetUsers" AS a
+WHERE a."NormalizedUserName" = @__normalizedUserName_0
+LIMIT 1
+    },
+    {
+      Type: ReaderExecutedAsync,
+      HasTransaction: false,
+      Text:
+SELECT a."Id", a."ClaimType", a."ClaimValue", a."UserId"
+FROM "AspNetUserClaims" AS a
+WHERE a."UserId" = @__user_Id_0
+    },
+    {
+      Type: ReaderExecutedAsync,
+      HasTransaction: false,
+      Text:
+SELECT a0."Name"
+FROM "AspNetUserRoles" AS a
+INNER JOIN "AspNetRoles" AS a0 ON a."RoleId" = a0."Id"
+WHERE a."UserId" = @__userId_0
+    },
+    {
+      Type: ReaderExecutedAsync,
+      HasTransaction: false,
+      Text:
+SELECT a."Id", a."ClaimType", a."ClaimValue", a."UserId"
+FROM "AspNetUserClaims" AS a
+WHERE a."UserId" = @__user_Id_0
+    },
+    {
+      Type: ReaderExecutedAsync,
+      HasTransaction: false,
+      Text:
+SELECT a0."Name"
+FROM "AspNetUserRoles" AS a
+INNER JOIN "AspNetRoles" AS a0 ON a."RoleId" = a0."Id"
+WHERE a."UserId" = @__userId_0
+    },
+    {
+      Type: ReaderExecutedAsync,
+      HasTransaction: false,
+      Text:
+SELECT a."Id", a."AccessFailedCount", a."ConcurrencyStamp", a."Email", a."EmailConfirmed", a."LastName", a."LockoutEnabled", a."LockoutEnd", a."Name", a."NormalizedEmail", a."NormalizedUserName", a."Password", a."PasswordHash", a."PhoneNumber", a."PhoneNumberConfirmed", a."SecurityStamp", a."TwoFactorEnabled", a."UserName"
+FROM "AspNetUsers" AS a
+WHERE a."NormalizedUserName" = @__normalizedUserName_0
+LIMIT 1
+    },
+    {
+      Type: ReaderExecutedAsync,
+      HasTransaction: false,
+      Text:
+SELECT a."Id", a."AccessFailedCount", a."ConcurrencyStamp", a."Email", a."EmailConfirmed", a."LastName", a."LockoutEnabled", a."LockoutEnd", a."Name", a."NormalizedEmail", a."NormalizedUserName", a."Password", a."PasswordHash", a."PhoneNumber", a."PhoneNumberConfirmed", a."SecurityStamp", a."TwoFactorEnabled", a."UserName"
+FROM "AspNetUsers" AS a
+WHERE a."NormalizedEmail" = @__normalizedEmail_0
+LIMIT 2
+    },
+    {
+      Type: ReaderExecutedAsync,
+      HasTransaction: true,
+      Text:
+INSERT INTO "AspNetUserClaims" ("ClaimType", "ClaimValue", "UserId")
+VALUES (@p0, @p1, @p2)
+RETURNING "Id";
+INSERT INTO "AspNetUserClaims" ("ClaimType", "ClaimValue", "UserId")
+VALUES (@p3, @p4, @p5)
+RETURNING "Id";
+INSERT INTO "AspNetUserClaims" ("ClaimType", "ClaimValue", "UserId")
+VALUES (@p6, @p7, @p8)
+RETURNING "Id";
+INSERT INTO "AspNetUserClaims" ("ClaimType", "ClaimValue", "UserId")
+VALUES (@p9, @p10, @p11)
+RETURNING "Id";
+UPDATE "AspNetUsers" SET "AccessFailedCount" = @p12, "ConcurrencyStamp" = @p13, "Email" = @p14, "EmailConfirmed" = @p15, "LastName" = @p16, "LockoutEnabled" = @p17, "LockoutEnd" = @p18, "Name" = @p19, "NormalizedEmail" = @p20, "NormalizedUserName" = @p21, "Password" = @p22, "PasswordHash" = @p23, "PhoneNumber" = @p24, "PhoneNumberConfirmed" = @p25, "SecurityStamp" = @p26, "TwoFactorEnabled" = @p27, "UserName" = @p28
+WHERE "Id" = @p29 AND "ConcurrencyStamp" = @p30;
+    },
+    {
+      Type: ReaderExecutedAsync,
+      HasTransaction: false,
+      Text:
+SELECT a."Id", a."ClaimType", a."ClaimValue", a."UserId"
+FROM "AspNetUserClaims" AS a
+WHERE a."UserId" = @__user_Id_0
+    },
+    {
+      Type: ReaderExecutedAsync,
+      HasTransaction: false,
+      Text:
+SELECT a0."Name"
+FROM "AspNetUserRoles" AS a
+INNER JOIN "AspNetRoles" AS a0 ON a."RoleId" = a0."Id"
+WHERE a."UserId" = @__userId_0
+    }
+  ]
+}

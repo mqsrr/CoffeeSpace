@@ -10,6 +10,7 @@
 
     <ItemGroup>
         <InternalsVisibleTo Include="CoffeeSpace.IdentityApi.Tests"/>
+        <InternalsVisibleTo Include="CoffeeSpace.IdentityApi.Tests.Integration"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -36,7 +37,6 @@
 
     <ItemGroup>
       <Folder Include="Application\" />
-      <Folder Include="Persistence\Abstractions\" />
     </ItemGroup>
 
     <ItemGroup>

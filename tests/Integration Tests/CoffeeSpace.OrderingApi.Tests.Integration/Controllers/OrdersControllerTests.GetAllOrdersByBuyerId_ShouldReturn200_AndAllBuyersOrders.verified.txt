@@ -1,0 +1,112 @@
+﻿{
+  response: {
+    Version: 1.1,
+    Content: {
+      Headers: [
+        {
+          Content-Type: [
+            application/json; charset=utf-8
+          ]
+        }
+      ]
+    },
+    StatusCode: OK,
+    ReasonPhrase: OK,
+    Headers: [],
+    TrailingHeaders: [],
+    RequestMessage: {
+      Version: 1.1,
+      Method: {
+        Method: GET
+      },
+      RequestUri: http://localhost/api/buyers/9d71b0d5-96ab-b2be-f988-d53b248cbfdf/orders,
+      Headers: [
+        {}
+      ]
+    },
+    IsSuccessStatusCode: true
+  },
+  orderResponses: [
+    {
+      Id: Guid_1,
+      Status: Shipped,
+      Address: {
+        Id: Guid_2,
+        Street: 5094 Reagan Spring,
+        City: South Randy,
+        Country: Maldives
+      },
+      OrderItems: [
+        {
+          Id: Guid_3,
+          Title: Practical Fresh Car,
+          Description: Sleek,
+          UnitPrice: 2.1715434,
+          Discount: 0.34836534
+        },
+        {
+          Id: Guid_4,
+          Title: Refined Soft Towels,
+          Description: Small,
+          UnitPrice: 4.9399004,
+          Discount: 0.7762839
+        },
+        {
+          Id: Guid_5,
+          Title: Rustic Granite Salad,
+          Description: Generic,
+          UnitPrice: 1.3270701,
+          Discount: 0.2863804
+        }
+      ]
+    },
+    {
+      Id: Guid_4,
+      Status: Cancelled,
+      Address: {
+        Id: Guid_4,
+        Street: 924 Conn Lodge,
+        City: Ryanmouth,
+        Country: Antarctica (the territory South of 60 deg S)
+      }
+    }
+  ],
+  sqlLogs: [
+    {
+      Type: ReaderExecutedAsync,
+      HasTransaction: false,
+      Text:
+SELECT EXISTS (
+    SELECT 1
+    FROM "Orders" AS o)
+    },
+    {
+      Type: ReaderExecuted,
+      HasTransaction: false,
+      Parameters: {
+        @__buyerId_0 (String?): Guid_4
+      },
+      Text:
+SELECT o."Id", o."AddressId", o."BuyerId", o."PaymentInfoId", o."Status", a."Id", a."City", a."Country", a."Street", o0."Id", o0."Description", o0."Discount", o0."OrderId", o0."Title", o0."UnitPrice"
+FROM "Orders" AS o
+INNER JOIN "Addresses" AS a ON o."AddressId" = a."Id"
+LEFT JOIN "OrderItems" AS o0 ON o."Id" = o0."OrderId"
+WHERE o."BuyerId" = @__buyerId_0
+ORDER BY o."Id", a."Id"
+    },
+    {
+      Type: ReaderExecuted,
+      HasTransaction: false,
+      Parameters: {
+        @__buyerId_0 (String?): Guid_4
+      },
+      Text:
+SELECT o."Id", o."AddressId", o."BuyerId", o."PaymentInfoId", o."Status", a."Id", a."City", a."Country", a."Street", o0."Id", o0."Description", o0."Discount", o0."OrderId", o0."Title", o0."UnitPrice"
+FROM "Orders" AS o
+INNER JOIN "Addresses" AS a ON o."AddressId" = a."Id"
+LEFT JOIN "OrderItems" AS o0 ON o."Id" = o0."OrderId"
+WHERE o."BuyerId" = @__buyerId_0
+ORDER BY o."Id", a."Id"
+    }
+  ]
+}

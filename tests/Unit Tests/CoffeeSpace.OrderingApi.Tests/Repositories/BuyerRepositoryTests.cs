@@ -103,9 +103,6 @@ public sealed class BuyerRepositoryTests : IClassFixture<OrderingDbContextFixtur
         var updatedBuyer = _fixture.Build<Buyer>()
             .With(buyer => buyer.Id, buyerToUpdate.Id)
             .Create();
-
-        _buyersDbSet.FindAsync(Arg.Any<object[]>(), Arg.Any<CancellationToken>())
-            .Returns(buyerToUpdate);
         
         _dbContext.SaveChangesAsync(Arg.Any<CancellationToken>())
             .Returns(1);
@@ -122,9 +119,8 @@ public sealed class BuyerRepositoryTests : IClassFixture<OrderingDbContextFixtur
     {
         // Arrange
         var updatedBuyer = _buyers.First();
-
-        _buyersDbSet.FindAsync(Arg.Any<object[]>(), Arg.Any<CancellationToken>())
-            .ReturnsNull();
+        _dbContext.SaveChangesAsync(Arg.Any<CancellationToken>())
+            .Returns(0);
         
         // Act
         var result = await _buyerRepository.UpdateAsync(updatedBuyer, CancellationToken.None);

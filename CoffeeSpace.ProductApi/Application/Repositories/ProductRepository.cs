@@ -63,12 +63,6 @@ internal sealed class ProductRepository : IProductRepository
 
     public async Task<Product?> UpdateProductAsync(Product product, CancellationToken cancellationToken)
     {
-        var productToUpdate = await _productDbContext.Products.FindAsync(new object[] {product.Id}, cancellationToken);
-        if (productToUpdate is null)
-        {
-            return null;
-        }
-        
         _productDbContext.Products.Update(product);
         int result = await _productDbContext.SaveChangesAsync(cancellationToken);
         

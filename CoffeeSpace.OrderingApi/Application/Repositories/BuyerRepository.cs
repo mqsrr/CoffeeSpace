@@ -55,16 +55,10 @@ internal sealed class BuyerRepository : IBuyerRepository
 
     public async Task<Buyer?> UpdateAsync(Buyer buyer, CancellationToken cancellationToken)
     {
-        var buyerToUpdate = await _orderingDbContext.Buyers.FindAsync(new object[]{buyer.Id}, cancellationToken);
-        if (buyerToUpdate is null)
-        {
-            return null;
-        }
-
         _orderingDbContext.Buyers.Update(buyer);
-        await _orderingDbContext.SaveChangesAsync(cancellationToken);
+        int result = await _orderingDbContext.SaveChangesAsync(cancellationToken);
 
-        return buyer;
+        return result > 0 ? buyer : null;
     }
 
     public async Task<bool> DeleteByIdAsync(string id, CancellationToken cancellationToken)

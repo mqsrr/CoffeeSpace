@@ -25,7 +25,6 @@ builder.Configuration.AddAzureKeyVault();
 builder.Configuration.AddJwtBearer(builder);
 
 builder.Services.AddControllers();
-
 builder.Services.AddApiVersioning(new MediaTypeApiVersionReader("api-version"));
 
 builder.Services.AddStackExchangeRedisCache(x => 
@@ -45,6 +44,10 @@ builder.Services.AddFluentValidationAutoValidation()
 
 builder.Services.AddOptions<AwsMessagingSettings>()
     .Bind(builder.Configuration.GetRequiredSection("AWS"))
+    .ValidateOnStart();
+
+builder.Services.AddOptions<JwtSettings>()
+    .Bind(builder.Configuration.GetRequiredSection("Jwt"))
     .ValidateOnStart();
 
 builder.Services.AddMassTransit(x =>

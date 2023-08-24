@@ -33,7 +33,6 @@ public sealed class OrdersController : ControllerBase
     public async Task<IActionResult> GetOrderByBuyerId([FromRoute] GetOrderByIdRequest request, CancellationToken cancellationToken)
     {
         var order = await _orderService.GetByIdAsync(request.Id, request.BuyerId, cancellationToken);
-
         return order is not null
             ? Ok(order.ToResponse())
             : NotFound();
@@ -43,7 +42,7 @@ public sealed class OrdersController : ControllerBase
     public async Task<IActionResult> CreateOrder([FromRoute] Guid buyerId, [FromBody] CreateOrderRequest request, CancellationToken cancellationToken)
     {
         var order = request.ToOrder(buyerId);
-        var created = await _orderService.CreateAsync(order, cancellationToken);
+        bool created = await _orderService.CreateAsync(order, cancellationToken);
 
         return created
             ? CreatedAtAction(nameof(GetOrderByBuyerId), new {buyerId, order.Id}, order.ToResponse())
@@ -53,8 +52,7 @@ public sealed class OrdersController : ControllerBase
     [HttpDelete(ApiEndpoints.Orders.Delete)]
     public async Task<IActionResult> DeleteOrder([FromRoute] DeleteOrderRequest request, CancellationToken cancellationToken)
     {
-        var deleted = await _orderService.DeleteByIdAsync(request.Id, request.BuyerId, cancellationToken);
-
+        bool deleted = await _orderService.DeleteByIdAsync(request.Id, request.BuyerId, cancellationToken);
         return deleted
             ? Ok()
             : NotFound();

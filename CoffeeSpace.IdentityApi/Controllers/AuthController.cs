@@ -23,7 +23,7 @@ public sealed class AuthController : ControllerBase
     [HttpPost(ApiEndpoints.Authentication.Register)]
     public async Task<IActionResult> RegisterAsync([FromBody] RegisterRequest request, CancellationToken cancellationToken)
     {
-        var token = await _sender.Send(new RegisterUserCommand
+        string? token = await _sender.Send(new RegisterUserCommand
         {
             Request = request
         }, cancellationToken);
@@ -36,7 +36,7 @@ public sealed class AuthController : ControllerBase
     [HttpPost(ApiEndpoints.Authentication.Login)]
     public async Task<IActionResult> LoginAsync([FromBody] LoginRequest request, CancellationToken cancellationToken)
     {
-        var token = await _sender.Send(new LoginUserQuery
+        string? token = await _sender.Send(new LoginUserQuery
         {
             Request = request
         }, cancellationToken);

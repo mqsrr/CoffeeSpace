@@ -9,7 +9,7 @@ namespace CoffeeSpace.OrderingApi.Controllers;
 
 [Authorize]
 [ApiController]
-[ApiVersion(1.0)]
+[ApiVersion(1.1)]
 public sealed class BuyersController : ControllerBase
 {
     private readonly IBuyerService _buyerService;
@@ -23,7 +23,6 @@ public sealed class BuyersController : ControllerBase
     public async Task<IActionResult> GetBuyerById([FromRoute] GetBuyerByIdRequest request, CancellationToken cancellationToken)
     {
         var buyer = await _buyerService.GetByIdAsync(request.Id, cancellationToken);
-
         return buyer is not null
             ? Ok(buyer.ToResponse())
             : NotFound();
@@ -33,7 +32,6 @@ public sealed class BuyersController : ControllerBase
     public async Task<IActionResult> GetBuyerByEmail([FromRoute] GetBuyerByEmailRequest request, CancellationToken cancellationToken)
     {
         var buyer = await _buyerService.GetByEmailAsync(request.Email, cancellationToken);
-
         return buyer is not null
             ? Ok(buyer.ToResponse())
             : NotFound();
@@ -43,7 +41,7 @@ public sealed class BuyersController : ControllerBase
     public async Task<IActionResult> CreateBuyer([FromBody] CreateBuyerRequest request, CancellationToken cancellationToken)
     {
         var buyer = request.ToBuyer();
-        var created = await _buyerService.CreateAsync(buyer, cancellationToken);
+        bool created = await _buyerService.CreateAsync(buyer, cancellationToken);
  
         return created
             ? CreatedAtAction(nameof(GetBuyerById), new { id = buyer.Id }, buyer.ToResponse())
@@ -51,10 +49,9 @@ public sealed class BuyersController : ControllerBase
     }
 
     [HttpPut(ApiEndpoints.Buyer.Update)]
-    public async Task<IActionResult> UpdateBuyer([FromRoute] Guid id, [FromBody] UpdateBuyerRequest request,CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateBuyer([FromRoute] Guid id, [FromBody] UpdateBuyerRequest request ,CancellationToken cancellationToken)
     {
         var updatedBuyer = await _buyerService.UpdateAsync(request.ToBuyer(id), cancellationToken);
-        
         return updatedBuyer is not null
             ? Ok(updatedBuyer.ToResponse())
             : NotFound();
@@ -63,8 +60,7 @@ public sealed class BuyersController : ControllerBase
     [HttpDelete(ApiEndpoints.Buyer.Delete)]
     public async Task<IActionResult> DeleteBuyerById([FromRoute] DeleteBuyerByIdRequest request, CancellationToken cancellationToken)
     {
-        var deleted = await _buyerService.DeleteByIdAsync(request.Id, cancellationToken);
-
+        bool deleted = await _buyerService.DeleteByIdAsync(request.Id, cancellationToken);
         return deleted
             ? Ok()
             : NotFound();

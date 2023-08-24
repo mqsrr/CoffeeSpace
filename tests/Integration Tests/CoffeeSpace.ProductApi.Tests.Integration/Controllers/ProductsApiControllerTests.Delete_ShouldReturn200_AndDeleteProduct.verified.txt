@@ -1,0 +1,40 @@
+﻿{
+  response: {
+    Version: 1.1,
+    Content: {
+      Headers: []
+    },
+    StatusCode: OK,
+    ReasonPhrase: OK,
+    Headers: [
+      {
+        api-supported-versions: [
+          1.0
+        ]
+      }
+    ],
+    TrailingHeaders: [],
+    RequestMessage: {
+      Version: 1.1,
+      Method: {
+        Method: DELETE
+      },
+      Headers: [
+        {}
+      ]
+    },
+    IsSuccessStatusCode: true
+  },
+  sqlLogs: [
+    {
+      Type: NonQueryExecutedAsync,
+      HasTransaction: false,
+      Parameters: {
+        @__id_0 (String?): Guid_1
+      },
+      Text:
+DELETE FROM "Products" AS p
+WHERE p."Id" = @__id_0
+    }
+  ]
+}

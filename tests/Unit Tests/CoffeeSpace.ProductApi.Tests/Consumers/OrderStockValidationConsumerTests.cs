@@ -1,6 +1,9 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoNSubstitute;
+using CoffeeSpace.Domain.Ordering.Orders;
+using CoffeeSpace.Domain.Products;
 using CoffeeSpace.Messages.Products.Events;
+using CoffeeSpace.Messages.Products.Responses;
 using CoffeeSpace.ProductApi.Application.Messages.Consumers;
 using CoffeeSpace.ProductApi.Application.Repositories.Abstractions;
 using FluentAssertions;
@@ -38,16 +41,45 @@ public sealed class OrderStockValidationConsumerTests : IAsyncLifetime
     public async Task Consume_ShouldConsumeMessage_AndCheckProductsStockAvailability()
     {
         // Arrange
-        var consumerEndpoint = await _testHarness.GetConsumerEndpoint<OrderStockValidationConsumer>();
-        var request = _fixture.Create<OrderStockValidation>();
+        var expectedProducts = _fixture.CreateMany<Product>().ToArray();
+        _productRepository.GetAllProductsAsync(Arg.Any<CancellationToken>())
+            .Returns(expectedProducts);
         
         // Act
-        await consumerEndpoint.Send(request);
+        var response = await _testHarness.Bus.Request<OrderStockValidation, OrderStockValidationResult>(new
+        {
+            Order = _fixture.Create<Order>(),
+            Products = expectedProducts
+        });
 
         // Assert
         bool consumedAny = await _consumerTestHarness.Consumed.Any<OrderStockValidation>();
         consumedAny.Should().BeTrue();
 
+        response.Message.IsValid.Should().BeTrue();
+        await _productRepository.Received().GetAllProductsAsync(Arg.Any<CancellationToken>());
+    }
+    
+    [Fact]
+    public async Task Consume_ShouldRespondFaultedMessage_WhenProductsStockIsNotValid()
+    {
+        // Arrange
+        var products = _fixture.CreateMany<Product>();
+        _productRepository.GetAllProductsAsync(Arg.Any<CancellationToken>())
+            .Returns(_fixture.CreateMany<Product>());
+        
+        // Act
+        var response = await _testHarness.Bus.Request<OrderStockValidation, Fault>(new
+        {
+            Order = _fixture.Create<Order>(),
+            Products = products
+        });
+
+        // Assert
+        bool consumedAny = await _consumerTestHarness.Consumed.Any<OrderStockValidation>();
+        consumedAny.Should().BeTrue();
+
+        response.Should().NotBeNull();
         await _productRepository.Received().GetAllProductsAsync(Arg.Any<CancellationToken>());
     }
 

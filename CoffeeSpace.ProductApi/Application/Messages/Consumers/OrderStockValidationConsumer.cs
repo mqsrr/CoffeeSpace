@@ -19,7 +19,7 @@ internal sealed class OrderStockValidationConsumer : IConsumer<OrderStockValidat
     public async Task Consume(ConsumeContext<OrderStockValidation> context)
     {
         var products = await _productRepository.GetAllProductsAsync(context.CancellationToken);
-        var isValid = context.Message.Products.All(x => 
+        bool isValid = context.Message.Products.All(x => 
             products.Any(product => product.Title.Equals(x.Title, StringComparison.Ordinal)));
         
         if (!isValid)

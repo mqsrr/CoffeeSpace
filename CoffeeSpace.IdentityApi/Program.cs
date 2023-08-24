@@ -24,7 +24,6 @@ builder.Services.AddControllers();
 builder.Services.AddMediator();
 
 builder.Services.AddApiVersioning(new MediaTypeApiVersionReader("api-version"));
-
 builder.Services.AddApplicationDb<ApplicationUsersDbContext>(builder.Configuration["IdentityDb:ConnectionString"]!);
 
 builder.Services.AddApplicationService<IAuthService<ApplicationUser>>();
