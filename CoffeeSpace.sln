@@ -3,52 +3,52 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31611.283
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeSpace.ProductApi", "CoffeeSpace.ProductApi\CoffeeSpace.ProductApi.csproj", "{03065897-727D-44D5-A3AB-B934A24F0449}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoffeeSpace.ProductApi", "CoffeeSpace.ProductApi\CoffeeSpace.ProductApi.csproj", "{03065897-727D-44D5-A3AB-B934A24F0449}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F0F6EF50-DFB7-4CE1-9493-01A59912B087}"
 	ProjectSection(SolutionItems) = preProject
 		docker-compose.yml = docker-compose.yml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeSpace.Messages", "CoffeeSpace.Messages\CoffeeSpace.Messages.csproj", "{465BBFE7-CE95-4ECE-952F-1126A558C4FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoffeeSpace.Messages", "CoffeeSpace.Messages\CoffeeSpace.Messages.csproj", "{465BBFE7-CE95-4ECE-952F-1126A558C4FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeSpace.Domain", "CoffeeSpace.Domain\CoffeeSpace.Domain.csproj", "{DF2E6168-2CC1-42A7-9304-5DD8C2F6A5DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoffeeSpace.Domain", "CoffeeSpace.Domain\CoffeeSpace.Domain.csproj", "{DF2E6168-2CC1-42A7-9304-5DD8C2F6A5DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeSpace.PaymentService", "CoffeeSpace.PaymentService\CoffeeSpace.PaymentService.csproj", "{FBB32C90-3105-499D-B025-13ED99FE7158}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoffeeSpace.PaymentService", "CoffeeSpace.PaymentService\CoffeeSpace.PaymentService.csproj", "{FBB32C90-3105-499D-B025-13ED99FE7158}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeSpace.ShipmentService", "CoffeeSpace.ShipmentService\CoffeeSpace.ShipmentService.csproj", "{699980BE-4241-4483-8F42-FD127D482593}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoffeeSpace.ShipmentService", "CoffeeSpace.ShipmentService\CoffeeSpace.ShipmentService.csproj", "{699980BE-4241-4483-8F42-FD127D482593}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeSpace.IdentityApi", "CoffeeSpace.IdentityApi\CoffeeSpace.IdentityApi.csproj", "{2CA433A2-20F6-4F85-9D22-24F2365B2B51}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoffeeSpace.IdentityApi", "CoffeeSpace.IdentityApi\CoffeeSpace.IdentityApi.csproj", "{2CA433A2-20F6-4F85-9D22-24F2365B2B51}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeSpace.ApiGateway", "CoffeeSpace.ApiGateway\CoffeeSpace.ApiGateway.csproj", "{EC6FF23D-2A37-47F6-9C14-9B353B451F8B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoffeeSpace.ApiGateway", "CoffeeSpace.ApiGateway\CoffeeSpace.ApiGateway.csproj", "{EC6FF23D-2A37-47F6-9C14-9B353B451F8B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeSpace.Core", "CoffeeSpace.Core\CoffeeSpace.Core.csproj", "{3CF2DB2B-1445-4F1F-9A8B-D7195F72B685}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoffeeSpace.Core", "CoffeeSpace.Core\CoffeeSpace.Core.csproj", "{3CF2DB2B-1445-4F1F-9A8B-D7195F72B685}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeSpace.Client", "CoffeeSpace.Client\CoffeeSpace.Client.csproj", "{AD268D7C-13EB-4A08-BF1C-0B9A36F06BEC}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeSpace.OrderingApi", "CoffeeSpace.OrderingApi\CoffeeSpace.OrderingApi.csproj", "{C2EE61A8-FEDC-4B0C-A42C-A9851E668722}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoffeeSpace.OrderingApi", "CoffeeSpace.OrderingApi\CoffeeSpace.OrderingApi.csproj", "{C2EE61A8-FEDC-4B0C-A42C-A9851E668722}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{769DECC0-73E6-47E7-9F33-3325C5367645}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Unit Tests", "Unit Tests", "{CDBBD9D2-DE60-4A1F-B584-033AED1F4B34}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeSpace.IdentityApi.Tests", "tests\Unit Tests\CoffeeSpace.IdentityApi.Tests\CoffeeSpace.IdentityApi.Tests.csproj", "{30F0E312-A3A0-45C1-88CE-8B134B988DBA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoffeeSpace.IdentityApi.Tests", "tests\Unit Tests\CoffeeSpace.IdentityApi.Tests\CoffeeSpace.IdentityApi.Tests.csproj", "{30F0E312-A3A0-45C1-88CE-8B134B988DBA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeSpace.OrderingApi.Tests", "tests\Unit Tests\CoffeeSpace.OrderingApi.Tests\CoffeeSpace.OrderingApi.Tests.csproj", "{8DA27559-8319-4EB6-9E04-E801560E55E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoffeeSpace.OrderingApi.Tests", "tests\Unit Tests\CoffeeSpace.OrderingApi.Tests\CoffeeSpace.OrderingApi.Tests.csproj", "{8DA27559-8319-4EB6-9E04-E801560E55E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeSpace.PaymentService.Tests", "tests\Unit Tests\CoffeeSpace.PaymentService.Tests\CoffeeSpace.PaymentService.Tests.csproj", "{F0E6971C-39AB-4D12-9D43-1E3A753E2CC6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoffeeSpace.PaymentService.Tests", "tests\Unit Tests\CoffeeSpace.PaymentService.Tests\CoffeeSpace.PaymentService.Tests.csproj", "{F0E6971C-39AB-4D12-9D43-1E3A753E2CC6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeSpace.ProductApi.Tests", "tests\Unit Tests\CoffeeSpace.ProductApi.Tests\CoffeeSpace.ProductApi.Tests.csproj", "{6538A27F-7D2C-4434-8296-7A078489C04E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoffeeSpace.ProductApi.Tests", "tests\Unit Tests\CoffeeSpace.ProductApi.Tests\CoffeeSpace.ProductApi.Tests.csproj", "{6538A27F-7D2C-4434-8296-7A078489C04E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeSpace.ShipmentService.Tests", "tests\Unit Tests\CoffeeSpace.ShipmentService.Tests\CoffeeSpace.ShipmentService.Tests.csproj", "{91DBCB2F-3849-4978-80A4-5C8DB182D420}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoffeeSpace.ShipmentService.Tests", "tests\Unit Tests\CoffeeSpace.ShipmentService.Tests\CoffeeSpace.ShipmentService.Tests.csproj", "{91DBCB2F-3849-4978-80A4-5C8DB182D420}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integration Tests", "Integration Tests", "{43BB0175-63D0-4819-8515-5A9577A61904}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeSpace.ProductApi.Tests.Integration", "tests\Integration Tests\CoffeeSpace.ProductApi.Tests.Integration\CoffeeSpace.ProductApi.Tests.Integration.csproj", "{3E2886AA-62CE-4148-8C7D-E671EB27F2F7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoffeeSpace.ProductApi.Tests.Integration", "tests\Integration Tests\CoffeeSpace.ProductApi.Tests.Integration\CoffeeSpace.ProductApi.Tests.Integration.csproj", "{3E2886AA-62CE-4148-8C7D-E671EB27F2F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeSpace.OrderingApi.Tests.Integration", "tests\Integration Tests\CoffeeSpace.OrderingApi.Tests.Integration\CoffeeSpace.OrderingApi.Tests.Integration.csproj", "{6F35F93E-B68B-4323-A991-87F1D2F496BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoffeeSpace.OrderingApi.Tests.Integration", "tests\Integration Tests\CoffeeSpace.OrderingApi.Tests.Integration\CoffeeSpace.OrderingApi.Tests.Integration.csproj", "{6F35F93E-B68B-4323-A991-87F1D2F496BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeSpace.IdentityApi.Tests.Integration", "tests\Integration Tests\CoffeeSpace.IdentityApi.Tests.Integration\CoffeeSpace.IdentityApi.Tests.Integration.csproj", "{22B29BA7-B8A8-40E4-AAC2-A1C491B69592}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoffeeSpace.IdentityApi.Tests.Integration", "tests\Integration Tests\CoffeeSpace.IdentityApi.Tests.Integration\CoffeeSpace.IdentityApi.Tests.Integration.csproj", "{22B29BA7-B8A8-40E4-AAC2-A1C491B69592}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoffeeSpace.Client", "CoffeeSpace.Client\CoffeeSpace.Client.csproj", "{16782DE9-D94B-4D10-A77C-8BF7C40FE6EF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -88,10 +88,6 @@ Global
 		{3CF2DB2B-1445-4F1F-9A8B-D7195F72B685}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3CF2DB2B-1445-4F1F-9A8B-D7195F72B685}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3CF2DB2B-1445-4F1F-9A8B-D7195F72B685}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AD268D7C-13EB-4A08-BF1C-0B9A36F06BEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AD268D7C-13EB-4A08-BF1C-0B9A36F06BEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AD268D7C-13EB-4A08-BF1C-0B9A36F06BEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AD268D7C-13EB-4A08-BF1C-0B9A36F06BEC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C2EE61A8-FEDC-4B0C-A42C-A9851E668722}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C2EE61A8-FEDC-4B0C-A42C-A9851E668722}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2EE61A8-FEDC-4B0C-A42C-A9851E668722}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -128,12 +124,14 @@ Global
 		{22B29BA7-B8A8-40E4-AAC2-A1C491B69592}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{22B29BA7-B8A8-40E4-AAC2-A1C491B69592}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{22B29BA7-B8A8-40E4-AAC2-A1C491B69592}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16782DE9-D94B-4D10-A77C-8BF7C40FE6EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16782DE9-D94B-4D10-A77C-8BF7C40FE6EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16782DE9-D94B-4D10-A77C-8BF7C40FE6EF}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{16782DE9-D94B-4D10-A77C-8BF7C40FE6EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16782DE9-D94B-4D10-A77C-8BF7C40FE6EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {61F7FB11-1E47-470C-91E2-47F8143E1572}
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{CDBBD9D2-DE60-4A1F-B584-033AED1F4B34} = {769DECC0-73E6-47E7-9F33-3325C5367645}
@@ -146,5 +144,8 @@ Global
 		{3E2886AA-62CE-4148-8C7D-E671EB27F2F7} = {43BB0175-63D0-4819-8515-5A9577A61904}
 		{6F35F93E-B68B-4323-A991-87F1D2F496BF} = {43BB0175-63D0-4819-8515-5A9577A61904}
 		{22B29BA7-B8A8-40E4-AAC2-A1C491B69592} = {43BB0175-63D0-4819-8515-5A9577A61904}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {61F7FB11-1E47-470C-91E2-47F8143E1572}
 	EndGlobalSection
 EndGlobal

@@ -183,9 +183,6 @@
         <SubType>Designer</SubType>
         <Generator>MSBuild:Compile</Generator>
       </MauiXaml>
-      <MauiXaml Update="Views\OrderInformationView.xaml">
-        <Generator>MSBuild:Compile</Generator>
-      </MauiXaml>
       <MauiXaml Update="Views\OrderView.xaml">
         <SubType>Designer</SubType>
         <Generator>MSBuild:Compile</Generator>
@@ -237,5 +234,8 @@
       <AndroidAsset Include="Resources\Raw\AboutAssets.txt" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\CoffeeSpace.Domain\CoffeeSpace.Domain.csproj" />
+    </ItemGroup>
 
 </Project>

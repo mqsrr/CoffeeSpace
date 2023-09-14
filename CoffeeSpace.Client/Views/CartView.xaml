@@ -3,7 +3,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:CoffeeSpace.Client._ViewModels"
-             xmlns:products="clr-namespace:CoffeeSpace.Client.Models.Products"
+             xmlns:ordering="clr-namespace:CoffeeSpace.Client.Models.Ordering"
              x:DataType="viewModels:CartViewModel"
              x:Class="CoffeeSpace.Client.Views.CartView"
              Title="Cart">
@@ -17,17 +17,21 @@
 
     <ScrollView>
         <StackLayout>
+
             <FlexLayout Wrap="Wrap" AlignItems="Start"
-                        BindableLayout.ItemsSource="{Binding Products}">
+                        BindableLayout.ItemsSource="{Binding OrderItems}">
                 <BindableLayout.ItemTemplate>
-                    <DataTemplate x:DataType="products:Product">
+                    <DataTemplate x:DataType="ordering:OrderItem">
                         <Frame
-                            Style="{OnPlatform Android={StaticResource CartOrderItemFrameAndroid},WinUI={StaticResource CartOrderItemFrameWindows}}">
+                            Style="{OnPlatform
+                            Android={StaticResource CartOrderItemFrameAndroid},
+                            WinUI={StaticResource CartOrderItemFrameWindows}}">
                             <Grid RowSpacing="1"
-                                  RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
+                                  RowDefinitions="Auto,Auto,Auto,Auto,Auto,10*"
                                   ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,80*">
-                                
-                                <HorizontalStackLayout Grid.Row="0" Grid.Column="1" Grid.RowSpan="2">
+
+                                <HorizontalStackLayout Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Margin="10">
+
                                     <Label
                                         Text="Product Title: "
                                         Style="{OnPlatform 
@@ -43,7 +47,7 @@
                                         MacCatalyst={StaticResource CartBindableLabelWindows}}" />
                                 </HorizontalStackLayout>
 
-                                <HorizontalStackLayout Grid.Row="1" Grid.Column="1" Grid.RowSpan="2">
+                                <HorizontalStackLayout Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Margin="10">
                                     <Label Text="Description: "
                                            Style="{OnPlatform 
                                            Android={StaticResource CartProductTitleAndroid}, 
@@ -58,7 +62,7 @@
                                 </HorizontalStackLayout>
 
                                 <HorizontalStackLayout Grid.Row="2" Grid.Column="1" Grid.RowSpan="2"
-                                                       Grid.ColumnSpan="2">
+                                                       Grid.ColumnSpan="2" Margin="10">
                                     <Label Text="Price: "
                                            Style="{OnPlatform 
                                            Android={StaticResource CartProductTitleAndroid},
@@ -73,7 +77,7 @@
                                            MacCatalyst={StaticResource CartBindableLabelWindows}}" />
                                 </HorizontalStackLayout>
 
-                                <HorizontalStackLayout Grid.Row="4" Grid.Column="1" Grid.RowSpan="2">
+                                <HorizontalStackLayout Grid.Row="3" Grid.Column="1" Grid.RowSpan="2" Margin="10">
                                     <Label Text="Quantity: "
                                            Style="{OnPlatform 
                                            Android={StaticResource CartProductTitleAndroid}, 
@@ -87,7 +91,9 @@
                                            MacCatalyst={StaticResource CartProductTitleWindows}}" />
                                 </HorizontalStackLayout>
 
-                                <HorizontalStackLayout Grid.Row="5" Grid.Column="1">
+                                <HorizontalStackLayout Grid.Row="4" Grid.Column="1" 
+                                                       VerticalOptions="End" Grid.RowSpan="2"
+                                                       Margin="10">
                                     <Label Text="Total: "
                                            Style="{OnPlatform
                                             Android={StaticResource CartProductTitleAndroid}, 
@@ -105,6 +111,10 @@
                     </DataTemplate>
                 </BindableLayout.ItemTemplate>
             </FlexLayout>
+            <Button Text="Confirm order items" WidthRequest="500"
+                HorizontalOptions="Center" VerticalOptions="Center"
+                Command="{Binding ConfirmOrdersStockCommand}"
+                IsVisible="{Binding OrderItems.Count}"/>
         </StackLayout>
     </ScrollView>
 </ContentPage>

@@ -1,4 +1,7 @@
-﻿using CoffeeSpace.Client.Models.Ordering;
+﻿using System.Collections.ObjectModel;
+using CoffeeSpace.Client.Models.Ordering;
+using CoffeeSpace.Client.Views;
+using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace CoffeeSpace.Client._ViewModels;
@@ -6,10 +9,10 @@ namespace CoffeeSpace.Client._ViewModels;
 public sealed partial class OrderViewModel : ObservableObject
 {
     [ObservableProperty] 
-    private ICollection<Order> _orders;
+    private ObservableCollection<Order> _orders;
 
-    public OrderViewModel()
+    public OrderViewModel(ProfileViewModel profileViewModel)
     {
-        _orders = new List<Order>();
+        _orders = profileViewModel.Buyer.Orders.ToObservableCollection() ?? new ObservableCollection<Order>();
     }
 }

@@ -21,7 +21,7 @@ internal sealed class OrderStateSagaDbContext : SagaDbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.AddInboxStateEntity();
+         modelBuilder.AddInboxStateEntity();
          modelBuilder.AddOutboxMessageEntity();
          modelBuilder.AddOutboxStateEntity();
          

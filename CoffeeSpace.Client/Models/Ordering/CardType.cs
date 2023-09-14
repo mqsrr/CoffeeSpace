@@ -1,3 +1,5 @@
+﻿
+
 namespace CoffeeSpace.Client.Models.Ordering;
 
 public enum CardType

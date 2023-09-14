@@ -28,7 +28,7 @@ public static class ApiEndpoints
     
     public static class Orders
     {
-        private const string Base = "/buyers/{{buyerId}}/orders";
+        private const string Base = $"/buyers/{{buyerId}}/orders";
 
         public const string Create = Base;
         public const string GetAll = Base;

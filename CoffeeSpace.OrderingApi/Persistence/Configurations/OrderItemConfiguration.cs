@@ -14,20 +14,26 @@ public sealed class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
         builder.Property(x => x.Id)
             .IsUnicode(false)
             .IsRequired();
-        
+
         builder.Property(x => x.Title)
             .IsRequired()
-            .IsUnicode(false)
-            .HasMaxLength(50);
-        
+            .HasMaxLength(64)
+            .IsUnicode(false);
+
         builder.Property(x => x.Description)
             .IsRequired()
             .IsUnicode(false)
-            .HasMaxLength(50);
+            .HasMaxLength(200);
 
         builder.Property(x => x.UnitPrice)
             .IsRequired()
-            .HasPrecision(2);
+            .HasPrecision(2)
+            .IsUnicode(false);
+
+        builder.Property(x => x.Discount)
+            .IsRequired()
+            .HasPrecision(2)
+            .IsUnicode(false);
 
         builder.Ignore(x => x.Quantity);
         builder.Ignore(x => x.Total);

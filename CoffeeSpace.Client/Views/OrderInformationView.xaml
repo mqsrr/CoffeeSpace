@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:CoffeeSpace.Client._ViewModels"
+             x:Class="CoffeeSpace.Client.Views.OrderInformationView"
+             x:DataType="viewModels:OrderInformationViewModel"
+             xmlns:ordering="clr-namespace:CoffeeSpace.Client.Models.Ordering"
+             Title="Order Information">
+
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,1" EndPoint="1,0">
+            <GradientStop Color="#C33764" Offset="0.2" />
+            <GradientStop Color="#1D2671" Offset="1.0" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
+
+    <StackLayout>
+        <Frame BackgroundColor="WhiteSmoke" Margin="10" 
+               WidthRequest="600" HeightRequest="300">
+            <Grid ColumnDefinitions="20*,Auto,Auto,Auto,20*"
+                  RowDefinitions="20*,Auto,Auto,Auto,20*"
+                  Margin="10">
+                <Entry Grid.Column="0" Grid.Row="1"
+                       BackgroundColor="WhiteSmoke" Placeholder="Country"
+                       PlaceholderColor="SlateGray" TextColor="SlateGray"
+                       Text="{Binding Address.Country, Mode=TwoWay}"/>
+                
+                <Entry Grid.Column="0" Grid.Row="2"
+                       BackgroundColor="WhiteSmoke" Placeholder="City"
+                       PlaceholderColor="SlateGray" TextColor="SlateGray"
+                       Text="{Binding Address.City, Mode=TwoWay}"/>
+                
+                <Entry Grid.Column="0" Grid.Row="3"
+                       BackgroundColor="WhiteSmoke" Placeholder="Street"
+                       PlaceholderColor="SlateGray" TextColor="SlateGray"
+                       Text="{Binding Address.Street, Mode=TwoWay}" />
+            </Grid>
+        </Frame>
+        <Frame BackgroundColor="WhiteSmoke" Margin="10"
+               WidthRequest="600" HeightRequest="300">
+            <Grid ColumnDefinitions="20*,Auto,Auto,Auto,20"
+                  RowDefinitions="20*,Auto,Auto,Auto,Auto,20*">
+
+                <Entry Grid.Column="0" Grid.Row="1"
+                       Placeholder="Card Number" BackgroundColor="WhiteSmoke"
+                       PlaceholderColor="SlateGray" TextColor="SlateGray"
+                       Text="{Binding PaymentInfo.CardNumber, Mode=TwoWay}"/>
+
+                <Entry Grid.Column="0" Grid.Row="2"
+                       Placeholder="CVV" BackgroundColor="WhiteSmoke"
+                       PlaceholderColor="SlateGray" TextColor="SlateGray"
+                       Text="{Binding PaymentInfo.SecurityNumber, Mode=TwoWay}"/>
+
+                <Entry Grid.Column="0" Grid.Row="3"
+                       Placeholder="Expire month" BackgroundColor="WhiteSmoke"
+                       PlaceholderColor="SlateGray" TextColor="SlateGray"
+                       Text="{Binding PaymentInfo.ExpirationMonth, Mode=TwoWay}"/>
+
+                <Entry Grid.Column="0" Grid.Row="4"
+                       Placeholder="Expire month" BackgroundColor="WhiteSmoke"
+                       PlaceholderColor="SlateGray" TextColor="SlateGray"
+                       Text="{Binding PaymentInfo.ExpirationYear, Mode=TwoWay}"/>
+
+                <Picker Grid.Column="1" Grid.Row="3" 
+                        BackgroundColor="SlateGray" TextColor="SlateGray"
+                        SelectedIndex="{Binding PaymentInfo.CardType, Mode=TwoWay}">
+                    <Picker.ItemsSource>
+                        <x:Array Type="{x:Type x:String}">
+                            <x:String>Visa</x:String>
+                            <x:String>Mastercard</x:String>
+                            <x:String>American</x:String>
+                        </x:Array>
+                    </Picker.ItemsSource>
+                </Picker>
+
+            </Grid>
+        </Frame>
+        <Button Text="Place Order" BackgroundColor="WhiteSmoke"
+                TextColor="Black" FontSize="Medium"
+                Command="{Binding CreateOrderCommand}"/>
+    </StackLayout>
+</ContentPage>

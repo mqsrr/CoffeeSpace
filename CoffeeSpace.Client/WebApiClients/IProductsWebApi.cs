@@ -8,7 +8,7 @@ namespace CoffeeSpace.Client.WebApiClients;
 public interface IProductsWebApi
 {
     [Get(ApiEndpoints.Products.GetAll)]
-    Task<IEnumerable<Product>> GetAllProductsAsync(CancellationToken cancellationToken);
+    Task<PagedList<Product>> GetAllProductsAsync(CancellationToken cancellationToken);
 
     [Get(ApiEndpoints.Products.GetById)]
     Task<Product> GetProductByIdAsync(Guid id, CancellationToken cancellationToken);

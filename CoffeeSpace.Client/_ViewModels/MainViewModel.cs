@@ -12,13 +12,12 @@ public sealed partial class MainViewModel : ObservableObject
     private readonly ISender _sender;
 
     [ObservableProperty] 
-    private IEnumerable<Product> _products;
+    private ObservableCollection<Product> _products;
 
     public MainViewModel(ISender sender)
     {
         _sender = sender;
-
-        _products = new List<Product>();
+        _products = new ObservableCollection<Product>();
     }
 
     [RelayCommand]

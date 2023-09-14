@@ -1,9 +1,7 @@
-namespace CoffeeSpace.Client.Models.Ordering;
+﻿namespace CoffeeSpace.Client.Models.Ordering;
 
 public sealed class OrderItem
 {
-    public required string Id { get; init; }
-    
     public required string Title { get; init; }
 
     public required string Description { get; init; }

@@ -1,7 +1,10 @@
-﻿using CoffeeSpace.Client.Models.Products;
+﻿using CoffeeSpace.Client.Messages.Commands;
+using CoffeeSpace.Client.Models.Ordering;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Mediator;
+using Microsoft.IdentityModel.Tokens;
+using System.Collections.ObjectModel;
 
 namespace CoffeeSpace.Client._ViewModels;
 
@@ -10,42 +13,38 @@ public sealed partial class CartViewModel : ObservableObject
     private readonly ISender _sender;
 
     [ObservableProperty]
-    private ICollection<Product> _products;
-    
+    private ObservableCollection<OrderItem> _orderItems;
+
     public CartViewModel(ISender sender)
     {
         _sender = sender;
-
-        _products = new List<Product>();
+        _orderItems = new ObservableCollection<OrderItem>();
     }
-    
+
     [RelayCommand]
-    internal void AddProductToCart(Product product)
+    internal void AddOrderItemIntoCart(OrderItem orderItemToAdd)
     {
-        product.Quantity++;
-        if (!Products.Contains(product))
+        var orderItem = OrderItems.FirstOrDefault(orderItem => orderItem.Title.Equals(orderItemToAdd.Title, StringComparison.OrdinalIgnoreCase));
+        if (OrderItems.IsNullOrEmpty() || orderItem is null)
         {
-            Products.Add(product);
+            OrderItems.Add(orderItemToAdd);
             return;
         }
+        orderItem.Quantity += orderItemToAdd.Quantity;
 
-        RefreshProduct(product);
+        OrderItems.Remove(orderItem);
+        OrderItems.Add(orderItem);
     }
-    
+
     [RelayCommand]
-    private void ClearCart()
+    private async Task ConfirmOrdersStock(CancellationToken cancellationToken)
     {
-        foreach (var product in Products)
+        await _sender.Send(new ConfirmOrdersStockCommand
         {
-            product.Quantity = 0;
-        }
+            OrderItems = OrderItems
+        }, cancellationToken);
 
-        Products.Clear();
-    }
-    
-    private void RefreshProduct(Product product)
-    {
-        Products.Remove(product);
-        Products.Add(product);
+        OrderItems.Clear();
+        await Shell.Current.GoToAsync("Order Information");
     }
 }

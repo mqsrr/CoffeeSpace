@@ -1,20 +1,17 @@
+using System.Data.Common;
 using CoffeeSpace.OrderingApi.Persistence;
 using MassTransit;
+using MassTransit.Configuration;
 
 namespace CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Sagas.Definitions;
 
 internal sealed class OrderStateDefinition : SagaDefinition<OrderStateInstance>
 {
-    private readonly IServiceProvider _provider;
-    
-    public OrderStateDefinition(IServiceProvider provider)
+    protected override void ConfigureSaga(
+        IReceiveEndpointConfigurator endpointConfigurator, 
+        ISagaConfigurator<OrderStateInstance> sagaConfigurator,
+        IRegistrationContext registrationContext)
     {
-        _provider = provider;
-    }
-    
-    protected override void ConfigureSaga(IReceiveEndpointConfigurator endpointConfigurator, 
-        ISagaConfigurator<OrderStateInstance> sagaConfigurator)
-    {
-        endpointConfigurator.UseEntityFrameworkOutbox<OrderStateSagaDbContext>(_provider);
+        endpointConfigurator.UseEntityFrameworkOutbox<OrderStateSagaDbContext>(registrationContext);
     }
 }

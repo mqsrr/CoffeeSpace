@@ -8,11 +8,14 @@ public sealed partial class ProfileViewModel : ObservableObject
 {
     [ObservableProperty] 
     private Buyer _buyer;
-
+    
     public bool IsPasswordVisible { get; set; }
 
     [RelayCommand]
-    private void ChangePasswordVisibility() => IsPasswordVisible = !IsPasswordVisible;
+    private void ChangePasswordVisibility()
+    {
+        IsPasswordVisible = !IsPasswordVisible;
+    }
 
     [RelayCommand]
     private Task ChangePassword()

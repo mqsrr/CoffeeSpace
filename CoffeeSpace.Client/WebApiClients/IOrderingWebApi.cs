@@ -1,3 +1,4 @@
+using CoffeeSpace.Client.Contracts.Ordering;
 using CoffeeSpace.Client.Helpers;
 using CoffeeSpace.Client.Models.Ordering;
 using Refit;
@@ -13,10 +14,10 @@ public interface IOrderingWebApi
     [Get(ApiEndpoints.Orders.Get)]
     Task<Order> GetOrderByBuyerId(Guid buyerId, Guid id, CancellationToken cancellationToken);
     
-    [Get(ApiEndpoints.Orders.Create)]
-    Task<HttpResponseMessage> CreateOrder(Guid buyerId, CancellationToken cancellationToken);
+    [Post(ApiEndpoints.Orders.Create)]
+    Task<HttpResponseMessage> CreateOrder(Guid buyerId, [Body]CreateOrderRequest order, CancellationToken cancellationToken);
     
-    [Get(ApiEndpoints.Orders.Delete)]
+    [Delete(ApiEndpoints.Orders.Delete)]
     Task<HttpResponseMessage> DeleteOrder(Guid buyerId, Guid id, CancellationToken cancellationToken);
     
 }

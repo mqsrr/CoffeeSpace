@@ -8,6 +8,11 @@
     FlyoutBehavior="Flyout">
 
     <ShellContent
+        Title="Login"
+        ContentTemplate="{DataTemplate views:LoginView}"
+        Route="LoginPage" />
+
+    <ShellContent
         Title="Home"
         ContentTemplate="{DataTemplate views:MainView}"
         Route="MainPage" />
@@ -22,10 +27,6 @@
         ContentTemplate="{DataTemplate views:CartView}"
         Route="CartPage" />
 
-    <ShellContent
-        Title="Login"
-        ContentTemplate="{DataTemplate views:LoginView}"
-        Route="LoginPage" />
 
     <ShellContent
         Title="Profile"

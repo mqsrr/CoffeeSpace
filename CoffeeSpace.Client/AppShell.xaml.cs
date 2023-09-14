@@ -8,6 +8,7 @@ public partial class AppShell : Shell
     {
         InitializeComponent();
 
-        Routing.RegisterRoute("MainPage", typeof(MainView));
+        Routing.RegisterRoute(nameof(MainView), typeof(MainView));
+        Routing.RegisterRoute("Order Information", typeof(OrderInformationView));
     }
 }

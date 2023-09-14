@@ -1,5 +1,6 @@
 using CoffeeSpace.Client._ViewModels;
 using CoffeeSpace.Client.WebApiClients;
+using CommunityToolkit.Maui.Core.Extensions;
 
 namespace CoffeeSpace.Client.Views;
 
@@ -20,6 +21,6 @@ public partial class MainView : ContentPage
     protected override async void OnAppearing()
     {
         var products = await _productsWebApi.GetAllProductsAsync(CancellationToken.None);
-        _mainViewModel.Products = products;
+        _mainViewModel.Products = products.Items.ToObservableCollection();
     }
 }

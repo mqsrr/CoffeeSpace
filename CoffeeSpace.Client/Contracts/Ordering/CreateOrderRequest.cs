@@ -4,9 +4,9 @@ namespace CoffeeSpace.Client.Contracts.Ordering;
 
 public sealed class CreateOrderRequest
 {
-    public required OrderStatus Status { get; init; }
+    public required int Status { get; init; }
     
-    public required CreateAddressRequest CreateAddressRequest { get; init; }
+    public required CreateAddressRequest Address { get; init; }
     
     public required CreatePaymentInfoRequest PaymentInfo { get; init; }
     

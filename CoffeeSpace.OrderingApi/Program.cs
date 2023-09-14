@@ -1,3 +1,4 @@
+using System.Configuration;
 using System.Data;
 using Asp.Versioning;
 using CoffeeSpace.Core.Extensions;
@@ -37,6 +38,7 @@ builder.Services.AddApiVersioning(new MediaTypeApiVersionReader("api-version"));
 builder.Services.AddStackExchangeRedisCache(x =>
     x.Configuration = builder.Configuration["Redis:ConnectionString"]);
 
+
 builder.Services.AddApplicationDb<IOrderingDbContext, OrderingDbContext>(builder.Configuration["OrderingDb:ConnectionString"]!);
 builder.Services.AddApplicationDb<OrderStateSagaDbContext>(builder.Configuration["OrderStateSagaDb:ConnectionString"]!);
 
@@ -73,7 +75,6 @@ builder.Services.AddMassTransit(x =>
 
     x.AddEntityFrameworkOutbox<OrderStateSagaDbContext>(configurator =>
     {
-        configurator.IsolationLevel = IsolationLevel.ReadCommitted;        
         configurator.UsePostgres();
     });
      

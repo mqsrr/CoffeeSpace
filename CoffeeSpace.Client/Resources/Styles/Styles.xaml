@@ -492,29 +492,6 @@
         <Setter Property="WidthRequest" Value="820" />
     </Style>
 
-    <Style TargetType="Grid" x:Key="GridCartOrderItemWindows">
-        <Setter Property="RowDefinitions" Value="Auto,Auto,Auto,Auto,Auto,Auto,Auto,420" />
-        <Setter Property="ColumnDefinitions" Value="Auto,Auto,Auto,Auto,Auto,Auto,820" />
-    </Style>
-
-    <Style TargetType="Grid" x:Key="GridCartOrderItemAndroid">
-        <Setter Property="RowDefinitions" Value="Auto,Auto,Auto,Auto,Auto,Auto,Auto" />
-        <Setter Property="ColumnDefinitions" Value="Auto,Auto,Auto,Auto,Auto,Auto,80*" />
-        <Setter Property="RowSpacing" Value="1" />
-    </Style>
-
-    <Style TargetType="Image" x:Key="CartOrderImageAndroid">
-        <Setter Property="HeightRequest" Value="200" />
-        <Setter Property="VerticalOptions" Value="Center" />
-        <Setter Property="HorizontalOptions" Value="Center" />
-    </Style>
-
-    <Style TargetType="Image" x:Key="CartOrderImageWindows">
-        <Setter Property="HeightRequest" Value="280" />
-        <Setter Property="VerticalOptions" Value="Center" />
-        <Setter Property="HorizontalOptions" Value="Center" />
-    </Style>
-
     <Style TargetType="Label" x:Key="CartProductTitleAndroid">
         <Setter Property="TextColor" Value="Black" />
         <Setter Property="FontSize" Value="Small" />
@@ -526,10 +503,9 @@
 
     <Style TargetType="Label" x:Key="CartProductTitleWindows">
         <Setter Property="TextColor" Value="Black" />
-        <Setter Property="FontSize" Value="Medium" />
+        <Setter Property="FontSize" Value="Small" />
         <Setter Property="CharacterSpacing" Value="1" />
         <Setter Property="HorizontalOptions" Value="Center" />
-        <Setter Property="VerticalOptions" Value="Center" />
         <Setter Property="Padding" Value="10" />
     </Style>
 
@@ -538,16 +514,15 @@
         <Setter Property="FontSize" Value="Small" />
         <Setter Property="CharacterSpacing" Value="1" />
         <Setter Property="HorizontalOptions" Value="Center" />
-        <Setter Property="VerticalOptions" Value="Center" />
     </Style>
 
     <Style TargetType="Label" x:Key="CartBindableLabelWindows">
         <Setter Property="TextColor" Value="Black" />
-        <Setter Property="FontSize" Value="Medium" />
+        <Setter Property="FontSize" Value="Small" />
         <Setter Property="CharacterSpacing" Value="1" />
         <Setter Property="HorizontalOptions" Value="Center" />
-        <Setter Property="VerticalOptions" Value="Center" />
-        <Setter Property="MaximumWidthRequest" Value="10" />
+        <Setter Property="MaxLines" Value="6"/>
+        <Setter Property="MaximumWidthRequest" Value="730"/>
         <Setter Property="Padding" Value="10" />
     </Style>
 
@@ -561,7 +536,7 @@
 
     <Style TargetType="FlexLayout" x:Key="MainViewFlexLayoutWindows">
         <Setter Property="Wrap" Value="Wrap" />
-        <Setter Property="JustifyContent" Value="SpaceAround" />
+        <Setter Property="JustifyContent" Value="SpaceBetween" />
         <Setter Property="AlignItems" Value="Start" />
     </Style>
 
@@ -570,8 +545,8 @@
         <Setter Property="Margin" Value="10" />
         <Setter Property="CornerRadius" Value="10" />
         <Setter Property="BackgroundColor" Value="WhiteSmoke" />
-        <Setter Property="HeightRequest" Value="320" />
-        <Setter Property="WidthRequest" Value="300" />
+        <Setter Property="HeightRequest" Value="280" />
+        <Setter Property="WidthRequest" Value="280" />
     </Style>
 
     <Style TargetType="Frame" x:Key="MainViewOrderItemFrameWindows">
@@ -579,7 +554,7 @@
         <Setter Property="Margin" Value="10" />
         <Setter Property="CornerRadius" Value="10" />
         <Setter Property="BackgroundColor" Value="WhiteSmoke" />
-        <Setter Property="HeightRequest" Value="330" />
+        <Setter Property="HeightRequest" Value="280" />
         <Setter Property="WidthRequest" Value="280" />
     </Style>
 

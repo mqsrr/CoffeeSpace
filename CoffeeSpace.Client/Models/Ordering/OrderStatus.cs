@@ -1,4 +1,4 @@
-namespace CoffeeSpace.Client.Models.Ordering;
+﻿namespace CoffeeSpace.Client.Models.Ordering;
 
 public enum OrderStatus
 {

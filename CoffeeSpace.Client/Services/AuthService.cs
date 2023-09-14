@@ -1,8 +1,9 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using CoffeeSpace.Client.Contracts.Authentication;
 using CoffeeSpace.Client.Services.Abstractions;
 using CoffeeSpace.Client.WebApiClients;
 using Microsoft.IdentityModel.Tokens;
-using SecureStorage = Xamarin.Essentials.SecureStorage;
 
 
 namespace CoffeeSpace.Client.Services;
@@ -18,25 +19,28 @@ public sealed class AuthService : IAuthService
 
     public async Task<bool> LoginAsync(LoginRequest request, CancellationToken cancellationToken)
     {
-        var token = await _identityWebApi.LoginAsync(request, cancellationToken);
+        string token = await _identityWebApi.LoginAsync(request, cancellationToken);
         if (token.IsNullOrEmpty())
         {
             return false;
         }
         
-        await SecureStorage.SetAsync("jwt-token", token);
+        var tokenHandler = new JwtSecurityTokenHandler().ReadJwtToken(token);
+        await SecureStorage.Default.SetAsync("jwt-token", token);
+        await SecureStorage.Default.SetAsync("buyer-email", tokenHandler.Claims.First(claim => claim.Type == ClaimTypes.Email).Value);
+
         return true;
     }
 
     public async Task<bool> RegisterAsync(RegisterRequest request, CancellationToken cancellationToken)
     {
-        var token = await _identityWebApi.RegisterAsync(request, cancellationToken);
+        string token = await _identityWebApi.RegisterAsync(request, cancellationToken);
         if (token.IsNullOrEmpty())
         {
             return false;
         }
 
-        await SecureStorage.SetAsync("jwt-token", token);
+        await SecureStorage.Default.SetAsync("jwt-token", token);
         return true;
     }
 }

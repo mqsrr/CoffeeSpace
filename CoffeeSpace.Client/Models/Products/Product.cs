@@ -1,7 +1,9 @@
-namespace CoffeeSpace.Client.Models.Products;
+﻿namespace CoffeeSpace.Client.Models.Products;
 
 public sealed class Product
 {
+    public required string Id { get; init; }
+    
     public required string Title { get; init; }
 
     public required string Description { get; init; }
@@ -9,8 +11,6 @@ public sealed class Product
     public required float UnitPrice { get; init; }
 
     public required float Discount { get; init; }
-
-    public required int Quantity { get; set; }
-
-    public float Total => Quantity * UnitPrice;
+    
+    public  required int Quantity { get; set; }
 }

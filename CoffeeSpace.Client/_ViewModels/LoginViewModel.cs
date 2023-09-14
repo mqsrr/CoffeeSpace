@@ -1,5 +1,6 @@
 using CoffeeSpace.Client.Contracts.Authentication;
 using CoffeeSpace.Client.Services.Abstractions;
+using CoffeeSpace.Client.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -28,6 +29,7 @@ public sealed partial class LoginViewModel : ObservableObject
             await Shell.Current.DisplayAlert("Authentication error!", "Please check your credentials and try again.", "Ok"); ;
             return;
         }
-        await Shell.Current.GoToAsync("MainPage");
+
+        await Shell.Current.GoToAsync(nameof(MainView));
     }
 }
