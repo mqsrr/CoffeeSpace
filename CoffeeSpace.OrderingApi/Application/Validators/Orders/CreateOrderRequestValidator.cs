@@ -26,6 +26,7 @@ internal sealed class CreateOrderRequestValidator : AbstractValidator<CreateOrde
             .NotNull();
 
         RuleForEach(x => x.OrderItems)
-            .NotNull();
+            .NotNull()
+            .SetValidator(new OrderItemValidator());
     }
 }

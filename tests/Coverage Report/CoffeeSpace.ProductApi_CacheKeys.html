@@ -36,7 +36,7 @@
 <div class="card">
 <div class="card-header">Line coverage</div>
 <div class="card-body">
-<div class="large cardpercentagebar cardpercentagebar0">100%</div>
+<div class="large cardpercentagebar cardpercentagebar33">66%</div>
 <div class="table">
 <table>
 <tr>
@@ -45,19 +45,19 @@
 </tr>
 <tr>
 <th>Uncovered lines:</th>
-<td class="limit-width right" title="0">0</td>
+<td class="limit-width right" title="1">1</td>
 </tr>
 <tr>
 <th>Coverable lines:</th>
-<td class="limit-width right" title="2">2</td>
+<td class="limit-width right" title="3">3</td>
 </tr>
 <tr>
 <th>Total lines:</th>
-<td class="limit-width right" title="11">11</td>
+<td class="limit-width right" title="13">13</td>
 </tr>
 <tr>
 <th>Line coverage:</th>
-<td class="limit-width right" title="2 of 2">100%</td>
+<td class="limit-width right" title="2 of 3">66.6%</td>
 </tr>
 </table>
 </div>
@@ -96,14 +96,14 @@
 </div>
 </div>
 <h1>Coverage history</h1>
-<div class="historychart ct-chart" data-data="historyChartDatab787951f15bb4e4785c6309e8bd419ae"></div>
+<div class="historychart ct-chart" data-data="historyChartDatab52db8d177bd4812a35bb4d57e3151e9"></div>
 <script type="text/javascript">/* <![CDATA[ */ 
-var historyChartDatab787951f15bb4e4785c6309e8bd419ae = {
-    "series" : [[{ 'meta': 0, 'value': 100 }],
+var historyChartDatab52db8d177bd4812a35bb4d57e3151e9 = {
+    "series" : [[{ 'meta': 0, 'value': 100 }, { 'meta': 1, 'value': 66.6 }],
 [],
 []
 ],
-    "tooltips" : ['<h3>8/25/2023 - 1:26:59 AM</h3><br /><span class="linecoverage"></span> Line coverage: 100% (2/2)<br />Total lines: 11']
+    "tooltips" : ['<h3>8/25/2023 - 1:26:59 AM</h3><br /><span class="linecoverage"></span> Line coverage: 100% (2/2)<br />Total lines: 11','<h3>9/24/2023 - 7:14:15 PM</h3><br /><span class="linecoverage"></span> Line coverage: 66.6% (2/3)<br />Total lines: 13']
 };
  /* ]]> */ </script>
 <h1>File(s)</h1>
@@ -120,18 +120,21 @@ var historyChartDatab787951f15bb4e4785c6309e8bd419ae = {
 <tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line6"></a><code>6</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;{</code></td></tr>
 <tr class="coverableline" title="Covered (1 visits)" data-coverage="{'AllTestMethods': {'VC': '1', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">1</td><td class="rightmargin right"><a id="file0_line7"></a><code>7</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;string&nbsp;GetAll&nbsp;=&gt;&nbsp;&quot;products-all&quot;;</code></td></tr>
 <tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line8"></a><code>8</code></td><td></td><td class="lightgray"><code></code></td></tr>
-<tr class="coverableline" title="Covered (1 visits)" data-coverage="{'AllTestMethods': {'VC': '1', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">1</td><td class="rightmargin right"><a id="file0_line9"></a><code>9</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;string&nbsp;GetById(string&nbsp;id)&nbsp;=&gt;&nbsp;$&quot;products-{id}&quot;;</code></td></tr>
-<tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line10"></a><code>10</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;}</code></td></tr>
-<tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line11"></a><code>11</code></td><td></td><td class="lightgray"><code>}</code></td></tr>
+<tr class="coverableline" title="Not covered (0 visits)" data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line9"></a><code>9</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;string&nbsp;GetPaged(int&nbsp;page,&nbsp;int&nbsp;pageSize)&nbsp;=&gt;&nbsp;$&quot;products-page-{page}-pageSize-{pageSize}&quot;;</code></td></tr>
+<tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line10"></a><code>10</code></td><td></td><td class="lightgray"><code></code></td></tr>
+<tr class="coverableline" title="Covered (1 visits)" data-coverage="{'AllTestMethods': {'VC': '1', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">1</td><td class="rightmargin right"><a id="file0_line11"></a><code>11</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;static&nbsp;string&nbsp;GetById(string&nbsp;id)&nbsp;=&gt;&nbsp;$&quot;products-{id}&quot;;</code></td></tr>
+<tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line12"></a><code>12</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;}</code></td></tr>
+<tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line13"></a><code>13</code></td><td></td><td class="lightgray"><code>}</code></td></tr>
 </tbody>
 </table>
 </div>
-<div class="footer">Generated by: ReportGenerator 5.1.24.0<br />8/25/2023 - 1:26:59 AM<br /><a href="https://github.com/danielpalme/ReportGenerator">GitHub</a> | <a href="https://reportgenerator.io">reportgenerator.io</a></div></div>
+<div class="footer">Generated by: ReportGenerator 5.1.24.0<br />9/24/2023 - 7:14:15 PM<br /><a href="https://github.com/danielpalme/ReportGenerator">GitHub</a> | <a href="https://reportgenerator.io">reportgenerator.io</a></div></div>
 <div class="containerright">
 <div class="containerrightfixed">
 <h1>Methods/Properties</h1>
 <a href="#file0_line7" class="navigatetohash percentagebar percentagebar100" title="Line coverage: 100% - GetAll()"><i class="icon-wrench"></i>GetAll()</a><br />
-<a href="#file0_line9" class="navigatetohash percentagebar percentagebar100" title="Line coverage: 100% - GetById(System.String)"><i class="icon-cube"></i>GetById(System.String)</a><br />
+<a href="#file0_line9" class="navigatetohash percentagebar percentagebar0" title="Line coverage: 0% - GetPaged(System.Int32,System.Int32)"><i class="icon-cube"></i>GetPaged(System.Int32,System.Int32)</a><br />
+<a href="#file0_line11" class="navigatetohash percentagebar percentagebar100" title="Line coverage: 100% - GetById(System.String)"><i class="icon-cube"></i>GetById(System.String)</a><br />
 <br/></div>
 </div></div>
 <script type="text/javascript">

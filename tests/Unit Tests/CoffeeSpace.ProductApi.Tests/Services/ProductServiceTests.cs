@@ -51,18 +51,18 @@ public sealed class ProductServiceTests
     public async Task GetAllAsync_ShouldReturnAllProducts()
     {
         // Arrange
-        var request = new GetAllProductsRequest
+        var request = new GetPagedProductsRequest
         {
             Page = 1,
             PageSize = 2
         };
         var expectedProducts = _products.OrderBy(order => order.Title).Take(request.PageSize).ToArray();
         
-        _productRepository.GetAllProductsAsync(request, CancellationToken.None)
+        _productRepository.GetAllProductsAsync(CancellationToken.None)
             .Returns(expectedProducts);
         
         // Act
-        var result = await _productService.GetAllProductsAsync(request, CancellationToken.None);
+        var result = await _productService.GetAllProductsAsync(CancellationToken.None);
 
         // Assert
         result.Should().BeEquivalentTo(expectedProducts);

@@ -21,7 +21,6 @@ internal sealed class OrderingDbContext : DbContext, IOrderingDbContext
 
     public OrderingDbContext(DbContextOptions<OrderingDbContext> options) : base(options)
     {
-        
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

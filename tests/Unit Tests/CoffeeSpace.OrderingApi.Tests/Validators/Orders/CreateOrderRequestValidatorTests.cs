@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using AutoFixture.Xunit2;
+using CoffeeSpace.Domain.Ordering.Orders;
 using CoffeeSpace.OrderingApi.Application.Contracts.Requests.Addresses;
 using CoffeeSpace.OrderingApi.Application.Contracts.Requests.Orders;
 using CoffeeSpace.OrderingApi.Application.Contracts.Requests.PaymentInfo;
@@ -60,6 +61,18 @@ public sealed class CreateOrderRequestValidatorTests
         var request = _fixture.Build<CreateOrderRequest>()
             .With(createOrderRequest => createOrderRequest.PaymentInfo, paymentInfoRequest)
             .With(createOrderRequest => createOrderRequest.Address, addressRequest)
+            .With(createOrderRequest => createOrderRequest.OrderItems, new OrderItem[]
+            {
+                new OrderItem
+                {
+                    Id = null,
+                    Title = "Title",
+                    Description = "Description",
+                    UnitPrice = 1.4f,
+                    Quantity = 1,
+                    Discount = 0.3f
+                }
+            })
             .Create();
 
         // Act

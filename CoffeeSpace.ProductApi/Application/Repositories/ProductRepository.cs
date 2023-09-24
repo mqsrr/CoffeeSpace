@@ -1,5 +1,4 @@
 using CoffeeSpace.Domain.Products;
-using CoffeeSpace.ProductApi.Application.Contracts.Requests;
 using CoffeeSpace.ProductApi.Application.Repositories.Abstractions;
 using CoffeeSpace.ProductApi.Persistence.Abstractions;
 using Microsoft.EntityFrameworkCore;
@@ -30,7 +29,7 @@ internal sealed class ProductRepository : IProductRepository
             : _productDbContext.Products;
     }
     
-    public async Task<IEnumerable<Product>> GetAllProductsAsync(GetAllProductsRequest request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<Product>> GetAllProductsAsync(int page, int pageSize, CancellationToken cancellationToken)
     {
         bool isNotEmpty = await _productDbContext.Products.AnyAsync(cancellationToken);
         if (!isNotEmpty)
@@ -40,8 +39,8 @@ internal sealed class ProductRepository : IProductRepository
 
         var products = _productDbContext.Products
             .OrderBy(product => product.Title)
-            .Skip((request.Page - 1) * request.PageSize)
-            .Take(request.PageSize)
+            .Skip((page- 1) * pageSize)
+            .Take(pageSize)
             .AsEnumerable();
 
         return products;

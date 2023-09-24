@@ -4,8 +4,8 @@
     Content: {
       Headers: []
     },
-    StatusCode: OK,
-    ReasonPhrase: OK,
+    StatusCode: NoContent,
+    ReasonPhrase: No Content,
     Headers: [],
     TrailingHeaders: [],
     RequestMessage: {

@@ -33,9 +33,12 @@ public sealed class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
         builder.Property(x => x.Discount)
             .IsRequired()
             .HasPrecision(2)
+            .IsUnicode(false);        
+        
+        builder.Property(x => x.Quantity)
+            .IsRequired()
             .IsUnicode(false);
 
-        builder.Ignore(x => x.Quantity);
         builder.Ignore(x => x.Total);
         
         builder.HasIndex(x => x.Id)

@@ -25,11 +25,7 @@
               application/json; charset=utf-8
             ]
           },
-          {
-            Content-Length: [
-              882
-            ]
-          }
+          {}
         ]
       },
       Method: {
@@ -62,12 +58,8 @@ INSERT INTO "Payments" ("Id", "CardNumber", "CardType", "ExpirationMonth", "Expi
 VALUES (@p4, @p5, @p6, @p7, @p8, @p9);
 INSERT INTO "Orders" ("Id", "AddressId", "BuyerId", "PaymentInfoId", "Status")
 VALUES (@p10, @p11, @p12, @p13, @p14);
-INSERT INTO "OrderItems" ("Id", "Description", "Discount", "OrderId", "Title", "UnitPrice")
-VALUES (@p15, @p16, @p17, @p18, @p19, @p20);
-INSERT INTO "OrderItems" ("Id", "Description", "Discount", "OrderId", "Title", "UnitPrice")
-VALUES (@p21, @p22, @p23, @p24, @p25, @p26);
-INSERT INTO "OrderItems" ("Id", "Description", "Discount", "OrderId", "Title", "UnitPrice")
-VALUES (@p27, @p28, @p29, @p30, @p31, @p32);
+INSERT INTO "OrderItems" ("Id", "Description", "Discount", "OrderId", "Quantity", "Title", "UnitPrice")
+VALUES (@p15, @p16, @p17, @p18, @p19, @p20, @p21);
     }
   ]
 }

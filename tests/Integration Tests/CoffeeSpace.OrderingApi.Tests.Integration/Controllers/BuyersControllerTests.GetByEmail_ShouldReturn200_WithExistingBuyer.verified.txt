@@ -57,7 +57,7 @@ WHERE o."BuyerId" = @__p_0
         @__p_0 (String?): Guid_2
       },
       Text:
-SELECT o."Id", o."Description", o."Discount", o."OrderId", o."Title", o."UnitPrice"
+SELECT o."Id", o."Description", o."Discount", o."OrderId", o."Quantity", o."Title", o."UnitPrice"
 FROM "OrderItems" AS o
 WHERE o."OrderId" = @__p_0
     },
@@ -68,7 +68,7 @@ WHERE o."OrderId" = @__p_0
         @__p_0 (String?): Guid_1
       },
       Text:
-SELECT o."Id", o."Description", o."Discount", o."OrderId", o."Title", o."UnitPrice"
+SELECT o."Id", o."Description", o."Discount", o."OrderId", o."Quantity", o."Title", o."UnitPrice"
 FROM "OrderItems" AS o
 WHERE o."OrderId" = @__p_0
     },

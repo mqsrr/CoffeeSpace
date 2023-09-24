@@ -11,7 +11,6 @@ internal sealed class ProductDbContext : DbContext, IProductDbContext
 
     public ProductDbContext(DbContextOptions<ProductDbContext> options) : base(options)
     {
-        
     }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)

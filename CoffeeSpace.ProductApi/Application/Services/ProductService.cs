@@ -1,5 +1,6 @@
 using CoffeeSpace.Domain.Products;
-using CoffeeSpace.ProductApi.Application.Contracts.Requests;
+using CoffeeSpace.ProductApi.Application.Extensions;
+using CoffeeSpace.ProductApi.Application.Helpers;
 using CoffeeSpace.ProductApi.Application.Repositories.Abstractions;
 using CoffeeSpace.ProductApi.Application.Services.Abstractions;
 
@@ -19,10 +20,18 @@ internal sealed class ProductService : IProductService
         return _productRepository.GetCountAsync(cancellationToken);
     }
 
-    public Task<IEnumerable<Product>> GetAllProductsAsync(GetAllProductsRequest request, CancellationToken cancellationToken)
+    public Task<IEnumerable<Product>> GetAllProductsAsync(CancellationToken cancellationToken)
     {
-        var products = _productRepository.GetAllProductsAsync(request, cancellationToken);
+        var products = _productRepository.GetAllProductsAsync(cancellationToken);
         return products;
+    }
+    
+    public async Task<PagedList<Product>> GetAllProductsAsync(int page, int pageSize, CancellationToken cancellationToken)
+    {
+        var products = await _productRepository.GetAllProductsAsync(page, pageSize, cancellationToken);
+        int globalCount = await _productRepository.GetCountAsync(cancellationToken);
+        
+        return products.ToPagedList(page, pageSize, globalCount);
     }
 
     public Task<Product?> GetProductByIdAsync(Guid id, CancellationToken cancellationToken)

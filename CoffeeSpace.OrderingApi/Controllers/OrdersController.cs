@@ -54,7 +54,7 @@ public sealed class OrdersController : ControllerBase
     {
         bool deleted = await _orderService.DeleteByIdAsync(request.Id, request.BuyerId, cancellationToken);
         return deleted
-            ? Ok()
+            ? NoContent()
             : NotFound();
     }
 }

@@ -16,7 +16,7 @@ namespace CoffeeSpace.OrderingApi.Persistence.Migrations.OrderingDb
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.10")
+                .HasAnnotation("ProductVersion", "7.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -166,6 +166,10 @@ namespace CoffeeSpace.OrderingApi.Persistence.Migrations.OrderingDb
 
                     b.Property<string>("OrderId")
                         .HasColumnType("text");
+
+                    b.Property<int>("Quantity")
+                        .IsUnicode(false)
+                        .HasColumnType("integer");
 
                     b.Property<string>("Title")
                         .IsRequired()

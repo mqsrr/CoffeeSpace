@@ -1,5 +1,3 @@
-using System.Configuration;
-using System.Data;
 using Asp.Versioning;
 using CoffeeSpace.Core.Extensions;
 using CoffeeSpace.Core.Services.Abstractions;
@@ -37,7 +35,6 @@ builder.Services.AddApiVersioning(new MediaTypeApiVersionReader("api-version"));
 
 builder.Services.AddStackExchangeRedisCache(x =>
     x.Configuration = builder.Configuration["Redis:ConnectionString"]);
-
 
 builder.Services.AddApplicationDb<IOrderingDbContext, OrderingDbContext>(builder.Configuration["OrderingDb:ConnectionString"]!);
 builder.Services.AddApplicationDb<OrderStateSagaDbContext>(builder.Configuration["OrderStateSagaDb:ConnectionString"]!);
@@ -89,11 +86,11 @@ builder.Services.AddMassTransit(x =>
 
     x.UsingAmazonSqs((context, config) =>
     {
-        var awsSettings = context.GetRequiredService<IOptions<AwsMessagingSettings>>().Value;
-        config.Host(awsSettings.Region, hostConfig =>
+        var awsMessagingSettings = context.GetRequiredService<IOptions<AwsMessagingSettings>>().Value;
+        config.Host(awsMessagingSettings.Region, hostConfig =>
         {
-            hostConfig.AccessKey(awsSettings.AccessKey);
-            hostConfig.SecretKey(awsSettings.SecretKey);
+            hostConfig.AccessKey(awsMessagingSettings.AccessKey);
+            hostConfig.SecretKey(awsMessagingSettings.SecretKey);
         });
         config.UsePublishMessageScheduler();
 

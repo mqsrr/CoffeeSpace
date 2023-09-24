@@ -14,9 +14,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup .NET
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '7.0.x'
       - name: Restore dependencies
@@ -24,13 +24,13 @@ jobs:
 
       - name: Build
         run: dotnet build --configuration Release CoffeeSpace.OrderingApi/CoffeeSpace.OrderingApi.csproj
-
+        
   ProductsApi:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup .NET
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '7.0.x'
       - name: Restore dependencies
@@ -42,9 +42,9 @@ jobs:
   IdentityApi:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup .NET
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '7.0.x'
       - name: Restore dependencies
@@ -56,9 +56,9 @@ jobs:
   PaymentService:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup .NET
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '7.0.x'
       - name: Restore dependencies
@@ -66,13 +66,13 @@ jobs:
 
       - name: Build
         run: dotnet build --configuration Release CoffeeSpace.PaymentService/CoffeeSpace.PaymentService.csproj
-  
+
   ShipmentService:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup .NET
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '7.0.x'
       - name: Restore dependencies
@@ -84,9 +84,9 @@ jobs:
   ApiGateway:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup .NET
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '7.0.x'
       - name: Restore dependencies
@@ -98,9 +98,9 @@ jobs:
   Core-Library:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup .NET
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '7.0.x'
       - name: Restore dependencies
@@ -112,9 +112,9 @@ jobs:
   Messages-Library:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup .NET
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '7.0.x'
       - name: Restore dependencies
@@ -126,9 +126,9 @@ jobs:
   Domain-Library:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup .NET
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '7.0.x'
       - name: Restore dependencies
@@ -136,4 +136,3 @@ jobs:
 
       - name: Build
         run: dotnet build --configuration Release CoffeeSpace.Domain/CoffeeSpace.Domain.csproj
-      

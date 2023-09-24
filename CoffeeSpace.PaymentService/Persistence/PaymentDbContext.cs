@@ -11,7 +11,6 @@ internal sealed class PaymentDbContext : DbContext, IPaymentDbContext
     
     public PaymentDbContext(DbContextOptions<PaymentDbContext> options) : base(options)
     {
-
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

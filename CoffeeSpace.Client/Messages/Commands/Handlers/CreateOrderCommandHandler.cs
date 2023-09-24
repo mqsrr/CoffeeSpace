@@ -1,6 +1,5 @@
 ﻿using System.Net.Http.Json;
 using CoffeeSpace.Client._ViewModels;
-using CoffeeSpace.Client.Mappers;
 using CoffeeSpace.Client.Models.Ordering;
 using CoffeeSpace.Client.WebApiClients;
 using Mediator;

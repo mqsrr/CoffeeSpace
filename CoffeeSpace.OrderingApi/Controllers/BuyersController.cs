@@ -62,7 +62,7 @@ public sealed class BuyersController : ControllerBase
     {
         bool deleted = await _buyerService.DeleteByIdAsync(request.Id, cancellationToken);
         return deleted
-            ? Ok()
+            ? NoContent()
             : NotFound();
     }
 }

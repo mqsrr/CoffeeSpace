@@ -46,21 +46,27 @@
             Title: Practical Fresh Car,
             Description: Sleek,
             UnitPrice: 2.1715434,
-            Discount: 0.34836534
+            Quantity: 6,
+            Discount: 0.34836534,
+            Total: 13.029261
           },
           {
             Id: Guid_1,
             Title: Refined Soft Towels,
             Description: Small,
             UnitPrice: 4.9399004,
-            Discount: 0.7762839
+            Quantity: 6,
+            Discount: 0.7762839,
+            Total: 29.639402
           },
           {
             Id: Guid_5,
             Title: Rustic Granite Salad,
             Description: Generic,
             UnitPrice: 1.3270701,
-            Discount: 0.2863804
+            Quantity: 6,
+            Discount: 0.2863804,
+            Total: 7.9624205
           }
         ]
       },
@@ -107,7 +113,7 @@ WHERE o."BuyerId" = @__p_0
         @__p_0 (String?): Guid_2
       },
       Text:
-SELECT o."Id", o."Description", o."Discount", o."OrderId", o."Title", o."UnitPrice"
+SELECT o."Id", o."Description", o."Discount", o."OrderId", o."Quantity", o."Title", o."UnitPrice"
 FROM "OrderItems" AS o
 WHERE o."OrderId" = @__p_0
     },
@@ -118,7 +124,7 @@ WHERE o."OrderId" = @__p_0
         @__p_0 (String?): Guid_1
       },
       Text:
-SELECT o."Id", o."Description", o."Discount", o."OrderId", o."Title", o."UnitPrice"
+SELECT o."Id", o."Description", o."Discount", o."OrderId", o."Quantity", o."Title", o."UnitPrice"
 FROM "OrderItems" AS o
 WHERE o."OrderId" = @__p_0
     },

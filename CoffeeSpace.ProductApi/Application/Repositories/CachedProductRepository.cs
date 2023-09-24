@@ -1,7 +1,6 @@
 using CoffeeSpace.Core.Attributes;
 using CoffeeSpace.Core.Services.Abstractions;
 using CoffeeSpace.Domain.Products;
-using CoffeeSpace.ProductApi.Application.Contracts.Requests;
 using CoffeeSpace.ProductApi.Application.Helpers;
 using CoffeeSpace.ProductApi.Application.Repositories.Abstractions;
 
@@ -33,10 +32,13 @@ internal sealed class CachedProductRepository : IProductRepository
         }, cancellationToken);
     }
     
-    public Task<IEnumerable<Product>> GetAllProductsAsync(GetAllProductsRequest request, CancellationToken cancellationToken)
+    public Task<IEnumerable<Product>> GetAllProductsAsync(int page, int pageSize, CancellationToken cancellationToken)
     {
-        var products = _productRepository.GetAllProductsAsync(request, cancellationToken);
-        return products;
+        return _cacheService.GetAllOrCreateAsync(CacheKeys.Products.GetPaged(page, pageSize), () =>
+        {
+            var products = _productRepository.GetAllProductsAsync(page, pageSize, cancellationToken);
+            return products;
+        }, cancellationToken);
     }
 
     public Task<Product?> GetProductByIdAsync(string id, CancellationToken cancellationToken)

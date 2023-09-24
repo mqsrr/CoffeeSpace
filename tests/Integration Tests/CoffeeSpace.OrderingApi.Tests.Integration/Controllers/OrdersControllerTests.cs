@@ -2,9 +2,12 @@
 using AutoBogus;
 using CoffeeSpace.Domain.Ordering.BuyerInfo;
 using CoffeeSpace.Domain.Ordering.Orders;
+using CoffeeSpace.OrderingApi.Application.Contracts.Requests.Addresses;
 using CoffeeSpace.OrderingApi.Application.Contracts.Requests.Orders;
+using CoffeeSpace.OrderingApi.Application.Contracts.Requests.PaymentInfo;
 using CoffeeSpace.OrderingApi.Application.Contracts.Responses.Orders;
 using CoffeeSpace.OrderingApi.Application.Helpers;
+using CoffeeSpace.OrderingApi.Tests.Integration.Fakers.Models;
 using CoffeeSpace.OrderingApi.Tests.Integration.Fakers.Requests;
 using CoffeeSpace.OrderingApi.Tests.Integration.Fixtures;
 using VerifyTests.EntityFramework;
@@ -74,9 +77,14 @@ public sealed class OrdersControllerTests : IAsyncLifetime
     public async Task CreateOrder_ShouldReturn201_AndCreateOrder()
     {
         // Arrange
-        var order = AutoFaker.Generate<CreateOrderRequest, CreateOrderRequestFaker>();
+        var order = new CreateOrderRequest
+        {
+            Address = AutoFaker.Generate<CreateAddressRequest, CreateAddressRequestFaker>(),
+            PaymentInfo = AutoFaker.Generate<CreatePaymentInfoRequest, CreatePaymentInfoRequestFaker>(),
+            OrderItems = AutoFaker.Generate<OrderItem, OrderItemFaker>(11).TakeLast(1),
+            Status = OrderStatus.Submitted
+        };
         var buyer = _buyers.ElementAt(1);
-        
         string request = ApiEndpoints.Orders.Create.Replace("{buyerId:guid}", buyer.Id);
         
         // Act
@@ -84,12 +92,11 @@ public sealed class OrdersControllerTests : IAsyncLifetime
 
         // Assert
         var sqlLogs = EfRecording.FinishRecording("OrderingDb");
-
         await Verify(new
         {
             response,
             sqlLogs
-        }).IgnoreMembers("Authorization", "Host", "Exception", "Location", "Parameters");
+        }).IgnoreMembers("Authorization", "Host", "Exception", "Location", "Parameters", "Content-Length");
     }
     
     [Fact]
@@ -97,7 +104,6 @@ public sealed class OrdersControllerTests : IAsyncLifetime
     {
         // Arrange
         var order = _orders.Last();
-        
         string request = ApiEndpoints.Orders.Delete
             .Replace("{buyerId:guid}", order.BuyerId)
             .Replace("{id:guid}", order.Id);

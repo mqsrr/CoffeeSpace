@@ -9,7 +9,7 @@ public interface IProductRepository
 
     Task<IEnumerable<Product>> GetAllProductsAsync(CancellationToken cancellationToken);
     
-    Task<IEnumerable<Product>> GetAllProductsAsync(GetAllProductsRequest request, CancellationToken cancellationToken);
+    Task<IEnumerable<Product>> GetAllProductsAsync(int page, int pageSize, CancellationToken cancellationToken);
     
     Task<Product?> GetProductByIdAsync(string id, CancellationToken cancellationToken);
     

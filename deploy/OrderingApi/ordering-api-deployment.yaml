@@ -5,7 +5,7 @@ metadata:
   labels:
     app: ordering-api
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: ordering-api

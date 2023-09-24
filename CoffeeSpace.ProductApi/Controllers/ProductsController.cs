@@ -22,13 +22,17 @@ public sealed class ProductsController : ControllerBase
     }
 
     [HttpGet(ApiEndpoints.Products.GetAll)]
-    public async Task<IActionResult> GetAll([FromQuery] GetAllProductsRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
-        var products = await _productService.GetAllProductsAsync(request, cancellationToken);
-        int count = await _productService.GetCountAsync(cancellationToken);
-
-        var response = products.Select(x => x.ToResponse()).ToPagedList(request.Page, request.PageSize, count);
-        return Ok(response);
+        var products = await _productService.GetAllProductsAsync(cancellationToken);
+        return Ok(products);
+    }
+        
+    [HttpGet(ApiEndpoints.Products.GetPaged)]
+    public async Task<IActionResult> GetPaged([FromQuery]GetPagedProductsRequest request, CancellationToken cancellationToken)
+    {
+        var pagedProducts = await _productService.GetAllProductsAsync(request.Page, request.PageSize, cancellationToken);
+        return Ok(pagedProducts);
     }
     
     [HttpGet(ApiEndpoints.Products.Get)]
@@ -67,7 +71,7 @@ public sealed class ProductsController : ControllerBase
     {
         bool deleted = await _productService.DeleteProductByIdAsync(request.Id, cancellationToken);
         return deleted
-            ? Ok()
+            ? NoContent()
             : NotFound();
     }
 }

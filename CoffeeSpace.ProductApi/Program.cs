@@ -36,7 +36,6 @@ builder.Services.AddApplicationService<IProductRepository>();
 builder.Services.AddApplicationService<IProductService>();
 
 builder.Services.AddApplicationService(typeof(ICacheService<>));
-
 builder.Services.Decorate<IProductRepository, CachedProductRepository>();
 
 builder.Services.AddFluentValidationAutoValidation()
@@ -56,20 +55,19 @@ builder.Services.AddMassTransit(x =>
     x.AddConsumer<OrderStockValidationConsumer>();
 
     x.AddInMemoryInboxOutbox();
-    
-    x.UsingAmazonSqs((context, config) =>
+    x.UsingAmazonSqs((context, configurator) =>
     {
         var awsSettings = context.GetRequiredService<IOptions<AwsMessagingSettings>>().Value;
-        config.Host(awsSettings.Region, hostConfig =>
+        configurator.Host(awsSettings.Region, hostConfigurator =>
         {
-            hostConfig.AccessKey(awsSettings.AccessKey);
-            hostConfig.SecretKey(awsSettings.SecretKey);
+            hostConfigurator.AccessKey(awsSettings.AccessKey);
+            hostConfigurator.SecretKey(awsSettings.SecretKey);
         });
         
-        config.UseNewtonsoftJsonSerializer();
-        config.UseNewtonsoftJsonDeserializer();
+        configurator.ConfigureEndpoints(context);
         
-        config.ConfigureEndpoints(context);
+        configurator.UseNewtonsoftJsonSerializer();
+        configurator.UseNewtonsoftJsonDeserializer();
     });
 });
 

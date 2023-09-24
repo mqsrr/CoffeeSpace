@@ -33,13 +33,13 @@ public sealed class ProductsApiControllerTests : IClassFixture<ProductApiFactory
         var response = await _httpClient.GetAsync(uriRequest);
 
         // Assert
-        var pagedResponse = await response.Content.ReadFromJsonAsync<PagedList<ProductResponse>>();
+        var productResponses = await response.Content.ReadFromJsonAsync<IEnumerable<ProductResponse>>();
         var sqlLogs = EfRecording.FinishRecording("ProductDb");
 
         await Verify(new
         {
-            response,
-            pagedResponse,
+            response, 
+            productResponses,
             sqlLogs
         }).IgnoreMember("Authorization");
     }
