@@ -1,12 +1,10 @@
-﻿name: Test
+name: Test
 
 on:
   workflow_run:
-    workflows: ["Build"]
-    types: [completed]
-    branches: 
-      - main
-      - wip
+    workflows: [Build]
+    types:
+      - completed
 jobs:
   OrderingApi:
     runs-on: ubuntu-latest
