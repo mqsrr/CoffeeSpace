@@ -16,8 +16,6 @@ internal sealed class OrderItemValidator : AbstractValidator<OrderItem>
             .NotNull();
         
         RuleFor(x => x.Discount)
-            .NotEmpty()
-            .NotNull()
             .GreaterThanOrEqualTo(0)
             .LessThanOrEqualTo(1);
         

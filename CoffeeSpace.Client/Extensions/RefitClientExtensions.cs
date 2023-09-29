@@ -21,4 +21,17 @@ public static class RefitClientExtensions
         }
         return services;
     }
+    
+    public static IServiceCollection AddWebApiClient<TClient>(this IServiceCollection services, string baseAddress, bool requiresAuthorization)
+        where TClient : class
+    {
+        var httpClientBuilder = services.AddRefitClient<TClient>().ConfigureHttpClient(config =>
+            config.BaseAddress = new Uri(baseAddress));
+
+        if (requiresAuthorization)
+        {
+            httpClientBuilder.AddHttpMessageHandler<AuthHeaderHandler>();
+        }
+        return services;
+    }
 }

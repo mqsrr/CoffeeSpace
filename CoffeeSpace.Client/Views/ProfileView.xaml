@@ -44,8 +44,7 @@
 
                     <Button Text="Change Password" TextColor="Black"
                             CharacterSpacing="1" BackgroundColor="LightGray"
-                            HeightRequest="20" VerticalOptions="Start"
-                            Command="{Binding ChangePasswordCommand}" />
+                            HeightRequest="20" VerticalOptions="Start" />
                 </HorizontalStackLayout>
             </Grid>
         </Frame>

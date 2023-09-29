@@ -1,4 +1,5 @@
 ﻿using CoffeeSpace.Core.Extensions;
+using CoffeeSpace.Domain.Ordering.BuyerInfo.CardInfo;
 using CoffeeSpace.Domain.Ordering.Orders;
 using CoffeeSpace.OrderingApi.Application.Repositories.Abstractions;
 using CoffeeSpace.OrderingApi.Persistence.Abstractions;
@@ -26,6 +27,7 @@ internal sealed class OrderRepository : IOrderRepository
         var orders = _orderingDbContext.Orders
             .Where(x => x.BuyerId == buyerId)
             .Include(x => x.Address)
+            .Include(x => x.PaymentInfo)
             .Include(x => x.OrderItems);
         
         return orders;

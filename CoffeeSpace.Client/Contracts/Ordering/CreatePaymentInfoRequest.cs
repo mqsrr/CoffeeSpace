@@ -9,9 +9,9 @@ public sealed class CreatePaymentInfoRequest
 
     public string SecurityNumber { get; init; }
 
-    public int ExpirationMonth { get; init; }
+    public string ExpirationMonth { get; init; }
 
-    public int ExpirationYear { get; init; }
+    public string ExpirationYear { get; init; }
 
     public int CardType { get; init; }
 }

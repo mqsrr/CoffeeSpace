@@ -5,7 +5,6 @@ using CoffeeSpace.Client.Services.Abstractions;
 using CoffeeSpace.Client.Views;
 using CoffeeSpace.Client.WebApiClients;
 using CommunityToolkit.Maui;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace CoffeeSpace.Client;
@@ -25,12 +24,13 @@ public static class MauiProgram
             })
             .ConfigureImageSources();
 
-        builder.Services.AddPagesFromAssembly<MainView>(ServiceLifetime.Scoped);        
-        builder.Services.AddPagesFromAssembly<MainViewModel>(ServiceLifetime.Scoped);        
+        builder.Services.AddPagesFromAssembly<MainView>();        
+        builder.Services.AddPagesFromAssembly<MainViewModel>();        
+
+        builder.Services.AddApplicationService<IAuthService>();
+        builder.Services.AddApplicationService<IHubConnectionService>(ServiceLifetime.Singleton);
 
         builder.Services.AddMediator();
-        builder.Services.AddApplicationService<IAuthService>();
-
         builder.Services.AddTransient<AuthHeaderHandler>();
 
         builder.Services

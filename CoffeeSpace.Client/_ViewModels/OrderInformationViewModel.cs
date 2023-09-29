@@ -29,7 +29,7 @@ public sealed partial class OrderInformationViewModel : ObservableObject
     }
 
     [RelayCommand]
-    public async Task CreateOrderAsync(CancellationToken cancellationToken)
+    private async Task CreateOrderAsync(CancellationToken cancellationToken)
     {
         string buyerId = await SecureStorage.GetAsync("buyer-id");
         bool result = await _sender.Send(new CreateOrderCommand
@@ -46,7 +46,7 @@ public sealed partial class OrderInformationViewModel : ObservableObject
 
         if (!result)
         {
-            await Shell.Current.DisplayAlert("Order cannot be created", "There was a problem in order creation proccess", "Ok");
+            await Shell.Current.DisplayAlert("Order cannot be created", "There was a problem in order creation process", "Ok");
         }
     }
 

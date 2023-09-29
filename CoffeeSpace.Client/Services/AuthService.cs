@@ -40,7 +40,10 @@ public sealed class AuthService : IAuthService
             return false;
         }
 
+        var tokenHandler = new JwtSecurityTokenHandler().ReadJwtToken(token);
         await SecureStorage.Default.SetAsync("jwt-token", token);
+        await SecureStorage.Default.SetAsync("buyer-email", tokenHandler.Claims.First(claim => claim.Type == ClaimTypes.Email).Value);
+
         return true;
     }
 }

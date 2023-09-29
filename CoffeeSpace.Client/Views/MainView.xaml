@@ -30,30 +30,31 @@
                         WinUI={StaticResource MainViewOrderItemFrameWindows},
                         Android={StaticResource MainViewOrderItemFrameAndroid}}">
                         <Grid RowDefinitions="10,Auto,Auto,Auto,Auto,10*"
-                              ColumnDefinitions="20,Auto,Auto,Auto,Auto,10*">
+                              ColumnDefinitions="20,Auto,Auto,Auto,10*"
+                              RowSpacing="10">
 
                             <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
                                    Text="{Binding Title}" TextColor="Black"
                                    VerticalOptions="Start" HorizontalOptions="Start" />
 
-                            <Label Grid.Row="4" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="2"
+                            <Label Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"
                                    Text="Price:" TextColor="Black"
                                    VerticalOptions="Center" HorizontalOptions="Center"
-                                   Margin="80,0,0,00"/>
+                                   Margin="100,0,0,0"/>
 
-                            <Label Grid.Row="4" Grid.Column="1" Grid.RowSpan="2"
+                            <Label Grid.Row="3" Grid.Column="1"
                                    Text="{Binding UnitPrice}" TextColor="Black"
                                    VerticalOptions="Center" HorizontalOptions="End" 
                                    Margin="30,0,0,0"/>
 
-                            <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="3"
+                            <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
                                    MaximumWidthRequest="230"
                                    Text="{Binding Description}" TextColor="Black"
                                    VerticalOptions="Center" HorizontalOptions="Start"
                                    HorizontalTextAlignment="Start" VerticalTextAlignment="Center"
                                    LineBreakMode="CharacterWrap" LineHeight="1.3" MaxLines="6" />
 
-                            <Button Grid.Row="4" Grid.Column="1" Grid.RowSpan="2"
+                            <Button Grid.Row="3" Grid.Column="1"
                                     Text="Place in Cart" CharacterSpacing="1"
                                     VerticalOptions="Center" HorizontalOptions="Start"
                                     Margin="0,0,80,0"

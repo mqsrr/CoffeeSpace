@@ -472,8 +472,7 @@
                 Value="{AppThemeBinding Light={StaticResource Gray950}, Dark={StaticResource Gray200}}" />
     </Style>
 
-    <!--CartViewStyles-->
-
+    <!--#region CartViewStyles-->
     <Style TargetType="Frame" x:Key="CartOrderItemFrameAndroid">
         <Setter Property="BorderColor" Value="WhiteSmoke" />
         <Setter Property="Margin" Value="10" />
@@ -482,16 +481,29 @@
         <Setter Property="WidthRequest" Value="400" />
         <Setter Property="HeightRequest" Value="300" />
     </Style>
-
     <Style TargetType="Frame" x:Key="CartOrderItemFrameWindows">
         <Setter Property="BorderColor" Value="WhiteSmoke" />
         <Setter Property="Margin" Value="10" />
         <Setter Property="CornerRadius" Value="10" />
         <Setter Property="BackgroundColor" Value="WhiteSmoke" />
-        <Setter Property="HeightRequest" Value="420" />
-        <Setter Property="WidthRequest" Value="820" />
+        <Setter Property="HeightRequest" Value="250" />
+        <Setter Property="WidthRequest" Value="650" />
     </Style>
-
+    <Style TargetType="Label" x:Key="CartMicroBindableLabelStyle">
+        <Setter Property="TextColor" Value="Black"/>
+        <Setter Property="FontSize" Value="Micro"/>
+        <Setter Property="CharacterSpacing" Value="1"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="MaxLines" Value="3"/>
+        <Setter Property="MaximumWidthRequest" Value="450"/>
+        <Setter Property="Padding" Value="10"/>
+    </Style>    
+    <Style TargetType="Label" x:Key="CartMicroLabelStyle">
+        <Setter Property="TextColor" Value="Black"/>
+        <Setter Property="FontSize" Value="Micro"/>
+        <Setter Property="CharacterSpacing" Value="1"/>
+        <Setter Property="Padding" Value="10"/>
+    </Style>
     <Style TargetType="Label" x:Key="CartProductTitleAndroid">
         <Setter Property="TextColor" Value="Black" />
         <Setter Property="FontSize" Value="Small" />
@@ -500,33 +512,14 @@
         <Setter Property="VerticalOptions" Value="Center" />
         <Setter Property="Padding" Value="7" />
     </Style>
-
-    <Style TargetType="Label" x:Key="CartProductTitleWindows">
-        <Setter Property="TextColor" Value="Black" />
-        <Setter Property="FontSize" Value="Small" />
-        <Setter Property="CharacterSpacing" Value="1" />
-        <Setter Property="HorizontalOptions" Value="Center" />
-        <Setter Property="Padding" Value="10" />
-    </Style>
-
     <Style TargetType="Label" x:Key="CartBindableTitleAndroid">
         <Setter Property="TextColor" Value="Black" />
         <Setter Property="FontSize" Value="Small" />
         <Setter Property="CharacterSpacing" Value="1" />
         <Setter Property="HorizontalOptions" Value="Center" />
     </Style>
-
-    <Style TargetType="Label" x:Key="CartBindableLabelWindows">
-        <Setter Property="TextColor" Value="Black" />
-        <Setter Property="FontSize" Value="Small" />
-        <Setter Property="CharacterSpacing" Value="1" />
-        <Setter Property="HorizontalOptions" Value="Center" />
-        <Setter Property="MaxLines" Value="6"/>
-        <Setter Property="MaximumWidthRequest" Value="730"/>
-        <Setter Property="Padding" Value="10" />
-    </Style>
-
-    <!--MainViewStyles-->
+    <!--#endregion-->
+    <!--#region MainViewStyles-->
 
     <Style TargetType="FlexLayout" x:Key="MainViewFlexLayoutAndroid">
         <Setter Property="Wrap" Value="Wrap" />
@@ -581,4 +574,36 @@
         <Setter Property="HorizontalOptions" Value="Start" />
         <Setter Property="WidthRequest" Value="130" />
     </Style>
+    <!--#endregion-->
+    <!--#region Order Information Styles-->
+    <Style TargetType="Frame" x:Key="OrderInformationFrameWindows">
+        <Setter Property="BackgroundColor" Value="WhiteSmoke"/>
+        <Setter Property="HeightRequest" Value="340"/>
+        <Setter Property="WidthRequest" Value="500"/>
+        <Setter Property="Margin" Value="10"/>
+    </Style>
+    <Style TargetType="Entry" x:Key="OrderInformationWhiteSmokeEntry">
+        <Setter Property="BackgroundColor" Value="WhiteSmoke"/>
+        <Setter Property="PlaceholderColor" Value="SlateGray"/>
+        <Setter Property="TextColor" Value="SlateGray"/>
+    </Style>    
+    <Style TargetType="Picker" x:Key="OrderInformationWhiteSmokePicker">
+        <Setter Property="BackgroundColor" Value="SlateGray"/>
+        <Setter Property="TextColor" Value="SlateGray"/>
+    </Style>   
+    <Style TargetType="Button" x:Key="OrderInformationWhiteSmokeButton">
+        <Setter Property="BackgroundColor" Value="SlateGray"/>
+        <Setter Property="TextColor" Value="Black"/>
+        <Setter Property="Margin" Value="20"/>
+        <Setter Property="FontSize" Value="Small"/>
+    </Style>
+    <!--#endregion-->
+    <!--#region Order Styles-->
+    <Style TargetType="Frame" x:Key="OrderFrameWindows">
+        <Setter Property="BackgroundColor" Value="WhiteSmoke"/>
+        <Setter Property="MinimumHeightRequest" Value="200"/>
+        <Setter Property="WidthRequest" Value="450"/>
+    </Style>
+
+    <!--#endregion-->
 </ResourceDictionary>

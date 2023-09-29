@@ -1,0 +1,16 @@
+<div class="order">
+  <div class="order-info">
+    <span class="order-label">{{order.id.substring(0, 4)}}</span>
+  </div>
+  <ul class="order-items" *ngFor="let orderItem of order.orderItems">
+    <li class="order-item">{{orderItem.title}} x{{orderItem.quantity}}: {{orderItem.total.toPrecision(2)}}$</li>
+  </ul>
+  <hr class="separator">
+  <div class="order-address">
+    <p>{{order.address.street}}</p>
+    <p>{{order.address.city}}</p>
+  </div>
+  <div class="order-status">
+    <span class="status-processing">{{getOrderStatusString(order.orderStatus)}}</span>
+  </div>
+</div>

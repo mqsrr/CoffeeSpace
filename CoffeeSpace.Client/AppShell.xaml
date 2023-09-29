@@ -10,7 +10,8 @@
     <ShellContent
         Title="Login"
         ContentTemplate="{DataTemplate views:LoginView}"
-        Route="LoginPage" />
+        Route="LoginPage" 
+        FlyoutItemIsVisible="False"/>
 
     <ShellContent
         Title="Home"
@@ -26,10 +27,4 @@
         Title="Cart"
         ContentTemplate="{DataTemplate views:CartView}"
         Route="CartPage" />
-
-
-    <ShellContent
-        Title="Profile"
-        ContentTemplate="{DataTemplate views:ProfileView}"
-        Route="ProfilePage" />
 </Shell>

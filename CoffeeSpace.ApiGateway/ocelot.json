@@ -131,6 +131,19 @@
       }
     },
     {
+      "UpstreamPathTemplate": "/ordering-hub/negotiate",
+      "UpstreamHttpMethod": [ "OPTIONS" , "POST"],
+
+      "DownstreamPathTemplate": "/ordering-hub/negotiate",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ordering-api",
+          "Port": 8081
+        }
+      ]
+    },
+    {
       "UpstreamPathTemplate": "/buyers",
       "UpstreamHttpMethod": [ "GET", "POST" ],
 

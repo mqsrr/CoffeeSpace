@@ -1,5 +1,6 @@
 ﻿using CoffeeSpace.Client.Messages.Commands;
 using CoffeeSpace.Client.Models.Ordering;
+using CoffeeSpace.Client.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Mediator;
@@ -30,10 +31,8 @@ public sealed partial class CartViewModel : ObservableObject
             OrderItems.Add(orderItemToAdd);
             return;
         }
-        orderItem.Quantity += orderItemToAdd.Quantity;
 
-        OrderItems.Remove(orderItem);
-        OrderItems.Add(orderItem);
+        orderItem.Quantity += orderItemToAdd.Quantity;
     }
 
     [RelayCommand]
@@ -45,6 +44,6 @@ public sealed partial class CartViewModel : ObservableObject
         }, cancellationToken);
 
         OrderItems.Clear();
-        await Shell.Current.GoToAsync("Order Information");
+        await Shell.Current.GoToAsync(nameof(OrderInformationView));
     }
 }

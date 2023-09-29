@@ -9,6 +9,7 @@ using CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Sagas.Definition
 using CoffeeSpace.OrderingApi.Application.Pipelines;
 using CoffeeSpace.OrderingApi.Application.Repositories.Abstractions;
 using CoffeeSpace.OrderingApi.Application.Services.Abstractions;
+using CoffeeSpace.OrderingApi.Application.SignalRHubs;
 using CoffeeSpace.OrderingApi.Application.Validators;
 using CoffeeSpace.OrderingApi.Persistence;
 using CoffeeSpace.OrderingApi.Persistence.Abstractions;
@@ -22,17 +23,17 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.UseSerilog((context, configuration) => 
+builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration));
 
 builder.Configuration.AddAzureKeyVault();
 builder.Configuration.AddJwtBearer(builder);
 
+builder.Services.AddSignalR().AddAzureSignalR();
 builder.Services.AddControllers();
 builder.Services.AddMediator();
 
 builder.Services.AddApiVersioning(new MediaTypeApiVersionReader("api-version"));
-
 builder.Services.AddStackExchangeRedisCache(x =>
     x.Configuration = builder.Configuration["Redis:ConnectionString"]);
 
@@ -60,6 +61,14 @@ builder.Services.AddOptions<JwtSettings>()
 builder.Services.AddFluentValidationAutoValidation()
     .AddValidatorsFromAssemblyContaining<IValidatorMarker>(ServiceLifetime.Singleton, includeInternalTypes: true);
 
+builder.Services.AddCors(options => options.AddDefaultPolicy(policyBuilder =>
+{
+    policyBuilder.AllowCredentials()
+        .WithOrigins("http://localhost:4200")
+        .WithMethods("POST")
+        .WithHeaders("x-requested-with", "x-signalr-user-agent");
+}));
+
 builder.Services.AddQuartz(x => x.UseMicrosoftDependencyInjectionJobFactory());
 builder.Services.AddMassTransit(x =>
 {
@@ -70,16 +79,12 @@ builder.Services.AddMassTransit(x =>
     x.AddQuartzConsumers();
     x.AddPublishMessageScheduler();
 
-    x.AddEntityFrameworkOutbox<OrderStateSagaDbContext>(configurator =>
-    {
-        configurator.UsePostgres();
-    });
-     
+    x.AddEntityFrameworkOutbox<OrderStateSagaDbContext>(configurator => { configurator.UsePostgres(); });
     x.AddSagaStateMachine<OrderStateMachine, OrderStateInstance, OrderStateDefinition>()
         .EntityFrameworkRepository(configurator =>
         {
             configurator.ConcurrencyMode = ConcurrencyMode.Optimistic;
-            
+
             configurator.UsePostgres();
             configurator.ExistingDbContext<OrderStateSagaDbContext>();
         });
@@ -96,7 +101,7 @@ builder.Services.AddMassTransit(x =>
 
         config.UseNewtonsoftJsonSerializer();
         config.UseNewtonsoftJsonSerializer();
-        
+
         config.ConfigureEndpoints(context);
     });
 });
@@ -108,9 +113,11 @@ var app = builder.Build();
 app.UseSerilogRequestLogging();
 app.UseHealthChecks("/_health");
 
+app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<OrderingHub>("ordering-hub");
 
 app.Run();

@@ -16,68 +16,62 @@
     </ContentPage.Background>
 
     <ScrollView>
-        <FlexLayout Wrap="Wrap" JustifyContent="SpaceBetween"
-                    BindableLayout.ItemsSource="{Binding Orders}" AlignItems="Start">
+        <FlexLayout Wrap="Wrap" JustifyContent="SpaceEvenly"
+                    BindableLayout.ItemsSource="{Binding Orders}" AlignItems="Start"
+                    Margin="10">
             <BindableLayout.ItemTemplate>
                 <DataTemplate x:DataType="ordering:Order">
-                    <Frame BackgroundColor="WhiteSmoke">
-                        <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,10*"
-                              ColumnDefinitions="Auto,Auto,Auto,Auto,300"
-                              RowSpacing="1" ColumnSpacing="2"
-                              Padding="10">
+                    <Frame Style="{OnPlatform 
+                        WinUI={StaticResource OrderFrameWindows}}">
+                        <Grid RowDefinitions="10*,Auto,Auto,Auto,10*"
+                              ColumnDefinitions="Auto,Auto,Auto,Auto,10*"
+                              RowSpacing="20" ColumnSpacing="10" Padding="10">
                             
-                            <Label Grid.Row="3" Grid.Column="0"
+                            <Label Grid.Row="1" Grid.Column="0"
                                    Text="Street: " TextColor="Black"
-                                   FontSize="Small" Margin="0,10,0,0" />
-    
-                            <Label Grid.Row="3" Grid.Column="1"
+                                   FontSize="Small"/>
+
+                            <Label Grid.Row="1" Grid.Column="1"
                                    Text="{Binding Address.Street}" TextColor="Black"
-                                   FontSize="Small" Margin="0,10,0,0" />
-    
-                            <Label Grid.Row="4" Grid.Column="0"
+                                   FontSize="Small"/>
+
+                            <Label Grid.Row="2" Grid.Column="0"
                                    Text="Order Items:" TextColor="Black"
-                                   FontSize="Small" Margin="0,10,0,0" />
+                                   FontSize="Small" />
     
-                            <ListView Grid.Row="4" Grid.Column="1"
+                            <ListView Grid.Row="2" Grid.Column="1"
                                       ItemsSource="{Binding OrderItems}">
                                 <ListView.ItemTemplate>
                                     <DataTemplate x:DataType="ordering:OrderItem">
                                         <ViewCell>
-                                            <Grid RowDefinitions="Auto,Auto,Auto,Auto"
-                                                  ColumnDefinitions="Auto,Auto,Auto,Auto"
-                                                  Padding="1">
+                                            <Grid RowDefinitions="10*,Auto,Auto,10*"
+                                               ColumnDefinitions="Auto,Auto,Auto,Auto,10*"
+                                               ColumnSpacing="6">
+
+                                                <Label Grid.Row="1" Grid.Column="0"
+                                                    Text="{Binding Title}" TextColor="Black"/>
                                                 
-                                                <Label Grid.Row="0" Grid.Column="0"
-                                                       Text="{Binding Title}" TextColor="Black"
-                                                       Margin="2" />
-                                                
-                                                <Label Grid.Row="0" Grid.Column="1"
-                                                       Text="{Binding UnitPrice}" TextColor="Black"
-                                                       Margin="2" />
-                                                
-                                                <Label Grid.Row="0" Grid.Column="2"
-                                                       Text="{Binding Quantity}" TextColor="Black"
-                                                       Margin="2" />
+                                                <Label Grid.Row="1" Grid.Column="1"
+                                                       Text="{Binding Quantity}" TextColor="Black"/>                                               
                                                 
                                                 <Label Grid.Row="1" Grid.Column="2"
-                                                       Text="{Binding Total}" TextColor="Black"
-                                                       Margin="2"/>
+                                                    Text="->" TextColor="Black"/>
+
+                                                <Label Grid.Row="1" Grid.Column="3"
+                                                    Text="{Binding Total}" TextColor="Black"/>
                                             </Grid>
                                         </ViewCell>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>
     
-                            <Label Grid.Row="6" Grid.Column="0"
+                            <Label Grid.Row="3" Grid.Column="0"
                                    Text="Order Status:" TextColor="Black"
-                                   TextTransform="Uppercase" FontSize="Small"
-                                   VerticalOptions="End" />
+                                   FontSize="Small"/>
     
-                            <Label Grid.Row="6" Grid.Column="1"
+                            <Label Grid.Row="3" Grid.Column="1"
                                    Text="{Binding Status}" TextColor="Green"
-                                   TextTransform="Uppercase" FontSize="Small"
-                                   Margin="10,0,0,0"
-                                   VerticalOptions="End" />
+                                   FontSize="Small"/>
                         </Grid>
                     </Frame>
                 </DataTemplate>

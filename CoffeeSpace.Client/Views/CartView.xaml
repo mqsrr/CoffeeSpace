@@ -18,77 +18,69 @@
     <ScrollView>
         <StackLayout>
 
+
             <FlexLayout Wrap="Wrap" AlignItems="Start"
                         BindableLayout.ItemsSource="{Binding OrderItems}">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="ordering:OrderItem">
                         <Frame
-                            Style="{OnPlatform
+                            Style="{OnPlatform 
                             Android={StaticResource CartOrderItemFrameAndroid},
                             WinUI={StaticResource CartOrderItemFrameWindows}}">
                             <Grid RowSpacing="1"
                                   RowDefinitions="Auto,Auto,Auto,Auto,Auto,10*"
-                                  ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,80*">
+                                  ColumnDefinitions="10*,Auto,Auto,80*">
 
                                 <HorizontalStackLayout Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Margin="10">
 
                                     <Label
                                         Text="Product Title: "
                                         Style="{OnPlatform 
-                                        Android={StaticResource CartProductTitleAndroid}, 
-                                        WinUI={StaticResource CartProductTitleWindows},
-                                        MacCatalyst={StaticResource CartProductTitleWindows}}" />
+                                        Android={StaticResource CartProductTitleAndroid},
+                                        WinUI={StaticResource CartMicroBindableLabelStyle}}"/>
 
                                     <Label
                                         Text="{Binding Title}"
                                         Style="{OnPlatform 
                                         Android={StaticResource CartBindableTitleAndroid},
-                                        WinUI={StaticResource CartBindableLabelWindows},
-                                        MacCatalyst={StaticResource CartBindableLabelWindows}}" />
+                                        WinUI={StaticResource CartMicroBindableLabelStyle}}"/>
                                 </HorizontalStackLayout>
 
                                 <HorizontalStackLayout Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Margin="10">
                                     <Label Text="Description: "
                                            Style="{OnPlatform 
-                                           Android={StaticResource CartProductTitleAndroid}, 
-                                           WinUI={StaticResource CartProductTitleWindows},
-                                           MacCatalyst={StaticResource CartProductTitleWindows}}" />
+                                           Android={StaticResource CartProductTitleAndroid},
+                                           WinUI={StaticResource CartMicroBindableLabelStyle}}"/>
 
                                     <Label Text="{Binding Description}"
                                            Style="{OnPlatform 
-                                           Android={StaticResource CartBindableTitleAndroid}, 
-                                           WinUI={StaticResource CartBindableLabelWindows},
-                                           MacCatalyst={StaticResource CartBindableLabelWindows}}" />
+                                           Android={StaticResource CartBindableTitleAndroid},
+                                           WinUI={StaticResource CartMicroBindableLabelStyle}}"/>
                                 </HorizontalStackLayout>
 
                                 <HorizontalStackLayout Grid.Row="2" Grid.Column="1" Grid.RowSpan="2"
                                                        Grid.ColumnSpan="2" Margin="10">
                                     <Label Text="Price: "
                                            Style="{OnPlatform 
-                                           Android={StaticResource CartProductTitleAndroid},
-                                           WinUI={StaticResource CartProductTitleWindows},
-                                           MacCatalyst={StaticResource CartProductTitleWindows}}" />
+                                           Android={StaticResource CartBindableTitleAndroid},
+                                           WinUI={StaticResource CartMicroBindableLabelStyle}}"/>
 
 
                                     <Label Text="{Binding UnitPrice}"
                                            Style="{OnPlatform 
-                                           Android={StaticResource CartBindableTitleAndroid}, 
-                                           WinUI={StaticResource CartBindableLabelWindows},
-                                           MacCatalyst={StaticResource CartBindableLabelWindows}}" />
+                                           Android={StaticResource CartBindableTitleAndroid},
+                                           WinUI={StaticResource CartMicroBindableLabelStyle}}"/>
                                 </HorizontalStackLayout>
-
-                                <HorizontalStackLayout Grid.Row="3" Grid.Column="1" Grid.RowSpan="2" Margin="10">
+                                <HorizontalStackLayout Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" HorizontalOptions="End" Margin="10">
                                     <Label Text="Quantity: "
                                            Style="{OnPlatform 
-                                           Android={StaticResource CartProductTitleAndroid}, 
-                                           WinUI={StaticResource CartProductTitleWindows},
-                                           MacCatalyst={StaticResource CartProductTitleWindows}}" />
+                                           Android={StaticResource CartProductTitleAndroid},
+                                           WinUI={StaticResource CartMicroLabelStyle}}"/>
 
                                     <Label Text="{Binding Quantity}"
                                            Style="{OnPlatform 
-                                           Android={StaticResource CartProductTitleAndroid}, 
-                                           WinUI={StaticResource CartProductTitleWindows},
-                                           MacCatalyst={StaticResource CartProductTitleWindows}}" />
+                                           Android={StaticResource CartProductTitleAndroid},
+                                           WinUI={StaticResource CartMicroLabelStyle}}"/>
                                 </HorizontalStackLayout>
 
                                 <HorizontalStackLayout Grid.Row="4" Grid.Column="1" 
@@ -96,15 +88,13 @@
                                                        Margin="10">
                                     <Label Text="Total: "
                                            Style="{OnPlatform
-                                            Android={StaticResource CartProductTitleAndroid}, 
-                                            WinUI={StaticResource CartProductTitleWindows},
-                                            MacCatalyst={StaticResource CartProductTitleWindows}}" />
+                                            Android={StaticResource CartProductTitleAndroid},
+                                            WinUI={StaticResource CartMicroBindableLabelStyle}}"/>
 
                                     <Label Text="{Binding Total}"
                                            Style="{OnPlatform 
-                                           Android={StaticResource CartProductTitleAndroid}, 
-                                           WinUI={StaticResource CartProductTitleWindows},
-                                           MacCatalyst={StaticResource CartProductTitleWindows}}" />
+                                           Android={StaticResource CartProductTitleAndroid},
+                                           WinUI={StaticResource CartMicroBindableLabelStyle}}"/>
                                 </HorizontalStackLayout>
                             </Grid>
                         </Frame>

@@ -16,6 +16,6 @@ public sealed class GetAllProductsQueryHandler : IQueryHandler<GetAllProductsQue
     public async ValueTask<IEnumerable<Product>> Handle(GetAllProductsQuery query, CancellationToken cancellationToken)
     {
         var products = await _productsWebApi.GetAllProductsAsync(cancellationToken);
-        return products.Items;
+        return products;
     }
 }
