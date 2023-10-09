@@ -29,12 +29,12 @@ builder.Services.AddApplicationDb<ApplicationUsersDbContext>(builder.Configurati
 builder.Services.AddApplicationService<IAuthService<ApplicationUser>>();
 builder.Services.AddApplicationService<ITokenWriter<ApplicationUser>>();
 
-builder.Services.AddOptions<JwtSettings>()
-    .Bind(builder.Configuration.GetRequiredSection("Jwt"))
+builder.Services.AddOptions<AwsMessagingSettings>()
+    .Bind(builder.Configuration.GetRequiredSection(AwsMessagingSettings.SectionName))
     .ValidateOnStart();
 
-builder.Services.AddOptions<AwsMessagingSettings>()
-    .Bind(builder.Configuration.GetRequiredSection("AWS"))
+builder.Services.AddOptions<JwtSettings>()
+    .Bind(builder.Configuration.GetRequiredSection(JwtSettings.SectionName))
     .ValidateOnStart();
 
 builder.Services.AddFluentValidationAutoValidation()

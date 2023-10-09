@@ -1,6 +1,6 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoNSubstitute;
-using CoffeeSpace.Messages.Ordering.Events;
+using CoffeeSpace.Messages.Ordering.Commands;
 using CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Consumers;
 using CoffeeSpace.OrderingApi.Application.Messaging.Mediator.Notifications.Orders;
 using CoffeeSpace.OrderingApi.Application.Repositories.Abstractions;

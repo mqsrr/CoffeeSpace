@@ -8,7 +8,7 @@ public interface ICacheService<TEntity>
     Task<TEntity?> GetAsync(string key, CancellationToken cancellationToken);
 
     Task SetAsync(string key, string jsonEntity, CancellationToken cancellationToken);
-
+    
     Task RemoveAsync(string key, CancellationToken cancellationToken);
 
     Task<TEntity?> GetOrCreateAsync(string key, Func<Task<TEntity?>> createEntity, CancellationToken cancellationToken);

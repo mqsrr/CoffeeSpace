@@ -1,16 +1,8 @@
 version: "1.0"
-linter: jetbrains/qodana-dotnet:2023.1-eap
-dot-net:
+dot-net: 
   solution: CoffeeSpace.sln
-include:
-  - name: CppThisArgMemberFuncDelegateCtorIsUnsuportedByDotNetCore
-  - name: ClassCanBeSealed.Global
-  - name: ClassCanBeSealed.Local
-  - name: DuplicatePropertyInspection
-  - name: LoopCanBePartlyConvertedToQuery
+linter: jetbrains/qodana-dotnet:2023.2-eap
 exclude:
-  - name: UnusedAutoPropertyAccessor.Global
-  - name: UnusedAutoPropertyAccessor.Local
   - name: All
     paths:
       - CoffeeSpace.Client/Contracts
@@ -34,8 +26,16 @@ exclude:
       - CoffeeSpace.ApiGateway/Extensions
       - CoffeeSpace.Core/Extensions
       - CoffeeSpace.Client
-  - name: UnusedMemberInSuper.Global
-  - name: UnusedType.Global
-  - name: UnusedMethodReturnValue.Global
   - name: ClassNeverInstantiated.Global
   - name: InvertIf
+  - name: UnusedAutoPropertyAccessor.Global
+  - name: UnusedAutoPropertyAccessor.Local
+  - name: UnusedMemberInSuper.Global
+  - name: UnusedMethodReturnValue.Global
+  - name: UnusedType.Global
+include:
+  - name: ClassCanBeSealed.Global
+  - name: ClassCanBeSealed.Local
+  - name: CppThisArgMemberFuncDelegateCtorIsUnsuportedByDotNetCore
+  - name: DuplicatePropertyInspection
+  - name: LoopCanBePartlyConvertedToQuery

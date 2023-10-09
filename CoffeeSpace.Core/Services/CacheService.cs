@@ -22,8 +22,7 @@ public sealed class CacheService<TEntity> : ICacheService<TEntity>
 
     public async Task<IEnumerable<TEntity>> GetAllAsync(string key, CancellationToken cancellationToken)
     {
-        var cachedOrderItem = await _distributedCache.GetStringAsync(key, cancellationToken);
-        
+        string? cachedOrderItem = await _distributedCache.GetStringAsync(key, cancellationToken);
         return cachedOrderItem is null
             ? Enumerable.Empty<TEntity>()
             : JsonConvert.DeserializeObject<IEnumerable<TEntity>>(cachedOrderItem)!;
@@ -32,17 +31,16 @@ public sealed class CacheService<TEntity> : ICacheService<TEntity>
 
     public async Task<TEntity?> GetAsync(string key, CancellationToken cancellationToken)
     {
-        var cachedOrderItem = await _distributedCache.GetStringAsync(key, cancellationToken);
-        
+        string? cachedOrderItem = await _distributedCache.GetStringAsync(key, cancellationToken);
         return cachedOrderItem is null
             ? null
             : JsonConvert.DeserializeObject<TEntity>(cachedOrderItem);
 
     }
-
-    public Task SetAsync(string key, string jsonEntity, CancellationToken cancellationToken)
+    
+    public Task SetAsync(string key, string entity, CancellationToken cancellationToken)
     {
-        return _distributedCache.SetStringAsync(key, jsonEntity, _options, cancellationToken);
+        return _distributedCache.SetStringAsync(key, entity, _options, cancellationToken);
     }
 
     public Task RemoveAsync(string key, CancellationToken cancellationToken)
@@ -65,7 +63,7 @@ public sealed class CacheService<TEntity> : ICacheService<TEntity>
             return null;
         }
 
-        var jsonEntity = JsonConvert.SerializeObject(entity, new JsonSerializerSettings
+        string jsonEntity = JsonConvert.SerializeObject(entity, new JsonSerializerSettings
         {
             NullValueHandling = NullValueHandling.Ignore
         });
@@ -89,7 +87,7 @@ public sealed class CacheService<TEntity> : ICacheService<TEntity>
             return Enumerable.Empty<TEntity>();
         }
 
-        var jsonEntity = JsonConvert.SerializeObject(entity, new JsonSerializerSettings
+        string jsonEntity = JsonConvert.SerializeObject(entity, new JsonSerializerSettings
         {
             NullValueHandling = NullValueHandling.Ignore
         });

@@ -1,4 +1,4 @@
-using CoffeeSpace.Messages.Ordering.Events;
+using CoffeeSpace.Messages.Ordering.Commands;
 using CoffeeSpace.OrderingApi.Application.Mapping;
 using CoffeeSpace.OrderingApi.Application.Repositories.Abstractions;
 using CoffeeSpace.OrderingApi.Application.SignalRHubs;

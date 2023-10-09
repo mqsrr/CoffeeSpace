@@ -1,4 +1,4 @@
-using CoffeeSpace.Messages.Ordering.Events;
+using CoffeeSpace.Messages.Ordering.Commands;
 using CoffeeSpace.OrderingApi.Application.Messaging.Mediator.Notifications.Orders;
 using CoffeeSpace.OrderingApi.Application.Repositories.Abstractions;
 using CoffeeSpace.OrderingApi.Application.SignalRHubs;
@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Consumers;
 
-internal sealed class UpdateOrderStatusConsumer : IConsumer<UpdateOrderStatus>
+public sealed class UpdateOrderStatusConsumer : IConsumer<UpdateOrderStatus>
 {
     private readonly IOrderRepository _orderRepository;
     private readonly IPublisher _publisher;

@@ -2,7 +2,7 @@ using CoffeeSpace.Domain.Ordering.BuyerInfo;
 
 namespace CoffeeSpace.Messages.Buyers;
 
-public sealed record UpdateBuyer
+public interface UpdateBuyer
 {
-    public required Buyer Buyer { get; init; }
+    public Buyer Buyer { get; }
 }

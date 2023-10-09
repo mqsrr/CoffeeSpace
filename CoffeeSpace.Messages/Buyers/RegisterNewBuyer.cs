@@ -1,8 +1,8 @@
 namespace CoffeeSpace.Messages.Buyers;
 
-public sealed class RegisterNewBuyer
+public interface RegisterNewBuyer
 {
-    public required string Name { get; init; }
+    string Name { get; }
 
-    public required string Email { get; init; }
+    string Email { get; }
 }

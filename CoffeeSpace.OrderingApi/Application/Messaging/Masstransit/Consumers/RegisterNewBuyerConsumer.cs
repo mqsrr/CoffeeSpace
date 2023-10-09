@@ -5,7 +5,7 @@ using MassTransit;
 
 namespace CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Consumers;
 
-internal sealed class RegisterNewBuyerConsumer : IConsumer<RegisterNewBuyer>
+public sealed class RegisterNewBuyerConsumer : IConsumer<RegisterNewBuyer>
 {
     private readonly IBuyerService _buyerService;
     private readonly ILogger<RegisterNewBuyerConsumer> _logger;

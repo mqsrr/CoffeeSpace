@@ -1,7 +1,7 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoNSubstitute;
 using CoffeeSpace.Domain.Ordering.Orders;
-using CoffeeSpace.Messages.Shipment.Events;
+using CoffeeSpace.Messages.Shipment.Commands;
 using CoffeeSpace.ShipmentService.Consumers;
 using FluentAssertions;
 using MassTransit;

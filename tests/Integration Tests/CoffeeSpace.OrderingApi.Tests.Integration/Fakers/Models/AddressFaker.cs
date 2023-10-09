@@ -1,5 +1,6 @@
 ﻿using AutoBogus;
 using CoffeeSpace.Domain.Ordering.BuyerInfo;
+using CoffeeSpace.Domain.Ordering.Orders;
 
 namespace CoffeeSpace.OrderingApi.Tests.Integration.Fakers.Models;
 

@@ -7,14 +7,12 @@ using System.Text;
 using AutoBogus;
 using CoffeeSpace.Core.Settings;
 using CoffeeSpace.Domain.Ordering.BuyerInfo;
-using CoffeeSpace.Domain.Ordering.BuyerInfo.CardInfo;
 using CoffeeSpace.Domain.Ordering.Orders;
 using CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Consumers;
 using CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Sagas;
 using CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Sagas.Definitions;
 using CoffeeSpace.OrderingApi.Controllers;
 using CoffeeSpace.OrderingApi.Persistence;
-using CoffeeSpace.OrderingApi.Tests.Integration.Fakers;
 using CoffeeSpace.OrderingApi.Tests.Integration.Fakers.Models;
 using DotNet.Testcontainers.Builders;
 using MassTransit;
@@ -43,7 +41,6 @@ public sealed class OrderingApiFactory : WebApplicationFactory<BuyersController>
     private readonly RedisContainer _redisContainer;
 
     public IEnumerable<Address> Addresses { get; init; }
-    public IEnumerable<PaymentInfo> PaymentInfos { get; init; }
     public IEnumerable<Buyer> Buyers { get; init; }
     public IEnumerable<OrderItem> OrderItems { get; init; }
     public IEnumerable<Order> Orders { get; init; }
@@ -73,13 +70,12 @@ public sealed class OrderingApiFactory : WebApplicationFactory<BuyersController>
 
         OrderItems = AutoFaker.Generate<OrderItem, OrderItemFaker>(10);
         Addresses = AutoFaker.Generate<Address, AddressFaker>(2);
-        PaymentInfos = AutoFaker.Generate<PaymentInfo, PaymentInfoFaker>(2);
         Buyers = AutoFaker.Generate<Buyer, BuyerFaker>(3);
         
         Orders = AutoFaker.Generate<Order, OrderFaker>( 1, builder => 
-            builder.WithArgs(Buyers.First().Id, Addresses.First(), PaymentInfos.First(), OrderItems.Take(3)));
+            builder.WithArgs(Buyers.First().Id, Addresses.First(), OrderItems.Take(3)));
         Orders = Orders.Append(AutoFaker.Generate<Order, OrderFaker>(2, builder =>
-            builder.WithArgs(Buyers.First().Id, Addresses.Last(), PaymentInfos.Last(), OrderItems.Take(3))).Last());
+            builder.WithArgs(Buyers.First().Id, Addresses.Last(), OrderItems.Take(3))).Last());
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -197,7 +193,6 @@ public sealed class OrderingApiFactory : WebApplicationFactory<BuyersController>
             
         orderingDbContext.OrderItems.AddRange(OrderItems);
         orderingDbContext.Addresses.AddRange(Addresses);
-        orderingDbContext.PaymentInfos.AddRange(PaymentInfos);
         orderingDbContext.SaveChanges();
 
         orderingDbContext.Buyers.AddRange(Buyers);

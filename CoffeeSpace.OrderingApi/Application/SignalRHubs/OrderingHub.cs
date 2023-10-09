@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace CoffeeSpace.OrderingApi.Application.SignalRHubs;
 
-internal sealed class OrderingHub : Hub<IOrderingHub>
+public sealed class OrderingHub : Hub<IOrderingHub>
 {
     public async Task JoinGroup(string groupName)
     {

@@ -34,8 +34,7 @@ builder.Services.AddControllers();
 builder.Services.AddMediator();
 
 builder.Services.AddApiVersioning(new MediaTypeApiVersionReader("api-version"));
-builder.Services.AddStackExchangeRedisCache(x =>
-    x.Configuration = builder.Configuration["Redis:ConnectionString"]);
+builder.Services.AddStackExchangeRedisCache(x => x.Configuration = builder.Configuration["Redis:ConnectionString"]);
 
 builder.Services.AddApplicationDb<IOrderingDbContext, OrderingDbContext>(builder.Configuration["OrderingDb:ConnectionString"]!);
 builder.Services.AddApplicationDb<OrderStateSagaDbContext>(builder.Configuration["OrderStateSagaDb:ConnectionString"]!);
@@ -51,35 +50,40 @@ builder.Services.AddApplicationService<IBuyerRepository>();
 builder.Services.AddApplicationService(typeof(IPipelineBehavior<,>), typeof(IPipelineAssemblyMarker));
 
 builder.Services.AddOptions<AwsMessagingSettings>()
-    .Bind(builder.Configuration.GetSection("AWS"))
+    .Bind(builder.Configuration.GetSection(AwsMessagingSettings.SectionName))
     .ValidateOnStart();
 
 builder.Services.AddOptions<JwtSettings>()
-    .Bind(builder.Configuration.GetSection("Jwt"))
+    .Bind(builder.Configuration.GetSection(JwtSettings.SectionName))
     .ValidateOnStart();
 
 builder.Services.AddFluentValidationAutoValidation()
     .AddValidatorsFromAssemblyContaining<IValidatorMarker>(ServiceLifetime.Singleton, includeInternalTypes: true);
 
 builder.Services.AddCors(options => options.AddDefaultPolicy(policyBuilder =>
-{
     policyBuilder.AllowCredentials()
         .WithOrigins("http://localhost:4200")
         .WithMethods("POST")
-        .WithHeaders("x-requested-with", "x-signalr-user-agent");
-}));
+        .WithHeaders("x-requested-with", "x-signalr-user-agent")));
 
-builder.Services.AddQuartz(x => x.UseMicrosoftDependencyInjectionJobFactory());
+builder.Services.AddQuartz(x =>
+{
+    x.UseMicrosoftDependencyInjectionJobFactory();
+    x.UseInMemoryStore();
+
+    x.InterruptJobsOnShutdownWithWait = true;
+    x.UseTimeZoneConverter();
+});
+
 builder.Services.AddMassTransit(x =>
 {
     x.SetKebabCaseEndpointNameFormatter();
-    x.AddConsumer<RegisterNewBuyerConsumer>();
-    x.AddConsumer<UpdateOrderStatusConsumer>();
+    x.AddConsumersFromNamespaceContaining<RegisterNewBuyerConsumer>();
 
     x.AddQuartzConsumers();
     x.AddPublishMessageScheduler();
 
-    x.AddEntityFrameworkOutbox<OrderStateSagaDbContext>(configurator => { configurator.UsePostgres(); });
+    x.AddEntityFrameworkOutbox<OrderStateSagaDbContext>(configurator => configurator.UsePostgres());
     x.AddSagaStateMachine<OrderStateMachine, OrderStateInstance, OrderStateDefinition>()
         .EntityFrameworkRepository(configurator =>
         {
@@ -97,10 +101,11 @@ builder.Services.AddMassTransit(x =>
             hostConfig.AccessKey(awsMessagingSettings.AccessKey);
             hostConfig.SecretKey(awsMessagingSettings.SecretKey);
         });
+
         config.UsePublishMessageScheduler();
 
         config.UseNewtonsoftJsonSerializer();
-        config.UseNewtonsoftJsonSerializer();
+        config.UseNewtonsoftJsonDeserializer();
 
         config.ConfigureEndpoints(context);
     });

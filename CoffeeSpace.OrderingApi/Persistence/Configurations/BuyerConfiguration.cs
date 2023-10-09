@@ -22,15 +22,14 @@ public sealed class BuyerConfiguration : IEntityTypeConfiguration<Buyer>
         builder.Property(x => x.Name)
             .IsRequired()
             .IsUnicode(false)
-            .HasMaxLength(50);
+            .HasMaxLength(64);
 
         builder.Property(x => x.Email)
             .IsRequired()
             .IsUnicode(false)
-            .HasMaxLength(50);
-        
+            .HasMaxLength(64);
+
         builder.HasIndex(x => x.Id)
-            .IsUnique()
-            .IsDescending();
+            .IsUnique();
     }
 }

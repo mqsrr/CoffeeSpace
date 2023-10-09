@@ -1,7 +1,7 @@
 ﻿using AutoFixture;
 using CoffeeSpace.Domain.Ordering.Orders;
-using CoffeeSpace.Messages.Ordering.Events;
-using CoffeeSpace.Messages.Products.Events;
+using CoffeeSpace.Messages.Ordering.Commands;
+using CoffeeSpace.Messages.Products.Commands;
 using CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Sagas;
 using FluentAssertions;
 using MassTransit;

@@ -27,9 +27,7 @@ builder.Configuration.AddJwtBearer(builder);
 builder.Services.AddControllers();
 builder.Services.AddApiVersioning(new MediaTypeApiVersionReader("api-version"));
 
-builder.Services.AddStackExchangeRedisCache(x => 
-    x.Configuration = builder.Configuration["Redis:ConnectionString"]);
-
+builder.Services.AddStackExchangeRedisCache(x => x.Configuration = builder.Configuration["Redis:ConnectionString"]);
 builder.Services.AddApplicationDb<IProductDbContext, ProductDbContext>(builder.Configuration["ProductsDb:ConnectionString"]!);
 
 builder.Services.AddApplicationService<IProductRepository>();
@@ -42,11 +40,11 @@ builder.Services.AddFluentValidationAutoValidation()
     .AddValidatorsFromAssemblyContaining<CreateProductRequestValidator>(ServiceLifetime.Singleton, includeInternalTypes: true);
 
 builder.Services.AddOptions<AwsMessagingSettings>()
-    .Bind(builder.Configuration.GetRequiredSection("AWS"))
+    .Bind(builder.Configuration.GetRequiredSection(AwsMessagingSettings.SectionName))
     .ValidateOnStart();
 
 builder.Services.AddOptions<JwtSettings>()
-    .Bind(builder.Configuration.GetRequiredSection("Jwt"))
+    .Bind(builder.Configuration.GetRequiredSection(JwtSettings.SectionName))
     .ValidateOnStart();
 
 builder.Services.AddMassTransit(x =>

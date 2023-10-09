@@ -1,8 +1,8 @@
 namespace CoffeeSpace.Messages.Buyers;
 
-public sealed class DeleteBuyer
+public interface DeleteBuyer
 {
-    public required string Name { get; init; }
+    string Name { get; }
 
-    public required string Email { get; init; }
+    string Email { get; }
 }

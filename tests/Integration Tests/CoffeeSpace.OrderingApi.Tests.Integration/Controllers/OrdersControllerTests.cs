@@ -4,7 +4,6 @@ using CoffeeSpace.Domain.Ordering.BuyerInfo;
 using CoffeeSpace.Domain.Ordering.Orders;
 using CoffeeSpace.OrderingApi.Application.Contracts.Requests.Addresses;
 using CoffeeSpace.OrderingApi.Application.Contracts.Requests.Orders;
-using CoffeeSpace.OrderingApi.Application.Contracts.Requests.PaymentInfo;
 using CoffeeSpace.OrderingApi.Application.Contracts.Responses.Orders;
 using CoffeeSpace.OrderingApi.Application.Helpers;
 using CoffeeSpace.OrderingApi.Tests.Integration.Fakers.Models;
@@ -80,7 +79,6 @@ public sealed class OrdersControllerTests : IAsyncLifetime
         var order = new CreateOrderRequest
         {
             Address = AutoFaker.Generate<CreateAddressRequest, CreateAddressRequestFaker>(),
-            PaymentInfo = AutoFaker.Generate<CreatePaymentInfoRequest, CreatePaymentInfoRequestFaker>(),
             OrderItems = AutoFaker.Generate<OrderItem, OrderItemFaker>(11).TakeLast(1),
             Status = OrderStatus.Submitted
         };

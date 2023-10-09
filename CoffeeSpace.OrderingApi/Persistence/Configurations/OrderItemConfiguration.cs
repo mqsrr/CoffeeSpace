@@ -12,8 +12,8 @@ public sealed class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
             .HasKey(x => x.Id);
 
         builder.Property(x => x.Id)
-            .IsUnicode(false)
-            .IsRequired();
+            .IsRequired()
+            .IsUnicode(false);
 
         builder.Property(x => x.Title)
             .IsRequired()
@@ -40,9 +40,8 @@ public sealed class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
             .IsUnicode(false);
 
         builder.Ignore(x => x.Total);
-        
+
         builder.HasIndex(x => x.Id)
-            .IsUnique()
-            .IsDescending(false);
+            .IsUnique();
     }
 }

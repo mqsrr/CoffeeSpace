@@ -2,6 +2,7 @@ using CoffeeSpace.OrderingApi.Persistence.Configurations;
 using MassTransit;
 using MassTransit.EntityFrameworkCoreIntegration;
 using Microsoft.EntityFrameworkCore;
+using Quartz.Spi;
 
 namespace CoffeeSpace.OrderingApi.Persistence;
 

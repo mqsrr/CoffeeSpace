@@ -1,4 +1,5 @@
 using Azure.Identity;
+using CoffeeSpace.Core.Managers;
 using CoffeeSpace.Core.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;

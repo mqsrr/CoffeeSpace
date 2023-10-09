@@ -1,4 +1,4 @@
-using CoffeeSpace.OrderingApi.Application.Contracts.Requests.Orders;
+﻿using CoffeeSpace.OrderingApi.Application.Contracts.Requests.Orders;
 using FluentValidation;
 
 namespace CoffeeSpace.OrderingApi.Application.Validators.Orders;
@@ -11,10 +11,6 @@ internal sealed class CreateOrderRequestValidator : AbstractValidator<CreateOrde
             .Empty();
         
         RuleFor(x => x.Address)
-            .NotNull()
-            .NotEmpty();
-            
-        RuleFor(x => x.PaymentInfo)
             .NotNull()
             .NotEmpty();
         

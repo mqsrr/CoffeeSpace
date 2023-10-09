@@ -2,7 +2,7 @@
 using AutoFixture.AutoNSubstitute;
 using CoffeeSpace.Domain.Ordering.Orders;
 using CoffeeSpace.Domain.Products;
-using CoffeeSpace.Messages.Products.Events;
+using CoffeeSpace.Messages.Products.Commands;
 using CoffeeSpace.Messages.Products.Responses;
 using CoffeeSpace.ProductApi.Application.Messages.Consumers;
 using CoffeeSpace.ProductApi.Application.Repositories.Abstractions;
@@ -46,7 +46,7 @@ public sealed class OrderStockValidationConsumerTests : IAsyncLifetime
             .Returns(expectedProducts);
         
         // Act
-        var response = await _testHarness.Bus.Request<OrderStockValidation, OrderStockValidationResult>(new
+        var response = await _testHarness.Bus.Request<OrderStockValidation, OrderStockConfirmed>(new
         {
             Order = _fixture.Create<Order>(),
             Products = expectedProducts

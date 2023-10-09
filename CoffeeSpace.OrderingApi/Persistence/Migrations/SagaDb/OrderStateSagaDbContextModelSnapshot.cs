@@ -17,7 +17,7 @@ namespace CoffeeSpace.OrderingApi.Persistence.Migrations.SagaDb
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.10")
+                .HasAnnotation("ProductVersion", "7.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -28,9 +28,11 @@ namespace CoffeeSpace.OrderingApi.Persistence.Migrations.SagaDb
                         .HasColumnType("uuid");
 
                     b.Property<string>("BuyerId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("CurrentState")
+                        .IsUnicode(false)
                         .HasColumnType("integer");
 
                     b.Property<string>("OrderId")
@@ -43,12 +45,16 @@ namespace CoffeeSpace.OrderingApi.Persistence.Migrations.SagaDb
                     b.Property<bool>("StockValidationSuccess")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("UpdateOrderStatudCorrelationId")
+                    b.Property<string>("UpdateOrderStatusCorrelationId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("CorrelationId");
 
-                    b.ToTable("OrderStateInstance");
+                    b.HasIndex("CorrelationId")
+                        .IsUnique();
+
+                    b.ToTable("OrderStateInstance", (string)null);
                 });
 
             modelBuilder.Entity("MassTransit.EntityFrameworkCoreIntegration.InboxState", b =>
@@ -97,7 +103,7 @@ namespace CoffeeSpace.OrderingApi.Persistence.Migrations.SagaDb
 
                     b.HasIndex("Delivered");
 
-                    b.ToTable("InboxState");
+                    b.ToTable("InboxState", (string)null);
                 });
 
             modelBuilder.Entity("MassTransit.EntityFrameworkCoreIntegration.OutboxMessage", b =>
@@ -188,7 +194,7 @@ namespace CoffeeSpace.OrderingApi.Persistence.Migrations.SagaDb
                     b.HasIndex("InboxMessageId", "InboxConsumerId", "SequenceNumber")
                         .IsUnique();
 
-                    b.ToTable("OutboxMessage");
+                    b.ToTable("OutboxMessage", (string)null);
                 });
 
             modelBuilder.Entity("MassTransit.EntityFrameworkCoreIntegration.OutboxState", b =>
@@ -218,7 +224,7 @@ namespace CoffeeSpace.OrderingApi.Persistence.Migrations.SagaDb
 
                     b.HasIndex("Created");
 
-                    b.ToTable("OutboxState");
+                    b.ToTable("OutboxState", (string)null);
                 });
 #pragma warning restore 612, 618
         }

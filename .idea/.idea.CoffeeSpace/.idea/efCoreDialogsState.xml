@@ -14,7 +14,7 @@
         <entry key="Common:e40665f3-9b61-4074-9b0c-db39077ea3fa:dbContext" value="CoffeeSpace.OrderingApi.Persistence.OrderingDbContext" />
         <entry key="Common:fbb32c90-3105-499d-b025-13ed99fe7158:dbContext" value="CoffeeSpace.PaymentService.Persistence.PaymentDbContext" />
         <entry key="Common:noBuild" value="false" />
-        <entry key="Common:outputFolder" value="Persistence/Migrations" />
+        <entry key="Common:outputFolder" value="Persistence/Migrations/SagaDb" />
         <entry key="Common:targetFramework" value="net7.0" />
         <entry key="Common:useDefaultConnection" value="true" />
       </map>

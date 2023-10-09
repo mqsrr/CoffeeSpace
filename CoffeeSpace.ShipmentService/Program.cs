@@ -13,7 +13,7 @@ builder.Host.UseSerilog((context, configuration) =>
 builder.Configuration.AddAzureKeyVault();
 
  builder.Services.AddOptions<AwsMessagingSettings>()
-     .Bind(builder.Configuration.GetRequiredSection("AWS"))
+     .Bind(builder.Configuration.GetRequiredSection(AwsMessagingSettings.SectionName))
      .ValidateOnStart();
 
 builder.Services.AddMassTransit(x =>
@@ -37,7 +37,6 @@ builder.Services.AddMassTransit(x =>
 });
 
 builder.Services.AddHealthChecks();
-
 var app = builder.Build();
 
 app.UseHealthChecks("/_health");

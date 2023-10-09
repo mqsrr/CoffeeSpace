@@ -1,4 +1,4 @@
-using CoffeeSpace.Messages.Products.Events;
+using CoffeeSpace.Messages.Products.Commands;
 using CoffeeSpace.Messages.Products.Responses;
 using CoffeeSpace.ProductApi.Application.Repositories.Abstractions;
 using MassTransit;
@@ -31,7 +31,7 @@ internal sealed class OrderStockValidationConsumer : IConsumer<OrderStockValidat
         }
         
         _logger.LogInformation("The order with ID {OrderId} has successfully completed product validation", context.Message.Order.Id);
-        await context.RespondAsync<OrderStockValidationResult>(new
+        await context.RespondAsync<OrderStockConfirmed>(new
         {
             context.Message.Order,
             IsValid = isValid

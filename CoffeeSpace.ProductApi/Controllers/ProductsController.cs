@@ -1,6 +1,5 @@
 using Asp.Versioning;
 using CoffeeSpace.ProductApi.Application.Contracts.Requests;
-using CoffeeSpace.ProductApi.Application.Extensions;
 using CoffeeSpace.ProductApi.Application.Helpers;
 using CoffeeSpace.ProductApi.Application.Mapping;
 using CoffeeSpace.ProductApi.Application.Services.Abstractions;
@@ -39,7 +38,6 @@ public sealed class ProductsController : ControllerBase
     public async Task<IActionResult> GetById([FromRoute] GetProductByIdRequest request, CancellationToken cancellationToken)
     {
         var product = await _productService.GetProductByIdAsync(request.Id, cancellationToken);
-        
         return product is not null
             ? Ok(product)
             : NotFound();
@@ -49,7 +47,7 @@ public sealed class ProductsController : ControllerBase
     public async Task<IActionResult> Create([FromBody] CreateProductRequest request, CancellationToken cancellationToken)
     {
         var product = request.ToProduct();
-        var created = await _productService.CreateProductAsync(product, cancellationToken);
+        bool created = await _productService.CreateProductAsync(product, cancellationToken);
 
         return created
             ? CreatedAtAction(nameof(GetById), new {id = product.Id}, product.ToResponse())

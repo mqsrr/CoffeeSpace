@@ -57,57 +57,22 @@ namespace CoffeeSpace.OrderingApi.Persistence.Migrations.OrderingDb
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(50)
+                        .HasMaxLength(64)
                         .IsUnicode(false)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("character varying(64)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
+                        .HasMaxLength(64)
                         .IsUnicode(false)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("character varying(64)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("Id")
-                        .IsUnique()
-                        .IsDescending();
+                        .IsUnique();
 
                     b.ToTable("Buyers", (string)null);
-                });
-
-            modelBuilder.Entity("CoffeeSpace.Domain.Ordering.BuyerInfo.CardInfo.PaymentInfo", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
-
-                    b.Property<string>("CardNumber")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<int>("CardType")
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ExpirationMonth")
-                        .IsUnicode(false)
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ExpirationYear")
-                        .IsUnicode(false)
-                        .HasColumnType("integer");
-
-                    b.Property<string>("SecurityNumber")
-                        .IsRequired()
-                        .IsUnicode(false)
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Payments", (string)null);
                 });
 
             modelBuilder.Entity("CoffeeSpace.Domain.Ordering.Orders.Order", b =>
@@ -124,12 +89,9 @@ namespace CoffeeSpace.OrderingApi.Persistence.Migrations.OrderingDb
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("PaymentInfoId")
+                    b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -139,9 +101,6 @@ namespace CoffeeSpace.OrderingApi.Persistence.Migrations.OrderingDb
                     b.HasIndex("BuyerId");
 
                     b.HasIndex("Id")
-                        .IsUnique();
-
-                    b.HasIndex("PaymentInfoId")
                         .IsUnique();
 
                     b.ToTable("Orders", (string)null);
@@ -206,15 +165,7 @@ namespace CoffeeSpace.OrderingApi.Persistence.Migrations.OrderingDb
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CoffeeSpace.Domain.Ordering.BuyerInfo.CardInfo.PaymentInfo", "PaymentInfo")
-                        .WithOne()
-                        .HasForeignKey("CoffeeSpace.Domain.Ordering.Orders.Order", "PaymentInfoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Address");
-
-                    b.Navigation("PaymentInfo");
                 });
 
             modelBuilder.Entity("CoffeeSpace.Domain.Ordering.Orders.OrderItem", b =>
