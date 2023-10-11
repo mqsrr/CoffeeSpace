@@ -6,9 +6,9 @@ using CoffeeSpace.OrderingApi.Application.Extensions;
 using CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Consumers;
 using CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Sagas;
 using CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Sagas.Definitions;
-using CoffeeSpace.OrderingApi.Application.Pipelines;
 using CoffeeSpace.OrderingApi.Application.Repositories.Abstractions;
 using CoffeeSpace.OrderingApi.Application.Services.Abstractions;
+using CoffeeSpace.OrderingApi.Application.Services.Decorators;
 using CoffeeSpace.OrderingApi.Application.SignalRHubs;
 using CoffeeSpace.OrderingApi.Application.Validators;
 using CoffeeSpace.OrderingApi.Persistence;
@@ -16,7 +16,6 @@ using CoffeeSpace.OrderingApi.Persistence.Abstractions;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MassTransit;
-using Mediator;
 using Microsoft.Extensions.Options;
 using Quartz;
 using Serilog;
@@ -30,6 +29,7 @@ builder.Configuration.AddAzureKeyVault();
 builder.Configuration.AddJwtBearer(builder);
 
 builder.Services.AddSignalR().AddAzureSignalR();
+
 builder.Services.AddControllers();
 builder.Services.AddMediator();
 
@@ -47,7 +47,8 @@ builder.Services.AddApplicationService<IOrderRepository>();
 builder.Services.AddApplicationService<IBuyerService>();
 builder.Services.AddApplicationService<IBuyerRepository>();
 
-builder.Services.AddApplicationService(typeof(IPipelineBehavior<,>), typeof(IPipelineAssemblyMarker));
+builder.Services.Decorate<IOrderService, CachedOrderService>();
+builder.Services.Decorate<IBuyerService, CachedBuyerService>();
 
 builder.Services.AddOptions<AwsMessagingSettings>()
     .Bind(builder.Configuration.GetSection(AwsMessagingSettings.SectionName))
@@ -75,25 +76,25 @@ builder.Services.AddQuartz(x =>
     x.UseTimeZoneConverter();
 });
 
-builder.Services.AddMassTransit(x =>
+builder.Services.AddMassTransit(configurator =>
 {
-    x.SetKebabCaseEndpointNameFormatter();
-    x.AddConsumersFromNamespaceContaining<RegisterNewBuyerConsumer>();
+    configurator.SetKebabCaseEndpointNameFormatter();
+    configurator.AddConsumersFromNamespaceContaining<RegisterNewBuyerConsumer>();
 
-    x.AddQuartzConsumers();
-    x.AddPublishMessageScheduler();
-
-    x.AddEntityFrameworkOutbox<OrderStateSagaDbContext>(configurator => configurator.UsePostgres());
-    x.AddSagaStateMachine<OrderStateMachine, OrderStateInstance, OrderStateDefinition>()
-        .EntityFrameworkRepository(configurator =>
+    configurator.AddQuartzConsumers();
+    configurator.AddPublishMessageScheduler();
+    
+    configurator.AddEntityFrameworkOutbox<OrderStateSagaDbContext>(outboxConfigurator => outboxConfigurator.UsePostgres());
+    configurator.AddSagaStateMachine<OrderStateMachine, OrderStateInstance, OrderStateDefinition>()
+        .EntityFrameworkRepository(repositoryConfigurator =>
         {
-            configurator.ConcurrencyMode = ConcurrencyMode.Optimistic;
+            repositoryConfigurator.ConcurrencyMode = ConcurrencyMode.Optimistic;
 
-            configurator.UsePostgres();
-            configurator.ExistingDbContext<OrderStateSagaDbContext>();
+            repositoryConfigurator.UsePostgres();
+            repositoryConfigurator.ExistingDbContext<OrderStateSagaDbContext>();
         });
 
-    x.UsingAmazonSqs((context, config) =>
+    configurator.UsingAmazonSqs((context, config) =>
     {
         var awsMessagingSettings = context.GetRequiredService<IOptions<AwsMessagingSettings>>().Value;
         config.Host(awsMessagingSettings.Region, hostConfig =>

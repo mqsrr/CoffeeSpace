@@ -1,15 +1,20 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoNSubstitute;
+using CoffeeSpace.Domain.Ordering.Orders;
 using CoffeeSpace.Messages.Ordering.Commands;
 using CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Consumers;
 using CoffeeSpace.OrderingApi.Application.Messaging.Mediator.Notifications.Orders;
 using CoffeeSpace.OrderingApi.Application.Repositories.Abstractions;
+using CoffeeSpace.OrderingApi.Application.SignalRHubs;
+using CoffeeSpace.OrderingApi.Application.SignalRHubs.Abstraction;
 using FluentAssertions;
 using MassTransit;
 using MassTransit.Testing;
 using Mediator;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
+using NSubstitute.Extensions;
 using Xunit;
 
 namespace CoffeeSpace.OrderingApi.Tests.Consumers;
@@ -21,6 +26,7 @@ public sealed class UpdateOrderStatusConsumerTests : IAsyncLifetime
     private readonly IPublisher _publisher;
     private readonly IOrderRepository _orderRepository;
     private readonly Fixture _fixture;
+    private readonly IHubContext<OrderingHub, IOrderingHub> _hubContext;
 
     public UpdateOrderStatusConsumerTests()
     {
@@ -29,10 +35,12 @@ public sealed class UpdateOrderStatusConsumerTests : IAsyncLifetime
 
         _orderRepository = _fixture.Create<IOrderRepository>();
         _publisher = _fixture.Create<IPublisher>();
+        _hubContext = _fixture.Create<IHubContext<OrderingHub, IOrderingHub>>();
         
         var serviceProvider = new ServiceCollection()
             .AddScoped<IOrderRepository>(_ => _orderRepository)
             .AddScoped<IPublisher>(_ => _publisher)
+            .AddScoped<IHubContext<OrderingHub, IOrderingHub>>(_ => _hubContext)
             .AddMassTransitTestHarness(config => config.AddConsumer<UpdateOrderStatusConsumer>())
             .BuildServiceProvider(true);
 
@@ -46,7 +54,7 @@ public sealed class UpdateOrderStatusConsumerTests : IAsyncLifetime
         // Arrange
         var consumerEndpoint = await _testHarness.GetConsumerEndpoint<UpdateOrderStatusConsumer>();
         var request = _fixture.Create<UpdateOrderStatus>();
-
+        
         _orderRepository.UpdateOrderStatusAsync(request.OrderId, request.Status, Arg.Any<CancellationToken>())
             .Returns(true);
 

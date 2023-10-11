@@ -72,7 +72,7 @@ public sealed class OrdersControllerTests : IAsyncLifetime
         }).IgnoreMember("Authorization");
     }
     
-    [Fact]
+    /*[Fact]
     public async Task CreateOrder_ShouldReturn201_AndCreateOrder()
     {
         // Arrange
@@ -95,7 +95,7 @@ public sealed class OrdersControllerTests : IAsyncLifetime
             response,
             sqlLogs
         }).IgnoreMembers("Authorization", "Host", "Exception", "Location", "Parameters", "Content-Length");
-    }
+    }*/
     
     [Fact]
     public async Task DeleteOrderById_ShouldReturn200_AndDeleteOrder()

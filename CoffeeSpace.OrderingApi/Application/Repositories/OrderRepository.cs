@@ -1,5 +1,4 @@
-﻿using CoffeeSpace.Core.Extensions;
-using CoffeeSpace.Domain.Ordering.Orders;
+﻿using CoffeeSpace.Domain.Ordering.Orders;
 using CoffeeSpace.OrderingApi.Application.Repositories.Abstractions;
 using CoffeeSpace.OrderingApi.Persistence.Abstractions;
 using Microsoft.EntityFrameworkCore;
@@ -24,55 +23,32 @@ internal sealed class OrderRepository : IOrderRepository
         }
 
         var orders = _orderingDbContext.Orders
-            .Where(x => x.BuyerId == buyerId)
-            .Include(x => x.Address)
-            .Include(x => x.OrderItems);
+            .Where(order => order.BuyerId == buyerId)
+            .Include(order => order.OrderItems)
+            .Include(order => order.Address)
+            .AsEnumerable();
         
         return orders;
     }
     
-    public async Task<Order?> GetByIdAsync(string id, CancellationToken cancellationToken)
+    public Task<Order?> GetByIdAsync(string id, CancellationToken cancellationToken)
     {
-        var order = await _orderingDbContext.Orders.FindAsync(new object?[] {id},  cancellationToken);
-        if (order is null)
-        {
-            return order;
-        }
-
-        await _orderingDbContext.Orders.LoadDataAsync(order, o => o.OrderItems);
-        await _orderingDbContext.Orders.LoadDataAsync(order, o => o.Address);
-
+        var order = _orderingDbContext.Orders
+            .Include(order => order.OrderItems)
+            .Include(order => order.Address)
+            .FirstOrDefaultAsync(order => order.Id == id, cancellationToken);
+        
         return order;
     }
     
     public async Task<bool> CreateAsync(Order order, CancellationToken cancellationToken)
     {
-        var buyer = await _orderingDbContext.Buyers.FindAsync(new object?[] {order.BuyerId}, cancellationToken);
-        if (buyer is null)
-        {
-            return false;
-        }
-        
         await _orderingDbContext.Orders.AddAsync(order, cancellationToken);
         int result = await _orderingDbContext.SaveChangesAsync(cancellationToken);
 
         return result > 0;
     }
-
-    public async Task<Order?> UpdateAsync(Order order, CancellationToken cancellationToken)
-    {
-        var orderToUpdate = await _orderingDbContext.Orders.FindAsync(new object[] {order.Id}, cancellationToken);
-        if (orderToUpdate is null)
-        {
-            return null;
-        }
-        
-        _orderingDbContext.Orders.Update(order);
-        await _orderingDbContext.SaveChangesAsync(cancellationToken);
-        
-        return order;
-    }
-
+    
     public async Task<bool> UpdateOrderStatusAsync(string id, OrderStatus orderStatus, CancellationToken cancellationToken)
     {
         int result = await _orderingDbContext.Orders

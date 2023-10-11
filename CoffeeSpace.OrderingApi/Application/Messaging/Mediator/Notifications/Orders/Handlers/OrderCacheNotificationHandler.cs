@@ -20,6 +20,8 @@ internal sealed class OrderCacheNotificationHandler :
     public async ValueTask Handle(CreateOrderNotification notification, CancellationToken cancellationToken)
     {
         await _cacheService.RemoveAsync(CacheKeys.Order.GetAll(notification.BuyerId), cancellationToken);
+        await _cacheService.RemoveAsync(CacheKeys.Order.GetByCustomerId(notification.Id, notification.BuyerId), cancellationToken);
+        
         await _cacheService.RemoveAsync(CacheKeys.Buyers.Get(notification.BuyerId), cancellationToken);
     }
 
@@ -35,5 +37,7 @@ internal sealed class OrderCacheNotificationHandler :
     {
         await _cacheService.RemoveAsync(CacheKeys.Order.GetAll(notification.BuyerId), cancellationToken);
         await _cacheService.RemoveAsync(CacheKeys.Order.GetByCustomerId(notification.Id, notification.BuyerId), cancellationToken);
+        
+        await _cacheService.RemoveAsync(CacheKeys.Buyers.Get(notification.BuyerId), cancellationToken);
     }
 }

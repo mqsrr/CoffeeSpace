@@ -12,15 +12,15 @@ namespace CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Sagas;
 
 internal sealed class OrderStateMachine : MassTransitStateMachine<OrderStateInstance>
 {
-    public State Submitted { get; private set; }
+    public required State Submitted { get; init; }
 
-    public State StockConfirmed { get; private set; }
+    public required State StockConfirmed { get; init; }
 
-    public State Paid { get; private set; }
+    public required State Paid { get; init; }
 
-    public State Shipped { get; private set; }
+    public required State Shipped { get; init; }
 
-    public State Canceled { get; private set; }
+    public required State Canceled { get; init; }
 
     public OrderStateMachine(ILogger<OrderStateMachine> logger)
     {
@@ -63,15 +63,14 @@ internal sealed class OrderStateMachine : MassTransitStateMachine<OrderStateInst
                 }))
                 .TransitionTo(Submitted));
 
-        WhenEnterAny(binder =>
-            binder.If(context => context.Saga.CurrentState > 2, activityBinder =>
-                activityBinder.PublishAsync(context =>
-                    context.Init<UpdateOrderStatus>(new
-                    {
-                        context.Saga.OrderId,
-                        context.Saga.BuyerId,
-                        Status = context.Saga.CurrentState - 3
-                    }))));
+        WhenEnterAny(binder => binder.If(context => context.Saga.CurrentState > 2, activityBinder =>
+            activityBinder.PublishAsync(context =>
+                context.Init<UpdateOrderStatus>(new
+                {
+                    context.Saga.OrderId,
+                    context.Saga.BuyerId,
+                    Status = context.Saga.CurrentState - 3
+                }))));
 
         WhenEnter(Canceled, binder => binder.Finalize());
 
@@ -109,7 +108,8 @@ internal sealed class OrderStateMachine : MassTransitStateMachine<OrderStateInst
                     context.Message.Order
                 }))
                 .Then(context => context.Saga.PaymentSuccess = true)
-                .TransitionTo(Paid));
+                .TransitionTo(Paid),
+            Ignore(RequestOrderStockValidation.TimeoutExpired));
 
         During(Paid,
             When(RequestOrderShipment.TimeoutExpired)
@@ -125,22 +125,19 @@ internal sealed class OrderStateMachine : MassTransitStateMachine<OrderStateInst
                     Status = OrderStatus.Shipped
                 }))
                 .TransitionTo(Shipped)
-                .Finalize());
+                .Finalize(),
+            Ignore(RequestOrderPayment.TimeoutExpired));
 
         SetCompletedWhenFinalized();
     }
 
-    public Event<SubmitOrder> SubmitOrder { get; private set; }
+    public required Event<SubmitOrder> SubmitOrder { get; init; }
 
-    public Event<CancelOrder> CancelOrder { get; private set; }
+    public required Event<CancelOrder> CancelOrder { get; init; }
 
-    public Request<OrderStateInstance, RequestOrderPayment, OrderPaymentSuccess> RequestOrderPayment { get; private set; }
+    public Request<OrderStateInstance, RequestOrderPayment, OrderPaymentSuccess> RequestOrderPayment { get; init; }
 
-    public Request<OrderStateInstance, OrderStockValidation, OrderStockConfirmed> RequestOrderStockValidation
-    {
-        get;
-        private set;
-    }
+    public Request<OrderStateInstance, OrderStockValidation, OrderStockConfirmed> RequestOrderStockValidation { get; init; }
 
-    public Request<OrderStateInstance, RequestOrderShipment, OrderShipped> RequestOrderShipment { get; private set; }
+    public Request<OrderStateInstance, RequestOrderShipment, OrderShipped> RequestOrderShipment { get; init; }
 }

@@ -15,7 +15,7 @@ public sealed partial class OrderViewModel : ObservableObject
     public OrderViewModel(ProfileViewModel profileViewModel, IHubConnectionService hubConnectionService)
     {
         _orders = profileViewModel.Buyer.Orders.ToObservableCollection();
-        hubConnectionService.OrderCreated(order =>
+        hubConnectionService.OnOrderCreated(order =>
         {
             bool isExists = _orders.Any(o => order.Id == o.Id);
             if (isExists)
@@ -26,7 +26,7 @@ public sealed partial class OrderViewModel : ObservableObject
             Orders.Add(order);
         });
 
-        hubConnectionService.OrderStatusUpdated((newOrderStatus, orderId) =>
+        hubConnectionService.OnOrderStatusUpdated((newOrderStatus, orderId) =>
         {
             var orderToUpdate = Orders.FirstOrDefault(order => order.Id == orderId);
             if (orderToUpdate is null)

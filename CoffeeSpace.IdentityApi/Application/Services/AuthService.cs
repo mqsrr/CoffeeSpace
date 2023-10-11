@@ -11,14 +11,12 @@ internal sealed class AuthService : IAuthService<ApplicationUser>
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly ITokenWriter<ApplicationUser> _tokenWriter;
     private readonly ISendEndpointProvider _endpointProvider;
-    private readonly ILogger _logger;
 
     public AuthService(SignInManager<ApplicationUser> signInManager, ITokenWriter<ApplicationUser> tokenWriter, ISendEndpointProvider endpointProvider)
     {
         _signInManager = signInManager;
         _tokenWriter = tokenWriter;
         _endpointProvider = endpointProvider;
-        _logger = signInManager.Logger;
     }
 
     public async Task<string?> RegisterAsync(ApplicationUser user, CancellationToken cancellationToken)
@@ -26,14 +24,12 @@ internal sealed class AuthService : IAuthService<ApplicationUser>
         var result = await _signInManager.UserManager.CreateAsync(user, user.Password);
         if (!result.Succeeded)
         {
-            _logger.LogWarning("Account cannot be created using the {@Username} username. Result errors: {@Errors}", user.UserName, result.Errors);
             return null;
         }
 
         var registerResult = await _signInManager.PasswordSignInAsync(user.UserName!, user.Password, false, false);
         if (!registerResult.Succeeded)
         {
-            _logger.LogWarning("Unexpected error occurred while signing in with password using {@Username} username, IsNotAllowed-{@IsNotAllowed}", user.UserName, registerResult.IsNotAllowed.ToString());
             return null;
         }
 
@@ -61,7 +57,6 @@ internal sealed class AuthService : IAuthService<ApplicationUser>
         var signInResult = await _signInManager.PasswordSignInAsync(username, password, false, false);
         if (!signInResult.Succeeded)
         {
-            _logger.LogWarning("Unexpected error occurred while signing in with password using {@Username} username, IsNotAllowed-{@IsNotAllowed}", username, signInResult.IsNotAllowed.ToString());
             return null;
         }
 

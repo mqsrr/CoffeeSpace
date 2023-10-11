@@ -2,32 +2,32 @@ using Asp.Versioning;
 using CoffeeSpace.IdentityApi.Application.Contracts.Requests.Login;
 using CoffeeSpace.IdentityApi.Application.Contracts.Requests.Register;
 using CoffeeSpace.IdentityApi.Application.Helpers;
-using CoffeeSpace.IdentityApi.Application.Messages.Commands;
-using CoffeeSpace.IdentityApi.Application.Messages.Queries;
-using Mediator;
+using CoffeeSpace.IdentityApi.Application.Mapping;
+using CoffeeSpace.IdentityApi.Application.Models;
+using CoffeeSpace.IdentityApi.Application.Services.Abstractions;
+using CoffeeSpace.IdentityApi.Filters;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoffeeSpace.IdentityApi.Controllers;
 
 [ApiController]
 [ApiVersion(1.0)]
+[ServiceFilter(typeof(ApiKeyAuthorizationFilter))]
 public sealed class AuthController : ControllerBase
 {
-    private readonly ISender _sender;
+    private readonly IAuthService<ApplicationUser> _authService;
 
-    public AuthController(ISender sender)
+    public AuthController(IAuthService<ApplicationUser> authService)
     {
-        _sender = sender;
+        _authService = authService;
     }
 
     [HttpPost(ApiEndpoints.Authentication.Register)]
     public async Task<IActionResult> RegisterAsync([FromBody] RegisterRequest request, CancellationToken cancellationToken)
     {
-        string? token = await _sender.Send(new RegisterUserCommand
-        {
-            Request = request
-        }, cancellationToken);
-
+        var applicationUser = request.ToUser();
+        string? token = await _authService.RegisterAsync(applicationUser, cancellationToken);
+        
         return token is not null
             ? Ok(token)
             : BadRequest();
@@ -36,11 +36,7 @@ public sealed class AuthController : ControllerBase
     [HttpPost(ApiEndpoints.Authentication.Login)]
     public async Task<IActionResult> LoginAsync([FromBody] LoginRequest request, CancellationToken cancellationToken)
     {
-        string? token = await _sender.Send(new LoginUserQuery
-        {
-            Request = request
-        }, cancellationToken);
-
+        string? token = await _authService.LoginAsync(request.Username, request.Password, cancellationToken);
         return token is not null
             ? Ok(token)
             : BadRequest("Login credentials are incorrect");

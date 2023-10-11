@@ -32,15 +32,6 @@ internal sealed class CachedProductRepository : IProductRepository
         }, cancellationToken);
     }
     
-    public Task<IEnumerable<Product>> GetAllProductsAsync(int page, int pageSize, CancellationToken cancellationToken)
-    {
-        return _cacheService.GetAllOrCreateAsync(CacheKeys.Products.GetPaged(page, pageSize), () =>
-        {
-            var products = _productRepository.GetAllProductsAsync(page, pageSize, cancellationToken);
-            return products;
-        }, cancellationToken);
-    }
-
     public Task<Product?> GetProductByIdAsync(string id, CancellationToken cancellationToken)
     {
         return _cacheService.GetOrCreateAsync(CacheKeys.Products.GetById(id), () =>

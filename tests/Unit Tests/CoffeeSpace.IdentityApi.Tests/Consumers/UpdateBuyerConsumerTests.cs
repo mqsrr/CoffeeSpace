@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoNSubstitute;
+using CoffeeSpace.Domain.Ordering.BuyerInfo;
 using CoffeeSpace.IdentityApi.Application.Messages.Consumers;
 using CoffeeSpace.IdentityApi.Application.Models;
 using CoffeeSpace.Messages.Buyers;
@@ -42,21 +43,24 @@ public sealed class UpdateBuyerConsumerTests : IAsyncLifetime
     {
         // Arrange
         var userToUpdate = _fixture.Create<ApplicationUser>();
-        var request = _fixture.Create<UpdateBuyer>();
         var consumerEndpoint = await _testHarness.GetConsumerEndpoint<UpdateBuyerConsumer>();
 
-        _userManager.FindByEmailAsync(request.Buyer.Email)
+        var buyer = _fixture.Create<Buyer>();
+        _userManager.FindByEmailAsync(buyer.Email)
             .Returns(userToUpdate);
         
         // Act
-        await consumerEndpoint.Send(request);
+        await consumerEndpoint.Send<UpdateBuyer>(new
+        {
+            Buyer = buyer
+        });
 
         // Assert
         bool consumedAny = await _consumerTestHarness.Consumed.Any<UpdateBuyer>();
         consumedAny.Should().BeTrue();
 
-        await _userManager.Received().SetEmailAsync(userToUpdate, request.Buyer.Email);
-        await _userManager.Received().SetUserNameAsync(userToUpdate, request.Buyer.Name);
+        await _userManager.Received().SetEmailAsync(userToUpdate, buyer.Email);
+        await _userManager.Received().SetUserNameAsync(userToUpdate, buyer.Name);
     }
 
     public async Task InitializeAsync()

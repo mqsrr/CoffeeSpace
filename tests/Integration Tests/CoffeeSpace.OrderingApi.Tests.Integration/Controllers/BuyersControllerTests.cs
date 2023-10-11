@@ -1,16 +1,12 @@
 ﻿using System.Net.Http.Json;
-using System.Text.Json;
 using AutoBogus;
-using Bogus.Extensions;
 using CoffeeSpace.Domain.Ordering.BuyerInfo;
 using CoffeeSpace.OrderingApi.Application.Contracts.Requests.Buyers;
 using CoffeeSpace.OrderingApi.Application.Contracts.Responses.Buyers;
 using CoffeeSpace.OrderingApi.Application.Helpers;
-using CoffeeSpace.OrderingApi.Tests.Integration.Fakers;
 using CoffeeSpace.OrderingApi.Tests.Integration.Fakers.Models;
 using CoffeeSpace.OrderingApi.Tests.Integration.Fakers.Requests;
 using CoffeeSpace.OrderingApi.Tests.Integration.Fixtures;
-using Newtonsoft.Json;
 using VerifyTests.EntityFramework;
 
 namespace CoffeeSpace.OrderingApi.Tests.Integration.Controllers;

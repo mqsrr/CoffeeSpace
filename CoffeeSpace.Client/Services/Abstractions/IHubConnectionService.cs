@@ -8,7 +8,9 @@ public interface IHubConnectionService
 
     Task StartConnectionAsync(string buyerId, CancellationToken cancellationToken);
 
-    void OrderCreated(Action<Order> onOrderCreation);
+    void OnOrderCreated(Action<Order> onOrderCreation);
 
-    void OrderStatusUpdated(Action<OrderStatus, string> onOrderStatusUpdated);
+    void OnOrderStatusUpdated(Action<OrderStatus, string> onOrderStatusUpdated);
+
+    void OnOrderPaymentPageInitialized(Action<string> onOrderPageInitialized);
 }

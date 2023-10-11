@@ -30,7 +30,7 @@ public sealed class OrderServiceTests
             .CreateMany();
 
         _sender = _fixture.Create<ISender>();
-        _orderService = new OrderService(_sender);
+        _orderService = new OrderService();
     }
 
     [Fact]

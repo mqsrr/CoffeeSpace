@@ -6,7 +6,6 @@ using CoffeeSpace.ProductApi.Application.Extensions;
 using CoffeeSpace.ProductApi.Application.Messages.Consumers;
 using CoffeeSpace.ProductApi.Application.Repositories;
 using CoffeeSpace.ProductApi.Application.Repositories.Abstractions;
-using CoffeeSpace.ProductApi.Application.Services.Abstractions;
 using CoffeeSpace.ProductApi.Application.Validators;
 using CoffeeSpace.ProductApi.Persistence;
 using CoffeeSpace.ProductApi.Persistence.Abstractions;
@@ -31,7 +30,6 @@ builder.Services.AddStackExchangeRedisCache(x => x.Configuration = builder.Confi
 builder.Services.AddApplicationDb<IProductDbContext, ProductDbContext>(builder.Configuration["ProductsDb:ConnectionString"]!);
 
 builder.Services.AddApplicationService<IProductRepository>();
-builder.Services.AddApplicationService<IProductService>();
 
 builder.Services.AddApplicationService(typeof(ICacheService<>));
 builder.Services.Decorate<IProductRepository, CachedProductRepository>();

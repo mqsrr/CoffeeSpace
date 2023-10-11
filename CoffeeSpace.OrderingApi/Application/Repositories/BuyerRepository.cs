@@ -1,5 +1,4 @@
-﻿using CoffeeSpace.Core.Extensions;
-using CoffeeSpace.Domain.Ordering.BuyerInfo;
+﻿using CoffeeSpace.Domain.Ordering.BuyerInfo;
 using CoffeeSpace.OrderingApi.Application.Repositories.Abstractions;
 using CoffeeSpace.OrderingApi.Persistence.Abstractions;
 using Microsoft.EntityFrameworkCore;
@@ -15,32 +14,28 @@ internal sealed class BuyerRepository : IBuyerRepository
         _orderingDbContext = orderingDbContext;
     }
 
-    public async Task<Buyer?> GetByIdAsync(string id, CancellationToken cancellationToken)
+    public Task<Buyer?> GetByIdAsync(string id, CancellationToken cancellationToken)
     {
-        var buyer = await _orderingDbContext.Buyers.FindAsync(new object?[] {id}, cancellationToken);
-        if (buyer is null)
-        {
-            return buyer;
-        }
-
-        await _orderingDbContext.Buyers.LoadDataAsync(buyer, b => b.Orders!);
-        await _orderingDbContext.Orders.LoadDataAsync(buyer.Orders!, o => o.OrderItems);
-        await _orderingDbContext.Orders.LoadDataAsync(buyer.Orders!, o => o.Address);
+        var buyer = _orderingDbContext.Buyers
+            .AsSplitQuery()
+            .Include(buyer => buyer.Orders)!
+            .ThenInclude(order => order.OrderItems)
+            .Include(buyer => buyer.Orders)!
+            .ThenInclude(order => order.Address)
+            .FirstOrDefaultAsync(buyer => buyer.Id == id, cancellationToken);
 
         return buyer;
     }
 
-    public async Task<Buyer?> GetByEmailAsync(string email, CancellationToken cancellationToken)
+    public Task<Buyer?> GetByEmailAsync(string email, CancellationToken cancellationToken)
     {
-        var buyer = await _orderingDbContext.Buyers.FirstOrDefaultAsync(c => c.Email == email, cancellationToken);
-        if (buyer is null)
-        {
-            return buyer;
-        }
-
-        await _orderingDbContext.Buyers.LoadDataAsync(buyer, b => b.Orders!);
-        await _orderingDbContext.Orders.LoadDataAsync(buyer.Orders!, o => o.OrderItems);
-        await _orderingDbContext.Orders.LoadDataAsync(buyer.Orders!, o => o.Address);
+        var buyer = _orderingDbContext.Buyers
+            .AsSplitQuery()
+            .Include(buyer => buyer.Orders)!
+            .ThenInclude(order => order.OrderItems)
+            .Include(buyer => buyer.Orders)!
+            .ThenInclude(order => order.Address)
+            .FirstOrDefaultAsync(buyer => buyer.Email == email, cancellationToken);
 
         return buyer;
     }
@@ -58,12 +53,13 @@ internal sealed class BuyerRepository : IBuyerRepository
         _orderingDbContext.Buyers.Update(buyer);
         int result = await _orderingDbContext.SaveChangesAsync(cancellationToken);
 
-        return result > 0 ? buyer : null;
+        return result > 0 
+            ? buyer 
+            : null;
     }
 
     public async Task<bool> DeleteByIdAsync(string id, CancellationToken cancellationToken)
     {
-        
         int result = await _orderingDbContext.Buyers
             .Where(buyer => buyer.Id == id)
             .ExecuteDeleteAsync(cancellationToken);

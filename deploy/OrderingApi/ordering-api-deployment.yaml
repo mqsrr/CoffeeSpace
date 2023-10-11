@@ -4,8 +4,11 @@ metadata:
   name: ordering-api
   labels:
     app: ordering-api
+    tags.datadoghq.com/env: Production
+    tags.datadoghq.com/service: ordering-api
+    tags.datadoghq.com/version: 1.0.0
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: ordering-api
@@ -14,6 +17,12 @@ spec:
       name: ordering-api
       labels:
         app: ordering-api
+        tags.datadoghq.com/env: Production
+        tags.datadoghq.com/service: ordering-api
+        tags.datadoghq.com/version: 1.0.0
+        admission.datadoghq.com/enabled: "true"
+      annotations:
+        admission.datadoghq.com/dotnet-lib.version: v2.38.0
     spec:
       containers:
         - name: ordering-api
@@ -22,26 +31,32 @@ spec:
           ports:
             - containerPort: 80
           env:
-          - name: "ASPNETCORE_ENVIRONMENT"
-            value: "Production"
-          - name: "AZURE_CLIENT_ID"
-            valueFrom:
-              secretKeyRef:
-                key: "azure-client-id"
-                name: "azure-key-vault"
-          - name: "AZURE_CLIENT_SECRET"
-            valueFrom:
-              secretKeyRef:
-                key: "azure-client-secret"
-                name: "azure-key-vault"
-          - name: "AZURE_TENANT_ID"
-            valueFrom:
-              secretKeyRef:
-                key: "azure-tenant-id"
-                name: "azure-key-vault"
-          - name: "AZURE_VAULT_NAME"
-            valueFrom:
-              secretKeyRef:
-                key: "azure-vault-name"
-                name: "azure-key-vault"
-      restartPolicy: Always  
+            - name: "ASPNETCORE_ENVIRONMENT"
+              value: "Production"
+            - name: "AZURE_CLIENT_ID"
+              valueFrom:
+                secretKeyRef:
+                  key: "azure-client-id"
+                  name: "azure-key-vault"
+            - name: "AZURE_CLIENT_SECRET"
+              valueFrom:
+                secretKeyRef:
+                  key: "azure-client-secret"
+                  name: "azure-key-vault"
+            - name: "AZURE_TENANT_ID"
+              valueFrom:
+                secretKeyRef:
+                  key: "azure-tenant-id"
+                  name: "azure-key-vault"
+            - name: "AZURE_VAULT_NAME"
+              valueFrom:
+                secretKeyRef:
+                  key: "azure-vault-name"
+                  name: "azure-key-vault"
+            - name: DD_LOGS_INJECTION
+              value: "true"
+            - name: DD_APPSEC_ENABLED
+              value: "true"
+            - name: DD_RUNTIME_METRICS_ENABLED
+              value: "true"            
+      restartPolicy: Always

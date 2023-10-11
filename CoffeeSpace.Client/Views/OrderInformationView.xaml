@@ -17,68 +17,52 @@
         <Frame Style="{OnPlatform 
                WinUI={StaticResource OrderInformationFrameWindows}}">
             <Grid ColumnDefinitions="20*,Auto,Auto,Auto,Auto,20"
-                  RowDefinitions="20*,Auto,Auto,Auto,Auto,Auto,Auto,20*">
+                  RowDefinitions="20*,Auto,Auto,Auto,Auto,Auto,20*">
 
                 <Entry Grid.Column="0" Grid.Row="1"
-                       Placeholder="Card Number"
-                       Text="{Binding PaymentInfo.CardNumber, Mode=TwoWay}"
-                       Style="{OnPlatform 
-                       WinUI={StaticResource OrderInformationWhiteSmokeEntry}}"/>
-
-                <Entry Grid.Column="0" Grid.Row="2"
-                       Placeholder="CVV" 
-                       Text="{Binding PaymentInfo.SecurityNumber, Mode=TwoWay}"
-                       Style="{OnPlatform 
-                       WinUI={StaticResource OrderInformationWhiteSmokeEntry}}"/>
-
-                <Entry Grid.Column="0" Grid.Row="3"
-                       Placeholder="Expire month"
-                       Text="{Binding PaymentInfo.ExpirationMonth, Mode=TwoWay}"
-                       Style="{OnPlatform 
-                       WinUI={StaticResource OrderInformationWhiteSmokeEntry}}"/>
-
-                <Entry Grid.Column="0" Grid.Row="4"
-                       Placeholder="Expire Year"
-                       Text="{Binding PaymentInfo.ExpirationYear, Mode=TwoWay}"
-                       Style="{OnPlatform 
-                       WinUI={StaticResource OrderInformationWhiteSmokeEntry}}"/>
-
-                <Picker Grid.Column="1" Grid.Row="3" 
-                        SelectedIndex="{Binding PaymentInfo.CardType, Mode=TwoWay}"
-                        Style="{OnPlatform WinUI={StaticResource OrderInformationWhiteSmokePicker}}">
-                    <Picker.ItemsSource>
-                        <x:Array Type="{x:Type x:String}">
-                            <x:String>Visa</x:String>
-                            <x:String>Mastercard</x:String>
-                            <x:String>American</x:String>
-                        </x:Array>
-                    </Picker.ItemsSource>
-                </Picker>
-
-                <Entry Grid.Column="0" Grid.Row="5"
                    Placeholder="Street"
                    Text="{Binding Address.Street, Mode=TwoWay}"
                    Style="{OnPlatform 
                    WinUI={StaticResource OrderInformationWhiteSmokeEntry}}"/>
 
-                <Entry Grid.Column="1" Grid.Row="5"
+                <Entry Grid.Column="0" Grid.Row="2"
                    Placeholder="Country"
                    Text="{Binding Address.Country, Mode=TwoWay}"
                    Style="{OnPlatform 
                    WinUI={StaticResource OrderInformationWhiteSmokeEntry}}"/>
 
-                <Entry Grid.Column="1" Grid.Row="6"
+                <Entry Grid.Column="0" Grid.Row="3"
                    Placeholder="City"
                    Text="{Binding Address.City, Mode=TwoWay}"
                    Style="{OnPlatform 
                    WinUI={StaticResource OrderInformationWhiteSmokeEntry}}"/>
 
-                <Button Grid.Column="0" Grid.Row="6"
-                    Text="Place Order"
+                <HorizontalStackLayout Grid.Column="0" Grid.Row="4"
+                                       HorizontalOptions="Center">
+                    <Button 
+                    Text="Place Order" Grid.ColumnSpan="2"
                     Command="{Binding CreateOrderCommand}"
                     Style="{OnPlatform 
                     WinUI={StaticResource OrderInformationWhiteSmokeButton}}"/>
+
+                    <Button 
+                    Text="Procced To Payment" Grid.ColumnSpan="2"
+                    Command="{Binding CreateOrderCommand}"
+                    Style="{OnPlatform 
+                    WinUI={StaticResource OrderInformationWhiteSmokeButton}}"/>
+                </HorizontalStackLayout>
+
+
             </Grid>
+        </Frame>
+        <Frame BackgroundColor="White" HeightRequest="600"
+               WidthRequest="800">
+            <WebView Grid.Row="5" Grid.Column="0">
+
+                <WebView.Source>
+                    <UrlWebViewSource Url="https://www.youtube.com/watch?v=s47u8QtlDMM"/>
+                </WebView.Source>                
+            </WebView>
         </Frame>
     </StackLayout>
 </ContentPage>
