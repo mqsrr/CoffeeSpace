@@ -11,6 +11,12 @@
         Title="Login"
         ContentTemplate="{DataTemplate views:LoginView}"
         Route="LoginPage" 
+        FlyoutItemIsVisible="False"/>   
+    
+    <ShellContent
+        Title="Register"
+        ContentTemplate="{DataTemplate views:RegisterView}"
+        Route="RegisterPage" 
         FlyoutItemIsVisible="False"/>
 
     <ShellContent

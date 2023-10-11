@@ -1,8 +1,6 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoNSubstitute;
 using CoffeeSpace.Domain.Ordering.BuyerInfo;
-using CoffeeSpace.OrderingApi.Application.Messaging.Mediator.Commands.Buyers;
-using CoffeeSpace.OrderingApi.Application.Messaging.Mediator.Queries.Buyers;
 using CoffeeSpace.OrderingApi.Application.Services;
 using FluentAssertions;
 using Mediator;
@@ -29,7 +27,7 @@ public sealed class BuyerServiceTests
             .CreateMany();
 
         _sender = _fixture.Create<ISender>();
-        _buyerService = new BuyerService(_sender);
+        _buyerService = new BuyerService();
     }
     
     [Fact]

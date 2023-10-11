@@ -8,9 +8,7 @@ public interface IProductRepository
     Task<int> GetCountAsync(CancellationToken cancellationToken);
 
     Task<IEnumerable<Product>> GetAllProductsAsync(CancellationToken cancellationToken);
-    
-    Task<IEnumerable<Product>> GetAllProductsAsync(int page, int pageSize, CancellationToken cancellationToken);
-    
+
     Task<Product?> GetProductByIdAsync(string id, CancellationToken cancellationToken);
     
     Task<bool> CreateProductAsync(Product product, CancellationToken cancellationToken);

@@ -9,11 +9,20 @@ spec:
   selector:
     matchLabels:
       app: apigateway
+      tags.datadoghq.com/env: Production
+      tags.datadoghq.com/service: apigateway
+      tags.datadoghq.com/version: 1.0.0
   template:
     metadata:
       name: apigateway
       labels:
         app: apigateway
+        tags.datadoghq.com/env: Production
+        tags.datadoghq.com/service: apigateway
+        tags.datadoghq.com/version: 1.0.0
+        admission.datadoghq.com/enabled: "true"
+      annotations:
+        admission.datadoghq.com/dotnet-lib.version: v2.38.0
     spec:
       containers:
         - name: apigateway
@@ -44,6 +53,12 @@ spec:
                 secretKeyRef:
                   key: "azure-vault-name"
                   name: "azure-key-vault"
+            - name: DD_LOGS_INJECTION
+              value: "true"
+            - name: DD_APPSEC_ENABLED
+              value: "true"
+            - name: DD_RUNTIME_METRICS_ENABLED
+              value: "true"
       restartPolicy: Always
 
       

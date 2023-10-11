@@ -93,9 +93,12 @@ public sealed class OrderingApiFactory : WebApplicationFactory<BuyersController>
         builder.UseSetting("Jwt:Key", "testing-coffeespac!!23");
         builder.UseSetting("Jwt:Expire", "1");
 
+        builder.UseSetting("Azure:SignalR:ConnectionString", "Endpoint=https://testing.service.signalr.net;AccessKey=testing-access-key;Version=1.0;");
+
         Environment.SetEnvironmentVariable(Environments.Staging, "Testing");
         builder.ConfigureTestServices(services =>
         {
+            services.AddSignalR();
             services.AddQuartz(config => config.UseMicrosoftDependencyInjectionJobFactory());
             services.AddMassTransitTestHarness(config =>
             {

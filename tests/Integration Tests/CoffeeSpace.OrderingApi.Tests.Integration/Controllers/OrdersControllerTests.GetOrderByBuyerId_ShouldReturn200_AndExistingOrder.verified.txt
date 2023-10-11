@@ -34,7 +34,7 @@
         @__p_0 (String?): Guid_1
       },
       Text:
-SELECT o."Id", o."AddressId", o."BuyerId", o."PaymentInfoId", o."Status"
+SELECT o."Id", o."AddressId", o."BuyerId", o."Status"
 FROM "Orders" AS o
 WHERE o."Id" = @__p_0
 LIMIT 1

@@ -4,8 +4,11 @@ metadata:
   name: identity-api
   labels:
     app: identity-api
+    tags.datadoghq.com/env: Production
+    tags.datadoghq.com/service: identity-api
+    tags.datadoghq.com/version: 1.0.0
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: identity-api
@@ -14,6 +17,12 @@ spec:
       name: identity-api
       labels:
         app: identity-api
+        tags.datadoghq.com/env: Production
+        tags.datadoghq.com/service: identity-api
+        tags.datadoghq.com/version: 1.0.0
+        admission.datadoghq.com/enabled: "true"
+      annotations:
+        admission.datadoghq.com/dotnet-lib.version: v2.38.0
     spec:
       containers:
         - name: identity-api
@@ -42,4 +51,10 @@ spec:
               secretKeyRef:
                 key: "azure-vault-name"
                 name: "azure-key-vault"
+          - name: DD_LOGS_INJECTION
+            value: "true"
+          - name: DD_APPSEC_ENABLED
+            value: "true"
+          - name: DD_RUNTIME_METRICS_ENABLED
+            value: "true"
       restartPolicy: Always

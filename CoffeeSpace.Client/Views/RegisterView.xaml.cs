@@ -2,6 +2,7 @@ using CoffeeSpace.Client._ViewModels;
 using System.IdentityModel.Tokens.Jwt;
 using CoffeeSpace.Client.Messages.Commands;
 using Mediator;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CoffeeSpace.Client.Views;
 
@@ -41,6 +42,11 @@ public partial class RegisterView
 
     private static bool IsJwtTokenExpired(string token)
     {
+        if (token.IsNullOrEmpty())
+        {
+            return true;
+        }
+
         var jwtToken = new JwtSecurityTokenHandler().ReadToken(token);
         return jwtToken is not null && jwtToken.ValidTo < DateTime.UtcNow;
     }

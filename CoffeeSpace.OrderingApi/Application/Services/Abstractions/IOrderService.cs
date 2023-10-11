@@ -10,8 +10,6 @@ public interface IOrderService
     
     Task<bool> CreateAsync(Order order, CancellationToken cancellationToken);
     
-    Task<Order?> UpdateAsync(Order order, CancellationToken cancellationToken);
-    
     Task<bool> DeleteByIdAsync(Guid id, Guid buyerId, CancellationToken cancellationToken);
 
 }

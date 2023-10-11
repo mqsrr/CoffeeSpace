@@ -6,7 +6,9 @@ using CoffeeSpace.IdentityApi.Application.Messages.Consumers;
 using CoffeeSpace.IdentityApi.Application.Models;
 using CoffeeSpace.IdentityApi.Application.Services.Abstractions;
 using CoffeeSpace.IdentityApi.Application.Validators;
+using CoffeeSpace.IdentityApi.Filters;
 using CoffeeSpace.IdentityApi.Persistence;
+using CoffeeSpace.IdentityApi.Settings;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MassTransit;
@@ -19,9 +21,7 @@ builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration));
 
 builder.Configuration.AddAzureKeyVault();
-
 builder.Services.AddControllers();
-builder.Services.AddMediator();
 
 builder.Services.AddApiVersioning(new MediaTypeApiVersionReader("api-version"));
 builder.Services.AddApplicationDb<ApplicationUsersDbContext>(builder.Configuration["IdentityDb:ConnectionString"]!);
@@ -29,12 +29,18 @@ builder.Services.AddApplicationDb<ApplicationUsersDbContext>(builder.Configurati
 builder.Services.AddApplicationService<IAuthService<ApplicationUser>>();
 builder.Services.AddApplicationService<ITokenWriter<ApplicationUser>>();
 
+builder.Services.AddApplicationServiceAsSelf<ApiKeyAuthorizationFilter>();
+
 builder.Services.AddOptions<AwsMessagingSettings>()
     .Bind(builder.Configuration.GetRequiredSection(AwsMessagingSettings.SectionName))
     .ValidateOnStart();
 
 builder.Services.AddOptions<JwtSettings>()
     .Bind(builder.Configuration.GetRequiredSection(JwtSettings.SectionName))
+    .ValidateOnStart();
+
+builder.Services.AddOptions<ApiKeySettings>()
+    .Bind(builder.Configuration.GetRequiredSection(ApiKeySettings.SectionName))
     .ValidateOnStart();
 
 builder.Services.AddFluentValidationAutoValidation()

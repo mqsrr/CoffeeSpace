@@ -23,27 +23,9 @@ internal sealed class ProductRepository : IProductRepository
     public async Task<IEnumerable<Product>> GetAllProductsAsync(CancellationToken cancellationToken)
     {
         bool isNotEmpty = await _productDbContext.Products.AnyAsync(cancellationToken);
-        
         return !isNotEmpty
             ? Enumerable.Empty<Product>()
             : _productDbContext.Products;
-    }
-    
-    public async Task<IEnumerable<Product>> GetAllProductsAsync(int page, int pageSize, CancellationToken cancellationToken)
-    {
-        bool isNotEmpty = await _productDbContext.Products.AnyAsync(cancellationToken);
-        if (!isNotEmpty)
-        {
-            return Enumerable.Empty<Product>();
-        }
-
-        var products = _productDbContext.Products
-            .OrderBy(product => product.Title)
-            .Skip((page- 1) * pageSize)
-            .Take(pageSize)
-            .AsEnumerable();
-
-        return products;
     }
 
     public async Task<Product?> GetProductByIdAsync(string id, CancellationToken cancellationToken)

@@ -40,7 +40,7 @@ LIMIT 1
         @__p_0 (String?): Guid_1
       },
       Text:
-SELECT o."Id", o."AddressId", o."BuyerId", o."PaymentInfoId", o."Status"
+SELECT o."Id", o."AddressId", o."BuyerId", o."Status"
 FROM "Orders" AS o
 WHERE o."BuyerId" = @__p_0
     },

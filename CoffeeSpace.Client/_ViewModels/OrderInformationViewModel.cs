@@ -4,6 +4,7 @@ using CoffeeSpace.Client.Contracts.Ordering;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Mediator;
+using CoffeeSpace.Client.Services.Abstractions;
 
 namespace CoffeeSpace.Client._ViewModels;
 
@@ -18,14 +19,21 @@ public sealed partial class OrderInformationViewModel : ObservableObject
     private CreateAddressRequest _address;
 
     [ObservableProperty]
-    private CreatePaymentInfoRequest _paymentInfo;
+    private bool _paymentPageInitialized;
 
-    public OrderInformationViewModel(ISender sender)
+    public string ApprovalLink { get; private set; }
+
+    public OrderInformationViewModel(ISender sender, IHubConnectionService hubConnectionService)
     {
         _sender = sender;
 
         Address = new CreateAddressRequest();
-        PaymentInfo = new CreatePaymentInfoRequest();
+
+        hubConnectionService.OnOrderPaymentPageInitialized((paymentApprovalLink) =>
+        {
+            _paymentPageInitialized = true;
+            ApprovalLink = paymentApprovalLink;
+        });
     }
 
     [RelayCommand]
@@ -38,7 +46,6 @@ public sealed partial class OrderInformationViewModel : ObservableObject
             {
                 OrderItems = OrderItems,
                 Address = Address,
-                PaymentInfo = PaymentInfo,
                 Status = (int)OrderStatus.Submitted
             },
             BuyerId = Guid.Parse(buyerId)
@@ -48,6 +55,12 @@ public sealed partial class OrderInformationViewModel : ObservableObject
         {
             await Shell.Current.DisplayAlert("Order cannot be created", "There was a problem in order creation process", "Ok");
         }
+    }
+
+    [RelayCommand]
+    private async Task SendToPaymentPageAsync(CancellationToken cancellationToken)
+    {
+        
     }
 
 }

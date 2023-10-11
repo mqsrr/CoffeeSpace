@@ -27,12 +27,12 @@ internal sealed class HubConnectionService : IHubConnectionService, IAsyncDispos
         await _hubConnection.InvokeAsync("JoinGroup", buyerId, cancellationToken);
     }
 
-    public void OrderCreated(Action<Order> onOrderCreation)
+    public void OnOrderCreated(Action<Order> onOrderCreation)
     {
         _hubConnection.On("OrderCreated", onOrderCreation);
     }
 
-    public void OrderStatusUpdated(Action<OrderStatus, string> onOrderStatusUpdated)
+    public void OnOrderStatusUpdated(Action<OrderStatus, string> onOrderStatusUpdated)
     {
         _hubConnection.On("OrderStatusUpdated", onOrderStatusUpdated);
     }
@@ -43,5 +43,8 @@ internal sealed class HubConnectionService : IHubConnectionService, IAsyncDispos
         await _hubConnection.StopAsync();
     }
 
-
+    public void OnOrderPaymentPageInitialized(Action<string> onOrderPageInitialized)
+    {
+        _hubConnection.On("OrderPaymentPageInitialized", onOrderPageInitialized);
+    }
 }

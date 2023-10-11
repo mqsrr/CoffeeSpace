@@ -8,7 +8,5 @@ public sealed class CreateOrderRequest
     
     public required CreateAddressRequest Address { get; init; }
     
-    public required CreatePaymentInfoRequest PaymentInfo { get; init; }
-    
     public required IEnumerable<OrderItem> OrderItems { get; init; }
 }
