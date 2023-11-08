@@ -2,7 +2,7 @@
 using AutoFixture.AutoNSubstitute;
 using CoffeeSpace.Domain.Ordering.BuyerInfo;
 using CoffeeSpace.Domain.Ordering.Orders;
-using CoffeeSpace.OrderingApi.Persistence.Abstractions;
+using CoffeeSpace.OrderingApi.Persistence;
 using Microsoft.EntityFrameworkCore;
 using MockQueryable.NSubstitute;
 using NSubstitute;
@@ -11,7 +11,7 @@ namespace CoffeeSpace.OrderingApi.Tests.Fixtures;
 
 public sealed class OrderingDbContextFixture
 {
-    public required IOrderingDbContext DbContext { get; init; }
+    public required OrderingDbContext DbContext { get; init; }
     public required DbSet<Order> Orders { get; init; }
     public required DbSet<Buyer> Buyers { get; init; }
 
@@ -23,7 +23,7 @@ public sealed class OrderingDbContextFixture
         Orders = fixture.CreateMany<Order>().AsQueryable().BuildMockDbSet();
         Buyers = fixture.CreateMany<Buyer>().AsQueryable().BuildMockDbSet();
 
-        DbContext = fixture.Create<IOrderingDbContext>();
+        DbContext = fixture.Create<OrderingDbContext>();
         DbContext.Orders.Returns(Orders);
         DbContext.Buyers.Returns(Buyers);
     }

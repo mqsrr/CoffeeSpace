@@ -27,6 +27,7 @@ internal sealed class OrderPaymentValidationConsumer : IConsumer<RequestOrderPay
 
         await _publishEndpoint.Publish<PaymentPageInitialized>(new
         {
+            OrderId = context.Message.Order.Id,
             context.Message.Order.BuyerId,
             PaymentApprovalLink = createdOrder.Links[1].Href
         });

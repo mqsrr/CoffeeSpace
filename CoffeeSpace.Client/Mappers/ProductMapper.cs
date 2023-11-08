@@ -7,5 +7,13 @@ namespace CoffeeSpace.Client.Mappers;
 [Mapper]
 public static partial class ProductMapper
 {
-    public static partial OrderItem ToOrderItem(this Product product);
+   private static partial OrderItem MapToOrderItem(this Product product);
+
+    public static OrderItem ToOrderItem(this Product product)
+    {
+        var orderItem = product.MapToOrderItem();
+        orderItem!.Quantity = product.Quantity;
+
+        return orderItem;
+    }
 }

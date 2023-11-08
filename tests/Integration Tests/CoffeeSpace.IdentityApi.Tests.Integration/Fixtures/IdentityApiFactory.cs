@@ -1,11 +1,6 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Runtime.CompilerServices;
-using System.Security.Claims;
-using System.Text;
-using CoffeeSpace.Core.Settings;
+﻿using System.Runtime.CompilerServices;
 using CoffeeSpace.IdentityApi.Application.Messages.Consumers;
 using CoffeeSpace.IdentityApi.Controllers;
-using CoffeeSpace.IdentityApi.Persistence;
 using DotNet.Testcontainers.Builders;
 using MassTransit;
 using Microsoft.AspNetCore.Hosting;
@@ -15,7 +10,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
 using Testcontainers.PostgreSql;
 using VerifyTests.EntityFramework;
 

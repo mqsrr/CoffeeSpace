@@ -1,15 +1,15 @@
 ﻿using CoffeeSpace.Domain.Ordering.Orders;
 using CoffeeSpace.OrderingApi.Application.Repositories.Abstractions;
-using CoffeeSpace.OrderingApi.Persistence.Abstractions;
+using CoffeeSpace.OrderingApi.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeSpace.OrderingApi.Application.Repositories;
 
 internal sealed class OrderRepository : IOrderRepository
 {
-    private readonly IOrderingDbContext _orderingDbContext;
+    private readonly OrderingDbContext _orderingDbContext;
 
-    public OrderRepository(IOrderingDbContext orderingDbContext)
+    public OrderRepository(OrderingDbContext orderingDbContext)
     {
         _orderingDbContext = orderingDbContext;
     }
@@ -22,11 +22,11 @@ internal sealed class OrderRepository : IOrderRepository
             return Enumerable.Empty<Order>();
         }
 
-        var orders = _orderingDbContext.Orders
+        var orders = await _orderingDbContext.Orders
             .Where(order => order.BuyerId == buyerId)
             .Include(order => order.OrderItems)
             .Include(order => order.Address)
-            .AsEnumerable();
+            .ToListAsync(cancellationToken);
         
         return orders;
     }

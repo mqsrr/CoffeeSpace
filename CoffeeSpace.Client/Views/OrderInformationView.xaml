@@ -44,25 +44,8 @@
                     Command="{Binding CreateOrderCommand}"
                     Style="{OnPlatform 
                     WinUI={StaticResource OrderInformationWhiteSmokeButton}}"/>
-
-                    <Button 
-                    Text="Procced To Payment" Grid.ColumnSpan="2"
-                    Command="{Binding CreateOrderCommand}"
-                    Style="{OnPlatform 
-                    WinUI={StaticResource OrderInformationWhiteSmokeButton}}"/>
                 </HorizontalStackLayout>
-
-
             </Grid>
-        </Frame>
-        <Frame BackgroundColor="White" HeightRequest="600"
-               WidthRequest="800">
-            <WebView Grid.Row="5" Grid.Column="0">
-
-                <WebView.Source>
-                    <UrlWebViewSource Url="https://www.youtube.com/watch?v=s47u8QtlDMM"/>
-                </WebView.Source>                
-            </WebView>
         </Frame>
     </StackLayout>
 </ContentPage>

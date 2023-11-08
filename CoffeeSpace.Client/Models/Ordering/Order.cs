@@ -1,10 +1,19 @@
-﻿namespace CoffeeSpace.Client.Models.Ordering;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-public sealed class Order
+namespace CoffeeSpace.Client.Models.Ordering;
+
+public sealed partial class Order : ObservableObject
 {
-    public required string Id { get; init; }
+    [ObservableProperty]
+    private OrderStatus _status;
     
-    public required OrderStatus Status { get; set; }
+    [ObservableProperty]
+    private TimeSpan _timeToProceedToPayment;
+
+    [ObservableProperty]
+    private string _paymentApprovalLink;
+    
+    public required string Id { get; init; }
 
     public required Address Address { get; init; }
 

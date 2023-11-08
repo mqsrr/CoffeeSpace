@@ -12,5 +12,5 @@ public interface IHubConnectionService
 
     void OnOrderStatusUpdated(Action<OrderStatus, string> onOrderStatusUpdated);
 
-    void OnOrderPaymentPageInitialized(Action<string> onOrderPageInitialized);
+    void OnOrderPaymentPageInitialized(Action<string, string> onOrderPageInitialized);
 }

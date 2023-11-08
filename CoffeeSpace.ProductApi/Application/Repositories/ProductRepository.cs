@@ -1,15 +1,15 @@
 using CoffeeSpace.Domain.Products;
 using CoffeeSpace.ProductApi.Application.Repositories.Abstractions;
-using CoffeeSpace.ProductApi.Persistence.Abstractions;
+using CoffeeSpace.ProductApi.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeSpace.ProductApi.Application.Repositories;
 
 internal sealed class ProductRepository : IProductRepository
 {
-    private readonly IProductDbContext _productDbContext;
+    private readonly ProductDbContext _productDbContext;
 
-    public ProductRepository(IProductDbContext productDbContext)
+    public ProductRepository(ProductDbContext productDbContext)
     {
         _productDbContext = productDbContext;
     }
@@ -22,10 +22,8 @@ internal sealed class ProductRepository : IProductRepository
 
     public async Task<IEnumerable<Product>> GetAllProductsAsync(CancellationToken cancellationToken)
     {
-        bool isNotEmpty = await _productDbContext.Products.AnyAsync(cancellationToken);
-        return !isNotEmpty
-            ? Enumerable.Empty<Product>()
-            : _productDbContext.Products;
+        var products = await _productDbContext.Products.ToListAsync(cancellationToken);
+        return products;
     }
 
     public async Task<Product?> GetProductByIdAsync(string id, CancellationToken cancellationToken)

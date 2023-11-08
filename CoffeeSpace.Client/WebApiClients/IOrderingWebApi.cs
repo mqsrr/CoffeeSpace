@@ -15,7 +15,7 @@ public interface IOrderingWebApi
     Task<Order> GetOrderByBuyerId(Guid buyerId, Guid id, CancellationToken cancellationToken);
     
     [Post(ApiEndpoints.Orders.Create)]
-    Task<HttpResponseMessage> CreateOrder(Guid buyerId, [Body]CreateOrderRequest order, CancellationToken cancellationToken);
+    Task<Order> CreateOrder(Guid buyerId, [Body]CreateOrderRequest order, CancellationToken cancellationToken);
     
     [Delete(ApiEndpoints.Orders.Delete)]
     Task<HttpResponseMessage> DeleteOrder(Guid buyerId, Guid id, CancellationToken cancellationToken);

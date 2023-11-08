@@ -1,11 +1,12 @@
 using CoffeeSpace.Client._ViewModels;
+using CoffeeSpace.Client.Messages.Commands;
 using CoffeeSpace.Client.Messages.Queries;
 using CommunityToolkit.Maui.Core.Extensions;
 using Mediator;
 
 namespace CoffeeSpace.Client.Views;
 
-public partial class MainView
+public partial class MainView : ContentPage
 {
     private readonly MainViewModel _mainViewModel;
     private readonly ISender _sender;
@@ -29,5 +30,7 @@ public partial class MainView
 
         var products = await _sender.Send(new GetAllProductsQuery());
         _mainViewModel.Products = products.ToObservableCollection();
+
+        await _sender.Send(new StartHubConnectionCommand());
     }
 }

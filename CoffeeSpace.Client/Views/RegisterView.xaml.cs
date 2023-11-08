@@ -6,7 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace CoffeeSpace.Client.Views;
 
-public partial class RegisterView
+public partial class RegisterView : ContentPage
 {
     private readonly ISender _sender;
 

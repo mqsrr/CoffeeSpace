@@ -16,6 +16,7 @@
         <PackageReference Include="Ocelot.Provider.Kubernetes" Version="19.0.3" />
         <PackageReference Include="Ocelot.Provider.Polly" Version="19.0.3" />
         <PackageReference Include="Serilog.AspNetCore" Version="7.0.0" />
+        <PackageReference Include="Serilog.Sinks.Datadog.Logs" Version="0.5.2" />
     </ItemGroup>
 
     <ItemGroup>

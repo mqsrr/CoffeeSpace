@@ -1,9 +1,12 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoNSubstitute;
 using CoffeeSpace.Domain.Ordering.BuyerInfo;
+using CoffeeSpace.Messages.Buyers;
+using CoffeeSpace.OrderingApi.Application.Repositories.Abstractions;
 using CoffeeSpace.OrderingApi.Application.Services;
 using FluentAssertions;
-using Mediator;
+using MassTransit;
+using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
 using Xunit;
@@ -12,7 +15,8 @@ namespace CoffeeSpace.OrderingApi.Tests.Services;
 
 public sealed class BuyerServiceTests
 {
-    private readonly ISender _sender;
+    private readonly ISendEndpointProvider _sendEndpointProvider;
+    private readonly IBuyerRepository _buyerRepository;
     private readonly Fixture _fixture;
     private readonly IEnumerable<Buyer> _buyers;
     
@@ -26,8 +30,10 @@ public sealed class BuyerServiceTests
             .With(buyer => buyer.Id, Guid.NewGuid().ToString())
             .CreateMany();
 
-        _sender = _fixture.Create<ISender>();
-        _buyerService = new BuyerService();
+        _sendEndpointProvider = _fixture.Create<ISendEndpointProvider>();
+        _buyerRepository = _fixture.Create<IBuyerRepository>();
+
+        _buyerService = new BuyerService(_buyerRepository, _sendEndpointProvider);
     }
     
     [Fact]
@@ -35,9 +41,9 @@ public sealed class BuyerServiceTests
     {
         // Arrange
         var expectedBuyer = _buyers.First();
-        _sender.Send(Arg.Any<GetBuyerByEmailQuery>(), Arg.Any<CancellationToken>())
+        _buyerRepository.GetByEmailAsync(expectedBuyer.Email, Arg.Any<CancellationToken>())
             .Returns(expectedBuyer);
-
+        
         // Act
         var result = await _buyerService.GetByEmailAsync(expectedBuyer.Email, CancellationToken.None);
 
@@ -50,7 +56,7 @@ public sealed class BuyerServiceTests
     {
         // Arrange
         var expectedBuyer = _buyers.First();
-        _sender.Send(Arg.Any<GetBuyerByEmailQuery>(), Arg.Any<CancellationToken>())
+        _buyerRepository.GetByEmailAsync(expectedBuyer.Email, CancellationToken.None)
             .ReturnsNull();
 
         // Act
@@ -65,7 +71,7 @@ public sealed class BuyerServiceTests
     {
         // Arrange
         var expectedBuyer = _buyers.First();
-        _sender.Send(Arg.Any<GetBuyerByIdQuery>(), Arg.Any<CancellationToken>())
+        _buyerRepository.GetByIdAsync(expectedBuyer.Id, CancellationToken.None)
             .Returns(expectedBuyer);
 
         // Act
@@ -80,7 +86,7 @@ public sealed class BuyerServiceTests
     {
         // Arrange
         var expectedBuyer = _buyers.First();
-        _sender.Send(Arg.Any<GetBuyerByIdQuery>(), Arg.Any<CancellationToken>())
+        _buyerRepository.GetByIdAsync(expectedBuyer.Id, Arg.Any<CancellationToken>())
             .ReturnsNull();
 
         // Act
@@ -95,7 +101,7 @@ public sealed class BuyerServiceTests
     {
         // Arrange
         var buyerToCreate = _fixture.Create<Buyer>();
-        _sender.Send(Arg.Any<CreateBuyerCommand>(), Arg.Any<CancellationToken>())
+        _buyerRepository.CreateAsync(buyerToCreate, Arg.Any<CancellationToken>())
             .Returns(true);
 
         // Act
@@ -110,7 +116,7 @@ public sealed class BuyerServiceTests
     {
         // Arrange
         var buyerToCreate = _fixture.Create<Buyer>();
-        _sender.Send(Arg.Any<CreateBuyerCommand>(), Arg.Any<CancellationToken>())
+        _buyerRepository.CreateAsync(buyerToCreate, Arg.Any<CancellationToken>())
             .Returns(false);
 
         // Act
@@ -129,9 +135,9 @@ public sealed class BuyerServiceTests
             .With(buyer => buyer.Id, buyerToUpdate.Id)
             .Create();
 
-        _sender.Send(Arg.Any<UpdateBuyerCommand>(), Arg.Any<CancellationToken>())
+        _buyerRepository.UpdateAsync(updatedBuyer, CancellationToken.None)
             .Returns(updatedBuyer);
-
+        
         // Act
         var result = await _buyerService.UpdateAsync(updatedBuyer, CancellationToken.None);
  
@@ -144,7 +150,7 @@ public sealed class BuyerServiceTests
     {
         // Arrange
         var updatedBuyer = _buyers.First();
-        _sender.Send(Arg.Any<UpdateBuyerCommand>(), Arg.Any<CancellationToken>())
+        _buyerRepository.UpdateAsync(updatedBuyer, Arg.Any<CancellationToken>())
             .ReturnsNull();
 
         // Act
@@ -159,8 +165,14 @@ public sealed class BuyerServiceTests
     {
         // Arrange
         var buyerToDelete = _buyers.First();
-        _sender.Send(Arg.Any<DeleteBuyerByIdCommand>(), Arg.Any<CancellationToken>())
+        
+        _buyerRepository.DeleteByIdAsync(buyerToDelete.Id, CancellationToken.None)
             .Returns(true);
+
+        
+        _sendEndpointProvider.Send(Arg.Any<object>(), Arg.Any<CancellationToken>())
+            .Returns(Task.CompletedTask);
+        
 
         // Act
         bool result = await _buyerService.DeleteByIdAsync(Guid.Parse(buyerToDelete.Id), CancellationToken.None);
@@ -174,9 +186,8 @@ public sealed class BuyerServiceTests
     {
         // Arrange
         var buyerToDelete = _buyers.First();
-        _sender.Send(Arg.Any<DeleteBuyerByIdCommand>(), Arg.Any<CancellationToken>())
+        _buyerRepository.DeleteByIdAsync(buyerToDelete.Id, Arg.Any<CancellationToken>())
             .Returns(false);
-
         // Act
         bool result = await _buyerService.DeleteByIdAsync(Guid.Parse(buyerToDelete.Id), CancellationToken.None);
  

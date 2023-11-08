@@ -30,14 +30,17 @@ public static class MauiProgram
         builder.Services.AddApplicationService<IAuthService>();
         builder.Services.AddApplicationService<IHubConnectionService>(ServiceLifetime.Singleton);
 
+        builder.Services.AddApiKeyOptions(builder.Configuration);
         builder.Services.AddMediator();
-        builder.Services.AddTransient<AuthHeaderHandler>();
+        
+        builder.Services.AddTransient<BearerAuthorizationMessageHandler>();
+        builder.Services.AddTransient<ApiKeyAuthorizationMessageHandler>();
 
         builder.Services
-            .AddWebApiClient<IIdentityWebApi>(requiresAuthorization: false)
-            .AddWebApiClient<IBuyersWebApi>(requiresAuthorization: true)
-            .AddWebApiClient<IProductsWebApi>(requiresAuthorization: true)
-            .AddWebApiClient<IOrderingWebApi>(requiresAuthorization: true);
+            .AddWebApiClient<IIdentityWebApi, ApiKeyAuthorizationMessageHandler>()
+            .AddWebApiClient<IBuyersWebApi>()
+            .AddWebApiClient<IProductsWebApi>()
+            .AddWebApiClient<IOrderingWebApi>();
         
 #if DEBUG
         builder.Logging.AddDebug();

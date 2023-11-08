@@ -9,5 +9,5 @@ public interface IOrderingHub
 
     Task OrderStatusUpdated(OrderStatus newOrderStatus, string orderId);
     
-    Task OrderPaymentPageInitialized(string paymentApprovalLink);
+    Task OrderPaymentPageInitialized(string orderId, string paymentApprovalLink);
 }

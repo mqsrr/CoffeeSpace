@@ -37,14 +37,14 @@ internal sealed class HubConnectionService : IHubConnectionService, IAsyncDispos
         _hubConnection.On("OrderStatusUpdated", onOrderStatusUpdated);
     }
 
+    public void OnOrderPaymentPageInitialized(Action<string, string> onOrderPageInitialized)
+    {
+        _hubConnection.On("OrderPaymentPageInitialized", onOrderPageInitialized);
+    }
+
     public async ValueTask DisposeAsync()
     {
         await _hubConnection.InvokeAsync("LeaveGroup", _buyerId);
         await _hubConnection.StopAsync();
-    }
-
-    public void OnOrderPaymentPageInitialized(Action<string> onOrderPageInitialized)
-    {
-        _hubConnection.On("OrderPaymentPageInitialized", onOrderPageInitialized);
     }
 }

@@ -601,8 +601,8 @@
     <!--#region Order Styles-->
     <Style TargetType="Frame" x:Key="OrderFrameWindows">
         <Setter Property="BackgroundColor" Value="WhiteSmoke"/>
-        <Setter Property="MinimumHeightRequest" Value="200"/>
-        <Setter Property="WidthRequest" Value="450"/>
+        <Setter Property="MinimumHeightRequest" Value="250"/>
+        <Setter Property="MinimumWidthRequest" Value="450"/>
     </Style>
 
     <!--#endregion-->

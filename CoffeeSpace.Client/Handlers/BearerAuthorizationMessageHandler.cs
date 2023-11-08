@@ -2,7 +2,7 @@ using System.Net.Http.Headers;
 
 namespace CoffeeSpace.Client.Handlers;
 
-internal sealed class AuthHeaderHandler : DelegatingHandler
+internal sealed class BearerAuthorizationMessageHandler : DelegatingHandler
 {
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {

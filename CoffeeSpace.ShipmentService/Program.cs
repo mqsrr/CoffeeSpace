@@ -7,12 +7,13 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.UseSerilog((context, configuration) => 
-    configuration.ReadFrom.Configuration(context.Configuration));
-
 builder.Configuration.AddAzureKeyVault();
 
- builder.Services.AddOptions<AwsMessagingSettings>()
+builder.Host.UseSerilog((context, configuration) =>
+    configuration.ReadFrom.Configuration(context.Configuration)
+        .AddDatadogLogging("Shipment Service"));
+
+builder.Services.AddOptions<AwsMessagingSettings>()
      .Bind(builder.Configuration.GetRequiredSection(AwsMessagingSettings.SectionName))
      .ValidateOnStart();
 

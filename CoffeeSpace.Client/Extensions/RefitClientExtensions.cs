@@ -5,33 +5,32 @@ namespace CoffeeSpace.Client.Extensions;
 
 public static class RefitClientExtensions
 {
-    public static IServiceCollection AddWebApiClient<TClient>(this IServiceCollection services, bool requiresAuthorization)
+    public static IServiceCollection AddWebApiClient<TClient, TMessageHandler>(this IServiceCollection services)
+        where TClient : class
+        where TMessageHandler : DelegatingHandler
+    {
+        string baseAddress = DeviceInfo.Current.Platform == DevicePlatform.Android
+            ? "http://10.0.2.2:8085"
+            : "http://localhost:8085";
+
+        services.AddRefitClient<TClient>()
+            .ConfigureHttpClient(config => config.BaseAddress = new Uri(baseAddress))
+            .AddHttpMessageHandler<TMessageHandler>();
+
+        return services;
+    }
+    
+    public static IServiceCollection AddWebApiClient<TClient>(this IServiceCollection services)
         where TClient : class
     {
         string baseAddress = DeviceInfo.Current.Platform == DevicePlatform.Android
             ? "http://10.0.2.2:8085"
             : "http://localhost:8085";
 
-        var httpClientBuilder = services.AddRefitClient<TClient>().ConfigureHttpClient(config =>
-            config.BaseAddress = new Uri(baseAddress));
+        services.AddRefitClient<TClient>()
+            .ConfigureHttpClient(config => config.BaseAddress = new Uri(baseAddress))
+            .AddHttpMessageHandler<BearerAuthorizationMessageHandler>();
 
-        if (requiresAuthorization)
-        {
-            httpClientBuilder.AddHttpMessageHandler<AuthHeaderHandler>();
-        }
-        return services;
-    }
-    
-    public static IServiceCollection AddWebApiClient<TClient>(this IServiceCollection services, string baseAddress, bool requiresAuthorization)
-        where TClient : class
-    {
-        var httpClientBuilder = services.AddRefitClient<TClient>().ConfigureHttpClient(config =>
-            config.BaseAddress = new Uri(baseAddress));
-
-        if (requiresAuthorization)
-        {
-            httpClientBuilder.AddHttpMessageHandler<AuthHeaderHandler>();
-        }
         return services;
     }
 }

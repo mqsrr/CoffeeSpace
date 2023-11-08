@@ -24,6 +24,7 @@
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.11" />
       <PackageReference Include="Scrutor.AspNetCore" Version="3.3.0" />
       <PackageReference Include="Serilog.AspNetCore" Version="7.0.0" />
+      <PackageReference Include="Serilog.Sinks.Datadog.Logs" Version="0.5.2" />
     </ItemGroup>
 
 </Project>

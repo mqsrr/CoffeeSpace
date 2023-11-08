@@ -1,9 +1,8 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using AutoFixture;
+﻿using AutoFixture;
 using AutoFixture.AutoNSubstitute;
 using CoffeeSpace.Domain.Ordering.BuyerInfo;
 using CoffeeSpace.OrderingApi.Application.Repositories;
-using CoffeeSpace.OrderingApi.Persistence.Abstractions;
+using CoffeeSpace.OrderingApi.Persistence;
 using CoffeeSpace.OrderingApi.Tests.Fixtures;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +14,7 @@ namespace CoffeeSpace.OrderingApi.Tests.Repositories;
 
 public sealed class BuyerRepositoryTests : IClassFixture<OrderingDbContextFixture>
 {
-    private readonly IOrderingDbContext _dbContext;
+    private readonly OrderingDbContext _dbContext;
     private readonly DbSet<Buyer> _buyersDbSet;
     private readonly IEnumerable<Buyer> _buyers;
     private readonly Fixture _fixture;

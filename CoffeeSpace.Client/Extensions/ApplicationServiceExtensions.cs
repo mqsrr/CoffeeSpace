@@ -1,4 +1,9 @@
 
+using System.Collections.Immutable;
+using CoffeeSpace.Client.Settings;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+
 namespace CoffeeSpace.Client.Extensions;
 
 public static class ApplicationServiceExtensions
@@ -27,5 +32,16 @@ public static class ApplicationServiceExtensions
             .WithLifetime(serviceLifetime));
 
         return services;
+    }
+
+    public static IServiceCollection AddApiKeyOptions(this IServiceCollection serviceCollection, IConfiguration configuration)
+    {
+        serviceCollection.AddTransient(_ => Options.Create(new ApiKeySettings
+        {
+            ApiKey = configuration["Authorization:ApiKey"],
+            HeaderName = configuration["Authorization:HeaderName"]
+        }));
+
+        return serviceCollection;
     }
 }

@@ -1,12 +1,11 @@
 using System.Reflection;
 using CoffeeSpace.PaymentService.Models;
-using CoffeeSpace.PaymentService.Persistence.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using PayPalCheckoutSdk.Orders;
 
 namespace CoffeeSpace.PaymentService.Persistence;
 
-internal sealed class PaymentDbContext : DbContext, IPaymentDbContext
+internal sealed class PaymentDbContext : DbContext
 {
     public required DbSet<PaypalOrderInformation> PaypalOrders { get; init; }
 

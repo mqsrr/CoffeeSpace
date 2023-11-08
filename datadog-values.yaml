@@ -7,4 +7,4 @@ datadog:
     enabled: true
   apiKeyExistingSecret: datadog-secret
   appKeyExistingSecret: datadog-secret
-  site: datadoghq.com
+  site: us5.datadoghq.com

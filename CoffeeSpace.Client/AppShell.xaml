@@ -8,29 +8,14 @@
     FlyoutBehavior="Flyout">
 
     <ShellContent
-        Title="Login"
-        ContentTemplate="{DataTemplate views:LoginView}"
-        Route="LoginPage" 
-        FlyoutItemIsVisible="False"/>   
-    
-    <ShellContent
-        Title="Register"
-        ContentTemplate="{DataTemplate views:RegisterView}"
-        Route="RegisterPage" 
-        FlyoutItemIsVisible="False"/>
-
-    <ShellContent
         Title="Home"
-        ContentTemplate="{DataTemplate views:MainView}"
-        Route="MainPage" />
+        ContentTemplate="{DataTemplate views:MainView}"/>
 
     <ShellContent
         Title="Orders"
-        ContentTemplate="{DataTemplate views:OrderView}"
-        Route="OrderPage" />
+        ContentTemplate="{DataTemplate views:OrderView}"/>
 
     <ShellContent
         Title="Cart"
-        ContentTemplate="{DataTemplate views:CartView}"
-        Route="CartPage" />
+        ContentTemplate="{DataTemplate views:CartView}"/>
 </Shell>

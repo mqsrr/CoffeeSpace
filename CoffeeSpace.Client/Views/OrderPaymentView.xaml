@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:CoffeeSpace.Client._ViewModels"
+             x:Class="CoffeeSpace.Client.Views.OrderPaymentView"
+             x:DataType="viewModels:OrderPaymentViewModel"
+             Title="Order Payment">
+
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,1" EndPoint="1,0">
+            <GradientStop Color="#C33764" Offset="0.2" />
+            <GradientStop Color="#1D2671" Offset="1.0" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
+
+    <ScrollView>
+        <Frame BackgroundColor="LightGray" HeightRequest="700"
+               WidthRequest="700">
+            <WebView Source="{Binding PaymentApprovalLink}"/>    
+        </Frame>
+    </ScrollView>
+</ContentPage>

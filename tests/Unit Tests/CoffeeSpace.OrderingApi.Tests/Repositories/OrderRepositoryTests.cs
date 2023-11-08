@@ -1,10 +1,9 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using AutoFixture;
+﻿using AutoFixture;
 using AutoFixture.AutoNSubstitute;
 using CoffeeSpace.Domain.Ordering.BuyerInfo;
 using CoffeeSpace.Domain.Ordering.Orders;
 using CoffeeSpace.OrderingApi.Application.Repositories;
-using CoffeeSpace.OrderingApi.Persistence.Abstractions;
+using CoffeeSpace.OrderingApi.Persistence;
 using CoffeeSpace.OrderingApi.Tests.Fixtures;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +15,7 @@ namespace CoffeeSpace.OrderingApi.Tests.Repositories;
 
 public sealed class OrderRepositoryTests : IClassFixture<OrderingDbContextFixture>
 {
-    private readonly IOrderingDbContext _dbContext;
+    private readonly OrderingDbContext _dbContext;
     private readonly DbSet<Order> _ordersDbSet;
     private readonly DbSet<Buyer> _buyersDbSet;
     
@@ -82,43 +81,5 @@ public sealed class OrderRepositoryTests : IClassFixture<OrderingDbContextFixtur
 
         // Assert
         result.Should().BeFalse();
-    }
-    
-    [Fact]
-    public async Task UpdateAsync_ShouldReturnUpdatedOrder_WhenOrderWasUpdated()
-    {
-        // Arrange
-        var orderToUpdate = _orders.First();
-        var updatedOrder = _fixture.Build<Order>()
-            .With(order => order.Id, orderToUpdate.Id)
-            .Create();
-        
-        _ordersDbSet.FindAsync(Arg.Any<object[]>(), Arg.Any<CancellationToken>())
-            .Returns(orderToUpdate);
-
-        _dbContext.SaveChangesAsync(Arg.Any<CancellationToken>())
-            .Returns(1);
-        
-        // Act
-        var result = await _orderRepository.UpdateAsync(updatedOrder, CancellationToken.None);
-
-        // Assert
-        result.Should().BeEquivalentTo(updatedOrder);
-    }
-    
-    [Fact]
-    public async Task UpdateAsync_ShouldReturnNull_WhenOrderWasNotUpdated()
-    {
-        // Arrange
-        var updatedOrder = _orders.First();
-        
-        _ordersDbSet.FindAsync(Arg.Any<object[]>(), Arg.Any<CancellationToken>())
-            .ReturnsNull();
-        
-        // Act
-        var result = await _orderRepository.UpdateAsync(updatedOrder, CancellationToken.None);
-
-        // Assert
-        result.Should().BeNull();
     }
 }

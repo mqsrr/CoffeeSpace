@@ -18,7 +18,8 @@ using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog((context, configuration) => 
-    configuration.ReadFrom.Configuration(context.Configuration));
+    configuration.ReadFrom.Configuration(context.Configuration)
+        .AddDatadogLogging("Identity API"));
 
 builder.Configuration.AddAzureKeyVault();
 builder.Services.AddControllers();

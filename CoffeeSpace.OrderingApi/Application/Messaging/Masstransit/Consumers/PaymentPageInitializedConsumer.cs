@@ -17,6 +17,8 @@ public sealed class PaymentPageInitializedConsumer : IConsumer<PaymentPageInitia
 
     public async Task Consume(ConsumeContext<PaymentPageInitialized> context)
     {
-        await _hubContext.Clients.Group(context.Message.BuyerId).OrderPaymentPageInitialized(context.Message.PaymentApprovalLink);
+        await _hubContext.Clients
+            .Group(context.Message.BuyerId)
+            .OrderPaymentPageInitialized(context.Message.OrderId, context.Message.PaymentApprovalLink);
     }
 }

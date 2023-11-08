@@ -2,12 +2,11 @@ using CoffeeSpace.Client._ViewModels;
 
 namespace CoffeeSpace.Client.Views;
 
-public partial class OrderInformationView : ContentPage
+public partial class OrderPaymentView : ContentPage
 {
-
-    public OrderInformationView(OrderInformationViewModel viewModel)
+	public OrderPaymentView(OrderPaymentViewModel viewModel)
 	{
 		InitializeComponent();
 		BindingContext = viewModel;
-    }
+	}
 }

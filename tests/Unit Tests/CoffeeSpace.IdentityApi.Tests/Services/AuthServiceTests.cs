@@ -34,7 +34,7 @@ public sealed class AuthServiceTests
         _tokenWriter = _fixture.Create<ITokenWriter<ApplicationUser>>();
         _endpointProvider = _fixture.Create<ISendEndpointProvider>();
 
-        _authService = new AuthService(_signInManager, _tokenWriter, _endpointProvider);
+        _authService = new AuthService(_tokenWriter);
     }
     
     private static SignInManager<ApplicationUser> GetSignInManagerMock(UserManager<ApplicationUser> userManager)

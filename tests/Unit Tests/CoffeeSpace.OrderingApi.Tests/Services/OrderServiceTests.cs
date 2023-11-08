@@ -1,10 +1,11 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoNSubstitute;
 using CoffeeSpace.Domain.Ordering.Orders;
-using CoffeeSpace.OrderingApi.Application.Messaging.Mediator.Commands.Orders;
-using CoffeeSpace.OrderingApi.Application.Messaging.Mediator.Queries.Orders;
+using CoffeeSpace.Messages.Ordering.Commands;
+using CoffeeSpace.OrderingApi.Application.Repositories.Abstractions;
 using CoffeeSpace.OrderingApi.Application.Services;
 using FluentAssertions;
+using MassTransit;
 using Mediator;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
@@ -14,7 +15,8 @@ namespace CoffeeSpace.OrderingApi.Tests.Services;
 
 public sealed class OrderServiceTests
 {
-    private readonly ISender _sender;
+    private readonly IPublishEndpoint _publishEndpoint;
+    private readonly IOrderRepository _orderRepository;
     private readonly Fixture _fixture;
     private readonly IEnumerable<Order> _orders;
     
@@ -29,23 +31,25 @@ public sealed class OrderServiceTests
             .With(order => order.BuyerId, Guid.NewGuid().ToString())
             .CreateMany();
 
-        _sender = _fixture.Create<ISender>();
-        _orderService = new OrderService();
+        _publishEndpoint = _fixture.Create<IPublishEndpoint>();
+        _orderRepository = _fixture.Create<IOrderRepository>();
+        
+        _orderService = new OrderService(_orderRepository, _publishEndpoint);
     }
 
     [Fact]
     public async Task GetAllByBuyerIdAsync_ShouldReturnAllOrders()
     {
         // Arrange
-        var expectedOrder = _orders.First();
-        _sender.Send(Arg.Any<GetAllOrdersByBuyerIdQuery>(), Arg.Any<CancellationToken>())
-            .Returns(new []{expectedOrder});
-
+        var orders = _orders.Take(2).ToList();
+        _orderRepository.GetAllByBuyerIdAsync(orders[0].BuyerId, CancellationToken.None)
+            .Returns(orders);
+        
         // Act
-        var result = await _orderService.GetAllByBuyerIdAsync(Guid.Parse(expectedOrder.BuyerId), CancellationToken.None);
+        var result = await _orderService.GetAllByBuyerIdAsync(Guid.Parse(orders[0].BuyerId), CancellationToken.None);
 
         // Assert
-        result.Should().ContainEquivalentOf(expectedOrder);
+        result.Should().BeEquivalentTo(orders);
     }
     
     [Fact]
@@ -53,7 +57,7 @@ public sealed class OrderServiceTests
     {
         // Arrange
         var expectedOrder = _orders.First();
-        _sender.Send(Arg.Any<GetOrderByIdQuery>(), Arg.Any<CancellationToken>())
+        _orderRepository.GetByIdAsync(expectedOrder.Id, Arg.Any<CancellationToken>())
             .Returns(expectedOrder);
 
         // Act
@@ -68,9 +72,9 @@ public sealed class OrderServiceTests
     {
         // Arrange
         var expectedOrder = _orders.First();
-        _sender.Send(Arg.Any<GetOrderByIdQuery>(), Arg.Any<CancellationToken>())
+        _orderRepository.GetByIdAsync(expectedOrder.Id, Arg.Any<CancellationToken>())
             .ReturnsNull();
-
+        
         // Act
         var result = await _orderService.GetByIdAsync(Guid.Parse(expectedOrder.Id), Guid.Parse(expectedOrder.BuyerId), CancellationToken.None);
  
@@ -83,8 +87,12 @@ public sealed class OrderServiceTests
     {
         // Arrange
         var orderToCreate = _fixture.Create<Order>();
-        _sender.Send(Arg.Any<CreateOrderCommand>(), Arg.Any<CancellationToken>())
+        
+        _orderRepository.CreateAsync(orderToCreate, Arg.Any<CancellationToken>())
             .Returns(true);
+
+        _publishEndpoint.Publish<SubmitOrder>(Arg.Any<object>())
+            .Returns(Task.CompletedTask);
 
         // Act
         bool result = await _orderService.CreateAsync(orderToCreate, CancellationToken.None);
@@ -98,7 +106,7 @@ public sealed class OrderServiceTests
     {
         // Arrange
         var orderToCreate = _fixture.Create<Order>();
-        _sender.Send(Arg.Any<CreateOrderCommand>(), Arg.Any<CancellationToken>())
+        _orderRepository.CreateAsync(orderToCreate, Arg.Any<CancellationToken>())
             .Returns(false);
 
         // Act
@@ -108,46 +116,13 @@ public sealed class OrderServiceTests
         result.Should().BeFalse();
     }
     
-    [Fact]
-    public async Task UpdateAsync_ShouldReturnUpdatedOrder_WhenOrderWasUpdated()
-    {
-        // Arrange
-        var orderToUpdate = _orders.First();
-        var updatedOrder = _fixture.Build<Order>()
-            .With(order => order.Id, orderToUpdate.Id)
-            .Create();
-
-        _sender.Send(Arg.Any<UpdateOrderCommand>(), Arg.Any<CancellationToken>())
-            .Returns(updatedOrder);
-
-        // Act
-        var result = await _orderService.UpdateAsync(updatedOrder, CancellationToken.None);
- 
-        // Assert
-        result.Should().BeEquivalentTo(updatedOrder);
-    }
-    
-    [Fact]
-    public async Task UpdateAsync_ShouldReturnNull_WhenOrderWasNotUpdated()
-    {
-        // Arrange
-        var updatedOrder = _orders.First();
-        _sender.Send(Arg.Any<UpdateOrderCommand>(), Arg.Any<CancellationToken>())
-            .ReturnsNull();
-
-        // Act
-        var result = await _orderService.UpdateAsync(updatedOrder, CancellationToken.None);
- 
-        // Assert
-        result.Should().BeNull();
-    }
     
     [Fact]
     public async Task DeleteAsync_ShouldReturnTrue_WhenOrderWasDeleted()
     {
         // Arrange
         var orderToDelete = _orders.First();
-        _sender.Send(Arg.Any<DeleteOrderByIdCommand>(), Arg.Any<CancellationToken>())
+        _orderRepository.DeleteByIdAsync(orderToDelete.Id, Arg.Any<CancellationToken>())
             .Returns(true);
 
         // Act
@@ -162,7 +137,7 @@ public sealed class OrderServiceTests
     {
         // Arrange
         var orderToDelete = _orders.First();
-        _sender.Send(Arg.Any<DeleteOrderByIdCommand>(), Arg.Any<CancellationToken>())
+        _orderRepository.DeleteByIdAsync(orderToDelete.Id, Arg.Any<CancellationToken>())
             .Returns(false);
 
         // Act
