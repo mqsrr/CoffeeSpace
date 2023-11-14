@@ -71,7 +71,7 @@ builder.Services.AddApplicationService<IOrderService>();
 
 **`ICacheService` is coming from the Coffeespace.Core class library. There are generic services and settings, which can be used across microservices.**
 
-Caching is implemented in `Ordering API` and `Product API` using *Builder* pattern. `Ordering API` uses [Mediator's](https://github.com/martinothamar/Mediator) notifications to move cache invalidation logic into `Notification Handler`.
+Caching is implemented in `Ordering API` and `Product API` using `*Proxy*` pattern. `Ordering API` uses [Mediator's](https://github.com/martinothamar/Mediator) notifications to move cache invalidation logic into `Notification Handler`.
 ```cs
 internal sealed class OrderCacheNotificationHandler : 
     INotificationHandler<CreateOrderNotification>,
@@ -167,7 +167,8 @@ While `Product API` using different approach. Instead of moving cache invalidati
 > Example is from [Cached Product Repository](https://github.com/Marsik424/CoffeeSpace/blob/wip/CoffeeSpace.ProductApi/Application/Repositories/CachedProductRepository.cs).
 
 
-**[Decorator](https://github.com/Marsik424/CoffeeSpace/blob/wip/CoffeeSpace.Core/Attributes/Decorator.cs)** attribute, tells [Scrutor](https://github.com/khellang/Scrutor) to not register classes who applied this attribute.
+**[Decorator](https://github.com/Marsik424/CoffeeSpace/blob/wip/CoffeeSpace.Core/Attributes/Decorator.cs)** attribute, tells [Scrutor](https://github.com/khellang/Scrutor) to not register classes who applied this attribute. In this application I've been using this attribute to implement `Proxy` pattern.  
+
 
 ## API's
 ### Ordering API
