@@ -1,6 +1,6 @@
 # CoffeeSpace [![codecov](https://codecov.io/gh/Marsik424/CoffeeSpace/graph/badge.svg?token=CRRETNTN9W)](https://codecov.io/gh/Marsik424/CoffeeSpace) [![Build](https://github.com/Marsik424/CoffeeSpace/actions/workflows/build.yml/badge.svg)](https://github.com/Marsik424/CoffeeSpace/actions/workflows/build.yml)
 
-![Coffee_Space](https://github.com/Marsik424/CoffeeSpace/assets/82763271/20ac4493-da08-4b40-9da3-91f1b06b6c9b)
+![Coffee_Space excalidraw](https://github.com/Marsik424/CoffeeSpace/assets/82763271/28e06195-048d-4ec3-9161-adef5c89689b)
 
 # MAUI Client
 
@@ -71,45 +71,8 @@ builder.Services.AddApplicationService<IOrderService>();
 
 **`ICacheService` is coming from the Coffeespace.Core class library. There are generic services and settings, which can be used across microservices.**
 
-Caching is implemented in `Ordering API` and `Product API` using `*Proxy*` pattern. `Ordering API` uses [Mediator's](https://github.com/martinothamar/Mediator) notifications to move cache invalidation logic into `Notification Handler`.
-```cs
-internal sealed class OrderCacheNotificationHandler : 
-    INotificationHandler<CreateOrderNotification>,
-    INotificationHandler<UpdateOrderNotification>,
-    INotificationHandler<DeleteOrderNotification>
-{
-    private readonly ICacheService<Order> _cacheService;
+Caching is implemented in `Ordering API` and `Product API` using `Proxy` pattern. `Ordering API` uses [Mediator's](https://github.com/martinothamar/Mediator) notifications to move cache invalidation logic into `Notification Handler`.
 
-    public OrderCacheNotificationHandler(ICacheService<Order> cacheService)
-    {
-        _cacheService = cacheService;
-    }
-
-    public async ValueTask Handle(CreateOrderNotification notification, CancellationToken cancellationToken)
-    {
-        await _cacheService.RemoveAsync(CacheKeys.Order.GetAll(notification.BuyerId), cancellationToken);
-        await _cacheService.RemoveAsync(CacheKeys.Order.GetByCustomerId(notification.Id, notification.BuyerId), cancellationToken);
-        
-        await _cacheService.RemoveAsync(CacheKeys.Buyers.Get(notification.BuyerId), cancellationToken);
-    }
-
-    public async ValueTask Handle(UpdateOrderNotification notification, CancellationToken cancellationToken)
-    {
-        await _cacheService.RemoveAsync(CacheKeys.Order.GetAll(notification.BuyerId), cancellationToken);
-        await _cacheService.RemoveAsync(CacheKeys.Order.GetByCustomerId(notification.Id, notification.BuyerId), cancellationToken);
-            
-        await _cacheService.RemoveAsync(CacheKeys.Buyers.Get(notification.BuyerId), cancellationToken);
-    }
-
-    public async ValueTask Handle(DeleteOrderNotification notification, CancellationToken cancellationToken)
-    {
-        await _cacheService.RemoveAsync(CacheKeys.Order.GetAll(notification.BuyerId), cancellationToken);
-        await _cacheService.RemoveAsync(CacheKeys.Order.GetByCustomerId(notification.Id, notification.BuyerId), cancellationToken);
-        
-        await _cacheService.RemoveAsync(CacheKeys.Buyers.Get(notification.BuyerId), cancellationToken);
-    }
-}
-```
 After each of the process mutation process, I implicitly publish message to invalidate cache.
 
 ```cs
