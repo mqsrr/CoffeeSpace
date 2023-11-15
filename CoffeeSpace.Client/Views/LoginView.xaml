@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:CoffeeSpace.Client._ViewModels"
+             x:Class="CoffeeSpace.Client.Views.LoginView"
+             x:DataType="viewModels:LoginViewModel"
+             Title="Login Page">
+
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,1" EndPoint="1,0">
+            <GradientStop Color="#C33764" Offset="0.2" />
+            <GradientStop Color="#1D2671" Offset="1.0" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
+
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsEnabled="False" IsVisible="False"/>
+    </Shell.BackButtonBehavior>
+
+    <Frame HeightRequest="580" WidthRequest="380"
+           Margin="10" BackgroundColor="WhiteSmoke"
+           BorderColor="SlateGray" CornerRadius="10">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <StackLayout Grid.Row="0" Grid.Column="2"
+                         Spacing="10" Margin="10">
+
+                <Label Text="Login Form" TextColor="SlateGray"
+                       HorizontalOptions="Center" FontSize="Large"
+                       CharacterSpacing="1" />
+
+            </StackLayout>
+
+            <StackLayout Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4"
+                         Spacing="10" Margin="10">
+
+                <Entry PlaceholderColor="SlateGray" Placeholder="Username"
+                       HorizontalOptions="Fill" Margin="10"
+                       IsTextPredictionEnabled="False" TextColor="SlateGray"
+                       Text="{Binding LoginRequest.Username, Mode=TwoWay}"/>
+
+                <Entry PlaceholderColor="SlateGray" Placeholder="Password"
+                       HorizontalOptions="Fill" Margin="10"
+                       IsTextPredictionEnabled="False" IsPassword="True"
+                       TextColor="SlateGray"
+                       Text="{Binding LoginRequest.Password, Mode=TwoWay}" />
+
+                <Button Text="Login" CharacterSpacing="1"
+                        FontAttributes="Bold" WidthRequest="90"
+                        Command="{Binding AuthenticateCommand}" />
+            </StackLayout>
+
+            <StackLayout Grid.Row="3" Grid.Column="2"
+                         Margin="15" HorizontalOptions="Center">
+
+                <Label Text="Dont have account?" TextColor="Gray"
+                       TextDecorations="Underline">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding GoToRegisterFormCommand}"/>
+                    </Label.GestureRecognizers>
+                </Label>
+            </StackLayout>
+
+            <ScrollView Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="4"
+                        BackgroundColor="Transparent">
+                <StackLayout Spacing="10" Margin="10"
+                             HorizontalOptions="Center">
+                    <Label
+                        Text="Evidence of knowledge of the coffee tree and coffee drinking first appeared in the late 15th century; Coffee was first exported out of Ethiopia to Yemen by Somali merchants from Berbera and Zeila, which was procured from Harar and the Abyssinian interior.According to Captain Haines, who was the colonial administrator of Aden (1839-1854), Mocha historically imported up to two-thirds of their coffee from Berbera-based merchants before the coffee trade of Mocha was captured by British-controlled Aden in the 19th century. Thereafter, much of the Ethiopian coffee was exported to Aden via Berbera."
+                        TextColor="Gray" LineBreakMode="WordWrap"
+                        LineHeight="1" />
+                </StackLayout>
+            </ScrollView>
+        </Grid>
+    </Frame>
+</ContentPage>

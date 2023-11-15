@@ -1,44 +1,40 @@
 using Asp.Versioning;
-using CoffeeSpace.Core.Extensions;
 using CoffeeSpace.ProductApi.Application.Contracts.Requests;
 using CoffeeSpace.ProductApi.Application.Helpers;
 using CoffeeSpace.ProductApi.Application.Mapping;
-using CoffeeSpace.ProductApi.Application.Services.Abstractions;
+using CoffeeSpace.ProductApi.Application.Repositories.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.RateLimiting;
 
 namespace CoffeeSpace.ProductApi.Controllers;
 
 [Authorize]
 [ApiController]
 [ApiVersion(1.0)]
-[EnableRateLimiting(RateLimiterExtensions.BucketName)]
 public sealed class ProductsController : ControllerBase
 {
-    private readonly IProductService _productService;
+    private readonly IProductRepository _productRepository;
 
-    public ProductsController(IProductService productService)
+    public ProductsController(IProductRepository productRepository)
     {
-        _productService = productService;
+        _productRepository = productRepository;
     }
 
     [HttpGet(ApiEndpoints.Products.GetAll)]
     public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
-        var products = await _productService.GetAllProductsAsync(cancellationToken);
-        var response = products.Select(x => x.ToResponse());
+        var products = await _productRepository.GetAllProductsAsync(cancellationToken);
+        var responses = products.Select(product => product.ToResponse()); 
         
-        return Ok(response);
+        return Ok(responses);
     }
     
     [HttpGet(ApiEndpoints.Products.Get)]
-    public async Task<IActionResult> GetById([FromRoute] Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetById([FromRoute] GetProductByIdRequest request, CancellationToken cancellationToken)
     {
-        var product = await _productService.GetProductByIdAsync(id.ToString(), cancellationToken);
-        
+        var product = await _productRepository.GetProductByIdAsync(request.Id.ToString(), cancellationToken);
         return product is not null
-            ? Ok(product)
+            ? Ok(product.ToResponse())
             : NotFound();
     }
     
@@ -46,7 +42,7 @@ public sealed class ProductsController : ControllerBase
     public async Task<IActionResult> Create([FromBody] CreateProductRequest request, CancellationToken cancellationToken)
     {
         var product = request.ToProduct();
-        var created = await _productService.CreateProductAsync(product, cancellationToken);
+        bool created = await _productRepository.CreateProductAsync(product, cancellationToken);
 
         return created
             ? CreatedAtAction(nameof(GetById), new {id = product.Id}, product.ToResponse())
@@ -56,10 +52,7 @@ public sealed class ProductsController : ControllerBase
     [HttpPut(ApiEndpoints.Products.Update)]
     public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateProductRequest request, CancellationToken cancellationToken)
     {
-        request.Id = id;
-        
-        var product = request.ToProduct();
-        var updatedProduct = await _productService.UpdateProductAsync(product, cancellationToken);
+        var updatedProduct = await _productRepository.UpdateProductAsync(request.ToProduct(id), cancellationToken);
 
         return updatedProduct is not null
             ? Ok(updatedProduct.ToResponse())
@@ -67,12 +60,11 @@ public sealed class ProductsController : ControllerBase
     }
     
     [HttpDelete(ApiEndpoints.Products.Delete)]
-    public async Task<IActionResult> Delete([FromRoute] Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> Delete([FromRoute] DeleteProductByIdRequest request, CancellationToken cancellationToken)
     {
-        var deleted = await _productService.DeleteProductByIdAsync(id.ToString(), cancellationToken);
-
+        bool deleted = await _productRepository.DeleteProductByIdAsync(request.Id.ToString(), cancellationToken);
         return deleted
-            ? Ok()
+            ? NoContent()
             : NotFound();
     }
 }

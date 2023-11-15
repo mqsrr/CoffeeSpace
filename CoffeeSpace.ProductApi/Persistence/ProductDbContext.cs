@@ -4,13 +4,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeSpace.ProductApi.Persistence;
 
-internal sealed class ProductDbContext : DbContext, IProductDbContext
+internal sealed class ProductDbContext : DbContext
 {
     public required DbSet<Product> Products { get; init; }
 
     public ProductDbContext(DbContextOptions<ProductDbContext> options) : base(options)
     {
-        
     }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)

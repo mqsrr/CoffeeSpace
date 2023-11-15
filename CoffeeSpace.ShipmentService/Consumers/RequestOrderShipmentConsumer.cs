@@ -1,4 +1,4 @@
-using CoffeeSpace.Messages.Shipment.Events;
+using CoffeeSpace.Messages.Shipment.Commands;
 using CoffeeSpace.Messages.Shipment.Responses;
 using MassTransit;
 
@@ -19,9 +19,8 @@ internal sealed class RequestOrderShipmentConsumer : IConsumer<RequestOrderShipm
         await Task.Delay(TimeSpan.FromSeconds(3));
         
         _logger.LogInformation("Order with ID {OrderId} was successfully transferred to the shipment service", context.Message.Order.Id);
-        await context.RespondAsync<OrderShipmentResponse>(new
+        await context.RespondAsync<OrderShipped>(new
         {
-            context.Message.Order,
             ShipmentAvailable = true
         });
     }

@@ -4,6 +4,9 @@ metadata:
   name: redis
   labels:
     app: redis
+    tags.datadoghq.com/env: Production
+    tags.datadoghq.com/service: redis
+    tags.datadoghq.com/version: 1.0.0
 spec:
   replicas: 1
   selector:
@@ -14,6 +17,10 @@ spec:
       name: redis
       labels:
         app: redis
+        tags.datadoghq.com/env: Production
+        tags.datadoghq.com/service: redis
+        tags.datadoghq.com/version: 1.0.0
+        admission.datadoghq.com/enabled: "true"
     spec:
       containers:
         - name: redis
@@ -21,5 +28,12 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 6379
+          env:
+            - name: DD_LOGS_INJECTION
+              value: "true"
+            - name: DD_APPSEC_ENABLED
+              value: "true"
+            - name: DD_RUNTIME_METRICS_ENABLED
+              value: "true"
       restartPolicy: Always
       

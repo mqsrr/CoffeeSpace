@@ -1,0 +1,28 @@
+<ArchitectureGraph>
+  <Module Identifier="03065897-727D-44D5-A3AB-B934A24F0449" Name="CoffeeSpace.ProductApi" />
+  <Module Identifier="3CF2DB2B-1445-4F1F-9A8B-D7195F72B685" Name="CoffeeSpace.Core" />
+  <Module Identifier="DF2E6168-2CC1-42A7-9304-5DD8C2F6A5DD" Name="CoffeeSpace.Domain" />
+  <Module Identifier="465BBFE7-CE95-4ECE-952F-1126A558C4FF" Name="CoffeeSpace.Messages" />
+  <Module Identifier="C2EE61A8-FEDC-4B0C-A42C-A9851E668722" Name="CoffeeSpace.OrderingApi" />
+  <Module Identifier="FBB32C90-3105-499D-B025-13ED99FE7158" Name="CoffeeSpace.PaymentService" />
+  <Module Identifier="699980BE-4241-4483-8F42-FD127D482593" Name="CoffeeSpace.ShipmentService" />
+  <Module Identifier="2CA433A2-20F6-4F85-9D22-24F2365B2B51" Name="CoffeeSpace.IdentityApi" />
+  <Module Identifier="EC6FF23D-2A37-47F6-9C14-9B353B451F8B" Name="CoffeeSpace.ApiGateway" />
+  <Module Identifier="AD268D7C-13EB-4A08-BF1C-0B9A36F06BEC" Name="CoffeeSpace.Client" />
+  <Reference Identifier="03065897-727D-44D5-A3AB-B934A24F0449/r:CoffeeSpace.Core" SourceId="03065897-727D-44D5-A3AB-B934A24F0449" Name="CoffeeSpace.Core" TargetId="3CF2DB2B-1445-4F1F-9A8B-D7195F72B685" />
+  <Reference Identifier="03065897-727D-44D5-A3AB-B934A24F0449/r:CoffeeSpace.Domain" SourceId="03065897-727D-44D5-A3AB-B934A24F0449" Name="CoffeeSpace.Domain" TargetId="DF2E6168-2CC1-42A7-9304-5DD8C2F6A5DD" />
+  <Reference Identifier="465BBFE7-CE95-4ECE-952F-1126A558C4FF/r:CoffeeSpace.Domain" SourceId="465BBFE7-CE95-4ECE-952F-1126A558C4FF" Name="CoffeeSpace.Domain" TargetId="DF2E6168-2CC1-42A7-9304-5DD8C2F6A5DD" />
+  <Reference Identifier="03065897-727D-44D5-A3AB-B934A24F0449/r:CoffeeSpace.Messages" SourceId="03065897-727D-44D5-A3AB-B934A24F0449" Name="CoffeeSpace.Messages" TargetId="465BBFE7-CE95-4ECE-952F-1126A558C4FF" />
+  <Reference Identifier="C2EE61A8-FEDC-4B0C-A42C-A9851E668722/r:CoffeeSpace.Core" SourceId="C2EE61A8-FEDC-4B0C-A42C-A9851E668722" Name="CoffeeSpace.Core" TargetId="3CF2DB2B-1445-4F1F-9A8B-D7195F72B685" />
+  <Reference Identifier="C2EE61A8-FEDC-4B0C-A42C-A9851E668722/r:CoffeeSpace.Domain" SourceId="C2EE61A8-FEDC-4B0C-A42C-A9851E668722" Name="CoffeeSpace.Domain" TargetId="DF2E6168-2CC1-42A7-9304-5DD8C2F6A5DD" />
+  <Reference Identifier="C2EE61A8-FEDC-4B0C-A42C-A9851E668722/r:CoffeeSpace.Messages" SourceId="C2EE61A8-FEDC-4B0C-A42C-A9851E668722" Name="CoffeeSpace.Messages" TargetId="465BBFE7-CE95-4ECE-952F-1126A558C4FF" />
+  <Reference Identifier="FBB32C90-3105-499D-B025-13ED99FE7158/r:CoffeeSpace.Core" SourceId="FBB32C90-3105-499D-B025-13ED99FE7158" Name="CoffeeSpace.Core" TargetId="3CF2DB2B-1445-4F1F-9A8B-D7195F72B685" />
+  <Reference Identifier="FBB32C90-3105-499D-B025-13ED99FE7158/r:CoffeeSpace.Messages" SourceId="FBB32C90-3105-499D-B025-13ED99FE7158" Name="CoffeeSpace.Messages" TargetId="465BBFE7-CE95-4ECE-952F-1126A558C4FF" />
+  <Reference Identifier="FBB32C90-3105-499D-B025-13ED99FE7158/r:CoffeeSpace.Domain" SourceId="FBB32C90-3105-499D-B025-13ED99FE7158" Name="CoffeeSpace.Domain" TargetId="DF2E6168-2CC1-42A7-9304-5DD8C2F6A5DD" />
+  <Reference Identifier="699980BE-4241-4483-8F42-FD127D482593/r:CoffeeSpace.Core" SourceId="699980BE-4241-4483-8F42-FD127D482593" Name="CoffeeSpace.Core" TargetId="3CF2DB2B-1445-4F1F-9A8B-D7195F72B685" />
+  <Reference Identifier="699980BE-4241-4483-8F42-FD127D482593/r:CoffeeSpace.Messages" SourceId="699980BE-4241-4483-8F42-FD127D482593" Name="CoffeeSpace.Messages" TargetId="465BBFE7-CE95-4ECE-952F-1126A558C4FF" />
+  <Reference Identifier="699980BE-4241-4483-8F42-FD127D482593/r:CoffeeSpace.Domain" SourceId="699980BE-4241-4483-8F42-FD127D482593" Name="CoffeeSpace.Domain" TargetId="DF2E6168-2CC1-42A7-9304-5DD8C2F6A5DD" />
+  <Reference Identifier="2CA433A2-20F6-4F85-9D22-24F2365B2B51/r:CoffeeSpace.Core" SourceId="2CA433A2-20F6-4F85-9D22-24F2365B2B51" Name="CoffeeSpace.Core" TargetId="3CF2DB2B-1445-4F1F-9A8B-D7195F72B685" />
+  <Reference Identifier="2CA433A2-20F6-4F85-9D22-24F2365B2B51/r:CoffeeSpace.Messages" SourceId="2CA433A2-20F6-4F85-9D22-24F2365B2B51" Name="CoffeeSpace.Messages" TargetId="465BBFE7-CE95-4ECE-952F-1126A558C4FF" />
+  <Reference Identifier="2CA433A2-20F6-4F85-9D22-24F2365B2B51/r:CoffeeSpace.Domain" SourceId="2CA433A2-20F6-4F85-9D22-24F2365B2B51" Name="CoffeeSpace.Domain" TargetId="DF2E6168-2CC1-42A7-9304-5DD8C2F6A5DD" />
+</ArchitectureGraph>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:CoffeeSpace.Client._ViewModels"
+             x:Class="CoffeeSpace.Client.Views.OrderInformationView"
+             x:DataType="viewModels:OrderInformationViewModel"
+             Title="Order Information">
+
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,1" EndPoint="1,0">
+            <GradientStop Color="#C33764" Offset="0.2" />
+            <GradientStop Color="#1D2671" Offset="1.0" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
+
+    <StackLayout>
+        <Frame Style="{OnPlatform 
+               WinUI={StaticResource OrderInformationFrameWindows}}">
+            <Grid ColumnDefinitions="20*,Auto,Auto,Auto,Auto,20"
+                  RowDefinitions="20*,Auto,Auto,Auto,Auto,Auto,20*">
+
+                <Entry Grid.Column="0" Grid.Row="1"
+                   Placeholder="Street"
+                   Text="{Binding Address.Street, Mode=TwoWay}"
+                   Style="{OnPlatform 
+                   WinUI={StaticResource OrderInformationWhiteSmokeEntry}}"/>
+
+                <Entry Grid.Column="0" Grid.Row="2"
+                   Placeholder="Country"
+                   Text="{Binding Address.Country, Mode=TwoWay}"
+                   Style="{OnPlatform 
+                   WinUI={StaticResource OrderInformationWhiteSmokeEntry}}"/>
+
+                <Entry Grid.Column="0" Grid.Row="3"
+                   Placeholder="City"
+                   Text="{Binding Address.City, Mode=TwoWay}"
+                   Style="{OnPlatform 
+                   WinUI={StaticResource OrderInformationWhiteSmokeEntry}}"/>
+
+                <HorizontalStackLayout Grid.Column="0" Grid.Row="4"
+                                       HorizontalOptions="Center">
+                    <Button 
+                    Text="Place Order" Grid.ColumnSpan="2"
+                    Command="{Binding CreateOrderCommand}"
+                    Style="{OnPlatform 
+                    WinUI={StaticResource OrderInformationWhiteSmokeButton}}"/>
+                </HorizontalStackLayout>
+            </Grid>
+        </Frame>
+    </StackLayout>
+</ContentPage>

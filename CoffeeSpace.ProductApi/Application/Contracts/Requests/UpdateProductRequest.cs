@@ -2,7 +2,7 @@ namespace CoffeeSpace.ProductApi.Application.Contracts.Requests;
 
 public sealed class UpdateProductRequest
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; internal set; }
     
     public required string Title { get; init; }
 

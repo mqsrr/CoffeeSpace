@@ -2,7 +2,7 @@
 
 public sealed class UpdateBuyerRequest
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; internal set; }
     
     public required string Name { get; init; }
     

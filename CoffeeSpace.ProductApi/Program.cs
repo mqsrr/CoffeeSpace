@@ -6,7 +6,6 @@ using CoffeeSpace.ProductApi.Application.Extensions;
 using CoffeeSpace.ProductApi.Application.Messages.Consumers;
 using CoffeeSpace.ProductApi.Application.Repositories;
 using CoffeeSpace.ProductApi.Application.Repositories.Abstractions;
-using CoffeeSpace.ProductApi.Application.Services.Abstractions;
 using CoffeeSpace.ProductApi.Application.Validators;
 using CoffeeSpace.ProductApi.Persistence;
 using FluentValidation;
@@ -17,35 +16,33 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.UseSerilog((context, configuration) => 
-    configuration.ReadFrom.Configuration(context.Configuration));
-
 builder.Configuration.AddAzureKeyVault();
 builder.Configuration.AddJwtBearer(builder);
 
-builder.Services.AddControllers();
-builder.Services.AddMediator();
+builder.Host.UseSerilog((context, configuration) =>
+    configuration.ReadFrom.Configuration(context.Configuration)
+        .AddDatadogLogging("Product API"));
 
-builder.Services.AddBucketRateLimiter(StatusCodes.Status429TooManyRequests);
+builder.Services.AddControllers();
 builder.Services.AddApiVersioning(new MediaTypeApiVersionReader("api-version"));
 
-builder.Services.AddStackExchangeRedisCache(x => 
-    x.Configuration = builder.Configuration["Redis:ConnectionString"]);
-
-builder.Services.AddApplicationDb<IProductDbContext, ProductDbContext>(builder.Configuration["ProductsDb:ConnectionString"]!);
+builder.Services.AddStackExchangeRedisCache(x => x.Configuration = builder.Configuration["Redis:ConnectionString"]);
+builder.Services.AddApplicationDb<ProductDbContext>(builder.Configuration["ProductsDb:ConnectionString"]!);
 
 builder.Services.AddApplicationService<IProductRepository>();
-builder.Services.AddApplicationService<IProductService>();
 
 builder.Services.AddApplicationService(typeof(ICacheService<>));
-
 builder.Services.Decorate<IProductRepository, CachedProductRepository>();
 
 builder.Services.AddFluentValidationAutoValidation()
     .AddValidatorsFromAssemblyContaining<CreateProductRequestValidator>(ServiceLifetime.Singleton, includeInternalTypes: true);
 
 builder.Services.AddOptions<AwsMessagingSettings>()
-    .Bind(builder.Configuration.GetRequiredSection("AWS"))
+    .Bind(builder.Configuration.GetRequiredSection(AwsMessagingSettings.SectionName))
+    .ValidateOnStart();
+
+builder.Services.AddOptions<JwtSettings>()
+    .Bind(builder.Configuration.GetRequiredSection(JwtSettings.SectionName))
     .ValidateOnStart();
 
 builder.Services.AddMassTransit(x =>
@@ -53,19 +50,20 @@ builder.Services.AddMassTransit(x =>
     x.SetKebabCaseEndpointNameFormatter();
     x.AddConsumer<OrderStockValidationConsumer>();
 
-    x.UsingAmazonSqs((context, config) =>
+    x.AddInMemoryInboxOutbox();
+    x.UsingAmazonSqs((context, configurator) =>
     {
         var awsSettings = context.GetRequiredService<IOptions<AwsMessagingSettings>>().Value;
-        config.Host(awsSettings.Region, hostConfig =>
+        configurator.Host(awsSettings.Region, hostConfigurator =>
         {
-            hostConfig.AccessKey(awsSettings.AccessKey);
-            hostConfig.SecretKey(awsSettings.SecretKey);
+            hostConfigurator.AccessKey(awsSettings.AccessKey);
+            hostConfigurator.SecretKey(awsSettings.SecretKey);
         });
         
-        config.UseNewtonsoftJsonSerializer();
-        config.UseNewtonsoftJsonDeserializer();
+        configurator.ConfigureEndpoints(context);
         
-        config.ConfigureEndpoints(context);
+        configurator.UseNewtonsoftJsonSerializer();
+        configurator.UseNewtonsoftJsonDeserializer();
     });
 });
 
@@ -74,12 +72,7 @@ builder.Services.AddServiceHealthChecks(builder);
 var app = builder.Build();
 
 app.UseSerilogRequestLogging();
-
 app.UseHealthChecks("/_health");
-
-app.UseRouting();
-
-app.UseRateLimiter();
 
 app.UseAuthentication();
 app.UseAuthorization();

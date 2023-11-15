@@ -5,32 +5,30 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        <UserSecretsId>85e69844-e33d-4d1d-870b-c98c8659a448</UserSecretsId>
         <PackageId>CoffeeSpace.ProductApi</PackageId>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Asp.Versioning.Mvc" Version="7.0.0" />
-      <PackageReference Include="AspNetCore.HealthChecks.MySql" Version="6.0.2" />
-      <PackageReference Include="AspNetCore.HealthChecks.Redis" Version="6.0.4" />
+        <InternalsVisibleTo Include="CoffeeSpace.ProductApi.Tests"/>
+        <InternalsVisibleTo Include="CoffeeSpace.ProductApi.Tests.Integration"/>
+    </ItemGroup>
+    
+    <ItemGroup>
+      <PackageReference Include="Asp.Versioning.Mvc" Version="7.1.0" />
+      <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="7.1.0" />
+      <PackageReference Include="AspNetCore.HealthChecks.Redis" Version="7.0.1" />
       <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
-      <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.5.2" />
-      <PackageReference Include="MassTransit.AmazonSQS" Version="8.0.15" />
+      <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.7.1" />
+      <PackageReference Include="MassTransit.AmazonSQS" Version="8.1.1" />
       <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.3.1" />
-      <PackageReference Include="MassTransit.Newtonsoft" Version="8.0.15" />
-      <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.15" />
-      <PackageReference Include="Mediator.Abstractions" Version="2.1.1" />
-      <PackageReference Include="Mediator.SourceGenerator" Version="2.1.1">
+      <PackageReference Include="MassTransit.Newtonsoft" Version="8.1.1" />
+      <PackageReference Include="MassTransit.RabbitMQ" Version="8.1.1" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.12">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.5">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
-      <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="7.0.5" />
-      <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0" />
-      <PackageReference Include="Riok.Mapperly" Version="2.8.0" />
+      <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="7.0.12" />
+      <PackageReference Include="Riok.Mapperly" Version="3.2.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -43,6 +41,10 @@
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Persistence\Migrations\" />
     </ItemGroup>
 
 </Project>

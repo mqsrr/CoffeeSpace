@@ -8,22 +8,29 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="6.0.2" />
-      <PackageReference Include="AspNetCore.HealthChecks.Redis" Version="6.0.4" />
-      <PackageReference Include="MassTransit.AmazonSQS" Version="8.0.15" />
+        <InternalsVisibleTo Include="CoffeeSpace.PaymentService.Tests"/>
+    </ItemGroup>
+    
+    <ItemGroup>
+      <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="7.1.0" />
+      <PackageReference Include="AspNetCore.HealthChecks.Redis" Version="7.0.1" />
+      <PackageReference Include="FastEndpoints" Version="5.18.0" />
+      <PackageReference Include="MassTransit.AmazonSQS" Version="8.1.1" />
       <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.3.1" />
-      <PackageReference Include="MassTransit.Newtonsoft" Version="8.0.15" />
-      <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.15" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.5">
+      <PackageReference Include="MassTransit.Newtonsoft" Version="8.1.1" />
+      <PackageReference Include="MassTransit.RabbitMQ" Version="8.1.1" />
+      <PackageReference Include="Mediator.Abstractions" Version="2.1.7" />
+      <PackageReference Include="Mediator.SourceGenerator" Version="2.1.7">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.12">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="7.0.12" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Persistence\Migrations\" />
+      <PackageReference Include="PayPalCheckoutSdk" Version="1.0.4" />
     </ItemGroup>
 
     <ItemGroup>

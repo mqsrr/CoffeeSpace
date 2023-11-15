@@ -18,6 +18,11 @@ internal sealed class CachedProductRepository : IProductRepository
         _cacheService = cacheService;
     }
 
+    public Task<int> GetCountAsync(CancellationToken cancellationToken)
+    {
+        return _productRepository.GetCountAsync(cancellationToken);
+    }
+
     public Task<IEnumerable<Product>> GetAllProductsAsync(CancellationToken cancellationToken)
     {
         return _cacheService.GetAllOrCreateAsync(CacheKeys.Products.GetAll, () =>
@@ -26,7 +31,7 @@ internal sealed class CachedProductRepository : IProductRepository
             return products;
         }, cancellationToken);
     }
-
+    
     public Task<Product?> GetProductByIdAsync(string id, CancellationToken cancellationToken)
     {
         return _cacheService.GetOrCreateAsync(CacheKeys.Products.GetById(id), () =>
@@ -38,7 +43,7 @@ internal sealed class CachedProductRepository : IProductRepository
 
     public async Task<bool> CreateProductAsync(Product product, CancellationToken cancellationToken)
     {
-        var created = await _productRepository.CreateProductAsync(product, cancellationToken);
+        bool created = await _productRepository.CreateProductAsync(product, cancellationToken);
         if (created)
         {
             await _cacheService.RemoveAsync(CacheKeys.Products.GetAll, cancellationToken);
@@ -61,7 +66,7 @@ internal sealed class CachedProductRepository : IProductRepository
 
     public async Task<bool> DeleteProductByIdAsync(string id, CancellationToken cancellationToken)
     {
-        var deleted = await _productRepository.DeleteProductByIdAsync(id, cancellationToken);
+        bool deleted = await _productRepository.DeleteProductByIdAsync(id, cancellationToken);
         if (deleted)
         {
             await _cacheService.RemoveAsync(CacheKeys.Products.GetAll, cancellationToken);

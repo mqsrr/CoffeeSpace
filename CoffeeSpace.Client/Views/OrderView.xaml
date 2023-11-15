@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModel="clr-namespace:CoffeeSpace.Client._ViewModels"
+             xmlns:ordering="clr-namespace:CoffeeSpace.Client.Models.Ordering"
+             xmlns:converters="clr-namespace:CoffeeSpace.Client.Converters"
+             x:DataType="viewModel:OrderViewModel"
+             x:Class="CoffeeSpace.Client.Views.OrderView"
+             Title="Orders">
+
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,1" EndPoint="1,0">
+            <GradientStop Color="#C33764" Offset="0.2" />
+            <GradientStop Color="#1D2671" Offset="1.0" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:NullToBoolConverter x:Key="NullToBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <FlexLayout Wrap="Wrap" JustifyContent="SpaceEvenly"
+                    BindableLayout.ItemsSource="{Binding Orders}" AlignItems="Start"
+                    Margin="10" Padding="20" >
+            <BindableLayout.ItemTemplate>
+                <DataTemplate x:DataType="ordering:Order">
+                    <Frame Style="{OnPlatform 
+                        WinUI={StaticResource OrderFrameWindows}}">
+                        <Grid RowDefinitions="10*,Auto,Auto,Auto,Auto,10*"
+                              ColumnDefinitions="Auto,Auto,Auto,Auto,10*"
+                              RowSpacing="15" ColumnSpacing="10" Padding="10">
+                            
+                            <Label Grid.Row="1" Grid.Column="0"
+                                   Text="Street: " TextColor="Black"
+                                   FontSize="Small"/>
+
+                            <Label Grid.Row="1" Grid.Column="1"
+                                   Text="{Binding Address.Street}" TextColor="Black"
+                                   FontSize="Small"/>
+
+                            <Label Grid.Row="2" Grid.Column="0"
+                                   Text="Order Items:" TextColor="Black"
+                                   FontSize="Small" />
+    
+                            <ListView Grid.Row="2" Grid.Column="1"
+                                      ItemsSource="{Binding OrderItems}">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="ordering:OrderItem">
+                                        <ViewCell>
+                                            <Grid RowDefinitions="10*,Auto,Auto,10*"
+                                               ColumnDefinitions="Auto,Auto,Auto,Auto,10*"
+                                               ColumnSpacing="6">
+
+                                                <Label Grid.Row="1" Grid.Column="0"
+                                                       Text="{Binding Quantity, Mode=OneWay, StringFormat='{0}'}" TextColor="Black"/>
+                                                
+                                                <Label Grid.Row="1" Grid.Column="1"
+                                                    Text="{Binding Title, Mode=OneWay}" TextColor="Black"/>
+                                                
+                                                <Label Grid.Row="1" Grid.Column="2"
+                                                    Text="{Binding UnitPrice, Mode=OneWay, StringFormat='{0:0.00}$'}" TextColor="Black"/>
+                                                
+                                                <Label Grid.Row="1" Grid.Column="3"
+                                                    Text="{Binding Total, Mode=OneWay, StringFormat='| Total: {0:0.00}$'}" TextColor="Black"/>
+                                            </Grid>
+                                        </ViewCell>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+    
+                            <Label Grid.Row="3" Grid.Column="0"
+                                   Text="Order Status:" TextColor="Black"
+                                   FontSize="Small"/>
+    
+                            <Label Grid.Row="3" Grid.Column="1"
+                                   Text="{Binding Status, Mode=OneWay}" TextColor="Green"
+                                   FontSize="Small"/>
+
+                            <Button Grid.Row="4" Grid.Column="0" IsVisible="{Binding PaymentApprovalLink, Mode=OneWay, Converter={StaticResource NullToBoolConverter}}"
+                                    Text="Proceed To Payment"
+                                    Command="{Binding Source={RelativeSource Mode=FindAncestorBindingContext, AncestorType={x:Type viewModel:OrderViewModel}}, Path=ProceedToPaymentCommand}"
+                                    CommandParameter="{Binding .}"
+                                    Style="{OnPlatform 
+                                    WinUI={StaticResource OrderViewButtonWindows}}"/>
+
+                            <Entry Grid.Row="4" Grid.Column="1" IsVisible="{Binding PaymentApprovalLink, Mode=OneWay, Converter={StaticResource NullToBoolConverter}}"
+                                   Text="{Binding TimeToProceedToPayment, Mode=OneWay}" TextColor="Black"
+                                   FontSize="Micro" BackgroundColor="LightGray"
+                                   HorizontalTextAlignment="Center" IsReadOnly="True"/>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </FlexLayout>
+    </ScrollView>
+</ContentPage>

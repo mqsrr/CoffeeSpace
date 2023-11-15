@@ -1,0 +1,11 @@
+.order-flex-container {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+
+.order-container {
+  margin: 10px;
+  padding: 20px;
+  flex: 0 0 400px;
+}

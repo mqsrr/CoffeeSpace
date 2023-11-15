@@ -7,9 +7,6 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.UseSerilog((context, configuration) =>
-    configuration.ReadFrom.Configuration(context.Configuration));
-
 builder.Configuration
     .AddJsonFile("ocelot.json", false, true)
     .AddAzureKeyVault()
@@ -19,6 +16,10 @@ builder.Services
     .AddOcelot(builder.Configuration)
     .AddPolly()
     .AddKubernetes();
+
+builder.Host.UseSerilog((context, configuration) =>
+    configuration.ReadFrom.Configuration(context.Configuration)
+        .AddDatadogLogging("API Gateway"));
 
 var app = builder.Build();
 

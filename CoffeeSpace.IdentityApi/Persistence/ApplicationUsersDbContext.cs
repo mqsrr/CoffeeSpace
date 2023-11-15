@@ -1,4 +1,4 @@
-using CoffeeSpace.IdentityApi.Models;
+using CoffeeSpace.IdentityApi.Application.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

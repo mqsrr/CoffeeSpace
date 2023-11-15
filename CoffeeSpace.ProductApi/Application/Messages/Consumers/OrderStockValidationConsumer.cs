@@ -1,4 +1,4 @@
-using CoffeeSpace.Messages.Products.Events;
+using CoffeeSpace.Messages.Products.Commands;
 using CoffeeSpace.Messages.Products.Responses;
 using CoffeeSpace.ProductApi.Application.Repositories.Abstractions;
 using MassTransit;
@@ -19,7 +19,7 @@ internal sealed class OrderStockValidationConsumer : IConsumer<OrderStockValidat
     public async Task Consume(ConsumeContext<OrderStockValidation> context)
     {
         var products = await _productRepository.GetAllProductsAsync(context.CancellationToken);
-        var isValid = context.Message.Products.All(x => 
+        bool isValid = context.Message.Products.All(x => 
             products.Any(product => product.Title.Equals(x.Title, StringComparison.Ordinal)));
         
         if (!isValid)
@@ -31,7 +31,7 @@ internal sealed class OrderStockValidationConsumer : IConsumer<OrderStockValidat
         }
         
         _logger.LogInformation("The order with ID {OrderId} has successfully completed product validation", context.Message.Order.Id);
-        await context.RespondAsync<OrderStockValidationResult>(new
+        await context.RespondAsync<OrderStockConfirmed>(new
         {
             context.Message.Order,
             IsValid = isValid

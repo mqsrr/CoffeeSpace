@@ -6,12 +6,16 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
-
+    
     <ItemGroup>
-        <PackageReference Include="MassTransit.AmazonSQS" Version="8.0.15" />
+        <InternalsVisibleTo Include="CoffeeSpace.ShipmentService.Tests"/>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="MassTransit.AmazonSQS" Version="8.1.1" />
         <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.3.1" />
-        <PackageReference Include="MassTransit.Newtonsoft" Version="8.0.15" />
-        <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.15" />
+        <PackageReference Include="MassTransit.Newtonsoft" Version="8.1.1" />
+        <PackageReference Include="MassTransit.RabbitMQ" Version="8.1.1" />
     </ItemGroup>
 
     <ItemGroup>

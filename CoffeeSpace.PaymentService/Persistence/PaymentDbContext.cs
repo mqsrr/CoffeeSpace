@@ -1,16 +1,18 @@
 using System.Reflection;
 using CoffeeSpace.PaymentService.Models;
 using Microsoft.EntityFrameworkCore;
+using PayPalCheckoutSdk.Orders;
 
 namespace CoffeeSpace.PaymentService.Persistence;
 
-internal sealed class PaymentDbContext : DbContext, IPaymentDbContext
+internal sealed class PaymentDbContext : DbContext
 {
-    public required DbSet<PaymentHistory> PaymentHistories { get; init; }
-    
+    public required DbSet<PaypalOrderInformation> PaypalOrders { get; init; }
+
+    public required DbSet<Order> Orders { get; init; }
+
     public PaymentDbContext(DbContextOptions<PaymentDbContext> options) : base(options)
     {
-
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

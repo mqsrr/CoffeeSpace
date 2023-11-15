@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:CoffeeSpace.Client._ViewModels"
+             x:DataType="viewModels:ProfileViewModel"
+             x:Class="CoffeeSpace.Client.Views.ProfileView">
+
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,1" EndPoint="1,0">
+            <GradientStop Color="#C33764" Offset="0.2" />
+
+            <GradientStop Color="#1D2671" Offset="1.0" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
+
+    <StackLayout>
+        <Frame BackgroundColor="WhiteSmoke"
+               WidthRequest="1000" HeightRequest="600">
+            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,600"
+                  ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,1000">
+
+                   <HorizontalStackLayout Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"
+                                          Padding="10" Spacing="15">
+                    <Label Text="Name: " TextColor="Black"
+                           FontSize="Medium" CharacterSpacing="1" />
+
+                    <Entry Text="{Binding Buyer.Name}" TextColor="Black"
+                           FontSize="Small" CharacterSpacing="1"
+                           BackgroundColor="LightGray" HeightRequest="20"
+                           IsReadOnly="True" HorizontalOptions="Center" VerticalOptions="Start" />
+
+                    <Label Text="Email: " TextColor="Black"
+                           FontSize="Medium" CharacterSpacing="1" />
+
+                    <Entry Text="{Binding Buyer.Email}" TextColor="Black"
+                           FontSize="Small" CharacterSpacing="1"
+                           BackgroundColor="LightGray" HeightRequest="20"
+                           IsReadOnly="True" HorizontalOptions="Center" VerticalOptions="Start" />
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout Grid.Column="1" Grid.Row="2"
+                                       Padding="10" Spacing="15">
+
+                    <Button Text="Change Password" TextColor="Black"
+                            CharacterSpacing="1" BackgroundColor="LightGray"
+                            HeightRequest="20" VerticalOptions="Start" />
+                </HorizontalStackLayout>
+            </Grid>
+        </Frame>
+    </StackLayout>
+</ContentPage>

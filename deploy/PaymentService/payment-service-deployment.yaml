@@ -4,8 +4,11 @@ metadata:
   name: payment-service
   labels:
     app: payment-service
+    tags.datadoghq.com/env: Production
+    tags.datadoghq.com/service: payment-service
+    tags.datadoghq.com/version: 1.0.0
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: payment-service
@@ -14,10 +17,16 @@ spec:
       name: payment-service
       labels:
         app: payment-service
+        tags.datadoghq.com/env: Production
+        tags.datadoghq.com/service: payment-service
+        tags.datadoghq.com/version: 1.0.0
+        admission.datadoghq.com/enabled: "true"
+      annotations:
+        admission.datadoghq.com/dotnet-lib.version: v2.38.0
     spec:
       containers:
         - name: payment-service
-          image: mqsr/coffeespace-payment-service:2.0.0
+          image: mqsr/coffeespace-payment-service:2.1.0
           imagePullPolicy: Always
           ports:
             - containerPort: 80
@@ -44,5 +53,16 @@ spec:
                 secretKeyRef:
                   key: "azure-vault-name"
                   name: "azure-key-vault"
+            - name: "DD_API_KEY"
+              valueFrom:
+                secretKeyRef:
+                  key: "api-key"
+                  name: "datadog-secret"
+            - name: DD_LOGS_INJECTION
+              value: "true"
+            - name: DD_APPSEC_ENABLED
+              value: "true"
+            - name: DD_RUNTIME_METRICS_ENABLED
+              value: "true"
       restartPolicy: Always
       

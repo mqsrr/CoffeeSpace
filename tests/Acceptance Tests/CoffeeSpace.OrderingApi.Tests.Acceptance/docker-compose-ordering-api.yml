@@ -1,0 +1,86 @@
+﻿version: '1.0'
+name: coffeespace
+
+services:
+  redis:
+    image: redis:7.0.9-alpine
+    ports:
+      - 6379:6379
+
+  rabbitmq:
+    image: rabbitmq:3.11.23-alpine
+    ports:
+      - 15672:15672
+      - 5672:5672
+  
+  orderingApi:
+    image: mqsr/coffeespace-ordering-api:1.0.7-rabbitmq
+    pull_policy: always
+    ports:
+      - 8082:80
+    environment:
+      OrderingDb__ConnectionString: 'Server=orderingDb;Port=5432;Database=testDb;User Id=test;Password=Tests123!;'
+      OrderStateSagaDb__ConnectionString: 'Server=orderStatesDb;Port=5432;Database=testDb;User Id=test;Password=Tests123!;'
+      Redis__ConnectionString: 'redis:6379'
+      Jwt__Key: 'mockedKeyHere!!!1'
+      Jwt__Audience: 'testing'
+      Jwt__Issuer: 'testing'
+      Jwt__Expire: '30'
+      RabbitMq__Host: 'rabbitmq'
+      RabbitMq__Username: 'guest'
+      RabbitMq__Password: 'guest'
+      Staging: Acceptance Test
+    depends_on:
+      - orderingDb
+      - orderStatesDb
+      - redis
+      - rabbitmq
+      - identityApi
+
+  identityApi:
+    image: mqsr/coffeespace-identity-api:1.0.6-rabbitmq
+    pull_policy: always
+    ports:
+      - 8081:80
+    environment:
+      IdentityDb__ConnectionString: 'Server=identityDb;Port=5432;Database=testDb;User Id=test;Password=Tests123!;'
+      Redis__ConnectionString: 'redis:6379'
+      Jwt__Key: 'mockedKeyHere!!!1'
+      Jwt__Audience: 'testing'
+      Jwt__Issuer: 'testing'
+      Jwt__Expire: '30'
+      RabbitMq__Host: 'rabbitmq'
+      RabbitMq__Username: 'guest'
+      RabbitMq__Password: 'guest'
+      Staging: Acceptance Test
+    depends_on:
+      - identityDb
+      - redis
+      - rabbitmq
+  
+  identityDb:
+    image: postgres:16.0-alpine
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_PASSWORD: Tests123!
+      POSTGRES_USER: test
+      POSTGRES_DB: testDb
+  
+  orderingDb:
+    image: postgres:16.0-alpine
+    ports:
+      - 5434:5432
+    environment:
+      POSTGRES_PASSWORD: Tests123!
+      POSTGRES_USER: test
+      POSTGRES_DB: testDb
+  
+  orderStatesDb:
+    image: postgres:16.0-alpine
+    ports:
+      - 5435:5432
+    environment:
+      POSTGRES_PASSWORD: Tests123!
+      POSTGRES_USER: test
+      POSTGRES_DB: testDb

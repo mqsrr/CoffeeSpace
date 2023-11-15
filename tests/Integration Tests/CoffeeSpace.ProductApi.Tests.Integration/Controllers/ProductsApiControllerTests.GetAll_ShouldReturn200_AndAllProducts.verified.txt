@@ -1,0 +1,132 @@
+﻿{
+  response: {
+    Version: 1.1,
+    Content: {
+      Headers: [
+        {
+          Content-Type: [
+            application/json; charset=utf-8; api-version=1.0
+          ]
+        }
+      ]
+    },
+    StatusCode: OK,
+    ReasonPhrase: OK,
+    Headers: [
+      {
+        api-supported-versions: [
+          1.0
+        ]
+      }
+    ],
+    TrailingHeaders: [],
+    RequestMessage: {
+      Version: 1.1,
+      Method: {
+        Method: GET
+      },
+      RequestUri: http://localhost/api/products,
+      Headers: [
+        {}
+      ]
+    },
+    IsSuccessStatusCode: true
+  },
+  productResponses: [
+    {
+      Id: Guid_1,
+      Title: Intelligent Cotton Shirt,
+      Description: Carbonite web goalkeeper gloves are ergonomically designed to give easy fit,
+      UnitPrice: 9.154923,
+      Discount: 0.6299082,
+      Quantity: 58
+    },
+    {
+      Id: Guid_2,
+      Title: Practical Rubber Car,
+      Description: Carbonite web goalkeeper gloves are ergonomically designed to give easy fit,
+      UnitPrice: 1.921108,
+      Discount: 0.81259304,
+      Quantity: 62
+    },
+    {
+      Id: Guid_3,
+      Title: Rustic Granite Bacon,
+      Description: Ergonomic executive chair upholstered in bonded black leather and PVC padded seat and back for all-day comfort and support,
+      UnitPrice: 0.8203924,
+      Discount: 0.7951698,
+      Quantity: 17
+    },
+    {
+      Id: Guid_4,
+      Title: Tasty Frozen Bacon,
+      Description: The beautiful range of Apple Naturalé that has an exciting mix of natural ingredients. With the Goodness of 100% Natural Ingredients,
+      UnitPrice: 3.5915787,
+      Discount: 0.9199722
+    },
+    {
+      Id: Guid_5,
+      Title: Refined Fresh Shoes,
+      Description: Boston's most advanced compression wear technology increases muscle oxygenation, stabilizes active muscles,
+      UnitPrice: 3.2579327,
+      Discount: 0.34332466,
+      Quantity: 73
+    },
+    {
+      Id: Guid_6,
+      Title: Practical Fresh Car,
+      Description: The Nagasaki Lander is the trademarked name of several series of Nagasaki sport bikes, that started with the 1984 ABC800J,
+      UnitPrice: 6.3110294,
+      Discount: 0.34836534,
+      Quantity: 29
+    },
+    {
+      Id: Guid_7,
+      Title: Refined Soft Towels,
+      Description: Ergonomic executive chair upholstered in bonded black leather and PVC padded seat and back for all-day comfort and support,
+      UnitPrice: 6.532479,
+      Discount: 0.7762839,
+      Quantity: 98
+    },
+    {
+      Id: Guid_8,
+      Title: Refined Frozen Chicken,
+      Description: The slim & simple Maple Gaming Keyboard from Dev Byte comes with a sleek body and 7- Color RGB LED Back-lighting for smart functionality,
+      UnitPrice: 2.178863,
+      Discount: 0.56116253,
+      Quantity: 22
+    },
+    {
+      Id: Guid_9,
+      Title: Rustic Granite Salad,
+      Description: Carbonite web goalkeeper gloves are ergonomically designed to give easy fit,
+      UnitPrice: 5.589212,
+      Discount: 0.2863804,
+      Quantity: 8
+    }
+  ],
+  sqlLogs: [
+    {
+      Type: ReaderExecutedAsync,
+      HasTransaction: false,
+      Text:
+SELECT EXISTS (
+    SELECT 1
+    FROM "Products" AS p)
+    },
+    {
+      Type: ReaderExecuted,
+      HasTransaction: false,
+      Text:
+SELECT p."Id", p."Description", p."Discount", p."Quantity", p."Title", p."UnitPrice"
+FROM "Products" AS p
+    },
+    {
+      Type: ReaderExecutedAsync,
+      HasTransaction: false,
+      Text:
+SELECT p."Id", p."Description", p."Discount", p."Quantity", p."Title", p."UnitPrice"
+FROM "Products" AS p
+    }
+  ]
+}

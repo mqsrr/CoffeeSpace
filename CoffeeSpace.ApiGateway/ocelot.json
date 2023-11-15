@@ -71,6 +71,28 @@
       }
     },
     {
+      "UpstreamPathTemplate": "/paged-products",
+      "UpstreamHttpMethod": [ "GET" ],
+
+      "DownstreamPathTemplate": "/api/paged-products",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "products-api",
+          "Port": 8082
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "QoSOptions": {
+        "ExceptionsAllowedBeforeBreaking": 3,
+        "DurationOfBreak": 1000,
+        "TimeoutValue": 6500
+      }
+    },
+    {
       "UpstreamPathTemplate": "/products/{id:guid}",
       "UpstreamHttpMethod": [ "GET", "DELETE", "PUT" ],
 
@@ -107,6 +129,19 @@
       "LoadBalancerOptions": {
         "Type": "RoundRobin"
       }
+    },
+    {
+      "UpstreamPathTemplate": "/ordering-hub/negotiate",
+      "UpstreamHttpMethod": [ "OPTIONS" , "POST"],
+
+      "DownstreamPathTemplate": "/ordering-hub/negotiate",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "ordering-api",
+          "Port": 8081
+        }
+      ]
     },
     {
       "UpstreamPathTemplate": "/buyers",
@@ -234,6 +269,38 @@
         {
           "Host": "ordering-api",
           "Port": 8081
+        }
+      ],
+      "LoadBalancerOptions": {
+        "Type": "RoundRobin"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/",
+      "UpstreamHttpMethod": [ "GET" ],
+
+      "DownstreamPathTemplate": "/",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "payment-service",
+          "Port": 8072
+        }
+      ],
+      "LoadBalancerOptions": {
+        "Type": "RoundRobin"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/application-orders/{orderId:guid}",
+      "UpstreamHttpMethod": [ "GET" ],
+
+      "DownstreamPathTemplate": "/api/application-orders/{orderId:guid}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "payment-service",
+          "Port": 8072
         }
       ],
       "LoadBalancerOptions": {

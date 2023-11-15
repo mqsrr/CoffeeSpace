@@ -1,11 +1,11 @@
 using CoffeeSpace.Domain.Ordering.BuyerInfo;
-using CoffeeSpace.Messages.Buyers.Commands;
+using CoffeeSpace.Messages.Buyers;
 using CoffeeSpace.OrderingApi.Application.Services.Abstractions;
 using MassTransit;
 
 namespace CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Consumers;
 
-internal sealed class RegisterNewBuyerConsumer : IConsumer<RegisterNewBuyer>
+public sealed class RegisterNewBuyerConsumer : IConsumer<RegisterNewBuyer>
 {
     private readonly IBuyerService _buyerService;
     private readonly ILogger<RegisterNewBuyerConsumer> _logger;
@@ -21,6 +21,7 @@ internal sealed class RegisterNewBuyerConsumer : IConsumer<RegisterNewBuyer>
         _logger.LogInformation("{@Email} was added to the ordering database", context.Message.Email);
         return _buyerService.CreateAsync(new Buyer
         {
+            Id = Guid.NewGuid().ToString(),
             Name = context.Message.Name,
             Email = context.Message.Email
         }, context.CancellationToken);

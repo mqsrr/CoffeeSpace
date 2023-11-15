@@ -1,0 +1,107 @@
+name: Test
+
+on:
+  workflow_run:
+    workflows: [Build]
+    types:
+      - completed
+
+jobs:
+  OrderingApi:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dotnet-version: ['7.0.x']
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+
+      - name: Unit Tests
+        run: dotnet test "tests/Unit Tests/CoffeeSpace.OrderingApi.Tests" --verbosity normal
+
+      - name: Integration Tests
+        run: dotnet test "tests/Integration Tests/CoffeeSpace.OrderingApi.Tests.Integration" --verbosity normal
+
+  ProductsApi:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dotnet-version: ['7.0.x']
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+
+      - name: Unit Tests
+        run: dotnet test "tests/Unit Tests/CoffeeSpace.ProductApi.Tests" --verbosity normal
+
+      - name: Integration Tests
+        run: dotnet test "tests/Integration Tests/CoffeeSpace.ProductApi.Tests.Integration" --verbosity normal
+
+  IdentityApi:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dotnet-version: ['7.0.x']
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+
+      - name: Unit Tests
+        run: dotnet test "tests/Unit Tests/CoffeeSpace.IdentityApi.Tests" --verbosity normal
+
+      - name: Integration Tests
+        run: dotnet test "tests/Integration Tests/CoffeeSpace.IdentityApi.Tests.Integration" --verbosity normal
+
+  PaymentService:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dotnet-version: ['7.0.x']
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+
+      - name: Unit Tests
+        run: dotnet test "tests/Unit Tests/CoffeeSpace.PaymentService.Tests" --verbosity normal
+
+  ShipmentService:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dotnet-version: ['7.0.x']
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+
+      - name: Unit Tests
+        run: dotnet test "tests/Unit Tests/CoffeeSpace.ShipmentService.Tests" --verbosity normal

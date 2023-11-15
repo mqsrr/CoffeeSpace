@@ -1,97 +1,72 @@
-using CoffeeSpace.Core.Services.Abstractions;
 using CoffeeSpace.Domain.Ordering.BuyerInfo;
-using CoffeeSpace.OrderingApi.Application.Helpers;
-using CoffeeSpace.OrderingApi.Application.Messaging.Mediator.Commands.Buyers;
-using CoffeeSpace.OrderingApi.Application.Messaging.Mediator.Queries.Buyers;
+using CoffeeSpace.Messages.Buyers;
+using CoffeeSpace.OrderingApi.Application.Repositories.Abstractions;
 using CoffeeSpace.OrderingApi.Application.Services.Abstractions;
-using Mediator;
+using MassTransit;
 
 namespace CoffeeSpace.OrderingApi.Application.Services;
 
 internal sealed class BuyerService : IBuyerService
 {
-    private readonly ISender _sender;
-    private readonly ICacheService<Buyer> _cache;
+    private readonly ISendEndpointProvider _sendEndpointProvider;
+    private readonly IBuyerRepository _buyerRepository;
 
-    public BuyerService(ISender sender, ICacheService<Buyer> cache)
+    public BuyerService(IBuyerRepository buyerRepository, ISendEndpointProvider sendEndpointProvider)
     {
-        _sender = sender;
-        _cache = cache;
+        _buyerRepository = buyerRepository;
+        _sendEndpointProvider = sendEndpointProvider;
     }
 
-    public Task<Buyer?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
+    public Task<Buyer?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        return _cache.GetOrCreateAsync(CacheKeys.Buyers.Get(id), async () =>
+        var buyer = _buyerRepository.GetByIdAsync(id.ToString(), cancellationToken);
+        return buyer;
+    }
+
+    public Task<Buyer?> GetByEmailAsync(string email, CancellationToken cancellationToken)
+    {
+        var buyer = _buyerRepository.GetByEmailAsync(email, cancellationToken);
+        return buyer;
+    }
+
+    public async Task<bool> CreateAsync(Buyer buyer, CancellationToken cancellationToken)
+    {
+        bool isCreated = await _buyerRepository.CreateAsync(buyer, cancellationToken);
+        return isCreated;
+    }
+
+    public async Task<Buyer?> UpdateAsync(Buyer buyer, CancellationToken cancellationToken)
+    {
+        var updatedBuyer = await _buyerRepository.UpdateAsync(buyer, cancellationToken);
+        if (updatedBuyer is not null)
         {
-            var buyer = await _sender.Send(new GetBuyerByIdQuery
+            await _sendEndpointProvider.Send<UpdateBuyer>(new
             {
-                Id = id
-            }, cancellationToken);
+                Buyer = updatedBuyer
+            }, cancellationToken).ConfigureAwait(false);
+        }
 
-            return buyer;
-        }, cancellationToken);
+        return updatedBuyer;
     }
 
-    public Task<Buyer?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
+    public async Task<bool> DeleteByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        return _cache.GetOrCreateAsync(CacheKeys.Buyers.GetByEmail(email), async () =>
+        var buyerToDelete = await _buyerRepository.GetByIdAsync(id.ToString(), cancellationToken);
+        if (buyerToDelete is null)
         {
-            var buyer = await _sender.Send(new GetBuyerByEmailQuery
+            return false;
+        }
+
+        bool isDeleted = await _buyerRepository.DeleteByIdAsync(id.ToString(), cancellationToken);
+        if (isDeleted)
+        {
+            await _sendEndpointProvider.Send<DeleteBuyer>(new
             {
-                Email = email
-            }, cancellationToken);
-
-            return buyer;
-        }, cancellationToken);
-    }
-
-    public async Task<bool> CreateAsync(Buyer buyer, CancellationToken cancellationToken = default)
-    {
-        var created = await _sender.Send(new CreateBuyerCommand
-        {
-            Buyer = buyer
-        }, cancellationToken);
-
-        if (created)
-        {
-            await _cache.RemoveAsync(CacheKeys.Buyers.Get(buyer.Id), cancellationToken);
-            await _cache.RemoveAsync(CacheKeys.Buyers.GetByEmail(buyer.Email), cancellationToken);
+                buyerToDelete.Name,
+                buyerToDelete.Email
+            }, cancellationToken).ConfigureAwait(false);
         }
-
-        return created;
-    }
-
-    public async Task<Buyer?> UpdateAsync(Buyer buyer, CancellationToken cancellationToken = default)
-    {
-        var result = await _sender.Send(new UpdateBuyerCommand
-        {
-            Buyer = buyer
-        }, cancellationToken);
-
-        if (result is not null)
-        {
-            await _cache.RemoveAsync(CacheKeys.Buyers.Get(buyer.Id), cancellationToken);
-            await _cache.RemoveAsync(CacheKeys.Buyers.GetByEmail(buyer.Email), cancellationToken);
-        }
-
-        return result;
-    }
-
-    public async Task<bool> DeleteByIdAsync(string id, CancellationToken cancellationToken = default)
-    {
-        var deleted = await _sender.Send(new DeleteBuyerByIdCommand
-        {
-            Id = id
-        }, cancellationToken);
-
-        if (deleted)
-        {
-            await _cache.RemoveAsync(CacheKeys.Buyers.Get(id), cancellationToken);
-            await _cache.RemoveAsync(CacheKeys.Order.GetAll(id), cancellationToken);
-        }
-
-        return deleted;
-    }
-}            
         
-    
+        return isDeleted;
+    }
+}

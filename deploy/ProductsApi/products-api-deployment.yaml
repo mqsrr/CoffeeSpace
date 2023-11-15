@@ -4,8 +4,11 @@ metadata:
   name: products-api
   labels:
     app: products-api
+    tags.datadoghq.com/env: Production
+    tags.datadoghq.com/service: products-api
+    tags.datadoghq.com/version: 1.0.0
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: products-api
@@ -14,10 +17,16 @@ spec:
       name: products-api
       labels:
         app: products-api
+        tags.datadoghq.com/env: Production
+        tags.datadoghq.com/service: products-api
+        tags.datadoghq.com/version: 1.0.0
+        admission.datadoghq.com/enabled: "true"
+      annotations:
+          admission.datadoghq.com/dotnet-lib.version: v2.38.0
     spec:
       containers:
         - name: products-api
-          image: mqsr/coffeespace-products-api:2.0.0
+          image: mqsr/coffeespace-products-api:2.0.2
           imagePullPolicy: Always
           env:
             - name: "ASPNETCORE_ENVIRONMENT"
@@ -42,13 +51,15 @@ spec:
                 secretKeyRef:
                   key: "azure-vault-name"
                   name: "azure-key-vault"
-          volumeMounts:
-            - name: ca-volume
-              mountPath: app/DigiCertGlobalRootCA.crt.pem
-              subPath: DigiCertGlobalRootCA.crt.pem
-              readOnly: true
+            - name: "DD_API_KEY"
+              valueFrom:
+                secretKeyRef:
+                  key: "api-key"
+                  name: "datadog-secret"
+            - name: DD_LOGS_INJECTION
+              value: "true"
+            - name: DD_APPSEC_ENABLED
+              value: "true"
+            - name: DD_RUNTIME_METRICS_ENABLED
+              value: "true"
       restartPolicy: Always
-      volumes:
-        - name: ca-volume
-          configMap:
-            name: ca-config

@@ -7,13 +7,14 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.UseSerilog((context, configuration) => 
-    configuration.ReadFrom.Configuration(context.Configuration));
-
 builder.Configuration.AddAzureKeyVault();
 
- builder.Services.AddOptions<AwsMessagingSettings>()
-     .Bind(builder.Configuration.GetRequiredSection("AWS"))
+builder.Host.UseSerilog((context, configuration) =>
+    configuration.ReadFrom.Configuration(context.Configuration)
+        .AddDatadogLogging("Shipment Service"));
+
+builder.Services.AddOptions<AwsMessagingSettings>()
+     .Bind(builder.Configuration.GetRequiredSection(AwsMessagingSettings.SectionName))
      .ValidateOnStart();
 
 builder.Services.AddMassTransit(x =>
@@ -37,7 +38,6 @@ builder.Services.AddMassTransit(x =>
 });
 
 builder.Services.AddHealthChecks();
-
 var app = builder.Build();
 
 app.UseHealthChecks("/_health");

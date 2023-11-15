@@ -1,0 +1,10 @@
+﻿targetSystem: "linux"
+datadog:
+  logs:
+    enabled: true
+    containerCollectAll: true
+  networkMonitoring:
+    enabled: true
+  apiKeyExistingSecret: datadog-secret
+  appKeyExistingSecret: datadog-secret
+  site: us5.datadoghq.com

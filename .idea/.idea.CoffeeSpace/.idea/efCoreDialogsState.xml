@@ -9,11 +9,12 @@
         <entry key="Common:2ca433a2-20f6-4f85-9d22-24f2365b2b51:dbContext" value="CoffeeSpace.IdentityApi.Persistence.ApplicationUsersDbContext" />
         <entry key="Common:99bc5b38-eb79-4b90-921b-9f954860dca4:dbContext" value="CoffeeSpace.Data.Context.ApplicationDb" />
         <entry key="Common:buildConfiguration" value="Debug" />
+        <entry key="Common:c2ee61a8-fedc-4b0c-a42c-a9851e668722:dbContext" value="CoffeeSpace.OrderingApi.Persistence.OrderStateSagaDbContext" />
         <entry key="Common:dbContext" value="CoffeeSpace.Data.Context.ApplicationDb" />
-        <entry key="Common:e40665f3-9b61-4074-9b0c-db39077ea3fa:dbContext" value="CoffeeSpace.OrderingApi.Persistence.OrderStateSagaDbContext" />
+        <entry key="Common:e40665f3-9b61-4074-9b0c-db39077ea3fa:dbContext" value="CoffeeSpace.OrderingApi.Persistence.OrderingDbContext" />
         <entry key="Common:fbb32c90-3105-499d-b025-13ed99fe7158:dbContext" value="CoffeeSpace.PaymentService.Persistence.PaymentDbContext" />
         <entry key="Common:noBuild" value="false" />
-        <entry key="Common:outputFolder" value="Migrations\ApplicationDb" />
+        <entry key="Common:outputFolder" value="Persistence/Migrations/SagaDb" />
         <entry key="Common:targetFramework" value="net7.0" />
         <entry key="Common:useDefaultConnection" value="true" />
       </map>

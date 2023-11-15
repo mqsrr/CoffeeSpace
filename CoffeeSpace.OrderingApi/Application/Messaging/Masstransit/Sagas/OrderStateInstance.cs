@@ -8,13 +8,13 @@ internal sealed class OrderStateInstance : SagaStateMachineInstance
 
     public int CurrentState { get; set; }
 
-    public string? OrderId { get; set; }
+    public required string OrderId { get; set; }
     
-    public string? BuyerId { get; set; }
+    public required string BuyerId { get; set; }
     
-    public string? UpdateOrderStatudCorrelationId { get; set; }
+    public required string UpdateOrderStatusCorrelationId { get; set; }
     
-    public bool StockValidationSuccess { get; set; }
+    public  bool StockValidationSuccess { get; set; }
 
     public bool PaymentSuccess { get; set; }
 }

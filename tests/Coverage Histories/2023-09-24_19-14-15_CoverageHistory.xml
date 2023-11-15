@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<coverage version="1.0" date="2023-09-24_19-14-15" tag="">
+  <assembly name="CoffeeSpace.ApiGateway">
+    <class name="CoffeeSpace.ApiGateway.Extensions.AzureKeyVaultExtensions" coveredlines="0" coverablelines="6" totallines="15" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="1" />
+    <class name="CoffeeSpace.ApiGateway.Extensions.JwtBearerExtensions" coveredlines="0" coverablelines="31" totallines="42" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="1" />
+    <class name="CoffeeSpace.ApiGateway.Program" coveredlines="0" coverablelines="16" totallines="30" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="1" />
+    <class name="CoffeeSpace.ApiGateway.Services.PrefixKeyVaultSecretManager" coveredlines="0" coverablelines="11" totallines="25" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="3" />
+  </assembly>
+  <assembly name="CoffeeSpace.Core">
+    <class name="CoffeeSpace.Core.Extensions.ApplicationDbExtensions" coveredlines="12" coverablelines="12" totallines="28" coveredbranches="0" totalbranches="0" coveredcodeelements="2" totalcodeelements="2" />
+    <class name="CoffeeSpace.Core.Extensions.ApplicationServiceExtensions" coveredlines="36" coverablelines="36" totallines="61" coveredbranches="0" totalbranches="0" coveredcodeelements="3" totalcodeelements="3" />
+    <class name="CoffeeSpace.Core.Extensions.AzureKeyVaultExtensions" coveredlines="5" coverablelines="9" totallines="23" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.Core.Extensions.DbContextExtensions" coveredlines="18" coverablelines="18" totallines="43" coveredbranches="0" totalbranches="0" coveredcodeelements="4" totalcodeelements="4" />
+    <class name="CoffeeSpace.Core.Extensions.DbContextSettingsExtensions" coveredlines="14" coverablelines="14" totallines="28" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.Core.Extensions.JwtBearerExtensions" coveredlines="32" coverablelines="32" totallines="47" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.Core.Extensions.RateLimiterExtensions" coveredlines="0" coverablelines="15" totallines="28" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="1" />
+    <class name="CoffeeSpace.Core.Services.CacheService&lt;TEntity&gt;" coveredlines="51" coverablelines="59" totallines="100" coveredbranches="0" totalbranches="0" coveredcodeelements="7" totalcodeelements="7" />
+    <class name="CoffeeSpace.Core.Services.PrefixKeyVaultSecretManager" coveredlines="0" coverablelines="11" totallines="26" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="3" />
+    <class name="CoffeeSpace.Core.Settings.AwsMessagingSettings" coveredlines="3" coverablelines="3" totallines="10" coveredbranches="0" totalbranches="0" coveredcodeelements="6" totalcodeelements="6" />
+    <class name="CoffeeSpace.Core.Settings.JwtSettings" coveredlines="4" coverablelines="4" totallines="12" coveredbranches="0" totalbranches="0" coveredcodeelements="8" totalcodeelements="8" />
+    <class name="CoffeeSpace.Core.Settings.PostgresDbContextSettings&lt;TDbContext&gt;" coveredlines="0" coverablelines="4" totallines="15" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="8" />
+    <class name="CoffeeSpace.Core.Settings.RabbitMqSettings" coveredlines="0" coverablelines="3" totallines="10" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="6" />
+  </assembly>
+  <assembly name="CoffeeSpace.Domain">
+    <class name="CoffeeSpace.Domain.Ordering.BuyerInfo.Address" coveredlines="4" coverablelines="4" totallines="12" coveredbranches="0" totalbranches="0" coveredcodeelements="8" totalcodeelements="8" />
+    <class name="CoffeeSpace.Domain.Ordering.BuyerInfo.Buyer" coveredlines="4" coverablelines="4" totallines="14" coveredbranches="0" totalbranches="0" coveredcodeelements="8" totalcodeelements="8" />
+    <class name="CoffeeSpace.Domain.Ordering.BuyerInfo.CardInfo.PaymentInfo" coveredlines="6" coverablelines="6" totallines="16" coveredbranches="0" totalbranches="0" coveredcodeelements="12" totalcodeelements="12" />
+    <class name="CoffeeSpace.Domain.Ordering.Orders.Order" coveredlines="6" coverablelines="6" totallines="19" coveredbranches="0" totalbranches="0" coveredcodeelements="12" totalcodeelements="12" />
+    <class name="CoffeeSpace.Domain.Ordering.Orders.OrderItem" coveredlines="7" coverablelines="7" totallines="18" coveredbranches="0" totalbranches="0" coveredcodeelements="14" totalcodeelements="14" />
+    <class name="CoffeeSpace.Domain.Products.Product" coveredlines="7" coverablelines="7" totallines="18" coveredbranches="0" totalbranches="0" coveredcodeelements="13" totalcodeelements="13" />
+  </assembly>
+  <assembly name="CoffeeSpace.IdentityApi">
+    <class name="CoffeeSpace.IdentityApi.Application.Contracts.Requests.Login.LoginRequest" coveredlines="2" coverablelines="2" totallines="8" coveredbranches="0" totalbranches="0" coveredcodeelements="4" totalcodeelements="4" />
+    <class name="CoffeeSpace.IdentityApi.Application.Contracts.Requests.Register.RegisterRequest" coveredlines="5" coverablelines="5" totallines="14" coveredbranches="0" totalbranches="0" coveredcodeelements="10" totalcodeelements="10" />
+    <class name="CoffeeSpace.IdentityApi.Application.Extensions.ApiVersionExtensions" coveredlines="10" coverablelines="10" totallines="18" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.IdentityApi.Application.Extensions.HealthChecksExtensions" coveredlines="5" coverablelines="5" totallines="11" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.IdentityApi.Application.Extensions.IdentityExtensions" coveredlines="22" coverablelines="22" totallines="36" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.IdentityApi.Application.Mapping.ApplicationUserMappingProfile" coveredlines="11" coverablelines="11" totallines="0" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.IdentityApi.Application.Messages.Commands.Handlers.RegisterUserCommandHandler" coveredlines="9" coverablelines="9" totallines="24" coveredbranches="0" totalbranches="0" coveredcodeelements="2" totalcodeelements="2" />
+    <class name="CoffeeSpace.IdentityApi.Application.Messages.Commands.RegisterUserCommand" coveredlines="1" coverablelines="1" totallines="9" coveredbranches="0" totalbranches="0" coveredcodeelements="2" totalcodeelements="2" />
+    <class name="CoffeeSpace.IdentityApi.Application.Messages.Consumers.DeleteBuyerConsumer" coveredlines="12" coverablelines="12" totallines="26" coveredbranches="0" totalbranches="0" coveredcodeelements="2" totalcodeelements="2" />
+    <class name="CoffeeSpace.IdentityApi.Application.Messages.Consumers.UpdateBuyerConsumer" coveredlines="13" coverablelines="13" totallines="28" coveredbranches="0" totalbranches="0" coveredcodeelements="2" totalcodeelements="2" />
+    <class name="CoffeeSpace.IdentityApi.Application.Messages.Queries.Handlers.LoginUserQueryHandler" coveredlines="9" coverablelines="9" totallines="23" coveredbranches="0" totalbranches="0" coveredcodeelements="2" totalcodeelements="2" />
+    <class name="CoffeeSpace.IdentityApi.Application.Messages.Queries.LoginUserQuery" coveredlines="1" coverablelines="1" totallines="9" coveredbranches="0" totalbranches="0" coveredcodeelements="2" totalcodeelements="2" />
+    <class name="CoffeeSpace.IdentityApi.Application.Models.ApplicationUser" coveredlines="5" coverablelines="5" totallines="16" coveredbranches="0" totalbranches="0" coveredcodeelements="10" totalcodeelements="10" />
+    <class name="CoffeeSpace.IdentityApi.Application.Services.AuthService" coveredlines="42" coverablelines="42" totallines="73" coveredbranches="0" totalbranches="0" coveredcodeelements="4" totalcodeelements="4" />
+    <class name="CoffeeSpace.IdentityApi.Application.Services.TokenWriter" coveredlines="22" coverablelines="22" totallines="46" coveredbranches="0" totalbranches="0" coveredcodeelements="3" totalcodeelements="3" />
+    <class name="CoffeeSpace.IdentityApi.Application.Validators.LoginRequestValidator" coveredlines="10" coverablelines="10" totallines="19" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.IdentityApi.Application.Validators.RegisterRequestValidator" coveredlines="20" coverablelines="20" totallines="32" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.IdentityApi.Controllers.AuthController" coveredlines="22" coverablelines="22" totallines="48" coveredbranches="0" totalbranches="0" coveredcodeelements="3" totalcodeelements="3" />
+    <class name="CoffeeSpace.IdentityApi.Program" coveredlines="47" coverablelines="47" totallines="76" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+  </assembly>
+  <assembly name="CoffeeSpace.IdentityApi.Tests">
+    <class name="CoffeeSpace.IdentityApi.Tests.Consumers.DeleteBuyerConsumerTests" coveredlines="30" coverablelines="30" totallines="70" coveredbranches="0" totalbranches="0" coveredcodeelements="4" totalcodeelements="4" />
+    <class name="CoffeeSpace.IdentityApi.Tests.Consumers.UpdateBuyerConsumerTests" coveredlines="31" coverablelines="31" totallines="71" coveredbranches="0" totalbranches="0" coveredcodeelements="4" totalcodeelements="4" />
+    <class name="CoffeeSpace.IdentityApi.Tests.Services.AuthServiceTests" coveredlines="95" coverablelines="95" totallines="184" coveredbranches="0" totalbranches="0" coveredcodeelements="8" totalcodeelements="8" />
+    <class name="CoffeeSpace.IdentityApi.Tests.Services.TokenWriterTests" coveredlines="38" coverablelines="38" totallines="82" coveredbranches="0" totalbranches="0" coveredcodeelements="3" totalcodeelements="3" />
+    <class name="CoffeeSpace.IdentityApi.Tests.Validators.LoginRequestValidatorTests" coveredlines="27" coverablelines="27" totallines="73" coveredbranches="0" totalbranches="0" coveredcodeelements="4" totalcodeelements="4" />
+    <class name="CoffeeSpace.IdentityApi.Tests.Validators.RegisterRequestValidatorTests" coveredlines="51" coverablelines="51" totallines="133" coveredbranches="0" totalbranches="0" coveredcodeelements="7" totalcodeelements="7" />
+  </assembly>
+  <assembly name="CoffeeSpace.IdentityApi.Tests.Acceptance">
+    <class name="CoffeeSpace.IdentityApi.Tests.Acceptance.Hooks.DockerControllerHooks" coveredlines="34" coverablelines="34" totallines="62" coveredbranches="0" totalbranches="0" coveredcodeelements="5" totalcodeelements="5" />
+    <class name="CoffeeSpace.IdentityApi.Tests.Acceptance.Models.LoginRequest" coveredlines="2" coverablelines="2" totallines="8" coveredbranches="0" totalbranches="0" coveredcodeelements="4" totalcodeelements="4" />
+    <class name="CoffeeSpace.IdentityApi.Tests.Acceptance.Models.RegisterRequest" coveredlines="5" coverablelines="5" totallines="14" coveredbranches="0" totalbranches="0" coveredcodeelements="10" totalcodeelements="10" />
+    <class name="CoffeeSpace.IdentityApi.Tests.Acceptance.StepDefinitions.UserAuthenticationStepDefinition" coveredlines="37" coverablelines="37" totallines="80" coveredbranches="0" totalbranches="0" coveredcodeelements="6" totalcodeelements="6" />
+  </assembly>
+  <assembly name="CoffeeSpace.IdentityApi.Tests.Integration">
+    <class name="CoffeeSpace.IdentityApi.Tests.Integration.Controllers.AuthControllerTests" coveredlines="36" coverablelines="36" totallines="78" coveredbranches="0" totalbranches="0" coveredcodeelements="5" totalcodeelements="5" />
+    <class name="CoffeeSpace.IdentityApi.Tests.Integration.Fakers.LoginRequestFaker" coveredlines="5" coverablelines="5" totallines="13" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.IdentityApi.Tests.Integration.Fakers.RegisterRequestFaker" coveredlines="9" coverablelines="9" totallines="18" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.IdentityApi.Tests.Integration.Fixtures.IdentityApiFactory" coveredlines="53" coverablelines="53" totallines="95" coveredbranches="0" totalbranches="0" coveredcodeelements="5" totalcodeelements="5" />
+  </assembly>
+  <assembly name="CoffeeSpace.Messages">
+    <class name="CoffeeSpace.Messages.Buyers.DeleteBuyer" coveredlines="2" coverablelines="2" totallines="8" coveredbranches="0" totalbranches="0" coveredcodeelements="4" totalcodeelements="4" />
+    <class name="CoffeeSpace.Messages.Buyers.RegisterNewBuyer" coveredlines="2" coverablelines="2" totallines="8" coveredbranches="0" totalbranches="0" coveredcodeelements="4" totalcodeelements="4" />
+    <class name="CoffeeSpace.Messages.Buyers.UpdateBuyer" coveredlines="1" coverablelines="1" totallines="8" coveredbranches="0" totalbranches="0" coveredcodeelements="2" totalcodeelements="2" />
+  </assembly>
+  <assembly name="CoffeeSpace.OrderingApi">
+    <class name="CoffeeSpace.OrderingApi.Application.Contracts.Requests.Addresses.CreateAddressRequest" coveredlines="4" coverablelines="4" totallines="12" coveredbranches="0" totalbranches="0" coveredcodeelements="8" totalcodeelements="8" />
+    <class name="CoffeeSpace.OrderingApi.Application.Contracts.Requests.Addresses.UpdateAddressRequest" coveredlines="0" coverablelines="4" totallines="12" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="8" />
+    <class name="CoffeeSpace.OrderingApi.Application.Contracts.Requests.Buyers.CreateBuyerRequest" coveredlines="3" coverablelines="3" totallines="10" coveredbranches="0" totalbranches="0" coveredcodeelements="6" totalcodeelements="6" />
+    <class name="CoffeeSpace.OrderingApi.Application.Contracts.Requests.Buyers.DeleteBuyerByIdRequest" coveredlines="1" coverablelines="1" totallines="6" coveredbranches="0" totalbranches="0" coveredcodeelements="2" totalcodeelements="2" />
+    <class name="CoffeeSpace.OrderingApi.Application.Contracts.Requests.Buyers.GetBuyerByEmailRequest" coveredlines="1" coverablelines="1" totallines="6" coveredbranches="0" totalbranches="0" coveredcodeelements="2" totalcodeelements="2" />
+    <class name="CoffeeSpace.OrderingApi.Application.Contracts.Requests.Buyers.GetBuyerByIdRequest" coveredlines="1" coverablelines="1" totallines="6" coveredbranches="0" totalbranches="0" coveredcodeelements="2" totalcodeelements="2" />
+    <class name="CoffeeSpace.OrderingApi.Application.Contracts.Requests.Buyers.UpdateBuyerRequest" coveredlines="3" coverablelines="3" totallines="10" coveredbranches="0" totalbranches="0" coveredcodeelements="6" totalcodeelements="6" />
+    <class name="CoffeeSpace.OrderingApi.Application.Contracts.Requests.Orders.CreateOrderRequest" coveredlines="6" coverablelines="6" totallines="20" coveredbranches="0" totalbranches="0" coveredcodeelements="12" totalcodeelements="12" />
+    <class name="CoffeeSpace.OrderingApi.Application.Contracts.Requests.Orders.DeleteOrderRequest" coveredlines="2" coverablelines="2" totallines="8" coveredbranches="0" totalbranches="0" coveredcodeelements="4" totalcodeelements="4" />
+    <class name="CoffeeSpace.OrderingApi.Application.Contracts.Requests.Orders.GetAllOrdersByBuyerIdRequest" coveredlines="1" coverablelines="1" totallines="6" coveredbranches="0" totalbranches="0" coveredcodeelements="2" totalcodeelements="2" />
+    <class name="CoffeeSpace.OrderingApi.Application.Contracts.Requests.Orders.GetOrderByIdRequest" coveredlines="2" coverablelines="2" totallines="8" coveredbranches="0" totalbranches="0" coveredcodeelements="4" totalcodeelements="4" />
+    <class name="CoffeeSpace.OrderingApi.Application.Contracts.Requests.PaymentInfo.CreatePaymentInfoRequest" coveredlines="6" coverablelines="6" totallines="18" coveredbranches="0" totalbranches="0" coveredcodeelements="12" totalcodeelements="12" />
+    <class name="CoffeeSpace.OrderingApi.Application.Contracts.Requests.PaymentInfo.UpdatePaymentInfoRequest" coveredlines="0" coverablelines="6" totallines="18" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="12" />
+    <class name="CoffeeSpace.OrderingApi.Application.Contracts.Responses.Addressses.AddressResponse" coveredlines="4" coverablelines="4" totallines="12" coveredbranches="0" totalbranches="0" coveredcodeelements="8" totalcodeelements="8" />
+    <class name="CoffeeSpace.OrderingApi.Application.Contracts.Responses.Buyers.BuyerResponse" coveredlines="4" coverablelines="4" totallines="14" coveredbranches="0" totalbranches="0" coveredcodeelements="8" totalcodeelements="8" />
+    <class name="CoffeeSpace.OrderingApi.Application.Contracts.Responses.Orders.OrderResponse" coveredlines="4" coverablelines="4" totallines="15" coveredbranches="0" totalbranches="0" coveredcodeelements="8" totalcodeelements="8" />
+    <class name="CoffeeSpace.OrderingApi.Application.Extensions.ApiVersionExtensions" coveredlines="9" coverablelines="9" totallines="17" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.OrderingApi.Application.Extensions.HealthChecksExtensions" coveredlines="6" coverablelines="6" totallines="12" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.OrderingApi.Application.Helpers.CacheKeys" coveredlines="4" coverablelines="4" totallines="16" coveredbranches="0" totalbranches="0" coveredcodeelements="4" totalcodeelements="4" />
+    <class name="CoffeeSpace.OrderingApi.Application.Mapping.BuyerMappingProfile" coveredlines="52" coverablelines="52" totallines="22" coveredbranches="0" totalbranches="0" coveredcodeelements="6" totalcodeelements="6" />
+    <class name="CoffeeSpace.OrderingApi.Application.Mapping.OrderItemMappingProfile" coveredlines="12" coverablelines="12" totallines="0" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.OrderingApi.Application.Mapping.OrderMappingProfile" coveredlines="58" coverablelines="58" totallines="21" coveredbranches="0" totalbranches="0" coveredcodeelements="6" totalcodeelements="6" />
+    <class name="CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Consumers.RegisterNewBuyerConsumer" coveredlines="14" coverablelines="14" totallines="29" coveredbranches="0" totalbranches="0" coveredcodeelements="2" totalcodeelements="2" />
+    <class name="CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Consumers.UpdateOrderStatusConsumer" coveredlines="17" coverablelines="17" totallines="34" coveredbranches="0" totalbranches="0" coveredcodeelements="2" totalcodeelements="2" />
+    <class name="CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Sagas.Definitions.OrderStateDefinition" coveredlines="3" coverablelines="3" totallines="17" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Sagas.OrderStateInstance" coveredlines="7" coverablelines="7" totallines="20" coveredbranches="0" totalbranches="0" coveredcodeelements="14" totalcodeelements="14" />
+    <class name="CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Sagas.OrderStateMachine" coveredlines="105" coverablelines="105" totallines="143" coveredbranches="0" totalbranches="0" coveredcodeelements="21" totalcodeelements="21" />
+    <class name="CoffeeSpace.OrderingApi.Application.Pipelines.Buyers.BuyerCacheInvalidationPipeline" coveredlines="39" coverablelines="39" totallines="66" coveredbranches="0" totalbranches="0" coveredcodeelements="4" totalcodeelements="4" />
+    <class name="CoffeeSpace.OrderingApi.Application.Pipelines.Buyers.BuyerCachePipeline" coveredlines="20" coverablelines="20" totallines="43" coveredbranches="0" totalbranches="0" coveredcodeelements="5" totalcodeelements="5" />
+    <class name="CoffeeSpace.OrderingApi.Application.Pipelines.Orders.OrderCacheInvalidationPipeline" coveredlines="27" coverablelines="39" totallines="67" coveredbranches="0" totalbranches="0" coveredcodeelements="3" totalcodeelements="4" />
+    <class name="CoffeeSpace.OrderingApi.Application.Pipelines.Orders.OrderCachePipeline" coveredlines="20" coverablelines="20" totallines="43" coveredbranches="0" totalbranches="0" coveredcodeelements="5" totalcodeelements="5" />
+    <class name="CoffeeSpace.OrderingApi.Application.Repositories.BuyerRepository" coveredlines="40" coverablelines="40" totallines="73" coveredbranches="0" totalbranches="0" coveredcodeelements="6" totalcodeelements="6" />
+    <class name="CoffeeSpace.OrderingApi.Application.Repositories.OrderRepository" coveredlines="46" coverablelines="55" totallines="95" coveredbranches="0" totalbranches="0" coveredcodeelements="6" totalcodeelements="7" />
+    <class name="CoffeeSpace.OrderingApi.Application.Services.BuyerService" coveredlines="39" coverablelines="39" totallines="67" coveredbranches="0" totalbranches="0" coveredcodeelements="6" totalcodeelements="6" />
+    <class name="CoffeeSpace.OrderingApi.Application.Services.OrderService" coveredlines="41" coverablelines="41" totallines="70" coveredbranches="0" totalbranches="0" coveredcodeelements="6" totalcodeelements="6" />
+    <class name="CoffeeSpace.OrderingApi.Application.Validators.Buyers.BuyerResponseValidator" coveredlines="13" coverablelines="13" totallines="23" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.OrderingApi.Application.Validators.Buyers.CreateBuyerRequestValidator" coveredlines="10" coverablelines="10" totallines="19" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.OrderingApi.Application.Validators.Buyers.UpdateBuyerRequestValidator" coveredlines="12" coverablelines="12" totallines="22" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.OrderingApi.Application.Validators.Orders.CreateOrderRequestValidator" coveredlines="19" coverablelines="19" totallines="32" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.OrderingApi.Application.Validators.Orders.OrderItemValidator" coveredlines="23" coverablelines="23" totallines="35" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.OrderingApi.Application.Validators.Orders.OrderResponseValidator" coveredlines="17" coverablelines="17" totallines="29" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.OrderingApi.Controllers.BuyersController" coveredlines="35" coverablelines="35" totallines="68" coveredbranches="0" totalbranches="0" coveredcodeelements="6" totalcodeelements="6" />
+    <class name="CoffeeSpace.OrderingApi.Controllers.OrdersController" coveredlines="28" coverablelines="28" totallines="60" coveredbranches="0" totalbranches="0" coveredcodeelements="5" totalcodeelements="5" />
+    <class name="CoffeeSpace.OrderingApi.Program" coveredlines="74" coverablelines="74" totallines="116" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+  </assembly>
+  <assembly name="CoffeeSpace.OrderingApi.Tests">
+    <class name="CoffeeSpace.OrderingApi.Tests.Consumers.RegisterNewBuyerConsumerTests" coveredlines="26" coverablelines="26" totallines="66" coveredbranches="0" totalbranches="0" coveredcodeelements="4" totalcodeelements="4" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Consumers.UpdateOrderStatusConsumerTests" coveredlines="30" coverablelines="30" totallines="72" coveredbranches="0" totalbranches="0" coveredcodeelements="4" totalcodeelements="4" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Fixtures.OrderingDbContextFixture" coveredlines="13" coverablelines="13" totallines="30" coveredbranches="0" totalbranches="0" coveredcodeelements="7" totalcodeelements="7" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Repositories.BuyerRepositoryTests" coveredlines="52" coverablelines="52" totallines="131" coveredbranches="0" totalbranches="0" coveredcodeelements="7" totalcodeelements="7" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Repositories.OrderRepositoryTests" coveredlines="49" coverablelines="49" totallines="124" coveredbranches="0" totalbranches="0" coveredcodeelements="6" totalcodeelements="6" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Sagas.OrderStateMachineTests" coveredlines="34" coverablelines="34" totallines="71" coveredbranches="0" totalbranches="0" coveredcodeelements="4" totalcodeelements="4" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Services.BuyerServiceTests" coveredlines="83" coverablelines="83" totallines="188" coveredbranches="0" totalbranches="0" coveredcodeelements="11" totalcodeelements="11" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Services.OrderServiceTests" coveredlines="77" coverablelines="77" totallines="174" coveredbranches="0" totalbranches="0" coveredcodeelements="10" totalcodeelements="10" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Validators.Buyers.BuyerResponseValidatorTests" coveredlines="34" coverablelines="34" totallines="94" coveredbranches="0" totalbranches="0" coveredcodeelements="5" totalcodeelements="5" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Validators.Buyers.CreateBuyerRequestValidatorTests" coveredlines="27" coverablelines="27" totallines="74" coveredbranches="0" totalbranches="0" coveredcodeelements="4" totalcodeelements="4" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Validators.Buyers.UpdateBuyerRequestValidatorTests" coveredlines="27" coverablelines="27" totallines="74" coveredbranches="0" totalbranches="0" coveredcodeelements="4" totalcodeelements="4" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Validators.Orders.CreateOrderRequestValidatorTests" coveredlines="39" coverablelines="39" totallines="84" coveredbranches="0" totalbranches="0" coveredcodeelements="4" totalcodeelements="4" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Validators.Orders.OrderResponseValidatorTests" coveredlines="12" coverablelines="12" totallines="37" coveredbranches="0" totalbranches="0" coveredcodeelements="2" totalcodeelements="2" />
+  </assembly>
+  <assembly name="CoffeeSpace.OrderingApi.Tests.Acceptance">
+    <class name="CoffeeSpace.OrderingApi.Tests.Acceptance.Fakers.CreateAddressRequestFaker" coveredlines="6" coverablelines="6" totallines="14" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Acceptance.Fakers.CreateOrderItemRequestFaker" coveredlines="8" coverablelines="8" totallines="16" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Acceptance.Fakers.CreateOrderRequestFaker" coveredlines="7" coverablelines="7" totallines="15" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Acceptance.Fakers.CreatePaymentInfoRequestFaker" coveredlines="8" coverablelines="8" totallines="16" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Acceptance.Helpers.ApiEndpoints" coveredlines="9" coverablelines="9" totallines="25" coveredbranches="0" totalbranches="0" coveredcodeelements="9" totalcodeelements="9" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Acceptance.Hooks.DockerControllerHooks" coveredlines="52" coverablelines="52" totallines="88" coveredbranches="0" totalbranches="0" coveredcodeelements="6" totalcodeelements="6" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Acceptance.Models.AddressResponse" coveredlines="4" coverablelines="4" totallines="12" coveredbranches="0" totalbranches="0" coveredcodeelements="8" totalcodeelements="8" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Acceptance.Models.BuyerResponse" coveredlines="4" coverablelines="4" totallines="12" coveredbranches="0" totalbranches="0" coveredcodeelements="9" totalcodeelements="9" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Acceptance.Models.CreateAddressRequest" coveredlines="3" coverablelines="3" totallines="10" coveredbranches="0" totalbranches="0" coveredcodeelements="6" totalcodeelements="6" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Acceptance.Models.CreateBuyerRequest" coveredlines="2" coverablelines="2" totallines="8" coveredbranches="0" totalbranches="0" coveredcodeelements="4" totalcodeelements="4" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Acceptance.Models.CreateOrderItemRequest" coveredlines="6" coverablelines="6" totallines="16" coveredbranches="0" totalbranches="0" coveredcodeelements="11" totalcodeelements="11" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Acceptance.Models.CreateOrderRequest" coveredlines="4" coverablelines="4" totallines="12" coveredbranches="0" totalbranches="0" coveredcodeelements="8" totalcodeelements="8" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Acceptance.Models.CreatePaymentInfoRequest" coveredlines="5" coverablelines="5" totallines="14" coveredbranches="0" totalbranches="0" coveredcodeelements="10" totalcodeelements="10" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Acceptance.Models.OrderItem" coveredlines="7" coverablelines="7" totallines="18" coveredbranches="0" totalbranches="0" coveredcodeelements="14" totalcodeelements="14" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Acceptance.Models.OrderResponse" coveredlines="4" coverablelines="4" totallines="12" coveredbranches="0" totalbranches="0" coveredcodeelements="8" totalcodeelements="8" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Acceptance.Models.RegisterRequest" coveredlines="5" coverablelines="5" totallines="14" coveredbranches="0" totalbranches="0" coveredcodeelements="10" totalcodeelements="10" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Acceptance.Models.UpdateBuyerRequest" coveredlines="2" coverablelines="2" totallines="8" coveredbranches="0" totalbranches="0" coveredcodeelements="4" totalcodeelements="4" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Acceptance.StepDefinitions.BuyersManagementStepDefinition" coveredlines="68" coverablelines="68" totallines="125" coveredbranches="0" totalbranches="0" coveredcodeelements="10" totalcodeelements="10" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Acceptance.StepDefinitions.OrderManagementStepDefinition" coveredlines="87" coverablelines="87" totallines="157" coveredbranches="0" totalbranches="0" coveredcodeelements="12" totalcodeelements="12" />
+  </assembly>
+  <assembly name="CoffeeSpace.OrderingApi.Tests.Integration">
+    <class name="CoffeeSpace.OrderingApi.Tests.Integration.Controllers.BuyersControllerTests" coveredlines="71" coverablelines="71" totallines="145" coveredbranches="0" totalbranches="0" coveredcodeelements="8" totalcodeelements="8" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Integration.Controllers.OrdersControllerTests" coveredlines="71" coverablelines="71" totallines="133" coveredbranches="0" totalbranches="0" coveredcodeelements="7" totalcodeelements="7" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Integration.Fakers.Models.AddressFaker" coveredlines="8" coverablelines="8" totallines="16" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Integration.Fakers.Models.BuyerFaker" coveredlines="8" coverablelines="8" totallines="18" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Integration.Fakers.Models.OrderFaker" coveredlines="9" coverablelines="9" totallines="20" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Integration.Fakers.Models.OrderItemFaker" coveredlines="10" coverablelines="10" totallines="19" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Integration.Fakers.Models.PaymentInfoFaker" coveredlines="9" coverablelines="9" totallines="18" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Integration.Fakers.Requests.CreateAddressRequestFaker" coveredlines="6" coverablelines="6" totallines="14" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Integration.Fakers.Requests.CreateBuyerRequestFaker" coveredlines="6" coverablelines="6" totallines="14" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Integration.Fakers.Requests.CreateOrderRequestFaker" coveredlines="0" coverablelines="6" totallines="17" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="1" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Integration.Fakers.Requests.CreatePaymentInfoRequestFaker" coveredlines="8" coverablelines="8" totallines="17" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Integration.Fakers.Requests.UpdateBuyerRequestFaker" coveredlines="0" coverablelines="7" totallines="15" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="1" />
+    <class name="CoffeeSpace.OrderingApi.Tests.Integration.Fixtures.OrderingApiFactory" coveredlines="135" coverablelines="135" totallines="209" coveredbranches="0" totalbranches="0" coveredcodeelements="18" totalcodeelements="18" />
+  </assembly>
+  <assembly name="CoffeeSpace.PaymentService">
+    <class name="CoffeeSpace.PaymentService.Consumers.OrderPaymentValidationConsumer" coveredlines="23" coverablelines="23" totallines="41" coveredbranches="0" totalbranches="0" coveredcodeelements="2" totalcodeelements="2" />
+    <class name="CoffeeSpace.PaymentService.Extensions.HealthChecksExtensions" coveredlines="0" coverablelines="5" totallines="11" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="1" />
+    <class name="CoffeeSpace.PaymentService.Models.PaymentHistory" coveredlines="5" coverablelines="5" totallines="14" coveredbranches="0" totalbranches="0" coveredcodeelements="10" totalcodeelements="10" />
+    <class name="CoffeeSpace.PaymentService.Program" coveredlines="0" coverablelines="32" totallines="53" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="1" />
+    <class name="CoffeeSpace.PaymentService.Repositories.PaymentHistoryRepository" coveredlines="19" coverablelines="35" totallines="61" coveredbranches="0" totalbranches="0" coveredcodeelements="4" totalcodeelements="6" />
+  </assembly>
+  <assembly name="CoffeeSpace.PaymentService.Tests">
+    <class name="CoffeeSpace.PaymentService.Tests.Consumers.OrderPaymentValidationConsumerTests" coveredlines="30" coverablelines="30" totallines="70" coveredbranches="0" totalbranches="0" coveredcodeelements="4" totalcodeelements="4" />
+    <class name="CoffeeSpace.PaymentService.Tests.Repositories.PaymentHistoryRepositoryTests" coveredlines="41" coverablelines="41" totallines="106" coveredbranches="0" totalbranches="0" coveredcodeelements="6" totalcodeelements="6" />
+  </assembly>
+  <assembly name="CoffeeSpace.ProductApi">
+    <class name="CoffeeSpace.ProductApi.Application.Contracts.Requests.CreateProductRequest" coveredlines="6" coverablelines="6" totallines="16" coveredbranches="0" totalbranches="0" coveredcodeelements="12" totalcodeelements="12" />
+    <class name="CoffeeSpace.ProductApi.Application.Contracts.Requests.DeleteProductByIdRequest" coveredlines="1" coverablelines="1" totallines="6" coveredbranches="0" totalbranches="0" coveredcodeelements="2" totalcodeelements="2" />
+    <class name="CoffeeSpace.ProductApi.Application.Contracts.Requests.GetPagedProductsRequest" coveredlines="2" coverablelines="2" totallines="8" coveredbranches="0" totalbranches="0" coveredcodeelements="4" totalcodeelements="4" />
+    <class name="CoffeeSpace.ProductApi.Application.Contracts.Requests.GetProductByIdRequest" coveredlines="1" coverablelines="1" totallines="6" coveredbranches="0" totalbranches="0" coveredcodeelements="2" totalcodeelements="2" />
+    <class name="CoffeeSpace.ProductApi.Application.Contracts.Requests.UpdateProductRequest" coveredlines="6" coverablelines="6" totallines="16" coveredbranches="0" totalbranches="0" coveredcodeelements="12" totalcodeelements="12" />
+    <class name="CoffeeSpace.ProductApi.Application.Contracts.Responses.ProductResponse" coveredlines="6" coverablelines="6" totallines="16" coveredbranches="0" totalbranches="0" coveredcodeelements="12" totalcodeelements="12" />
+    <class name="CoffeeSpace.ProductApi.Application.Extensions.ApiVersionExtensions" coveredlines="10" coverablelines="10" totallines="18" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.ProductApi.Application.Extensions.HealthChecksExtensions" coveredlines="5" coverablelines="5" totallines="11" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.ProductApi.Application.Extensions.PagedListExtensions" coveredlines="0" coverablelines="9" totallines="17" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="1" />
+    <class name="CoffeeSpace.ProductApi.Application.Helpers.CacheKeys" coveredlines="2" coverablelines="3" totallines="13" coveredbranches="0" totalbranches="0" coveredcodeelements="2" totalcodeelements="3" />
+    <class name="CoffeeSpace.ProductApi.Application.Helpers.PagedList&lt;TEntity&gt;" coveredlines="0" coverablelines="6" totallines="16" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="10" />
+    <class name="CoffeeSpace.ProductApi.Application.Mapping.ProductMappingConfig" coveredlines="40" coverablelines="40" totallines="23" coveredbranches="0" totalbranches="0" coveredcodeelements="4" totalcodeelements="4" />
+    <class name="CoffeeSpace.ProductApi.Application.Messages.Consumers.OrderStockValidationConsumer" coveredlines="21" coverablelines="21" totallines="40" coveredbranches="0" totalbranches="0" coveredcodeelements="2" totalcodeelements="2" />
+    <class name="CoffeeSpace.ProductApi.Application.Repositories.CachedProductRepository" coveredlines="48" coverablelines="55" totallines="87" coveredbranches="0" totalbranches="0" coveredcodeelements="7" totalcodeelements="8" />
+    <class name="CoffeeSpace.ProductApi.Application.Repositories.ProductRepository" coveredlines="36" coverablelines="48" totallines="81" coveredbranches="0" totalbranches="0" coveredcodeelements="7" totalcodeelements="8" />
+    <class name="CoffeeSpace.ProductApi.Application.Services.ProductService" coveredlines="27" coverablelines="32" totallines="60" coveredbranches="0" totalbranches="0" coveredcodeelements="7" totalcodeelements="8" />
+    <class name="CoffeeSpace.ProductApi.Application.Validators.CreateProductRequestValidator" coveredlines="23" coverablelines="23" totallines="35" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.ProductApi.Application.Validators.ProductResponseValidator" coveredlines="26" coverablelines="26" totallines="39" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.ProductApi.Application.Validators.UpdateProductRequestValidator" coveredlines="23" coverablelines="23" totallines="35" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.ProductApi.Controllers.ProductsController" coveredlines="33" coverablelines="37" totallines="77" coveredbranches="0" totalbranches="0" coveredcodeelements="6" totalcodeelements="7" />
+    <class name="CoffeeSpace.ProductApi.Program" coveredlines="51" coverablelines="51" totallines="86" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+  </assembly>
+  <assembly name="CoffeeSpace.ProductApi.Tests">
+    <class name="CoffeeSpace.ProductApi.Tests.Consumers.OrderStockValidationConsumerTests" coveredlines="46" coverablelines="46" totallines="95" coveredbranches="0" totalbranches="0" coveredcodeelements="5" totalcodeelements="5" />
+    <class name="CoffeeSpace.ProductApi.Tests.Repositories.CachedProductRepositoryTests" coveredlines="107" coverablelines="107" totallines="231" coveredbranches="0" totalbranches="0" coveredcodeelements="12" totalcodeelements="12" />
+    <class name="CoffeeSpace.ProductApi.Tests.Repositories.ProductRepositoryTests" coveredlines="70" coverablelines="70" totallines="171" coveredbranches="0" totalbranches="0" coveredcodeelements="9" totalcodeelements="9" />
+    <class name="CoffeeSpace.ProductApi.Tests.Services.ProductServiceTests" coveredlines="88" coverablelines="88" totallines="201" coveredbranches="0" totalbranches="0" coveredcodeelements="11" totalcodeelements="11" />
+    <class name="CoffeeSpace.ProductApi.Tests.Validators.CreateProductRequestValidatorTests" coveredlines="49" coverablelines="49" totallines="125" coveredbranches="0" totalbranches="0" coveredcodeelements="7" totalcodeelements="7" />
+    <class name="CoffeeSpace.ProductApi.Tests.Validators.ProductResponseValidatorTests" coveredlines="49" coverablelines="49" totallines="125" coveredbranches="0" totalbranches="0" coveredcodeelements="7" totalcodeelements="7" />
+    <class name="CoffeeSpace.ProductApi.Tests.Validators.UpdateProductRequestValidatorTests" coveredlines="49" coverablelines="49" totallines="125" coveredbranches="0" totalbranches="0" coveredcodeelements="7" totalcodeelements="7" />
+  </assembly>
+  <assembly name="CoffeeSpace.ProductApi.Tests.Acceptance">
+    <class name="CoffeeSpace.ProductApi.Application.Contracts.Responses.ProductResponse" coveredlines="6" coverablelines="6" totallines="16" coveredbranches="0" totalbranches="0" coveredcodeelements="12" totalcodeelements="12" />
+    <class name="CoffeeSpace.ProductApi.Tests.Acceptance.Helpers.ApiEndpoints" coveredlines="3" coverablelines="3" totallines="19" coveredbranches="0" totalbranches="0" coveredcodeelements="3" totalcodeelements="3" />
+    <class name="CoffeeSpace.ProductApi.Tests.Acceptance.Hooks.DockerControllerHooks" coveredlines="52" coverablelines="52" totallines="90" coveredbranches="0" totalbranches="0" coveredcodeelements="6" totalcodeelements="6" />
+    <class name="CoffeeSpace.ProductApi.Tests.Acceptance.Models.CreateProductRequest" coveredlines="6" coverablelines="6" totallines="16" coveredbranches="0" totalbranches="0" coveredcodeelements="12" totalcodeelements="12" />
+    <class name="CoffeeSpace.ProductApi.Tests.Acceptance.Models.RegisterRequest" coveredlines="5" coverablelines="5" totallines="14" coveredbranches="0" totalbranches="0" coveredcodeelements="10" totalcodeelements="10" />
+    <class name="CoffeeSpace.ProductApi.Tests.Acceptance.Models.UpdateProductRequest" coveredlines="6" coverablelines="6" totallines="16" coveredbranches="0" totalbranches="0" coveredcodeelements="12" totalcodeelements="12" />
+    <class name="CoffeeSpace.ProductApi.Tests.Acceptance.StepDefinitions.ProductManagementSteps" coveredlines="77" coverablelines="77" totallines="138" coveredbranches="0" totalbranches="0" coveredcodeelements="11" totalcodeelements="11" />
+  </assembly>
+  <assembly name="CoffeeSpace.ProductApi.Tests.Integration">
+    <class name="CoffeeSpace.ProductApi.Tests.Integration.Controllers.ProductsApiControllerTests" coveredlines="69" coverablelines="69" totallines="137" coveredbranches="0" totalbranches="0" coveredcodeelements="8" totalcodeelements="8" />
+    <class name="CoffeeSpace.ProductApi.Tests.Integration.Fakers.CreateProductRequestFaker" coveredlines="9" coverablelines="9" totallines="18" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.ProductApi.Tests.Integration.Fakers.ProductFaker" coveredlines="10" coverablelines="10" totallines="19" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.ProductApi.Tests.Integration.Fakers.UpdateProductRequestFaker" coveredlines="10" coverablelines="10" totallines="19" coveredbranches="0" totalbranches="0" coveredcodeelements="1" totalcodeelements="1" />
+    <class name="CoffeeSpace.ProductApi.Tests.Integration.Fixtures.ProductApiFactory" coveredlines="72" coverablelines="72" totallines="128" coveredbranches="0" totalbranches="0" coveredcodeelements="9" totalcodeelements="9" />
+  </assembly>
+  <assembly name="CoffeeSpace.ShipmentService">
+    <class name="CoffeeSpace.ShipmentService.Consumers.RequestOrderShipmentConsumer" coveredlines="13" coverablelines="13" totallines="28" coveredbranches="0" totalbranches="0" coveredcodeelements="2" totalcodeelements="2" />
+    <class name="CoffeeSpace.ShipmentService.Program" coveredlines="0" coverablelines="30" totallines="45" coveredbranches="0" totalbranches="0" coveredcodeelements="0" totalcodeelements="1" />
+  </assembly>
+  <assembly name="CoffeeSpace.ShipmentService.Tests">
+    <class name="CoffeeSpace.ShipmentService.Tests.Consumers.RequestOrderShipmentConsumerTests" coveredlines="24" coverablelines="24" totallines="57" coveredbranches="0" totalbranches="0" coveredcodeelements="4" totalcodeelements="4" />
+  </assembly>
+</coverage>

@@ -1,99 +1,60 @@
-using CoffeeSpace.Core.Services.Abstractions;
 using CoffeeSpace.Domain.Ordering.Orders;
-using CoffeeSpace.OrderingApi.Application.Helpers;
-using CoffeeSpace.OrderingApi.Application.Messaging.Mediator.Commands.Orders;
-using CoffeeSpace.OrderingApi.Application.Messaging.Mediator.Queries.Orders;
+using CoffeeSpace.Messages.Ordering.Commands;
+using CoffeeSpace.OrderingApi.Application.Mapping;
+using CoffeeSpace.OrderingApi.Application.Repositories.Abstractions;
 using CoffeeSpace.OrderingApi.Application.Services.Abstractions;
-using Mediator;
+using CoffeeSpace.OrderingApi.Application.SignalRHubs;
+using CoffeeSpace.OrderingApi.Application.SignalRHubs.Abstraction;
+using MassTransit;
+using Microsoft.AspNetCore.SignalR;
 
 namespace CoffeeSpace.OrderingApi.Application.Services;
 
 internal sealed class OrderService : IOrderService
 {
-    private readonly ISender _sender;
-    private readonly ICacheService<Order> _cache;
+    private readonly IOrderRepository _orderRepository;
+    private readonly IPublishEndpoint _publishEndpoint;
+    private readonly IHubContext<OrderingHub, IOrderingHub> _hubContext;
 
-    public OrderService(ISender sender, ICacheService<Order> cache)
+    public OrderService(IOrderRepository orderRepository, IPublishEndpoint publishEndpoint, IHubContext<OrderingHub, IOrderingHub> hubContext)
     {
-        _sender = sender;
-        _cache = cache;
+        _orderRepository = orderRepository;
+        _publishEndpoint = publishEndpoint;
+        _hubContext = hubContext;
     }
 
-    public Task<IEnumerable<Order>> GetAllByBuyerIdAsync(string buyerId, CancellationToken cancellationToken = default)
+    public Task<IEnumerable<Order>> GetAllByBuyerIdAsync(Guid buyerId, CancellationToken cancellationToken)
     {
-        return _cache.GetAllOrCreateAsync(CacheKeys.Order.GetAll(buyerId), async () =>
+        var orders = _orderRepository.GetAllByBuyerIdAsync(buyerId.ToString(), cancellationToken);
+        return orders;
+    }
+
+    public Task<Order?> GetByIdAsync(Guid id, Guid buyerId, CancellationToken cancellationToken)
+    {
+        var order = _orderRepository.GetByIdAsync(id.ToString(), cancellationToken);
+        return order;
+    }
+
+    public async Task<bool> CreateAsync(Order order, CancellationToken cancellationToken)
+    {
+        bool isCreated = await _orderRepository.CreateAsync(order, cancellationToken);
+        if (!isCreated)
         {
-            var orders = await _sender.Send(new GetAllOrdersByBuyerIdQuery
-            {
-                BuyerId = buyerId
-            }, cancellationToken);
+            return isCreated;
+        }
 
-            return orders;
-        }, cancellationToken);
-    }
-
-    public Task<Order?> GetByIdAsync(string id, string buyerId, CancellationToken cancellationToken = default)
-    {
-        return _cache.GetOrCreateAsync(CacheKeys.Order.GetByCustomerId(id, buyerId), async () =>
-        {
-            var order = await _sender.Send(new GetOrderByIdQuery
-            {
-                BuyerId = buyerId,
-                Id = id
-            }, cancellationToken);
-
-            return order;
-        }, cancellationToken);
-    }
-
-    public async Task<bool> CreateAsync(Order order, CancellationToken cancellationToken = default)
-    {
-        var created = await _sender.Send(new CreateOrderCommand
+        await _hubContext.Clients.Groups(order.BuyerId, "Web Dashboard").OrderCreated(order.ToResponse());
+        await _publishEndpoint.Publish<SubmitOrder>(new
         {
             Order = order
-        }, cancellationToken);
-
-        if (created)
-        {
-            await _cache.RemoveAsync(CacheKeys.Order.GetAll(order.BuyerId), cancellationToken);
-            await _cache.RemoveAsync(CacheKeys.Buyers.Get(order.BuyerId), cancellationToken);
-        }
-
-        return created;
+        }, cancellationToken).ConfigureAwait(false);
+        
+        return isCreated;
     }
-
-    public async Task<Order?> UpdateAsync(Order order, CancellationToken cancellationToken = default)
+    
+    public Task<bool> DeleteByIdAsync(Guid id, Guid buyerId, CancellationToken cancellationToken)
     {
-        var result = await _sender.Send(new UpdateOrderCommand
-        {
-            Order = order
-        }, cancellationToken);
-
-        if (result is not null)
-        {
-            await _cache.RemoveAsync(CacheKeys.Order.GetAll(order.BuyerId), cancellationToken);
-            await _cache.RemoveAsync(CacheKeys.Order.GetByCustomerId(order.Id, order.BuyerId), cancellationToken);
-            
-            await _cache.RemoveAsync(CacheKeys.Buyers.Get(order.BuyerId), cancellationToken);
-            await _cache.RemoveAsync(CacheKeys.Buyers.GetByEmail(order.Buyer!.Email), cancellationToken);
-        }
-
-        return result;
-    }
-
-    public async Task<bool> DeleteByIdAsync(string id, string buyerId, CancellationToken cancellationToken = default)
-    {
-        var deleted = await _sender.Send(new DeleteOrderByIdCommand
-        {
-            Id = id
-        }, cancellationToken);
-
-        if (deleted)
-        {
-            await _cache.RemoveAsync(CacheKeys.Order.GetAll(buyerId), cancellationToken);
-            await _cache.RemoveAsync(CacheKeys.Order.GetByCustomerId(id, buyerId), cancellationToken);
-        }
-
-        return deleted;
+        var isDeleted = _orderRepository.DeleteByIdAsync(id.ToString(), cancellationToken);
+        return isDeleted;
     }
 }

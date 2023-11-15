@@ -17,7 +17,7 @@
 							"script": {
 								"exec": [
 									"const products = pm.response.json();",
-									"const productId = products[0].id;",
+									"const productId = products.items[0].id;",
 									"pm.collectionVariables.set(\"productId\", productId);"
 								],
 								"type": "text/javascript"
@@ -78,6 +78,92 @@
 							],
 							"cookie": [],
 							"body": "[\n    {\n        \"id\": \"68bc015f-a2f0-4024-8fce-6a992cad1e0d\",\n        \"title\": \"Capuch\",\n        \"description\": \"Hello there\",\n        \"unitPrice\": 2.3,\n        \"discount\": 0,\n        \"quantity\": 1,\n        \"total\": 2.3\n    },\n    {\n        \"id\": \"adb9550e-3660-4b39-aa06-4614e96bb3f1\",\n        \"title\": \"Capuch\",\n        \"description\": \"Hello there\",\n        \"unitPrice\": 2.3,\n        \"discount\": 0,\n        \"quantity\": 1,\n        \"total\": 2.3\n    },\n    {\n        \"id\": \"eba8c57f-5f61-4eab-bf74-125dc6b73856\",\n        \"title\": \"Capuch\",\n        \"description\": \"Hello there\",\n        \"unitPrice\": 2.3,\n        \"discount\": 0,\n        \"quantity\": 1,\n        \"total\": 2.3\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "Get Paged Products",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const products = pm.response.json();",
+									"const productId = products.items[0].id;",
+									"pm.collectionVariables.set(\"productId\", productId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{products-url}}/api/products",
+							"host": [
+								"{{products-url}}"
+							],
+							"path": [
+								"api",
+								"products"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get All products Copy",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{products-url}}/api/paged-products?page=1&pageSize=5",
+									"host": [
+										"{{products-url}}"
+									],
+									"path": [
+										"api",
+										"paged-products"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "pageSize",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8; api-version=1.0"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 24 Sep 2023 13:53:59 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "api-supported-versions",
+									"value": "1.0"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"items\": [\n        {\n            \"id\": \"f9141fa3-4e69-4fd5-b345-d3a26220b80d\",\n            \"title\": \"Americano\",\n            \"description\": \"A diluted espresso drink made by adding hot water to a shot of espresso. It has a similar strength to drip coffee but with a distinct espresso taste.\",\n            \"unitPrice\": 2.75,\n            \"discount\": 0,\n            \"quantity\": 1,\n            \"total\": 2.75\n        },\n        {\n            \"id\": \"3e2babad-8196-4700-a9b6-319c683537a8\",\n            \"title\": \"Bicerin\",\n            \"description\": \"A traditional Italian drink from Turin, consisting of layers of espresso, drinking chocolate, and frothed milk. It creates a harmonious blend of coffee and chocolate.\",\n            \"unitPrice\": 5,\n            \"discount\": 0,\n            \"quantity\": 1,\n            \"total\": 5\n        },\n        {\n            \"id\": \"a5480611-0933-42b3-8b22-b36158ad642c\",\n            \"title\": \"Breve\",\n            \"description\": \"An espresso-based drink made with steamed half-and-half instead of milk, creating a richer and creamier texture. It offers a velvety mouthfeel and a stronger dairy flavor.\",\n            \"unitPrice\": 4.5,\n            \"discount\": 0,\n            \"quantity\": 1,\n            \"total\": 4.5\n        },\n        {\n            \"id\": \"05e23ef8-7eae-4fe7-af63-714f96272a00\",\n            \"title\": \"Cafe Latte\",\n            \"description\": \"A coffee drink made with a shot of espresso and steamed milk. It has a creamy and mellow flavor, with the espresso providing a robust base and the milk adding smoothness.\",\n            \"unitPrice\": 4,\n            \"discount\": 0,\n            \"quantity\": 1,\n            \"total\": 4\n        },\n        {\n            \"id\": \"735964c8-e953-4891-b8d3-8a4c66dfbc16\",\n            \"title\": \"Cappuccino\",\n            \"description\": \"A classic Italian coffee made with equal parts of espresso, steamed milk, and milk foam. It has a smooth and velvety texture, with a balance of coffee and milk flavors.\",\n            \"unitPrice\": 3.5,\n            \"discount\": 0,\n            \"quantity\": 1,\n            \"total\": 3.5\n        }\n    ],\n    \"page\": 1,\n    \"pageSize\": 5,\n    \"count\": 28,\n    \"hasNextPage\": true,\n    \"hasPreviousPage\": false\n}"
 						}
 					]
 				},
@@ -157,21 +243,17 @@
 						}
 					],
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhabGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6WyJmYzM3YjlkOS0wOTg3LTQxNjItYjJkMC01NzBmZWViZTU1ZGIiLCJmYzM3YjlkOS0wOTg3LTQxNjItYjJkMC01NzBmZWViZTU1ZGIiXSwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6WyJhZG1pbiIsImFkbWluIl0sImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6WyJ0ZXN0QGdtYWlsLmNvbSIsInRlc3RAZ21haWwuY29tIl0sIkFzcE5ldC5JZGVudGl0eS5TZWN1cml0eVN0YW1wIjpbIlpYN1hFSFdISTJXSDJKU1hMSUtBTVpGSVgzRlZQWUdJIiwiWlg3WEVIV0hJMldIMkpTWExJS0FNWkZJWDNGVlBZR0kiXSwibmJmIjoxNjgyMzI5NDAzLCJleHAiOjE2ODIzMzMwMDMsImlzcyI6IkNvZmZlZVNwYWNlLlNlcnZpY2UuY29tIiwiYXVkIjoiQ29mZmVlU3BhY2UuY29tIn0.KvF4XAW1fQBEbFVEsnKQYJy8594t-X58St_jMn8CYzM",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6WyI1OWM0ZTgyZi1iN2I4LTQ0NDEtYTYyOS1lZDViNjQ5OTk5ODciLCI1OWM0ZTgyZi1iN2I4LTQ0NDEtYTYyOS1lZDViNjQ5OTk5ODciXSwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6WyJNYXJzaWtvcyIsIk1hcnNpa29zIl0sImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6WyJhbnlAZ21haWwuY29tIiwiYW55QGdtYWlsLmNvbSJdLCJBc3BOZXQuSWRlbnRpdHkuU2VjdXJpdHlTdGFtcCI6WyJINERWVDVSNEdQNFlaVDJPV1Y2RTNKVTRTTVg2Uk9MVCIsIkg0RFZUNVI0R1A0WVpUMk9XVjZFM0pVNFNNWDZST0xUIl0sIm5iZiI6MTY5NTIxMjE1MywiZXhwIjoxNjk1MjEyNDUzLCJpc3MiOiJ0ZXN0aW5nIn0.GNQ5msmquq0V1I6EuVdBFzyqVqbUqsmPMRXnaDl-afk",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"Title\": \"Capuch\",\n    \"Description\": \"Hello there\",\n    \"UnitPrice\": 2.3,\n    \"Discount\": 0.0,\n    \"Quantity\": 1\n}",
+							"raw": "{\n    \"Title\": \"Capuch\",\n    \"Description\": \"Hello there\",\n    \"UnitPrice\": 2.3,\n    \"Discount\": 1.0,\n    \"Quantity\": 1\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -480,7 +562,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"Status\": 0,\n    \"Address\": {\n        \"City\": \"AnyCity\",\n        \"Country\": \"someCountry\",\n        \"Street\": \"test-street\"\n    },\n    \"PaymentInfo\": {\n        \"Cardtype\": 0,\n        \"CardNumber\": \"123324325435\",\n        \"SecurityNumber\": \"123\",\n        \"ExpirationYear\": \"2019\",\n        \"ExpirationMonth\": \"04\"\n    },\n    \"Orderitems\": [\n            {\n                \"title\": \"Capuchino\",\n                \"description\": \"Tasty one\",\n                \"unitPrice\": 1.5,\n                \"discount\": 0,\n                \"quantity\": 1\n            }\n    ]\n}",
+									"raw": "{\n    \"Status\": 0,\n    \"Address\": {\n        \"City\": \"AnyCity\",\n        \"Country\": \"someCountry\",\n        \"Street\": \"test-street\"\n    }\n    \"OrderItems\": [\n        {\n            \"title\": \"Americano\",\n            \"description\": \"Tasty one\",\n            \"unitPrice\": 5.3,\n            \"discount\": 0,\n            \"quantity\": 3\n        }\n    ]\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -497,36 +579,6 @@
 										"buyers",
 										"{{buyerId}}",
 										"orders"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Update order",
-							"request": {
-								"method": "PUT",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"Status\": 1,\n    \"Address\": {\n        \"Id\": \"3f24daba-bee9-438f-a732-82cb86260db5\",\n        \"City\": \"NewCityHere\",\n        \"Country\": \"someCountry\",\n        \"Street\": \"test-street\"\n    },\n    \"PaymentInfo\": {\n        \"Id\": \"c1df27d6-031c-4c42-9652-84b2d23e62cb\",\n        \"Cardtype\": 0,\n        \"CardNumber\": \"123324325435\",\n        \"SecurityNumber\": \"123\",\n        \"ExpirationYear\": \"2019\",\n        \"ExpirationMonth\": \"04\"\n    },\n    \"Orderitems\": [\n        {\n            \"Id\": \"116beb8e-867e-4436-9abf-24aceb4fdc3f\",\n                \"Title\": \"Capuch\",\n                \"Description\": \"Hello there\",\n                \"UnitPrice\": 2.3,\n                \"Discount\": 0.0,\n                \"Quantity\": 1\n        }\n    ]\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{ordering-url}}/api/buyers/{{buyerId}}/orders/{{orderId}}",
-									"host": [
-										"{{ordering-url}}"
-									],
-									"path": [
-										"api",
-										"buyers",
-										"{{buyerId}}",
-										"orders",
-										"{{orderId}}"
 									]
 								}
 							},
@@ -558,33 +610,6 @@
 				{
 					"name": "Buyers",
 					"item": [
-						{
-							"name": "Create buyer",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"Name\": \"Nikitos\",\n    \"Email\": \"some@gmail.com\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{ordering-url}}/api/buyers",
-									"host": [
-										"{{ordering-url}}"
-									],
-									"path": [
-										"api",
-										"buyers"
-									]
-								}
-							},
-							"response": []
-						},
 						{
 							"name": "Get buyer by id",
 							"request": {
@@ -620,27 +645,17 @@
 								}
 							],
 							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6WyIyM2IyNzYyZC05M2JjLTQzYjktODY1MS0zOTMwMzI0NTQzNWIiLCIyM2IyNzYyZC05M2JjLTQzYjktODY1MS0zOTMwMzI0NTQzNWIiXSwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6WyJhZG1pbiIsImFkbWluIl0sImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6WyJhZG1pbkBnbWFpbC5jb20iLCJhZG1pbkBnbWFpbC5jb20iXSwiQXNwTmV0LklkZW50aXR5LlNlY3VyaXR5U3RhbXAiOlsiRlRJTlJYR1I2V00yRjJSQzVBUkVNSlBZS0hZT1lVWUkiLCJGVElOUlhHUjZXTTJGMlJDNUFSRU1KUFlLSFlPWVVZSSJdLCJuYmYiOjE2ODQxNTY2NzUsImV4cCI6MTY4NDE2MDI3NSwiaXNzIjoiQ29mZmVlU3BhY2UuU2VydmljZS5jb20iLCJhdWQiOiJDb2ZmZWVTcGFjZS5jb20ifQ.Yd0VXhtKUsfhncAO133JN2IRJQq8gOfUQNMAy7gNWqs",
-											"type": "string"
-										}
-									]
-								},
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{ordering-url}}/api/buyers/admin@gmail.com",
+									"raw": "{{ordering-url}}/api/buyers/any@gmail.com",
 									"host": [
 										"{{ordering-url}}"
 									],
 									"path": [
 										"api",
 										"buyers",
-										"admin@gmail.com"
+										"any@gmail.com"
 									]
 								}
 							},
@@ -690,7 +705,16 @@
 					"name": "Health check",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "{{ordering-url}}/_health",
+							"host": [
+								"{{ordering-url}}"
+							],
+							"path": [
+								"_health"
+							]
+						}
 					},
 					"response": []
 				}
@@ -721,9 +745,47 @@
 			"item": [
 				{
 					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jwtToken = pm.response.body;",
+									"pm.collectionVariables.set(\"jwt-token\", jwtToken);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "V6pLT7L@&&NCL85W#&f&",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "x-api-key",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "x",
+								"value": "",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n    \"Username\": \"admin\",\n    \"Password\": \"Pass1234!\"\n}",
@@ -754,7 +816,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"Name\": \"Nikitos\",\n    \"LastName\": \"Nikitos22\",\n    \"Username\": \"Marsikos\",\n    \"Email\": \"any@gmail.com\",\n    \"Password\": \"Pass1234!\"\n}",
+							"raw": "{\n    \"Name\": \"Nikitos\",\n    \"LastName\": \"Nikitos22\",\n    \"Username\": \"123asd\",\n    \"Email\": \"an2y@gmail.com\",\n    \"Password\": \"Pass1234!\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -872,6 +934,100 @@
 							]
 						},
 						{
+							"name": "Get Paged Products",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const products = pm.response.json();",
+											"const productId = products.items[0].id;",
+											"pm.collectionVariables.set(\"productId\", productId);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway-url}}}}/paged-products?page=1&pagesize=5",
+									"host": [
+										"{{gateway-url}}}}"
+									],
+									"path": [
+										"paged-products"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "pagesize",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Get Paged Products",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{gateway-url}}/paged-products?page=1&pageSize=5",
+											"host": [
+												"{{gateway-url}}"
+											],
+											"path": [
+												"paged-products"
+											],
+											"query": [
+												{
+													"key": "page",
+													"value": "1"
+												},
+												{
+													"key": "pageSize",
+													"value": "5"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Length",
+											"value": "1586"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8; api-version=1.0"
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 24 Sep 2023 14:14:36 GMT"
+										},
+										{
+											"key": "Server",
+											"value": "Kestrel"
+										},
+										{
+											"key": "api-supported-versions",
+											"value": "1.0"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"items\": [\n        {\n            \"id\": \"f9141fa3-4e69-4fd5-b345-d3a26220b80d\",\n            \"title\": \"Americano\",\n            \"description\": \"A diluted espresso drink made by adding hot water to a shot of espresso. It has a similar strength to drip coffee but with a distinct espresso taste.\",\n            \"unitPrice\": 2.75,\n            \"discount\": 0,\n            \"quantity\": 1,\n            \"total\": 2.75\n        },\n        {\n            \"id\": \"3e2babad-8196-4700-a9b6-319c683537a8\",\n            \"title\": \"Bicerin\",\n            \"description\": \"A traditional Italian drink from Turin, consisting of layers of espresso, drinking chocolate, and frothed milk. It creates a harmonious blend of coffee and chocolate.\",\n            \"unitPrice\": 5,\n            \"discount\": 0,\n            \"quantity\": 1,\n            \"total\": 5\n        },\n        {\n            \"id\": \"a5480611-0933-42b3-8b22-b36158ad642c\",\n            \"title\": \"Breve\",\n            \"description\": \"An espresso-based drink made with steamed half-and-half instead of milk, creating a richer and creamier texture. It offers a velvety mouthfeel and a stronger dairy flavor.\",\n            \"unitPrice\": 4.5,\n            \"discount\": 0,\n            \"quantity\": 1,\n            \"total\": 4.5\n        },\n        {\n            \"id\": \"05e23ef8-7eae-4fe7-af63-714f96272a00\",\n            \"title\": \"Cafe Latte\",\n            \"description\": \"A coffee drink made with a shot of espresso and steamed milk. It has a creamy and mellow flavor, with the espresso providing a robust base and the milk adding smoothness.\",\n            \"unitPrice\": 4,\n            \"discount\": 0,\n            \"quantity\": 1,\n            \"total\": 4\n        },\n        {\n            \"id\": \"735964c8-e953-4891-b8d3-8a4c66dfbc16\",\n            \"title\": \"Cappuccino\",\n            \"description\": \"A classic Italian coffee made with equal parts of espresso, steamed milk, and milk foam. It has a smooth and velvety texture, with a balance of coffee and milk flavors.\",\n            \"unitPrice\": 3.5,\n            \"discount\": 0,\n            \"quantity\": 1,\n            \"total\": 3.5\n        }\n    ],\n    \"page\": 1,\n    \"pageSize\": 5,\n    \"count\": 28,\n    \"hasNextPage\": true,\n    \"hasPreviousPage\": false\n}"
+								}
+							]
+						},
+						{
 							"name": "Get Product By id",
 							"request": {
 								"method": "GET",
@@ -952,7 +1108,7 @@
 									"bearer": [
 										{
 											"key": "token",
-											"value": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6WyIyNzkyZDBhMC1lYTAyLTRlM2MtYWMwNy1mNmE4OTJmOTcxNTIiLCIyNzkyZDBhMC1lYTAyLTRlM2MtYWMwNy1mNmE4OTJmOTcxNTIiXSwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6WyJNYXJzaWtvcyIsIk1hcnNpa29zIl0sImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6WyJhbnlAZ21haWwuY29tIiwiYW55QGdtYWlsLmNvbSJdLCJBc3BOZXQuSWRlbnRpdHkuU2VjdXJpdHlTdGFtcCI6WyJKUDVXTExVN1hLRjJGRlpDUVI2SE1YRVNJTDQ0TDdSMyIsIkpQNVdMTFU3WEtGMkZGWkNRUjZITVhFU0lMNDRMN1IzIl0sIm5iZiI6MTY4Mzc5Nzc0MSwiZXhwIjoxNjgzODAxMzQxLCJpc3MiOiJDb2ZmZWVTcGFjZS5TZXJ2aWNlLmNvbSIsImF1ZCI6IkNvZmZlZVNwYWNlLmNvbSJ9.CSu8jQQPqGRVZPmWDFv_eURz2YI1Gyjp1pOc9fXs4lQ",
+											"value": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6WyJlYjU5OGM1NS02M2QyLTQxNWUtYTA4Ny1hYzIxOWQ0ZDFhYWMiLCJlYjU5OGM1NS02M2QyLTQxNWUtYTA4Ny1hYzIxOWQ0ZDFhYWMiXSwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6WyJhZG1pbiIsImFkbWluIl0sImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6WyJhbnlAZ21haWwuY29tIiwiYW55QGdtYWlsLmNvbSJdLCJBc3BOZXQuSWRlbnRpdHkuU2VjdXJpdHlTdGFtcCI6WyJMSDRKR1dVNU1RUklPWVlOV05DUTdYVFVVWEhWSE5HQyIsIkxINEpHV1U1TVFSSU9ZWU5XTkNRN1hUVVVYSFZITkdDIl0sIm5iZiI6MTY4Njk5OTE2NCwiZXhwIjoxNjg3MDAyNzY0LCJpc3MiOiJDb2ZmZWVTcGFjZS5TZXJ2aWNlLmNvbSIsImF1ZCI6IkNvZmZlZVNwYWNlLmNvbSJ9.LdQMLBi1IhuxrCD7PzS4thSvnD7I-Xnf_vk8VDE_fU0",
 											"type": "string"
 										}
 									]
@@ -1049,12 +1205,11 @@
 									}
 								},
 								"url": {
-									"raw": "{{gateway-url}}//products/{{productId}}",
+									"raw": "{{gateway-url}}/products/{{productId}}",
 									"host": [
 										"{{gateway-url}}"
 									],
 									"path": [
-										"",
 										"products",
 										"{{productId}}"
 									]
@@ -1172,6 +1327,9 @@
 						{
 							"name": "Health check",
 							"request": {
+								"auth": {
+									"type": "noauth"
+								},
 								"method": "GET",
 								"header": [],
 								"url": {
@@ -1287,7 +1445,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"Status\": 0,\n    \"Address\": {\n        \"City\": \"AnyCity\",\n        \"Country\": \"someCountry\",\n        \"Street\": \"test-street\"\n    },\n    \"PaymentInfo\": {\n        \"Cardtype\": 0,\n        \"CardNumber\": \"123324325435\",\n        \"SecurityNumber\": \"123\",\n        \"ExpirationYear\": \"2019\",\n        \"ExpirationMonth\": \"04\"\n    },\n    \"Orderitems\": [\n        {\n            \"title\": \"Capuchino\",\n            \"description\": \"Tasty one\",\n            \"unitPrice\": 1.5,\n            \"discount\": 0,\n            \"quantity\": 2\n        }\n    ]\n}",
+											"raw": "{\n    \"Status\": 0,\n    \"Address\": {\n        \"City\": \"AnyCity\",\n        \"Country\": \"someCountry\",\n        \"Street\": \"test-street\"\n    },\n    \"Orderitems\": [\n        {\n            \"title\": \"Americano\",\n            \"description\": \"Tasty one\",\n            \"unitPrice\": 5.3,\n            \"discount\": 0,\n            \"quantity\": 2\n        },\n        {\n            \"title\": \"Breve\",\n            \"description\": \"An espresso-based drink made with steamed half-and-half instead of milk, creating a richer and creamier texture.\",\n            \"unitPrice\": 4.5,\n            \"discount\": 0,\n            \"quantity\": 1\n        },\n        {\n            \"title\": \"Espresso\",\n        \"description\": \"A strong and concentrated coffee made by forcing hot water through finely ground coffee beans. It has a rich, full-bodied flavor with a thick layer of crema on top.\",\n        \"unitPrice\": 2.5,\n        \"discount\": 0,\n        \"quantity\": 1\n        }\n        \n    ]\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -1303,35 +1461,6 @@
 												"buyers",
 												"{{buyerId}}",
 												"orders"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "Update order",
-									"request": {
-										"method": "PUT",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\n    \"Status\": 1,\n    \"Address\": {\n        \"Id\": \"3f24daba-bee9-438f-a732-82cb86260db5\",\n        \"City\": \"NewCityHere\",\n        \"Country\": \"someCountry\",\n        \"Street\": \"test-street\"\n    },\n    \"PaymentInfo\": {\n        \"Id\": \"c1df27d6-031c-4c42-9652-84b2d23e62cb\",\n        \"Cardtype\": 0,\n        \"CardNumber\": \"123324325435\",\n        \"SecurityNumber\": \"123\",\n        \"ExpirationYear\": \"2019\",\n        \"ExpirationMonth\": \"04\"\n    },\n    \"Orderitems\": [\n        {\n            \"Id\": \"116beb8e-867e-4436-9abf-24aceb4fdc3f\",\n                \"Title\": \"Capuch\",\n                \"Description\": \"Hello there\",\n                \"UnitPrice\": 2.3,\n                \"Discount\": 0.0,\n                \"Quantity\": 1\n        }\n    ]\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "{{gateway-url}}/buyers/{{buyerId}}/orders/{{orderId}}",
-											"host": [
-												"{{gateway-url}}"
-											],
-											"path": [
-												"buyers",
-												"{{buyerId}}",
-												"orders",
-												"{{orderId}}"
 											]
 										}
 									},
@@ -1394,13 +1523,13 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "{{gateway-url}}/buyers/14abddeb-f9c7-4b76-8ae9-159f84cc17aa",
+											"raw": "{{gateway-url}}/buyers/{{buyerId}}",
 											"host": [
 												"{{gateway-url}}"
 											],
 											"path": [
 												"buyers",
-												"14abddeb-f9c7-4b76-8ae9-159f84cc17aa"
+												"{{buyerId}}"
 											]
 										}
 									},
@@ -1600,7 +1729,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6WyIyYTZiMDc4OS00MGMyLTRmNTQtYTU2Yy1hMDIwNGVmMDVlNzYiLCIyYTZiMDc4OS00MGMyLTRmNTQtYTU2Yy1hMDIwNGVmMDVlNzYiXSwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6WyJhZG1pbiIsImFkbWluIl0sImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6WyJhbnlAZ21haWwuY29tIiwiYW55QGdtYWlsLmNvbSJdLCJBc3BOZXQuSWRlbnRpdHkuU2VjdXJpdHlTdGFtcCI6WyJPVUszTFZMSkNCVVhFQUNHQVNURFNFNjVMUjdQSTNTUiIsIk9VSzNMVkxKQ0JVWEVBQ0dBU1REU0U2NUxSN1BJM1NSIl0sIm5iZiI6MTY4NDQ5OTIxMiwiZXhwIjoxNjg0NTAyODEyLCJpc3MiOiJDb2ZmZWVTcGFjZS5TZXJ2aWNlLmNvbSIsImF1ZCI6IkNvZmZlZVNwYWNlLmNvbSJ9.tvAk5owSZx90ojWH7CTqpbikRow4m401LM8nOByrUro",
+				"value": "",
 				"type": "string"
 			}
 		]
@@ -1636,11 +1765,11 @@
 		},
 		{
 			"key": "ordering-url",
-			"value": "http://localhost:5245"
+			"value": "https://localhost:7062"
 		},
 		{
 			"key": "identity-url",
-			"value": " http://localhost:5130"
+			"value": "https://localhost:7051"
 		},
 		{
 			"key": "gateway-url",
@@ -1653,6 +1782,10 @@
 		{
 			"key": "orderId",
 			"value": "4a8ba806-52fa-454b-8c96-218cd40049b3"
+		},
+		{
+			"key": "jwt-token",
+			"value": ""
 		}
 	]
 }

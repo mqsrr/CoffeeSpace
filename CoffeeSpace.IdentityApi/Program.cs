@@ -1,12 +1,14 @@
 using Asp.Versioning;
 using CoffeeSpace.Core.Extensions;
 using CoffeeSpace.Core.Settings;
-using CoffeeSpace.IdentityApi.Extensions;
-using CoffeeSpace.IdentityApi.Messages.Consumers;
-using CoffeeSpace.IdentityApi.Models;
+using CoffeeSpace.IdentityApi.Application.Extensions;
+using CoffeeSpace.IdentityApi.Application.Messages.Consumers;
+using CoffeeSpace.IdentityApi.Application.Models;
+using CoffeeSpace.IdentityApi.Application.Services.Abstractions;
+using CoffeeSpace.IdentityApi.Application.Validators;
+using CoffeeSpace.IdentityApi.Filters;
 using CoffeeSpace.IdentityApi.Persistence;
-using CoffeeSpace.IdentityApi.Services.Abstractions;
-using CoffeeSpace.IdentityApi.Validators;
+using CoffeeSpace.IdentityApi.Settings;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MassTransit;
@@ -16,27 +18,30 @@ using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog((context, configuration) => 
-    configuration.ReadFrom.Configuration(context.Configuration));
+    configuration.ReadFrom.Configuration(context.Configuration)
+        .AddDatadogLogging("Identity API"));
 
 builder.Configuration.AddAzureKeyVault();
-
 builder.Services.AddControllers();
-builder.Services.AddMediator();
 
-builder.Services.AddBucketRateLimiter(StatusCodes.Status429TooManyRequests);
 builder.Services.AddApiVersioning(new MediaTypeApiVersionReader("api-version"));
-
 builder.Services.AddApplicationDb<ApplicationUsersDbContext>(builder.Configuration["IdentityDb:ConnectionString"]!);
 
 builder.Services.AddApplicationService<IAuthService<ApplicationUser>>();
 builder.Services.AddApplicationService<ITokenWriter<ApplicationUser>>();
 
-builder.Services.AddOptions<JwtSettings>()
-    .Bind(builder.Configuration.GetRequiredSection("Jwt"))
-    .ValidateOnStart();
+builder.Services.AddApplicationServiceAsSelf<ApiKeyAuthorizationFilter>();
 
 builder.Services.AddOptions<AwsMessagingSettings>()
-    .Bind(builder.Configuration.GetRequiredSection("AWS"))
+    .Bind(builder.Configuration.GetRequiredSection(AwsMessagingSettings.SectionName))
+    .ValidateOnStart();
+
+builder.Services.AddOptions<JwtSettings>()
+    .Bind(builder.Configuration.GetRequiredSection(JwtSettings.SectionName))
+    .ValidateOnStart();
+
+builder.Services.AddOptions<ApiKeySettings>()
+    .Bind(builder.Configuration.GetRequiredSection(ApiKeySettings.SectionName))
     .ValidateOnStart();
 
 builder.Services.AddFluentValidationAutoValidation()
@@ -71,10 +76,7 @@ builder.Services.AddServiceHealthChecks(builder);
 var app = builder.Build();
 
 app.UseSerilogRequestLogging();
-
 app.UseHealthChecks("/_health");
-
-app.UseRateLimiter();
 
 app.MapControllers();
 

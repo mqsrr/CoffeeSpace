@@ -2,9 +2,15 @@
 
 namespace CoffeeSpace.OrderingApi.Application.Repositories.Abstractions;
 
-internal interface IOrderRepository : IRepository<Order>
+public interface IOrderRepository
 {
-    Task<IEnumerable<Order>> GetAllByBuyerIdAsync(string buyerId, CancellationToken cancellationToken = default);
+    Task<IEnumerable<Order>> GetAllByBuyerIdAsync(string buyerId, CancellationToken cancellationToken);
     
-    Task<Order?> UpdateOrderStatusAsync(Order order, OrderStatus orderStatus, CancellationToken cancellationToken = default);
+    Task<Order?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    
+    Task<bool> CreateAsync(Order order, CancellationToken cancellationToken);
+
+    Task<bool> UpdateOrderStatusAsync(string id, OrderStatus orderStatus, CancellationToken cancellationToken);
+    
+    Task<bool> DeleteByIdAsync(string id, CancellationToken cancellationToken);
 }

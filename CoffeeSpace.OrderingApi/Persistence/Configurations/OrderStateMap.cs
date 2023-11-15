@@ -15,12 +15,20 @@ internal sealed class OrderStateMap : SagaClassMap<OrderStateInstance>
             .IsRequired();
         
         entity.Property(x => x.CurrentState)
-            .IsRequired();
+            .IsRequired()
+            .IsUnicode(false);
 
         entity.Property(x => x.PaymentSuccess)
             .IsRequired();
 
         entity.Property(x => x.StockValidationSuccess)
             .IsRequired();
+
+        entity.Property(x => x.UpdateOrderStatusCorrelationId)
+            .IsRequired();
+
+        entity.HasIndex(x => x.CorrelationId)
+            .IsUnique();
+
     }
 }

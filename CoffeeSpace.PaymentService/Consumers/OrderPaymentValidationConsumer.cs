@@ -1,41 +1,35 @@
-using CoffeeSpace.Messages.Ordering.Events;
-using CoffeeSpace.Messages.Ordering.Responses;
-using CoffeeSpace.PaymentService.Models;
-using CoffeeSpace.PaymentService.Repositories.Abstractions;
+using CoffeeSpace.Messages.Ordering.Commands;
+using CoffeeSpace.Messages.Payment;
+using CoffeeSpace.PaymentService.Services.Abstractions;
 using MassTransit;
 
 namespace CoffeeSpace.PaymentService.Consumers;
 
-internal sealed class OrderPaymentValidationConsumer : IConsumer<OrderPaymentValidation>
+internal sealed class OrderPaymentValidationConsumer : IConsumer<RequestOrderPayment>
 {
-    private readonly IPaymentHistoryRepository _historyRepository;
-    private readonly ILogger<OrderPaymentValidationConsumer> _logger;
+    private readonly IPaymentService _paymentService;
+    private readonly IPublishEndpoint _publishEndpoint;
 
-    public OrderPaymentValidationConsumer(IPaymentHistoryRepository historyRepository, ILogger<OrderPaymentValidationConsumer> logger)
+    public OrderPaymentValidationConsumer(IPaymentService paymentService, IPublishEndpoint publishEndpoint)
     {
-        _historyRepository = historyRepository;
-        _logger = logger;
+        _paymentService = paymentService;
+        _publishEndpoint = publishEndpoint;
     }
 
-    public async Task Consume(ConsumeContext<OrderPaymentValidation> context)
+    public async Task Consume(ConsumeContext<RequestOrderPayment> context)
     {
-        var order = context.Message.Order;
-        var isValid = await _historyRepository.CreateAsync(new PaymentHistory
+        var createdOrder = await _paymentService.CreateOrderAsync(context.Message.Order, context.CancellationToken);
+        if (createdOrder is null)
         {
-            Id = Guid.NewGuid().ToString(),
-            OrderId = order.Id,
-            PaymentId = order.PaymentInfoId,
-            OrderDate = DateTime.UtcNow,
-            TotalPrice = order.OrderItems.Sum(x => x.Total)
-        });
+            await context.RespondAsync<Fault<RequestOrderPayment>>(context.Message);
+            return;
+        }
 
-        await Task.Delay(TimeSpan.FromSeconds(3));
-        _logger.LogInformation("The payment for the order with ID {OrderId} has been stored", order.Id);
-        
-        await context.RespondAsync<OrderPaymentValidationResult>(new
+        await _publishEndpoint.Publish<PaymentPageInitialized>(new
         {
-            Order = order,
-            IsValid = isValid
+            OrderId = context.Message.Order.Id,
+            context.Message.Order.BuyerId,
+            PaymentApprovalLink = createdOrder.Links[1].Href
         });
     }
 }
