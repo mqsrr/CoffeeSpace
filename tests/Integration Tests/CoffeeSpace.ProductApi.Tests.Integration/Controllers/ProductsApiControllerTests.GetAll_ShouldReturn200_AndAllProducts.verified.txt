@@ -110,21 +110,6 @@
       Type: ReaderExecutedAsync,
       HasTransaction: false,
       Text:
-SELECT EXISTS (
-    SELECT 1
-    FROM "Products" AS p)
-    },
-    {
-      Type: ReaderExecuted,
-      HasTransaction: false,
-      Text:
-SELECT p."Id", p."Description", p."Discount", p."Quantity", p."Title", p."UnitPrice"
-FROM "Products" AS p
-    },
-    {
-      Type: ReaderExecutedAsync,
-      HasTransaction: false,
-      Text:
 SELECT p."Id", p."Description", p."Discount", p."Quantity", p."Title", p."UnitPrice"
 FROM "Products" AS p
     }

@@ -38,13 +38,16 @@ internal sealed class BuyerService : IBuyerService
     public async Task<Buyer?> UpdateAsync(Buyer buyer, CancellationToken cancellationToken)
     {
         var updatedBuyer = await _buyerRepository.UpdateAsync(buyer, cancellationToken);
-        if (updatedBuyer is not null)
+        if (updatedBuyer is null)
         {
-            await _sendEndpointProvider.Send<UpdateBuyer>(new
-            {
-                Buyer = updatedBuyer
-            }, cancellationToken).ConfigureAwait(false);
+            return null;
         }
+
+        var sendEndpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri("queue:update-buyer"));
+        await sendEndpoint.Send<UpdateBuyer>(new
+        {
+            Buyer = updatedBuyer
+        }, cancellationToken).ConfigureAwait(false);
 
         return updatedBuyer;
     }
@@ -58,15 +61,18 @@ internal sealed class BuyerService : IBuyerService
         }
 
         bool isDeleted = await _buyerRepository.DeleteByIdAsync(id.ToString(), cancellationToken);
-        if (isDeleted)
+        if (!isDeleted)
         {
-            await _sendEndpointProvider.Send<DeleteBuyer>(new
-            {
-                buyerToDelete.Name,
-                buyerToDelete.Email
-            }, cancellationToken).ConfigureAwait(false);
+            return false;
         }
-        
+
+        var sendEndpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri("queue:delete-buyer"));
+        await sendEndpoint.Send<DeleteBuyer>(new
+        {
+            buyerToDelete.Name,
+            buyerToDelete.Email
+        }, cancellationToken).ConfigureAwait(false);
+
         return isDeleted;
     }
 }

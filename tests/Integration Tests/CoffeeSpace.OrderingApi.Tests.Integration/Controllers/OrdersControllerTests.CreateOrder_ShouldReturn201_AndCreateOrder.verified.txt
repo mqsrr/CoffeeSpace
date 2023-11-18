@@ -41,25 +41,14 @@
   sqlLogs: [
     {
       Type: ReaderExecutedAsync,
-      HasTransaction: false,
-      Text:
-SELECT b."Id", b."Email", b."Name"
-FROM "Buyers" AS b
-WHERE b."Id" = @__p_0
-LIMIT 1
-    },
-    {
-      Type: ReaderExecutedAsync,
       HasTransaction: true,
       Text:
 INSERT INTO "Addresses" ("Id", "City", "Country", "Street")
 VALUES (@p0, @p1, @p2, @p3);
-INSERT INTO "Payments" ("Id", "CardNumber", "CardType", "ExpirationMonth", "ExpirationYear", "SecurityNumber")
-VALUES (@p4, @p5, @p6, @p7, @p8, @p9);
-INSERT INTO "Orders" ("Id", "AddressId", "BuyerId", "PaymentInfoId", "Status")
-VALUES (@p10, @p11, @p12, @p13, @p14);
+INSERT INTO "Orders" ("Id", "AddressId", "BuyerId", "Status")
+VALUES (@p4, @p5, @p6, @p7);
 INSERT INTO "OrderItems" ("Id", "Description", "Discount", "OrderId", "Quantity", "Title", "UnitPrice")
-VALUES (@p15, @p16, @p17, @p18, @p19, @p20, @p21);
+VALUES (@p8, @p9, @p10, @p11, @p12, @p13, @p14);
     }
   ]
 }

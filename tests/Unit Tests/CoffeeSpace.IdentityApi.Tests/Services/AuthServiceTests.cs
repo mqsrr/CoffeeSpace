@@ -4,6 +4,7 @@ using AutoFixture.AutoNSubstitute;
 using CoffeeSpace.IdentityApi.Application.Models;
 using CoffeeSpace.IdentityApi.Application.Services;
 using CoffeeSpace.IdentityApi.Application.Services.Abstractions;
+using CoffeeSpace.Messages.Buyers;
 using FluentAssertions;
 using MassTransit;
 using Microsoft.AspNetCore.Http;
@@ -34,7 +35,7 @@ public sealed class AuthServiceTests
         _tokenWriter = _fixture.Create<ITokenWriter<ApplicationUser>>();
         _endpointProvider = _fixture.Create<ISendEndpointProvider>();
 
-        _authService = new AuthService(_tokenWriter);
+        _authService = new AuthService(_signInManager, _tokenWriter, _endpointProvider);
     }
     
     private static SignInManager<ApplicationUser> GetSignInManagerMock(UserManager<ApplicationUser> userManager)
@@ -104,6 +105,7 @@ public sealed class AuthServiceTests
 
         // Assert     
         jwtToken.Should().BeEquivalentTo(expectedToken);
+        await _endpointProvider.Received().GetSendEndpoint(Arg.Any<Uri>());
     }
     
     [Fact]

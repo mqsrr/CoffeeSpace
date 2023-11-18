@@ -1,15 +1,15 @@
 using CoffeeSpace.Domain.Products;
 using CoffeeSpace.ProductApi.Application.Repositories.Abstractions;
-using CoffeeSpace.ProductApi.Persistence;
+using CoffeeSpace.ProductApi.Persistence.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeSpace.ProductApi.Application.Repositories;
 
 internal sealed class ProductRepository : IProductRepository
 {
-    private readonly ProductDbContext _productDbContext;
+    private readonly IProductDbContext _productDbContext;
 
-    public ProductRepository(ProductDbContext productDbContext)
+    public ProductRepository(IProductDbContext productDbContext)
     {
         _productDbContext = productDbContext;
     }

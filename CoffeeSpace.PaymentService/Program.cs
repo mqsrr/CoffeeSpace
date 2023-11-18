@@ -5,6 +5,7 @@ using CoffeeSpace.PaymentService.Consumers;
 using CoffeeSpace.PaymentService.Extensions;
 using CoffeeSpace.PaymentService.Messages.PipelineBehaviours;
 using CoffeeSpace.PaymentService.Persistence;
+using CoffeeSpace.PaymentService.Persistence.Abstractions;
 using CoffeeSpace.PaymentService.Repositories.Abstractions;
 using CoffeeSpace.PaymentService.Services.Abstractions;
 using CoffeeSpace.PaymentService.Settings;
@@ -24,7 +25,7 @@ builder.Host.UseSerilog((context, configuration) =>
         .AddDatadogLogging("Payment Service"));
 
 builder.Services.AddStackExchangeRedisCache(options => options.Configuration = builder.Configuration["Redis:ConnectionString"]);
-builder.Services.AddApplicationDb<PaymentDbContext>(builder.Configuration["PaymentDb:ConnectionString"]!);
+builder.Services.AddApplicationDb<IPaymentDbContext, PaymentDbContext>(builder.Configuration["PaymentDb:ConnectionString"]!);
 
 builder.Services.AddApplicationService<IPaymentRepository>();
 builder.Services.AddApplicationService<IPaymentService>();

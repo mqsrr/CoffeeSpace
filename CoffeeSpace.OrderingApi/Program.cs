@@ -12,6 +12,7 @@ using CoffeeSpace.OrderingApi.Application.Services.Decorators;
 using CoffeeSpace.OrderingApi.Application.SignalRHubs;
 using CoffeeSpace.OrderingApi.Application.Validators;
 using CoffeeSpace.OrderingApi.Persistence;
+using CoffeeSpace.OrderingApi.Persistence.Abstractions;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MassTransit;
@@ -36,7 +37,7 @@ builder.Services.AddMediator();
 builder.Services.AddApiVersioning(new MediaTypeApiVersionReader("api-version"));
 builder.Services.AddStackExchangeRedisCache(x => x.Configuration = builder.Configuration["Redis:ConnectionString"]);
 
-builder.Services.AddApplicationDb<OrderingDbContext>(builder.Configuration["OrderingDb:ConnectionString"]!);
+builder.Services.AddApplicationDb<IOrderingDbContext, OrderingDbContext>(builder.Configuration["OrderingDb:ConnectionString"]!);
 builder.Services.AddApplicationDb<OrderStateSagaDbContext>(builder.Configuration["OrderStateSagaDb:ConnectionString"]!);
 
 builder.Services.AddApplicationService(typeof(ICacheService<>));

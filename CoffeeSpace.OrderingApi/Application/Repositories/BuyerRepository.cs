@@ -1,15 +1,15 @@
 ﻿using CoffeeSpace.Domain.Ordering.BuyerInfo;
 using CoffeeSpace.OrderingApi.Application.Repositories.Abstractions;
-using CoffeeSpace.OrderingApi.Persistence;
+using CoffeeSpace.OrderingApi.Persistence.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeSpace.OrderingApi.Application.Repositories;
 
 internal sealed class BuyerRepository : IBuyerRepository
 {
-    private readonly OrderingDbContext _orderingDbContext;
+    private readonly IOrderingDbContext _orderingDbContext;
 
-    public BuyerRepository(OrderingDbContext orderingDbContext)
+    public BuyerRepository(IOrderingDbContext orderingDbContext)
     {
         _orderingDbContext = orderingDbContext;
     }

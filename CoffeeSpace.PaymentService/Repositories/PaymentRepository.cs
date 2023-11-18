@@ -1,5 +1,6 @@
 ﻿using CoffeeSpace.PaymentService.Models;
 using CoffeeSpace.PaymentService.Persistence;
+using CoffeeSpace.PaymentService.Persistence.Abstractions;
 using CoffeeSpace.PaymentService.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,9 +8,9 @@ namespace CoffeeSpace.PaymentService.Repositories;
 
 internal sealed class PaymentRepository : IPaymentRepository
 {
-    private readonly PaymentDbContext _dbContext;
+    private readonly IPaymentDbContext _dbContext;
 
-    public PaymentRepository(PaymentDbContext dbContext)
+    public PaymentRepository(IPaymentDbContext dbContext)
     {
         _dbContext = dbContext;
     }

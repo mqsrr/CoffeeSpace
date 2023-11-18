@@ -15,8 +15,8 @@ public sealed class CachedProductRepositoryTests
 {
     private readonly ICacheService<Product> _cacheService;
     private readonly IProductRepository _productRepository;
-    private readonly Fixture _fixture;
     private readonly IEnumerable<Product> _products;
+    private readonly Fixture _fixture;
 
     private readonly CachedProductRepository _cachedProductRepository;
 
@@ -46,6 +46,8 @@ public sealed class CachedProductRepositoryTests
 
         // Assert
         result.Should().Be(expectedCount);
+
+        await _productRepository.Received().GetCountAsync(Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -63,6 +65,8 @@ public sealed class CachedProductRepositoryTests
 
         // Assert
         result.Should().BeEquivalentTo(_products);
+
+        await _productRepository.Received().GetAllProductsAsync(Arg.Any<CancellationToken>());
         await _cacheService.Received().GetAllOrCreateAsync(Arg.Any<string>(), Arg.Any<Func<Task<IEnumerable<Product>>>>(), Arg.Any<CancellationToken>());
     }
 
@@ -79,9 +83,7 @@ public sealed class CachedProductRepositoryTests
         // Assert
         result.Should().BeEquivalentTo(_products);
 
-        await _cacheService.Received().GetAllOrCreateAsync(
-            Arg.Any<string>(), Arg.Any<Func<Task<IEnumerable<Product>>>>(), Arg.Any<CancellationToken>());
-
+        await _cacheService.Received().GetAllOrCreateAsync(Arg.Any<string>(), Arg.Any<Func<Task<IEnumerable<Product>>>>(), Arg.Any<CancellationToken>());
         await _productRepository.DidNotReceive().GetAllProductsAsync(Arg.Any<CancellationToken>());
     }
 
@@ -90,6 +92,7 @@ public sealed class CachedProductRepositoryTests
     {
         // Arrange
         var expectedProduct = _products.First();
+        
         _cacheService.GetOrCreateAsync(Arg.Any<string>(), Arg.Any<Func<Task<Product>>>()!, Arg.Any<CancellationToken>())!
             .Returns(callInfo => callInfo.Arg<Func<Task<Product>>>().Invoke());
 
@@ -103,6 +106,7 @@ public sealed class CachedProductRepositoryTests
         result.Should().BeEquivalentTo(expectedProduct);
 
         await _cacheService.Received().GetOrCreateAsync(Arg.Any<string>(), Arg.Any<Func<Task<Product>>>()!, Arg.Any<CancellationToken>());
+        await _productRepository.Received().GetProductByIdAsync(expectedProduct.Id, Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -136,7 +140,9 @@ public sealed class CachedProductRepositoryTests
 
         // Assert
         result.Should().BeTrue();
+        
         await _cacheService.Received().RemoveAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
+        await _productRepository.Received().CreateProductAsync(productToCreate, Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -152,7 +158,9 @@ public sealed class CachedProductRepositoryTests
 
         // Assert
         result.Should().BeFalse();
+        
         await _cacheService.DidNotReceive().RemoveAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
+        await _productRepository.Received().CreateProductAsync(productToCreate, Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -172,7 +180,9 @@ public sealed class CachedProductRepositoryTests
 
         // Assert
         result.Should().BeEquivalentTo(updatedProduct);
+        
         await _cacheService.Received().RemoveAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
+        await _productRepository.Received().UpdateProductAsync(updatedProduct, Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -192,7 +202,9 @@ public sealed class CachedProductRepositoryTests
 
         // Assert
         result.Should().BeNull();
+        
         await _cacheService.DidNotReceive().RemoveAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
+        await _productRepository.Received().UpdateProductAsync(updatedProduct, Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -209,7 +221,9 @@ public sealed class CachedProductRepositoryTests
 
         // Assert
         result.Should().BeTrue();
+        
         await _cacheService.Received().RemoveAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
+        await _productRepository.Received().DeleteProductByIdAsync(productToDelete.Id, Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -226,6 +240,8 @@ public sealed class CachedProductRepositoryTests
 
         // Assert
         result.Should().BeFalse();
+        
         await _cacheService.DidNotReceive().RemoveAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
+        await _productRepository.Received().DeleteProductByIdAsync(productToDelete.Id, Arg.Any<CancellationToken>());
     }
 }

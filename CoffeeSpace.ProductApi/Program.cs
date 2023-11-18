@@ -8,6 +8,7 @@ using CoffeeSpace.ProductApi.Application.Repositories;
 using CoffeeSpace.ProductApi.Application.Repositories.Abstractions;
 using CoffeeSpace.ProductApi.Application.Validators;
 using CoffeeSpace.ProductApi.Persistence;
+using CoffeeSpace.ProductApi.Persistence.Abstractions;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MassTransit;
@@ -27,7 +28,7 @@ builder.Services.AddControllers();
 builder.Services.AddApiVersioning(new MediaTypeApiVersionReader("api-version"));
 
 builder.Services.AddStackExchangeRedisCache(x => x.Configuration = builder.Configuration["Redis:ConnectionString"]);
-builder.Services.AddApplicationDb<ProductDbContext>(builder.Configuration["ProductsDb:ConnectionString"]!);
+builder.Services.AddApplicationDb<IProductDbContext , ProductDbContext>(builder.Configuration["ProductsDb:ConnectionString"]!);
 
 builder.Services.AddApplicationService<IProductRepository>();
 

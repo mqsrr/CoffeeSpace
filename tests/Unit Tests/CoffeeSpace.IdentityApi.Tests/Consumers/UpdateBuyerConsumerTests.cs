@@ -44,8 +44,8 @@ public sealed class UpdateBuyerConsumerTests : IAsyncLifetime
         // Arrange
         var userToUpdate = _fixture.Create<ApplicationUser>();
         var consumerEndpoint = await _testHarness.GetConsumerEndpoint<UpdateBuyerConsumer>();
-
         var buyer = _fixture.Create<Buyer>();
+        
         _userManager.FindByEmailAsync(buyer.Email)
             .Returns(userToUpdate);
         

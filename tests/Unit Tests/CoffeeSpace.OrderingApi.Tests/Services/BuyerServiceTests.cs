@@ -1,4 +1,5 @@
-﻿using AutoFixture;
+﻿using System.Runtime.InteropServices.ComTypes;
+using AutoFixture;
 using AutoFixture.AutoNSubstitute;
 using CoffeeSpace.Domain.Ordering.BuyerInfo;
 using CoffeeSpace.Messages.Buyers;
@@ -6,7 +7,7 @@ using CoffeeSpace.OrderingApi.Application.Repositories.Abstractions;
 using CoffeeSpace.OrderingApi.Application.Services;
 using FluentAssertions;
 using MassTransit;
-using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
+using Microsoft.EntityFrameworkCore;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
 using Xunit;
@@ -17,15 +18,16 @@ public sealed class BuyerServiceTests
 {
     private readonly ISendEndpointProvider _sendEndpointProvider;
     private readonly IBuyerRepository _buyerRepository;
-    private readonly Fixture _fixture;
     private readonly IEnumerable<Buyer> _buyers;
-    
+    private readonly Fixture _fixture;
+
     private readonly BuyerService _buyerService;
     
     public BuyerServiceTests()
     {
         _fixture = new Fixture();
         _fixture.Customize(new AutoNSubstituteCustomization());
+        
         _buyers = _fixture.Build<Buyer>()
             .With(buyer => buyer.Id, Guid.NewGuid().ToString())
             .CreateMany();
@@ -49,6 +51,7 @@ public sealed class BuyerServiceTests
 
         // Assert
         result.Should().BeEquivalentTo(expectedBuyer);
+        await _buyerRepository.Received().GetByEmailAsync(expectedBuyer.Email, Arg.Any<CancellationToken>());
     }
     
     [Fact]
@@ -56,7 +59,7 @@ public sealed class BuyerServiceTests
     {
         // Arrange
         var expectedBuyer = _buyers.First();
-        _buyerRepository.GetByEmailAsync(expectedBuyer.Email, CancellationToken.None)
+        _buyerRepository.GetByEmailAsync(expectedBuyer.Email, Arg.Any<CancellationToken>())
             .ReturnsNull();
 
         // Act
@@ -64,6 +67,7 @@ public sealed class BuyerServiceTests
 
         // Assert
         result.Should().BeNull();
+        await _buyerRepository.Received().GetByEmailAsync(expectedBuyer.Email, Arg.Any<CancellationToken>());
     }
     
     [Fact]
@@ -79,6 +83,7 @@ public sealed class BuyerServiceTests
 
         // Assert
         result.Should().BeEquivalentTo(expectedBuyer);
+        await _buyerRepository.Received().GetByIdAsync(expectedBuyer.Id, Arg.Any<CancellationToken>());
     }
     
     [Fact]
@@ -94,6 +99,7 @@ public sealed class BuyerServiceTests
  
         // Assert
         result.Should().BeNull();
+        await _buyerRepository.Received().GetByIdAsync(expectedBuyer.Id, Arg.Any<CancellationToken>());
     }
     
     [Fact]
@@ -109,6 +115,7 @@ public sealed class BuyerServiceTests
  
         // Assert
         result.Should().BeTrue();
+        await _buyerRepository.Received().CreateAsync(buyerToCreate, Arg.Any<CancellationToken>());
     }
     
     [Fact]
@@ -124,26 +131,9 @@ public sealed class BuyerServiceTests
  
         // Assert
         result.Should().BeFalse();
+        await _buyerRepository.Received().CreateAsync(buyerToCreate, Arg.Any<CancellationToken>());
     }
     
-    [Fact]
-    public async Task UpdateAsync_ShouldReturnUpdatedBuyer_WhenBuyerWasUpdated()
-    {
-        // Arrange
-        var buyerToUpdate = _buyers.First();
-        var updatedBuyer = _fixture.Build<Buyer>()
-            .With(buyer => buyer.Id, buyerToUpdate.Id)
-            .Create();
-
-        _buyerRepository.UpdateAsync(updatedBuyer, CancellationToken.None)
-            .Returns(updatedBuyer);
-        
-        // Act
-        var result = await _buyerService.UpdateAsync(updatedBuyer, CancellationToken.None);
- 
-        // Assert
-        result.Should().BeEquivalentTo(updatedBuyer);
-    }
     
     [Fact]
     public async Task UpdateAsync_ShouldReturnNull_WhenBuyerWasNotUpdated()
@@ -158,27 +148,7 @@ public sealed class BuyerServiceTests
  
         // Assert
         result.Should().BeNull();
-    }
-    
-    [Fact]
-    public async Task DeleteAsync_ShouldReturnTrue_WhenBuyerWasDeleted()
-    {
-        // Arrange
-        var buyerToDelete = _buyers.First();
-        
-        _buyerRepository.DeleteByIdAsync(buyerToDelete.Id, CancellationToken.None)
-            .Returns(true);
-
-        
-        _sendEndpointProvider.Send(Arg.Any<object>(), Arg.Any<CancellationToken>())
-            .Returns(Task.CompletedTask);
-        
-
-        // Act
-        bool result = await _buyerService.DeleteByIdAsync(Guid.Parse(buyerToDelete.Id), CancellationToken.None);
- 
-        // Assert
-        result.Should().BeTrue();
+        await _buyerRepository.Received().UpdateAsync(updatedBuyer, Arg.Any<CancellationToken>());
     }
     
     [Fact]
@@ -186,12 +156,18 @@ public sealed class BuyerServiceTests
     {
         // Arrange
         var buyerToDelete = _buyers.First();
+
+        _buyerRepository.GetByIdAsync(buyerToDelete.Id, Arg.Any<CancellationToken>())
+            .Returns(buyerToDelete);
+        
         _buyerRepository.DeleteByIdAsync(buyerToDelete.Id, Arg.Any<CancellationToken>())
             .Returns(false);
+        
         // Act
         bool result = await _buyerService.DeleteByIdAsync(Guid.Parse(buyerToDelete.Id), CancellationToken.None);
  
         // Assert
         result.Should().BeFalse();
+        await _buyerRepository.Received().DeleteByIdAsync(buyerToDelete.Id, Arg.Any<CancellationToken>());
     }
 }

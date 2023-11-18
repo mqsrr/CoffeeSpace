@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Text;
 using AutoFixture;
+using AutoFixture.AutoNSubstitute;
 using CoffeeSpace.Core.Settings;
 using CoffeeSpace.IdentityApi.Application.Models;
 using CoffeeSpace.IdentityApi.Application.Services;
@@ -18,7 +19,7 @@ public class TokenWriterTests
 {
     private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
     private readonly IOptions<JwtSettings> _jwtSettings;
-    private readonly IFixture _fixture; // Using AutoFixture for test data generation
+    private readonly IFixture _fixture;
     
     private readonly TokenWriter _tokenWriter;
 
@@ -26,8 +27,9 @@ public class TokenWriterTests
     public TokenWriterTests()
     {
         _fixture = new Fixture();
+        _fixture.Customize(new AutoNSubstituteCustomization());
         
-        _userClaimsPrincipalFactory = Substitute.For<IUserClaimsPrincipalFactory<ApplicationUser>>();
+        _userClaimsPrincipalFactory = _fixture.Create<IUserClaimsPrincipalFactory<ApplicationUser>>();
         _jwtSettings = Options.Create(new JwtSettings
         {
             Key = "testKeysdl;fjsdlkf23",
@@ -61,11 +63,10 @@ public class TokenWriterTests
     {
         // Arrange
         var user = _fixture.Create<ApplicationUser>();
-        var mockClaimsPrincipal = Substitute.For<ClaimsPrincipal>();
+        var mockClaimsPrincipal = _fixture.Create<ClaimsPrincipal>();
+        string expectedToken = WriteToken(mockClaimsPrincipal);
 
         _userClaimsPrincipalFactory.CreateAsync(user).Returns(mockClaimsPrincipal);
-
-        string expectedToken = WriteToken(mockClaimsPrincipal);
 
         // Act
         string token = await _tokenWriter.WriteTokenAsync(user, CancellationToken.None);

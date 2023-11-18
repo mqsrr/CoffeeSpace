@@ -1,5 +1,4 @@
-﻿using System.Data;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 using System.Security.Claims;
@@ -8,9 +7,12 @@ using AutoBogus;
 using CoffeeSpace.Core.Settings;
 using CoffeeSpace.Domain.Ordering.BuyerInfo;
 using CoffeeSpace.Domain.Ordering.Orders;
+using CoffeeSpace.OrderingApi.Application.Contracts.Responses.Orders;
 using CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Consumers;
 using CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Sagas;
 using CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Sagas.Definitions;
+using CoffeeSpace.OrderingApi.Application.SignalRHubs;
+using CoffeeSpace.OrderingApi.Application.SignalRHubs.Abstraction;
 using CoffeeSpace.OrderingApi.Controllers;
 using CoffeeSpace.OrderingApi.Persistence;
 using CoffeeSpace.OrderingApi.Tests.Integration.Fakers.Models;
@@ -18,13 +20,16 @@ using DotNet.Testcontainers.Builders;
 using MassTransit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using NSubstitute;
 using Quartz;
 using Testcontainers.PostgreSql;
 using Testcontainers.Redis;
@@ -99,27 +104,27 @@ public sealed class OrderingApiFactory : WebApplicationFactory<BuyersController>
         builder.ConfigureTestServices(services =>
         {
             services.AddSignalR();
+            services.RemoveAll(typeof(IHubContext<OrderingHub, IOrderingHub>));
+            
+            var faker = Substitute.For<IHubContext<OrderingHub, IOrderingHub>>();
+            faker.Clients.Groups(Arg.Any<string[]>()).OrderCreated(Arg.Any<OrderResponse>())
+                .Returns(Task.CompletedTask);
+            
+            services.AddScoped<IHubContext<OrderingHub, IOrderingHub>>(_ => faker);
+            
             services.AddQuartz(config => config.UseMicrosoftDependencyInjectionJobFactory());
             services.AddMassTransitTestHarness(config =>
             {
                 config.SetKebabCaseEndpointNameFormatter();
                 config.AddConsumer<RegisterNewBuyerConsumer>();
                 config.AddConsumer<UpdateOrderStatusConsumer>();
-
+                
                 config.AddQuartzConsumers();
                 config.AddPublishMessageScheduler();
-
-                config.AddEntityFrameworkOutbox<OrderStateSagaDbContext>(configurator =>
-                {
-                    configurator.IsolationLevel = IsolationLevel.ReadCommitted;        
-                    configurator.UsePostgres();
-                });
-     
+                
                 config.AddSagaStateMachine<OrderStateMachine, OrderStateInstance, OrderStateDefinition>()
                     .EntityFrameworkRepository(configurator =>
                     {
-                        configurator.ConcurrencyMode = ConcurrencyMode.Optimistic;
-            
                         configurator.UsePostgres();
                         configurator.ExistingDbContext<OrderStateSagaDbContext>();
                     });

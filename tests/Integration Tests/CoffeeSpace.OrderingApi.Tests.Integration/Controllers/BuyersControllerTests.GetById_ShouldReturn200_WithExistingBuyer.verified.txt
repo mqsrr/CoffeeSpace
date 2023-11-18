@@ -87,68 +87,57 @@
       Type: ReaderExecutedAsync,
       HasTransaction: false,
       Parameters: {
-        @__p_0 (String?): Guid_1
+        @__id_0 (String?): Guid_1
       },
       Text:
 SELECT b."Id", b."Email", b."Name"
 FROM "Buyers" AS b
-WHERE b."Id" = @__p_0
+WHERE b."Id" = @__id_0
+ORDER BY b."Id"
 LIMIT 1
     },
     {
       Type: ReaderExecutedAsync,
       HasTransaction: false,
       Parameters: {
-        @__p_0 (String?): Guid_1
+        @__id_0 (String?): Guid_1
       },
       Text:
-SELECT o."Id", o."AddressId", o."BuyerId", o."Status"
-FROM "Orders" AS o
-WHERE o."BuyerId" = @__p_0
+SELECT t0."Id", t0."AddressId", t0."BuyerId", t0."Status", t."Id", t0."Id0", t0."City", t0."Country", t0."Street"
+FROM (
+    SELECT b."Id"
+    FROM "Buyers" AS b
+    WHERE b."Id" = @__id_0
+    LIMIT 1
+) AS t
+INNER JOIN (
+    SELECT o."Id", o."AddressId", o."BuyerId", o."Status", a."Id" AS "Id0", a."City", a."Country", a."Street"
+    FROM "Orders" AS o
+    INNER JOIN "Addresses" AS a ON o."AddressId" = a."Id"
+) AS t0 ON t."Id" = t0."BuyerId"
+ORDER BY t."Id", t0."Id", t0."Id0"
     },
     {
       Type: ReaderExecutedAsync,
       HasTransaction: false,
       Parameters: {
-        @__p_0 (String?): Guid_2
+        @__id_0 (String?): Guid_1
       },
       Text:
-SELECT o."Id", o."Description", o."Discount", o."OrderId", o."Quantity", o."Title", o."UnitPrice"
-FROM "OrderItems" AS o
-WHERE o."OrderId" = @__p_0
-    },
-    {
-      Type: ReaderExecutedAsync,
-      HasTransaction: false,
-      Parameters: {
-        @__p_0 (String?): Guid_1
-      },
-      Text:
-SELECT o."Id", o."Description", o."Discount", o."OrderId", o."Quantity", o."Title", o."UnitPrice"
-FROM "OrderItems" AS o
-WHERE o."OrderId" = @__p_0
-    },
-    {
-      Type: ReaderExecutedAsync,
-      HasTransaction: false,
-      Parameters: {
-        @__p_0 (String?): Guid_3
-      },
-      Text:
-SELECT a."Id", a."City", a."Country", a."Street"
-FROM "Addresses" AS a
-WHERE a."Id" = @__p_0
-    },
-    {
-      Type: ReaderExecutedAsync,
-      HasTransaction: false,
-      Parameters: {
-        @__p_0 (String?): Guid_1
-      },
-      Text:
-SELECT a."Id", a."City", a."Country", a."Street"
-FROM "Addresses" AS a
-WHERE a."Id" = @__p_0
+SELECT o0."Id", o0."Description", o0."Discount", o0."OrderId", o0."Quantity", o0."Title", o0."UnitPrice", t."Id", t0."Id", t0."Id0"
+FROM (
+    SELECT b."Id"
+    FROM "Buyers" AS b
+    WHERE b."Id" = @__id_0
+    LIMIT 1
+) AS t
+INNER JOIN (
+    SELECT o."Id", o."BuyerId", a."Id" AS "Id0"
+    FROM "Orders" AS o
+    INNER JOIN "Addresses" AS a ON o."AddressId" = a."Id"
+) AS t0 ON t."Id" = t0."BuyerId"
+INNER JOIN "OrderItems" AS o0 ON t0."Id" = o0."OrderId"
+ORDER BY t."Id", t0."Id", t0."Id0"
     }
   ]
 }

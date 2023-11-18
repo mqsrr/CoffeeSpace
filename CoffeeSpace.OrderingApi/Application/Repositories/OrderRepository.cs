@@ -1,15 +1,15 @@
 ﻿using CoffeeSpace.Domain.Ordering.Orders;
 using CoffeeSpace.OrderingApi.Application.Repositories.Abstractions;
-using CoffeeSpace.OrderingApi.Persistence;
+using CoffeeSpace.OrderingApi.Persistence.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeSpace.OrderingApi.Application.Repositories;
 
 internal sealed class OrderRepository : IOrderRepository
 {
-    private readonly OrderingDbContext _orderingDbContext;
+    private readonly IOrderingDbContext _orderingDbContext;
 
-    public OrderRepository(OrderingDbContext orderingDbContext)
+    public OrderRepository(IOrderingDbContext orderingDbContext)
     {
         _orderingDbContext = orderingDbContext;
     }

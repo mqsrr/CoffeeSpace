@@ -1,6 +1,9 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Net.Http.Headers;
+using System.Runtime.CompilerServices;
 using CoffeeSpace.IdentityApi.Application.Messages.Consumers;
 using CoffeeSpace.IdentityApi.Controllers;
+using CoffeeSpace.IdentityApi.Persistence;
+using CoffeeSpace.IdentityApi.Settings;
 using DotNet.Testcontainers.Builders;
 using MassTransit;
 using Microsoft.AspNetCore.Hosting;
@@ -10,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Testcontainers.PostgreSql;
 using VerifyTests.EntityFramework;
 
@@ -44,6 +48,9 @@ public sealed class IdentityApiFactory : WebApplicationFactory<AuthController>, 
         builder.UseSetting("Jwt:Issuer", "coffee-space.testing");
         builder.UseSetting("Jwt:Key", "testing-coffeespac!!23");
         builder.UseSetting("Jwt:Expire", "1");
+        
+        builder.UseSetting("Authorization:ApiKey", "1sdfsdfsdfsdfsdfdsfs");
+        builder.UseSetting("Authorization:HeaderName", "apiiii");
 
         Environment.SetEnvironmentVariable(Environments.Staging, "Testing");
         builder.ConfigureTestServices(services =>
@@ -69,7 +76,13 @@ public sealed class IdentityApiFactory : WebApplicationFactory<AuthController>, 
             _dbModel = dbContext.Model;
         });
     }
-    
+
+    protected override void ConfigureClient(HttpClient client)
+    {
+        var apiKeySettings = Services.GetRequiredService<IOptions<ApiKeySettings>>().Value;
+        client.DefaultRequestHeaders.Add(apiKeySettings.HeaderName, apiKeySettings.ApiKey);
+    }
+
     [ModuleInitializer]
     public static void InitializeVerify()
     {

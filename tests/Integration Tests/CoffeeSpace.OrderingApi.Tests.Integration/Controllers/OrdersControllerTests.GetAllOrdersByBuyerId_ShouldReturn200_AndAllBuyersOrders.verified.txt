@@ -87,27 +87,13 @@ SELECT EXISTS (
     FROM "Orders" AS o)
     },
     {
-      Type: ReaderExecuted,
+      Type: ReaderExecutedAsync,
       HasTransaction: false,
       Parameters: {
         @__buyerId_0 (String?): Guid_4
       },
       Text:
-SELECT o."Id", o."AddressId", o."BuyerId", o."Status", a."Id", a."City", a."Country", a."Street", o0."Id", o0."Description", o0."Discount", o0."OrderId", o0."Quantity", o0."Title", o0."UnitPrice"
-FROM "Orders" AS o
-INNER JOIN "Addresses" AS a ON o."AddressId" = a."Id"
-LEFT JOIN "OrderItems" AS o0 ON o."Id" = o0."OrderId"
-WHERE o."BuyerId" = @__buyerId_0
-ORDER BY o."Id", a."Id"
-    },
-    {
-      Type: ReaderExecuted,
-      HasTransaction: false,
-      Parameters: {
-        @__buyerId_0 (String?): Guid_4
-      },
-      Text:
-SELECT o."Id", o."AddressId", o."BuyerId", o."Status", a."Id", a."City", a."Country", a."Street", o0."Id", o0."Description", o0."Discount", o0."OrderId", o0."Quantity", o0."Title", o0."UnitPrice"
+SELECT o."Id", o."AddressId", o."BuyerId", o."Status", a."Id", o0."Id", o0."Description", o0."Discount", o0."OrderId", o0."Quantity", o0."Title", o0."UnitPrice", a."City", a."Country", a."Street"
 FROM "Orders" AS o
 INNER JOIN "Addresses" AS a ON o."AddressId" = a."Id"
 LEFT JOIN "OrderItems" AS o0 ON o."Id" = o0."OrderId"

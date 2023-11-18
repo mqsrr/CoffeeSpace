@@ -1,11 +1,12 @@
 using System.Reflection;
 using CoffeeSpace.Domain.Ordering.BuyerInfo;
 using CoffeeSpace.Domain.Ordering.Orders;
+using CoffeeSpace.OrderingApi.Persistence.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeSpace.OrderingApi.Persistence;
 
-public sealed class OrderingDbContext : DbContext
+public sealed class OrderingDbContext : DbContext, IOrderingDbContext
 {
     public required DbSet<Order> Orders { get; init; }
     

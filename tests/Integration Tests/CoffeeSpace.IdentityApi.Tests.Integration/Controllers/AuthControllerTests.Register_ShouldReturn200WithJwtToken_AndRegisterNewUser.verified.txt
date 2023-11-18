@@ -56,7 +56,13 @@
         Method: POST
       },
       RequestUri: http://localhost/api/auth/register,
-      Headers: []
+      Headers: [
+        {
+          apiiii: [
+            1sdfsdfsdfsdfsdfdsfs
+          ]
+        }
+      ]
     },
     IsSuccessStatusCode: true
   },

@@ -1,10 +1,11 @@
 using System.Reflection;
 using CoffeeSpace.Domain.Products;
+using CoffeeSpace.ProductApi.Persistence.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeSpace.ProductApi.Persistence;
 
-internal sealed class ProductDbContext : DbContext
+internal sealed class ProductDbContext : DbContext, IProductDbContext
 {
     public required DbSet<Product> Products { get; init; }
 
