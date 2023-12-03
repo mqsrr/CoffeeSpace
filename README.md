@@ -1,6 +1,6 @@
 # CoffeeSpace [![codecov](https://codecov.io/gh/Marsik424/CoffeeSpace/graph/badge.svg?token=CRRETNTN9W)](https://codecov.io/gh/Marsik424/CoffeeSpace) [![Build](https://github.com/Marsik424/CoffeeSpace/actions/workflows/build.yml/badge.svg)](https://github.com/Marsik424/CoffeeSpace/actions/workflows/build.yml)
 
-![Coffee_Space excalidraw](https://github.com/Marsik424/CoffeeSpace/assets/82763271/28e06195-048d-4ec3-9161-adef5c89689b)
+![Coffee_Space excalidraw](https://github.com/Marsik424/CoffeeSpace/assets/82763271/d1da62d1-e7d8-4877-87e2-30a2a2204160)
 
 # MAUI Client
 
