@@ -2,8 +2,8 @@
 using AutoFixture.AutoNSubstitute;
 using CoffeeSpace.Domain.Ordering.Orders;
 using CoffeeSpace.Messages.Ordering.Commands;
-using CoffeeSpace.PaymentService.Consumers;
-using CoffeeSpace.PaymentService.Services.Abstractions;
+using CoffeeSpace.PaymentService.Application.Messages.Consumers;
+using CoffeeSpace.PaymentService.Application.Services.Abstractions;
 using FluentAssertions;
 using MassTransit;
 using MassTransit.Testing;

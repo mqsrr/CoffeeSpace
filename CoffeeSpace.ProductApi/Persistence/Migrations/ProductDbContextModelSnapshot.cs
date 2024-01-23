@@ -16,7 +16,7 @@ namespace CoffeeSpace.ProductApi.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.7")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -28,13 +28,14 @@ namespace CoffeeSpace.ProductApi.Persistence.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(184)
+                        .HasMaxLength(200)
                         .IsUnicode(false)
-                        .HasColumnType("character varying(184)");
+                        .HasColumnType("character varying(200)");
 
-                    b.Property<float>("Discount")
+                    b.Property<byte[]>("Image")
+                        .IsRequired()
                         .IsUnicode(false)
-                        .HasColumnType("real");
+                        .HasColumnType("bytea");
 
                     b.Property<int>("Quantity")
                         .IsUnicode(false)
@@ -47,6 +48,7 @@ namespace CoffeeSpace.ProductApi.Persistence.Migrations
                         .HasColumnType("character varying(64)");
 
                     b.Property<float>("UnitPrice")
+                        .HasPrecision(2)
                         .IsUnicode(false)
                         .HasColumnType("real");
 

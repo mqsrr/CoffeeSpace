@@ -7,7 +7,6 @@ using CoffeeSpace.OrderingApi.Application.Helpers;
 using CoffeeSpace.OrderingApi.Tests.Integration.Fakers.Models;
 using CoffeeSpace.OrderingApi.Tests.Integration.Fakers.Requests;
 using CoffeeSpace.OrderingApi.Tests.Integration.Fixtures;
-using VerifyTests.EntityFramework;
 
 namespace CoffeeSpace.OrderingApi.Tests.Integration.Controllers;
 
@@ -35,7 +34,7 @@ public sealed class BuyersControllerTests : IAsyncLifetime
         var response = await _httpClient.GetAsync(request);
 
         // Assert
-        var sqlLogs = EfRecording.FinishRecording("OrderingDb");
+        var sqlLogs =Recording.Stop("OrderingDb");
         var buyerResponse = await response.Content.ReadFromJsonAsync<BuyerResponse>();
 
         await Verify(new
@@ -57,7 +56,7 @@ public sealed class BuyersControllerTests : IAsyncLifetime
         var response = await _httpClient.GetAsync(request);
 
         // Assert
-        var sqlLogs = EfRecording.FinishRecording("OrderingDb");
+        var sqlLogs =Recording.Stop("OrderingDb");
 
         await Verify(new
         {
@@ -77,7 +76,7 @@ public sealed class BuyersControllerTests : IAsyncLifetime
         var response = await _httpClient.PostAsJsonAsync(request, buyerToCreate);
 
         // Assert
-        var sqlLogs = EfRecording.FinishRecording("OrderingDb");
+        var sqlLogs =Recording.Stop("OrderingDb");
         await Verify(new
         {
             response,
@@ -98,7 +97,7 @@ public sealed class BuyersControllerTests : IAsyncLifetime
         var response = await _httpClient.PutAsJsonAsync(request, buyerToUpdate);
 
         // Assert
-        var sqlLogs = EfRecording.FinishRecording("OrderingDb");
+        var sqlLogs =Recording.Stop("OrderingDb");
         var buyerResponse = response.Content.ReadFromJsonAsync<BuyerResponse>();
         
         await Verify(new
@@ -120,7 +119,7 @@ public sealed class BuyersControllerTests : IAsyncLifetime
         var response = await _httpClient.DeleteAsync(request);
 
         // Assert
-        var sqlLogs = EfRecording.FinishRecording("OrderingDb");
+        var sqlLogs =Recording.Stop("OrderingDb");
         await Verify(new
         {
             response,
@@ -130,7 +129,7 @@ public sealed class BuyersControllerTests : IAsyncLifetime
 
     public Task InitializeAsync()
     {
-        EfRecording.StartRecording("OrderingDb");
+        Recording.Start("OrderingDb");
         return Task.CompletedTask;
     }
 

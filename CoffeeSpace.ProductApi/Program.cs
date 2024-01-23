@@ -1,7 +1,4 @@
 using Asp.Versioning;
-using CoffeeSpace.Core.Extensions;
-using CoffeeSpace.Core.Services.Abstractions;
-using CoffeeSpace.Core.Settings;
 using CoffeeSpace.ProductApi.Application.Extensions;
 using CoffeeSpace.ProductApi.Application.Messages.Consumers;
 using CoffeeSpace.ProductApi.Application.Repositories;
@@ -9,6 +6,8 @@ using CoffeeSpace.ProductApi.Application.Repositories.Abstractions;
 using CoffeeSpace.ProductApi.Application.Validators;
 using CoffeeSpace.ProductApi.Persistence;
 using CoffeeSpace.ProductApi.Persistence.Abstractions;
+using CoffeeSpace.Shared.Extensions;
+using CoffeeSpace.Shared.Settings;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MassTransit;
@@ -21,30 +20,24 @@ builder.Configuration.AddAzureKeyVault();
 builder.Configuration.AddJwtBearer(builder);
 
 builder.Host.UseSerilog((context, configuration) =>
-    configuration.ReadFrom.Configuration(context.Configuration)
-        .AddDatadogLogging("Product API"));
+    configuration.ReadFrom.Configuration(context.Configuration));
 
 builder.Services.AddControllers();
 builder.Services.AddApiVersioning(new MediaTypeApiVersionReader("api-version"));
 
-builder.Services.AddStackExchangeRedisCache(x => x.Configuration = builder.Configuration["Redis:ConnectionString"]);
-builder.Services.AddApplicationDb<IProductDbContext , ProductDbContext>(builder.Configuration["ProductsDb:ConnectionString"]!);
-
+builder.Services.AddApplicationDb<IProductDbContext, ProductDbContext>("Server=localhost;Port=5432;Database=testDb;User Id=test;Password=Tests123!");
 builder.Services.AddApplicationService<IProductRepository>();
 
-builder.Services.AddApplicationService(typeof(ICacheService<>));
 builder.Services.Decorate<IProductRepository, CachedProductRepository>();
 
 builder.Services.AddFluentValidationAutoValidation()
     .AddValidatorsFromAssemblyContaining<CreateProductRequestValidator>(ServiceLifetime.Singleton, includeInternalTypes: true);
 
-builder.Services.AddOptions<AwsMessagingSettings>()
-    .Bind(builder.Configuration.GetRequiredSection(AwsMessagingSettings.SectionName))
-    .ValidateOnStart();
+builder.Services.AddOptionsWithValidateOnStart<AwsMessagingSettings>()
+    .Bind(builder.Configuration.GetRequiredSection(AwsMessagingSettings.SectionName));
 
-builder.Services.AddOptions<JwtSettings>()
-    .Bind(builder.Configuration.GetRequiredSection(JwtSettings.SectionName))
-    .ValidateOnStart();
+builder.Services.AddOptionsWithValidateOnStart<JwtSettings>()
+    .Bind(builder.Configuration.GetRequiredSection(JwtSettings.SectionName));
 
 builder.Services.AddMassTransit(x =>
 {
@@ -69,10 +62,13 @@ builder.Services.AddMassTransit(x =>
 });
 
 builder.Services.AddServiceHealthChecks(builder);
+builder.Services.AddOpenTelemetryWithPrometheusExporter();
 
 var app = builder.Build();
 
 app.UseSerilogRequestLogging();
+app.MapPrometheusScrapingEndpoint();
+
 app.UseHealthChecks("/_health");
 
 app.UseAuthentication();

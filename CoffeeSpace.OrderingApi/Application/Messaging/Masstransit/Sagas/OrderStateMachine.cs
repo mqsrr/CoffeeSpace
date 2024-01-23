@@ -5,7 +5,6 @@ using CoffeeSpace.Messages.Products.Commands;
 using CoffeeSpace.Messages.Products.Responses;
 using CoffeeSpace.Messages.Shipment.Commands;
 using CoffeeSpace.Messages.Shipment.Responses;
-using CoffeeSpace.OrderingApi.Application.Mapping;
 using MassTransit;
 
 namespace CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Sagas;
@@ -51,15 +50,15 @@ internal sealed class OrderStateMachine : MassTransitStateMachine<OrderStateInst
                 .Then(context =>
                 {
                     context.Saga.OrderId = context.Message.Order.Id;
-                    context.Saga.UpdateOrderStatusCorrelationId = context.Message.Order.Id;
                     context.Saga.BuyerId = context.Message.Order.BuyerId;
+                    context.Saga.UpdateOrderStatusCorrelationId = context.Message.Order.Id;
                     context.Saga.StockValidationSuccess = false;
                     context.Saga.PaymentSuccess = false;
                 })
                 .Request(RequestOrderStockValidation, context => context.Init<OrderStockValidation>(new
                 {
                     context.Message.Order,
-                    Products = context.Message.Order.OrderItems.Select(x => x.ToProduct())
+                    ProductTitles = context.Message.Order.OrderItems.Select(item => item.Title)
                 }))
                 .TransitionTo(Submitted));
 

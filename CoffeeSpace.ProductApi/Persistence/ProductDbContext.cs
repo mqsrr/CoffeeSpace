@@ -7,12 +7,13 @@ namespace CoffeeSpace.ProductApi.Persistence;
 
 internal sealed class ProductDbContext : DbContext, IProductDbContext
 {
-    public required DbSet<Product> Products { get; init; }
-
     public ProductDbContext(DbContextOptions<ProductDbContext> options) : base(options)
     {
+        Database.EnsureCreated();
     }
-    
+
+    public required DbSet<Product> Products { get; init; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

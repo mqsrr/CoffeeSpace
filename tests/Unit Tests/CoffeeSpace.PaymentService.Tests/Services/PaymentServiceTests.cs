@@ -1,9 +1,9 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoNSubstitute;
 using CoffeeSpace.Domain.Ordering.Orders;
-using CoffeeSpace.PaymentService.Messages.Commands;
-using CoffeeSpace.PaymentService.Messages.Queries;
-using CoffeeSpace.PaymentService.Models;
+using CoffeeSpace.PaymentService.Application.Messages.Commands;
+using CoffeeSpace.PaymentService.Application.Messages.Queries;
+using CoffeeSpace.PaymentService.Application.Models;
 using FluentAssertions;
 using Mediator;
 using NSubstitute;
@@ -17,7 +17,7 @@ public sealed class PaymentServiceTests
     private readonly ISender _sender;
     private readonly Fixture _fixture;
 
-    private readonly PaymentService.Services.PaymentService _paymentService;
+    private readonly Application.Services.PaymentService _paymentService;
     
     public PaymentServiceTests()
     {
@@ -25,7 +25,7 @@ public sealed class PaymentServiceTests
         _fixture.Customize(new AutoNSubstituteCustomization());
 
         _sender = _fixture.Create<ISender>();
-        _paymentService = new PaymentService.Services.PaymentService(_sender);
+        _paymentService = new Application.Services.PaymentService(_sender);
     }
     
     [Fact]

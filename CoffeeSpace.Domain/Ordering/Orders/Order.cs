@@ -1,6 +1,4 @@
-﻿using CoffeeSpace.Domain.Ordering.BuyerInfo;
-
-namespace CoffeeSpace.Domain.Ordering.Orders;
+﻿namespace CoffeeSpace.Domain.Ordering.Orders;
 
 public sealed class Order
 {

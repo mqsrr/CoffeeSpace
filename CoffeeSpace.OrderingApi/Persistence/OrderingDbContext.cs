@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeSpace.OrderingApi.Persistence;
 
-public sealed class OrderingDbContext : DbContext, IOrderingDbContext
+public sealed class OrderingDbContext(DbContextOptions<OrderingDbContext> options) : DbContext(options), IOrderingDbContext
 {
     public required DbSet<Order> Orders { get; init; }
     
@@ -15,10 +15,6 @@ public sealed class OrderingDbContext : DbContext, IOrderingDbContext
     public required DbSet<Buyer> Buyers { get; init; }
     
     public required DbSet<Address> Addresses { get; init; }
-
-    public OrderingDbContext(DbContextOptions<OrderingDbContext> options) : base(options)
-    {
-    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

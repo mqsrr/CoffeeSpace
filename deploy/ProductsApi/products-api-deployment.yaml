@@ -56,10 +56,4 @@ spec:
                 secretKeyRef:
                   key: "api-key"
                   name: "datadog-secret"
-            - name: DD_LOGS_INJECTION
-              value: "true"
-            - name: DD_APPSEC_ENABLED
-              value: "true"
-            - name: DD_RUNTIME_METRICS_ENABLED
-              value: "true"
       restartPolicy: Always

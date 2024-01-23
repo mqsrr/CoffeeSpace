@@ -1,9 +1,7 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoNSubstitute;
-using CoffeeSpace.Domain.Ordering.Orders;
 using CoffeeSpace.Messages.Ordering.Commands;
 using CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Consumers;
-using CoffeeSpace.OrderingApi.Application.Messaging.Mediator.Notifications.Orders;
 using CoffeeSpace.OrderingApi.Application.Repositories.Abstractions;
 using CoffeeSpace.OrderingApi.Application.SignalRHubs;
 using CoffeeSpace.OrderingApi.Application.SignalRHubs.Abstraction;
@@ -14,7 +12,6 @@ using Mediator;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
-using NSubstitute.Extensions;
 using Xunit;
 
 namespace CoffeeSpace.OrderingApi.Tests.Consumers;

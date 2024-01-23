@@ -51,7 +51,7 @@ internal sealed class OrderService : IOrderService
         
         return isCreated;
     }
-    
+
     public Task<bool> DeleteByIdAsync(Guid id, Guid buyerId, CancellationToken cancellationToken)
     {
         var isDeleted = _orderRepository.DeleteByIdAsync(id.ToString(), cancellationToken);

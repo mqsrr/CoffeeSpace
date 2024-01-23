@@ -1,8 +1,8 @@
-using CoffeeSpace.Core.Attributes;
-using CoffeeSpace.Core.Services.Abstractions;
 using CoffeeSpace.Domain.Products;
 using CoffeeSpace.ProductApi.Application.Helpers;
 using CoffeeSpace.ProductApi.Application.Repositories.Abstractions;
+using CoffeeSpace.Shared.Attributes;
+using CoffeeSpace.Shared.Services.Abstractions;
 
 namespace CoffeeSpace.ProductApi.Application.Repositories;
 
@@ -10,9 +10,9 @@ namespace CoffeeSpace.ProductApi.Application.Repositories;
 internal sealed class CachedProductRepository : IProductRepository
 {
     private readonly IProductRepository _productRepository;
-    private readonly ICacheService<Product> _cacheService;
+    private readonly ICacheService _cacheService;
 
-    public CachedProductRepository(IProductRepository productRepository, ICacheService<Product> cacheService)
+    public CachedProductRepository(IProductRepository productRepository, ICacheService cacheService)
     {
         _productRepository = productRepository;
         _cacheService = cacheService;
@@ -29,7 +29,7 @@ internal sealed class CachedProductRepository : IProductRepository
         {
             var products = _productRepository.GetAllProductsAsync(cancellationToken);
             return products;
-        }, cancellationToken);
+        });
     }
     
     public Task<Product?> GetProductByIdAsync(string id, CancellationToken cancellationToken)
@@ -38,7 +38,7 @@ internal sealed class CachedProductRepository : IProductRepository
         {
             var product = _productRepository.GetProductByIdAsync(id, cancellationToken);
             return product;
-        }, cancellationToken);
+        });
     }
 
     public async Task<bool> CreateProductAsync(Product product, CancellationToken cancellationToken)
@@ -46,7 +46,7 @@ internal sealed class CachedProductRepository : IProductRepository
         bool created = await _productRepository.CreateProductAsync(product, cancellationToken);
         if (created)
         {
-            await _cacheService.RemoveAsync(CacheKeys.Products.GetAll, cancellationToken);
+            await _cacheService.RemoveAsync(CacheKeys.Products.GetAll);
         }
 
         return created;
@@ -57,8 +57,8 @@ internal sealed class CachedProductRepository : IProductRepository
         var updatedProduct = await _productRepository.UpdateProductAsync(product, cancellationToken);
         if (updatedProduct is not null)
         {
-            await _cacheService.RemoveAsync(CacheKeys.Products.GetAll, cancellationToken);
-            await _cacheService.RemoveAsync(CacheKeys.Products.GetById(updatedProduct.Id), cancellationToken);
+            await _cacheService.RemoveAsync(CacheKeys.Products.GetAll);
+            await _cacheService.RemoveAsync(CacheKeys.Products.GetById(updatedProduct.Id));
         }
 
         return updatedProduct;
@@ -69,8 +69,8 @@ internal sealed class CachedProductRepository : IProductRepository
         bool deleted = await _productRepository.DeleteProductByIdAsync(id, cancellationToken);
         if (deleted)
         {
-            await _cacheService.RemoveAsync(CacheKeys.Products.GetAll, cancellationToken);
-            await _cacheService.RemoveAsync(CacheKeys.Products.GetById(id), cancellationToken);
+            await _cacheService.RemoveAsync(CacheKeys.Products.GetAll);
+            await _cacheService.RemoveAsync(CacheKeys.Products.GetById(id));
         }
 
         return deleted;

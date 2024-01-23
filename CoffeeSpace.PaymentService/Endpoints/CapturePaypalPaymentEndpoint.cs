@@ -1,6 +1,6 @@
-﻿using CoffeeSpace.PaymentService.Contracts.Requests;
-using CoffeeSpace.PaymentService.Helpers;
-using CoffeeSpace.PaymentService.Services.Abstractions;
+﻿using CoffeeSpace.PaymentService.Application.Contracts.Requests;
+using CoffeeSpace.PaymentService.Application.Helpers;
+using CoffeeSpace.PaymentService.Application.Services.Abstractions;
 using FastEndpoints;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;

@@ -1,11 +1,10 @@
 using CoffeeSpace.Domain.Ordering.Orders;
-using CoffeeSpace.Domain.Products;
 
 namespace CoffeeSpace.Messages.Products.Commands;
 
 public interface OrderStockValidation
 {
     Order Order { get; }
-    
-    IEnumerable<Product> Products { get; }
+
+    IEnumerable<string> ProductTitles { get; }
 }

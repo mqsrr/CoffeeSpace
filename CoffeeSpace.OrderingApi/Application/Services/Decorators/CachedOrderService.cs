@@ -1,9 +1,9 @@
-﻿using CoffeeSpace.Core.Attributes;
-using CoffeeSpace.Core.Services.Abstractions;
-using CoffeeSpace.Domain.Ordering.Orders;
+﻿using CoffeeSpace.Domain.Ordering.Orders;
 using CoffeeSpace.OrderingApi.Application.Helpers;
 using CoffeeSpace.OrderingApi.Application.Messaging.Mediator.Notifications.Orders;
 using CoffeeSpace.OrderingApi.Application.Services.Abstractions;
+using CoffeeSpace.Shared.Attributes;
+using CoffeeSpace.Shared.Services.Abstractions;
 using Mediator;
 
 namespace CoffeeSpace.OrderingApi.Application.Services.Decorators;
@@ -11,11 +11,11 @@ namespace CoffeeSpace.OrderingApi.Application.Services.Decorators;
 [Decorator]
 internal sealed class CachedOrderService : IOrderService
 {
-    private readonly ICacheService<Order> _cacheService;
+    private readonly ICacheService _cacheService;
     private readonly IOrderService _orderService;
     private readonly IPublisher _publisher;
 
-    public CachedOrderService(ICacheService<Order> cacheService, IOrderService orderService, IPublisher publisher)
+    public CachedOrderService(ICacheService cacheService, IOrderService orderService, IPublisher publisher)
     {
         _cacheService = cacheService;
         _orderService = orderService;
@@ -28,7 +28,7 @@ internal sealed class CachedOrderService : IOrderService
         {
             var orders = _orderService.GetAllByBuyerIdAsync(buyerId, cancellationToken);
             return orders;
-        }, cancellationToken);
+        });
     }
 
     public Task<Order?> GetByIdAsync(Guid id, Guid buyerId, CancellationToken cancellationToken)
@@ -37,7 +37,7 @@ internal sealed class CachedOrderService : IOrderService
         {
             var order = _orderService.GetByIdAsync(id, buyerId, cancellationToken);
             return order;
-        }, cancellationToken);
+        });
 
     }
 

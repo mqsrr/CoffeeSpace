@@ -1,8 +1,8 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoNSubstitute;
-using CoffeeSpace.PaymentService.Models;
+using CoffeeSpace.PaymentService.Application.Models;
+using CoffeeSpace.PaymentService.Application.Repositories;
 using CoffeeSpace.PaymentService.Persistence.Abstractions;
-using CoffeeSpace.PaymentService.Repositories;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using MockQueryable.NSubstitute;

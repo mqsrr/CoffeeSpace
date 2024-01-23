@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
@@ -29,7 +29,6 @@
       <PackageReference Include="MassTransit.EntityFrameworkCore" Version="8.1.1" />
       <PackageReference Include="MassTransit.Newtonsoft" Version="8.1.1" />
       <PackageReference Include="MassTransit.Quartz" Version="8.1.1" />
-      <PackageReference Include="MassTransit.RabbitMQ" Version="8.1.1" />
       <PackageReference Include="Mediator.Abstractions" Version="2.1.7" />
       <PackageReference Include="Mediator.SourceGenerator" Version="2.1.7">
         <PrivateAssets>all</PrivateAssets>
@@ -40,13 +39,11 @@
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
-      <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="7.0.12" />
-      <PackageReference Include="Microsoft.ML.Recommender" Version="0.20.1" />
       <PackageReference Include="Riok.Mapperly" Version="3.2.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\CoffeeSpace.Core\CoffeeSpace.Core.csproj" />
+      <ProjectReference Include="..\CoffeeSpace.Shared\CoffeeSpace.Shared.csproj" />
       <ProjectReference Include="..\CoffeeSpace.Domain\CoffeeSpace.Domain.csproj" />
       <ProjectReference Include="..\CoffeeSpace.Messages\CoffeeSpace.Messages.csproj" />
     </ItemGroup>

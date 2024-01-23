@@ -31,9 +31,9 @@ internal sealed class OrderRepository : IOrderRepository
         return orders;
     }
     
-    public Task<Order?> GetByIdAsync(string id, CancellationToken cancellationToken)
+    public async Task<Order?> GetByIdAsync(string id, CancellationToken cancellationToken)
     {
-        var order = _orderingDbContext.Orders
+        var order = await _orderingDbContext.Orders
             .Include(order => order.OrderItems)
             .Include(order => order.Address)
             .FirstOrDefaultAsync(order => order.Id == id, cancellationToken);
@@ -58,7 +58,7 @@ internal sealed class OrderRepository : IOrderRepository
         
         return result > 0;
     }
-
+    
     public async Task<bool> DeleteByIdAsync(string id, CancellationToken cancellationToken)
     {
         int result = await _orderingDbContext.Orders

@@ -1,18 +1,18 @@
 using Asp.Versioning;
-using CoffeeSpace.Core.Extensions;
-using CoffeeSpace.Core.Services.Abstractions;
-using CoffeeSpace.Core.Settings;
 using CoffeeSpace.OrderingApi.Application.Extensions;
 using CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Consumers;
 using CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Sagas;
-using CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Sagas.Definitions;
 using CoffeeSpace.OrderingApi.Application.Repositories.Abstractions;
 using CoffeeSpace.OrderingApi.Application.Services.Abstractions;
 using CoffeeSpace.OrderingApi.Application.Services.Decorators;
+using CoffeeSpace.OrderingApi.Application.Settings;
 using CoffeeSpace.OrderingApi.Application.SignalRHubs;
 using CoffeeSpace.OrderingApi.Application.Validators;
 using CoffeeSpace.OrderingApi.Persistence;
 using CoffeeSpace.OrderingApi.Persistence.Abstractions;
+using CoffeeSpace.Shared.Extensions;
+using CoffeeSpace.Shared.Services.Abstractions;
+using CoffeeSpace.Shared.Settings;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MassTransit;
@@ -26,8 +26,7 @@ builder.Configuration.AddAzureKeyVault();
 builder.Configuration.AddJwtBearer(builder);
 
 builder.Host.UseSerilog((context, configuration) =>
-    configuration.ReadFrom.Configuration(context.Configuration)
-        .AddDatadogLogging("Ordering API"));
+    configuration.ReadFrom.Configuration(context.Configuration));
 
 builder.Services.AddSignalR().AddAzureSignalR();
 
@@ -35,12 +34,14 @@ builder.Services.AddControllers();
 builder.Services.AddMediator();
 
 builder.Services.AddApiVersioning(new MediaTypeApiVersionReader("api-version"));
-builder.Services.AddStackExchangeRedisCache(x => x.Configuration = builder.Configuration["Redis:ConnectionString"]);
 
 builder.Services.AddApplicationDb<IOrderingDbContext, OrderingDbContext>(builder.Configuration["OrderingDb:ConnectionString"]!);
 builder.Services.AddApplicationDb<OrderStateSagaDbContext>(builder.Configuration["OrderStateSagaDb:ConnectionString"]!);
 
-builder.Services.AddApplicationService(typeof(ICacheService<>));
+builder.Services.AddApplicationService<ICacheService>();
+
+builder.Services.Decorate<IOrderService, CachedOrderService>();
+builder.Services.Decorate<IBuyerService, CachedBuyerService>();
 
 builder.Services.AddApplicationService<IOrderService>();
 builder.Services.AddApplicationService<IOrderRepository>();
@@ -48,29 +49,23 @@ builder.Services.AddApplicationService<IOrderRepository>();
 builder.Services.AddApplicationService<IBuyerService>();
 builder.Services.AddApplicationService<IBuyerRepository>();
 
-builder.Services.Decorate<IOrderService, CachedOrderService>();
-builder.Services.Decorate<IBuyerService, CachedBuyerService>();
-
-builder.Services.AddOptions<AwsMessagingSettings>()
-    .Bind(builder.Configuration.GetSection(AwsMessagingSettings.SectionName))
-    .ValidateOnStart();
-
-builder.Services.AddOptions<JwtSettings>()
-    .Bind(builder.Configuration.GetSection(JwtSettings.SectionName))
-    .ValidateOnStart();
-
 builder.Services.AddFluentValidationAutoValidation()
     .AddValidatorsFromAssemblyContaining<IValidatorMarker>(ServiceLifetime.Singleton, includeInternalTypes: true);
 
+builder.Services.AddOptionsWithValidateOnStart<AwsMessagingSettings>()
+    .Bind(builder.Configuration.GetRequiredSection(AwsMessagingSettings.SectionName));
+
+builder.Services.AddOptionsWithValidateOnStart<JwtSettings>()
+    .Bind(builder.Configuration.GetRequiredSection(JwtSettings.SectionName));
+
 builder.Services.AddCors(options => options.AddDefaultPolicy(policyBuilder =>
     policyBuilder.AllowCredentials()
-        .WithOrigins("http://localhost:4200")
-        .WithMethods("POST")
-        .WithHeaders("x-requested-with", "x-signalr-user-agent")));
+        .WithOrigins(CorsSettings.AllowedOrigins)
+        .WithMethods(CorsSettings.AllowedMethods)
+        .WithHeaders(CorsSettings.AllowedHeaders)));
 
 builder.Services.AddQuartz(x =>
 {
-    x.UseMicrosoftDependencyInjectionJobFactory();
     x.UseInMemoryStore();
 
     x.InterruptJobsOnShutdownWithWait = true;
@@ -85,8 +80,7 @@ builder.Services.AddMassTransit(configurator =>
     configurator.AddQuartzConsumers();
     configurator.AddPublishMessageScheduler();
     
-    configurator.AddEntityFrameworkOutbox<OrderStateSagaDbContext>(outboxConfigurator => outboxConfigurator.UsePostgres());
-    configurator.AddSagaStateMachine<OrderStateMachine, OrderStateInstance, OrderStateDefinition>()
+    configurator.AddSagaStateMachine<OrderStateMachine, OrderStateInstance>()
         .EntityFrameworkRepository(repositoryConfigurator =>
         {
             repositoryConfigurator.ConcurrencyMode = ConcurrencyMode.Optimistic;
@@ -114,13 +108,16 @@ builder.Services.AddMassTransit(configurator =>
 });
 
 builder.Services.AddServiceHealthChecks(builder);
+builder.Services.AddOpenTelemetryWithPrometheusExporter();
 
 var app = builder.Build();
 
 app.UseSerilogRequestLogging();
 app.UseHealthChecks("/_health");
 
+app.MapPrometheusScrapingEndpoint();
 app.UseCors();
+
 app.UseAuthentication();
 app.UseAuthorization();
 

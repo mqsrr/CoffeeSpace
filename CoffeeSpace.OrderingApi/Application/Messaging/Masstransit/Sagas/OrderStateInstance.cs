@@ -9,7 +9,7 @@ internal sealed class OrderStateInstance : SagaStateMachineInstance
     public int CurrentState { get; set; }
 
     public required string OrderId { get; set; }
-    
+
     public required string BuyerId { get; set; }
     
     public required string UpdateOrderStatusCorrelationId { get; set; }

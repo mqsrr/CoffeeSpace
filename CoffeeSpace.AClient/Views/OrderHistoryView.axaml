@@ -1,0 +1,59 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:CoffeeSpace.AClient.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:glassMorphism="clr-namespace:SukiUI.Controls.GlassMorphism;assembly=SukiUI"
+             xmlns:controls="clr-namespace:SukiUI.Controls;assembly=SukiUI"
+             mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="650"
+             x:DataType="vm:OrderHistoryWindowViewModel"
+             x:Class="CoffeeSpace.AClient.Views.OrderHistoryView">
+
+    <Design.DataContext>
+        <vm:OrderHistoryWindowViewModel />
+    </Design.DataContext>
+    <UserControl.Background>
+        <ImageBrush Source="../Assets/wepik-export-20240101010025UDZ2.png" Stretch="UniformToFill">
+        </ImageBrush>
+    </UserControl.Background>
+
+    <ScrollViewer HorizontalAlignment="Left">
+        <ItemsControl ItemsSource="{Binding Orders}" Margin="10">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <controls:GlassCard Height="150" Width="300" Margin="5" DoubleTapped="InputElement_OnDoubleTapped">
+                        <Grid ShowGridLines="False"
+                              ColumnDefinitions="Auto,Auto,*"
+                              RowDefinitions="Auto,*">
+                            <TextBlock Grid.Column="0" Grid.Row="0" Text="{Binding Id}" Foreground="Gray" FontSize="12" FontWeight="Medium" FontFamily="{StaticResource Montserrat-Regular}" />
+                            <Border Grid.Row="1" Grid.Column="0" CornerRadius="7" ClipToBounds="True" MaxWidth="130" 
+                                    VerticalAlignment="Bottom" HorizontalAlignment="Left">
+                                <TextBlock Text="{Binding Status}" Padding="4" FontWeight="Medium" LetterSpacing="0.5" FontFamily="{StaticResource Montserrat-Regular}">
+                                    <TextBlock.Background>
+                                        <SolidColorBrush Color="PaleGreen" Opacity="0.1" />
+                                    </TextBlock.Background>                                   
+                                    <TextBlock.Foreground>
+                                        <SolidColorBrush Color="Green" Opacity="0.6" />
+                                    </TextBlock.Foreground>
+                                </TextBlock>
+                            </Border>
+
+                            <TextBlock Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right"
+                                       VerticalAlignment="Center" Text="Products: 18" FontFamily="{StaticResource Montserrat-Regular}"
+                                       FontWeight="Medium" LetterSpacing="0.4"/>
+                            <TextBlock Grid.Row="1" Grid.Column="2" HorizontalAlignment="Right"
+                                       VerticalAlignment="Bottom" Text="Total Sum: 400$" FontFamily="{StaticResource Montserrat-Regular}"
+                                       FontWeight="Medium" LetterSpacing="0.4"/>
+                        </Grid>
+                    </controls:GlassCard>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </ScrollViewer>
+
+</UserControl>

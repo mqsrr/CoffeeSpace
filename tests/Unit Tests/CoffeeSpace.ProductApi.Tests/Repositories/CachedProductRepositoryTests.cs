@@ -1,6 +1,5 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoNSubstitute;
-using CoffeeSpace.Core.Services.Abstractions;
 using CoffeeSpace.Domain.Products;
 using CoffeeSpace.ProductApi.Application.Repositories;
 using CoffeeSpace.ProductApi.Application.Repositories.Abstractions;

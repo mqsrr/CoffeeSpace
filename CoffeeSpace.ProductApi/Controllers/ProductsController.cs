@@ -39,7 +39,7 @@ public sealed class ProductsController : ControllerBase
     }
     
     [HttpPost(ApiEndpoints.Products.Create)]
-    public async Task<IActionResult> Create([FromBody] CreateProductRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> Create([FromForm] CreateProductRequest request, CancellationToken cancellationToken)
     {
         var product = request.ToProduct();
         bool created = await _productRepository.CreateProductAsync(product, cancellationToken);
@@ -50,7 +50,7 @@ public sealed class ProductsController : ControllerBase
     }
     
     [HttpPut(ApiEndpoints.Products.Update)]
-    public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateProductRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> Update([FromRoute] Guid id, [FromForm] UpdateProductRequest request, CancellationToken cancellationToken)
     {
         var updatedProduct = await _productRepository.UpdateProductAsync(request.ToProduct(id), cancellationToken);
 

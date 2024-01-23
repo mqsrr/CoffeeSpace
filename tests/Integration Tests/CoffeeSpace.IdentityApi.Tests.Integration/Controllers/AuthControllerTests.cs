@@ -6,7 +6,6 @@ using CoffeeSpace.IdentityApi.Application.Helpers;
 using CoffeeSpace.IdentityApi.Tests.Integration.Fakers;
 using CoffeeSpace.IdentityApi.Tests.Integration.Fixtures;
 using MassTransit.Testing;
-using VerifyTests.EntityFramework;
 
 namespace CoffeeSpace.IdentityApi.Tests.Integration.Controllers;
 
@@ -33,7 +32,7 @@ public sealed class AuthControllerTests : IClassFixture<IdentityApiFactory>, IAs
         var response = await _httpClient.PostAsJsonAsync(request, userToCreate);
 
         // Assert
-        var sqlLogs = EfRecording.FinishRecording("IdentityDb");
+        var sqlLogs =Recording.Stop("IdentityDb");
         await Verify(new
         {
             response,
@@ -57,7 +56,7 @@ public sealed class AuthControllerTests : IClassFixture<IdentityApiFactory>, IAs
         var response = await _httpClient.PostAsJsonAsync(request, userToCreate);
 
         // Assert
-        var sqlLogs = EfRecording.FinishRecording("IdentityDb");
+        var sqlLogs =Recording.Stop("IdentityDb");
         await Verify(new
         {
             response,
@@ -67,7 +66,7 @@ public sealed class AuthControllerTests : IClassFixture<IdentityApiFactory>, IAs
 
     public Task InitializeAsync()
     {
-        EfRecording.StartRecording("IdentityDb");
+        Recording.Start("IdentityDb");
         return Task.CompletedTask;
     }
 

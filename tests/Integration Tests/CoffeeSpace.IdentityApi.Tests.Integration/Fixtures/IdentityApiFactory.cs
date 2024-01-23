@@ -1,5 +1,4 @@
-﻿using System.Net.Http.Headers;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using CoffeeSpace.IdentityApi.Application.Messages.Consumers;
 using CoffeeSpace.IdentityApi.Controllers;
 using CoffeeSpace.IdentityApi.Persistence;
@@ -15,7 +14,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Testcontainers.PostgreSql;
-using VerifyTests.EntityFramework;
 
 namespace CoffeeSpace.IdentityApi.Tests.Integration.Fixtures;
 

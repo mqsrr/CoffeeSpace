@@ -14,9 +14,9 @@ internal sealed class BuyerRepository : IBuyerRepository
         _orderingDbContext = orderingDbContext;
     }
 
-    public Task<Buyer?> GetByIdAsync(string id, CancellationToken cancellationToken)
+    public async Task<Buyer?> GetByIdAsync(string id, CancellationToken cancellationToken)
     {
-        var buyer = _orderingDbContext.Buyers
+        var buyer = await _orderingDbContext.Buyers
             .AsSplitQuery()
             .Include(buyer => buyer.Orders)!
             .ThenInclude(order => order.OrderItems)
@@ -27,9 +27,9 @@ internal sealed class BuyerRepository : IBuyerRepository
         return buyer;
     }
 
-    public Task<Buyer?> GetByEmailAsync(string email, CancellationToken cancellationToken)
+    public async Task<Buyer?> GetByEmailAsync(string email, CancellationToken cancellationToken)
     {
-        var buyer = _orderingDbContext.Buyers
+        var buyer = await _orderingDbContext.Buyers
             .AsSplitQuery()
             .Include(buyer => buyer.Orders)!
             .ThenInclude(order => order.OrderItems)

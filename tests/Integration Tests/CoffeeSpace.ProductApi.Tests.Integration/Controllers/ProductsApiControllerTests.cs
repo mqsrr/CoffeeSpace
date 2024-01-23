@@ -7,7 +7,6 @@ using CoffeeSpace.ProductApi.Application.Helpers;
 using CoffeeSpace.ProductApi.Application.Mapping;
 using CoffeeSpace.ProductApi.Tests.Integration.Fakers;
 using CoffeeSpace.ProductApi.Tests.Integration.Fixtures;
-using VerifyTests.EntityFramework;
 
 namespace CoffeeSpace.ProductApi.Tests.Integration.Controllers;
 
@@ -34,7 +33,7 @@ public sealed class ProductsApiControllerTests : IClassFixture<ProductApiFactory
 
         // Assert
         var productResponses = await response.Content.ReadFromJsonAsync<IEnumerable<ProductResponse>>();
-        var sqlLogs = EfRecording.FinishRecording("ProductDb");
+        var sqlLogs = Recording.Stop("ProductDb");
 
         await Verify(new
         {
@@ -56,7 +55,7 @@ public sealed class ProductsApiControllerTests : IClassFixture<ProductApiFactory
 
         // Assert
         var productResponse = await response.Content.ReadFromJsonAsync<ProductResponse>();
-        var sqlLogs = EfRecording.FinishRecording("ProductDb");
+        var sqlLogs =Recording.Stop("ProductDb");
 
         await Verify(new
         {
@@ -77,7 +76,7 @@ public sealed class ProductsApiControllerTests : IClassFixture<ProductApiFactory
         var response = await _httpClient.PostAsJsonAsync(uriRequest, productToCreate);
 
         // Assert
-        var sqlLogs = EfRecording.FinishRecording("ProductDb");
+        var sqlLogs =Recording.Stop("ProductDb");
         await Verify(new
         {
             response,
@@ -97,7 +96,7 @@ public sealed class ProductsApiControllerTests : IClassFixture<ProductApiFactory
         var response = await _httpClient.PutAsJsonAsync(uriRequest, updatedProduct);
 
         // Assert
-        var sqlLogs = EfRecording.FinishRecording("ProductDb");
+        var sqlLogs =Recording.Stop("ProductDb");
         await Verify(new
         {
             response,
@@ -116,7 +115,7 @@ public sealed class ProductsApiControllerTests : IClassFixture<ProductApiFactory
         var response = await _httpClient.DeleteAsync(uriRequest);
 
         // Assert
-        var sqlLogs = EfRecording.FinishRecording("ProductDb");
+        var sqlLogs =Recording.Stop("ProductDb");
         await Verify(new
         {
             response,
@@ -126,7 +125,7 @@ public sealed class ProductsApiControllerTests : IClassFixture<ProductApiFactory
 
     public Task InitializeAsync()
     {
-        EfRecording.StartRecording("ProductDb");
+        Recording.Start("ProductDb");
         return Task.CompletedTask;
     }
 

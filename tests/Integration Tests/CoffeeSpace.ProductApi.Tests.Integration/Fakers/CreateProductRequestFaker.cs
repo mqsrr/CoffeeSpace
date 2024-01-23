@@ -12,7 +12,6 @@ public sealed class CreateProductRequestFaker : AutoFaker<CreateProductRequest>
         RuleFor(product => product.Title, faker => faker.Commerce.ProductName());
         RuleFor(product => product.Description, faker => faker.Commerce.ProductDescription());
         RuleFor(product => product.Quantity, faker => faker.Random.Int(0, 99));
-        RuleFor(product => product.Discount, faker => faker.Random.Float());
         RuleFor(product => product.UnitPrice, faker => faker.Random.Float(1, 10));
     }
 }

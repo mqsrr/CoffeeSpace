@@ -1,0 +1,60 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net7.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+        <ApplicationManifest>app.manifest</ApplicationManifest>
+        <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <AvaloniaResource Include="Assets\**"/>
+    </ItemGroup>
+    <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+        <DefineConstants>$(DefineConstants);ENABLE_XAML_HOT_RELOAD</DefineConstants>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AutoBogus" Version="2.13.1" />
+        <PackageReference Condition="$(DefineConstants.Contains(ENABLE_XAML_HOT_RELOAD))" Include="Avalonia.Markup.Xaml.Loader" Version="11.0.7" />
+        <PackageReference Condition="$(DefineConstants.Contains(ENABLE_XAML_HOT_RELOAD))" Include="HotAvalonia" Version="1.0.1" />
+        <PackageReference Include="HotAvalonia.Extensions" Version="1.0.1" PrivateAssets="All" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.1" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.2.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="11.0.7" />
+        <PackageReference Include="Avalonia.Desktop" Version="11.0.7" />
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.7" />
+        <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.7" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+        <PackageReference Include="HeroIcons.Avalonia" Version="1.0.2" />
+        <PackageReference Include="Mediator.Abstractions" Version="2.1.7" />
+        <PackageReference Include="Mediator.SourceGenerator" Version="2.1.7">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+        <PackageReference Include="Refit.HttpClientFactory" Version="7.0.0" />
+        <PackageReference Include="Riok.Mapperly" Version="3.3.0" />
+        <PackageReference Include="Scrutor" Version="4.2.2" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="3.1.2" />
+        <PackageReference Include="SukiUI" Version="6.0.0-beta" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Remove="C:\Users\nikit\.nuget\packages\sukiui\5.3.0\contentFiles\any\netstandard2.0\suki_photo.ico" />
+      <Content Remove="C:\Users\nikit\.nuget\packages\sukiui\6.0.0-beta\contentFiles\any\netstandard2.0\suki_photo.ico" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="SukiUI">
+        <HintPath>C:\Users\nikit\.nuget\packages\sukiui\5.3.0\lib\netstandard2.0\SukiUI.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+    
+</Project>

@@ -1,0 +1,80 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:CoffeeSpace.AClient.ViewModels"
+             mc:Ignorable="d"  d:DesignWidth="1280" d:DesignHeight="650"
+             x:DataType="vm:DashboardWindowViewModel"
+             x:Class="CoffeeSpace.AClient.Views.DashboardView">
+
+    <Design.DataContext>
+        <vm:DashboardWindowViewModel />
+    </Design.DataContext>
+    <UserControl.Background>
+        <ImageBrush Source="../Assets/wepik-export-20240101010025UDZ2.png" Stretch="UniformToFill">
+        </ImageBrush>
+    </UserControl.Background>
+    
+    <Panel Name="MainPanel">
+        <Grid ShowGridLines="False"
+              ColumnDefinitions="Auto,*"
+              RowDefinitions="Auto,*">
+            <ScrollViewer Grid.Row="1" Grid.Column="1">
+                <ItemsControl
+                    ItemsSource="{Binding Products}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid ShowGridLines="False"
+                                  ColumnDefinitions="Auto,Auto"
+                                  RowDefinitions="Auto,Auto" Margin="10">
+                                <Border Grid.ColumnSpan="2" Grid.RowSpan="2"
+                                        CornerRadius="15" ClipToBounds="True">
+                                    <Viewbox Height="150" Stretch="Uniform">
+                                        <Image Source="../Assets/ImagePlaceHolder.jpeg" />
+                                    </Viewbox>
+                                </Border>
+                                <Label Grid.Row="0" Grid.Column="1"
+                                       CornerRadius="10"
+                                       VerticalAlignment="Top"
+                                       HorizontalAlignment="Right"
+                                       Width="40" Margin="10 10"
+                                       Foreground="Black"
+                                       HorizontalContentAlignment="Center"
+                                       FontWeight="Heavy"
+                                       Background="Azure"
+                                       Content="{Binding UnitPrice, StringFormat='{}{0}$'}"
+                                       Opacity="30" />
+
+                                <Label Grid.Row="1" Grid.Column="0"
+                                       Grid.ColumnSpan="2"
+                                       Width="150" MaxHeight="50"
+                                       HorizontalAlignment="Left"
+                                       Margin="10 25 0 0"
+                                       VerticalAlignment="Center"
+                                       HorizontalContentAlignment="Left"
+                                       FontWeight="Heavy"
+                                       Foreground="WhiteSmoke"
+                                       BorderThickness="0"
+                                       Content="{Binding Title}" />
+                                
+                                <Button Grid.Row="1" Grid.Column="1"
+                                        VerticalAlignment="Bottom"
+                                        HorizontalAlignment="Right"
+                                        CornerRadius="10" Margin="7"
+                                        Command="{Binding #MainPanel.((vm:DashboardWindowViewModel)DataContext).AddToCartCommand}"
+                                        CommandParameter="{Binding .}">
+                                    <TextBlock Foreground="WhiteSmoke" Text="+" />
+                                </Button>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
+    </Panel>
+</UserControl>

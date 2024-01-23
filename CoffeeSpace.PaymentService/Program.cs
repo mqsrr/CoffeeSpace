@@ -1,14 +1,13 @@
-using CoffeeSpace.Core.Extensions;
-using CoffeeSpace.Core.Services.Abstractions;
-using CoffeeSpace.Core.Settings;
-using CoffeeSpace.PaymentService.Consumers;
-using CoffeeSpace.PaymentService.Extensions;
-using CoffeeSpace.PaymentService.Messages.PipelineBehaviours;
+using CoffeeSpace.PaymentService.Application.Extensions;
+using CoffeeSpace.PaymentService.Application.Messages.Consumers;
+using CoffeeSpace.PaymentService.Application.Messages.PipelineBehaviours;
+using CoffeeSpace.PaymentService.Application.Repositories.Abstractions;
+using CoffeeSpace.PaymentService.Application.Services.Abstractions;
+using CoffeeSpace.PaymentService.Application.Settings;
 using CoffeeSpace.PaymentService.Persistence;
 using CoffeeSpace.PaymentService.Persistence.Abstractions;
-using CoffeeSpace.PaymentService.Repositories.Abstractions;
-using CoffeeSpace.PaymentService.Services.Abstractions;
-using CoffeeSpace.PaymentService.Settings;
+using CoffeeSpace.Shared.Extensions;
+using CoffeeSpace.Shared.Settings;
 using FastEndpoints;
 using MassTransit;
 using Mediator;
@@ -24,7 +23,6 @@ builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration)
         .AddDatadogLogging("Payment Service"));
 
-builder.Services.AddStackExchangeRedisCache(options => options.Configuration = builder.Configuration["Redis:ConnectionString"]);
 builder.Services.AddApplicationDb<IPaymentDbContext, PaymentDbContext>(builder.Configuration["PaymentDb:ConnectionString"]!);
 
 builder.Services.AddApplicationService<IPaymentRepository>();
@@ -33,16 +31,13 @@ builder.Services.AddApplicationService<IPaymentService>();
 builder.Services.AddMediator();
 builder.Services.AddFastEndpoints();
 
-builder.Services.AddApplicationService(typeof(ICacheService<>));
 builder.Services.AddApplicationService(typeof(IPipelineBehavior<,>), typeof(IPipelineAssemblyMarker));
 
-builder.Services.AddOptions<AwsMessagingSettings>()
-    .Bind(builder.Configuration.GetRequiredSection(AwsMessagingSettings.SectionName))
-    .ValidateOnStart();
+builder.Services.AddOptionsWithValidateOnStart<AwsMessagingSettings>()
+    .Bind(builder.Configuration.GetRequiredSection(AwsMessagingSettings.SectionName));
 
-builder.Services.AddOptions<PaypalAuthenticationSettings>()
-    .Bind(builder.Configuration.GetRequiredSection(PaypalAuthenticationSettings.SectionName))
-    .ValidateOnStart();
+builder.Services.AddOptionsWithValidateOnStart<PaypalAuthenticationSettings>()
+    .Bind(builder.Configuration.GetRequiredSection(PaypalAuthenticationSettings.SectionName));
 
 builder.Services.AddMassTransit(x =>
 {
@@ -67,7 +62,6 @@ builder.Services.AddMassTransit(x =>
 builder.Services.AddServiceHealthChecks(builder);
 
 var app = builder.Build();
-
 app.UseHealthChecks("/_health");
 
 app.UseAuthentication();

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeSpace.ProductApi.Application.Repositories;
 
-internal sealed class ProductRepository : IProductRepository
+public sealed class ProductRepository : IProductRepository
 {
     private readonly IProductDbContext _productDbContext;
 
@@ -28,7 +28,7 @@ internal sealed class ProductRepository : IProductRepository
 
     public async Task<Product?> GetProductByIdAsync(string id, CancellationToken cancellationToken)
     {
-        var product = await _productDbContext.Products.FindAsync(new object?[]{ id }, cancellationToken: cancellationToken);
+        var product = await _productDbContext.Products.FindAsync([id], cancellationToken);
         return product;
     }
 
@@ -36,7 +36,7 @@ internal sealed class ProductRepository : IProductRepository
     {
         await _productDbContext.Products.AddAsync(product, cancellationToken);
         int result = await _productDbContext.SaveChangesAsync(cancellationToken);
-        
+
         return result > 0;
     }
 

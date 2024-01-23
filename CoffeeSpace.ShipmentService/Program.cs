@@ -1,5 +1,5 @@
-using CoffeeSpace.Core.Extensions;
-using CoffeeSpace.Core.Settings;
+using CoffeeSpace.Shared.Extensions;
+using CoffeeSpace.Shared.Settings;
 using CoffeeSpace.ShipmentService.Consumers;
 using MassTransit;
 using Microsoft.Extensions.Options;
@@ -13,9 +13,8 @@ builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration)
         .AddDatadogLogging("Shipment Service"));
 
-builder.Services.AddOptions<AwsMessagingSettings>()
-     .Bind(builder.Configuration.GetRequiredSection(AwsMessagingSettings.SectionName))
-     .ValidateOnStart();
+builder.Services.AddOptionsWithValidateOnStart<AwsMessagingSettings>()
+     .Bind(builder.Configuration.GetRequiredSection(AwsMessagingSettings.SectionName));
 
 builder.Services.AddMassTransit(x =>
 {

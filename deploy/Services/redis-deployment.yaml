@@ -28,12 +28,5 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 6379
-          env:
-            - name: DD_LOGS_INJECTION
-              value: "true"
-            - name: DD_APPSEC_ENABLED
-              value: "true"
-            - name: DD_RUNTIME_METRICS_ENABLED
-              value: "true"
       restartPolicy: Always
       

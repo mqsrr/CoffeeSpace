@@ -1,4 +1,4 @@
-﻿using CoffeeSpace.PaymentService.Models;
+﻿using CoffeeSpace.PaymentService.Application.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

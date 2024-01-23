@@ -1,0 +1,47 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:CoffeeSpace.AClient.ViewModels"
+        xmlns:controls="clr-namespace:SukiUI.Controls;assembly=SukiUI"
+        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="680"
+        x:Class="CoffeeSpace.AClient.Views.RegisterWindow"
+        x:DataType="vm:RegisterViewModel">
+    
+    <Design.DataContext>
+        <vm:RegisterViewModel />
+    </Design.DataContext>
+    <Window.Background>
+        <ImageBrush Source="../Assets/wepik-export-20240101010025UDZ2.png" Stretch="UniformToFill"/>
+    </Window.Background>
+    
+    <controls:GlassCard Width="400" Height="400" Margin="10">
+        <Grid ShowGridLines="False"
+              RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+              ColumnDefinitions="Auto,*,*">
+            <TextBlock Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2"
+                       Text="Register Form" Classes="h2" 
+                       FontFamily="{StaticResource Montserrat-Regular}" HorizontalAlignment="Center"/>
+            
+            <TextBox Grid.Row="1" Grid.Column="1"
+                     Watermark="Name" Margin="5" Text="{Binding RegisterRequest.Name, Mode=OneWayToSource}"/>
+            <TextBox Grid.Row="1" Grid.Column="2"
+                     Watermark="Last Name" Text="{Binding RegisterRequest.LastName, Mode=OneWayToSource}"/>
+            <TextBox Grid.Row="2" Grid.Column="1"
+                     Watermark="Username" Margin="5" Text="{Binding RegisterRequest.Username, Mode=OneWayToSource}"/>
+            <TextBox Grid.Row="2" Grid.Column="2"
+                     Watermark="Email" Text="{Binding RegisterRequest.Email, Mode=OneWayToSource}"/>
+            <TextBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"
+                     Watermark="Password" Margin="5" Text="{Binding RegisterRequest.Password, Mode=OneWayToSource}"/>
+            
+            <TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2"
+                       HorizontalAlignment="Center" Foreground="SlateGray"
+                       Text="Already have an account? | Close current window"/>
+            
+            <Button Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2"
+                    VerticalAlignment="Bottom" Margin="0 70 0 0"
+                    Classes="Flat Rounded" Content="Register"
+                    Command="{Binding RegisterCommand}"/>
+        </Grid>
+    </controls:GlassCard>
+</Window>

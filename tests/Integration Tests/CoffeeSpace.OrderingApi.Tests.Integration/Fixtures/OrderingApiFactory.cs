@@ -4,18 +4,17 @@ using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using System.Text;
 using AutoBogus;
-using CoffeeSpace.Core.Settings;
 using CoffeeSpace.Domain.Ordering.BuyerInfo;
 using CoffeeSpace.Domain.Ordering.Orders;
 using CoffeeSpace.OrderingApi.Application.Contracts.Responses.Orders;
 using CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Consumers;
 using CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Sagas;
-using CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Sagas.Definitions;
 using CoffeeSpace.OrderingApi.Application.SignalRHubs;
 using CoffeeSpace.OrderingApi.Application.SignalRHubs.Abstraction;
 using CoffeeSpace.OrderingApi.Controllers;
 using CoffeeSpace.OrderingApi.Persistence;
 using CoffeeSpace.OrderingApi.Tests.Integration.Fakers.Models;
+using CoffeeSpace.Shared.Settings;
 using DotNet.Testcontainers.Builders;
 using MassTransit;
 using Microsoft.AspNetCore.Hosting;
@@ -33,7 +32,6 @@ using NSubstitute;
 using Quartz;
 using Testcontainers.PostgreSql;
 using Testcontainers.Redis;
-using VerifyTests.EntityFramework;
 
 namespace CoffeeSpace.OrderingApi.Tests.Integration.Fixtures;
 
@@ -112,7 +110,7 @@ public sealed class OrderingApiFactory : WebApplicationFactory<BuyersController>
             
             services.AddScoped<IHubContext<OrderingHub, IOrderingHub>>(_ => faker);
             
-            services.AddQuartz(config => config.UseMicrosoftDependencyInjectionJobFactory());
+            services.AddQuartz();
             services.AddMassTransitTestHarness(config =>
             {
                 config.SetKebabCaseEndpointNameFormatter();
@@ -122,7 +120,7 @@ public sealed class OrderingApiFactory : WebApplicationFactory<BuyersController>
                 config.AddQuartzConsumers();
                 config.AddPublishMessageScheduler();
                 
-                config.AddSagaStateMachine<OrderStateMachine, OrderStateInstance, OrderStateDefinition>()
+                config.AddSagaStateMachine<OrderStateMachine, OrderStateInstance>()
                     .EntityFrameworkRepository(configurator =>
                     {
                         configurator.UsePostgres();

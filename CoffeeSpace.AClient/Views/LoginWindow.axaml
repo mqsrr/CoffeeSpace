@@ -1,0 +1,62 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:CoffeeSpace.AClient.ViewModels"
+        xmlns:icons="clr-namespace:HeroIconsAvalonia.Controls;assembly=HeroIconsAvalonia"
+        xmlns:controls="clr-namespace:SukiUI.Controls;assembly=SukiUI"
+        mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="650"
+        x:DataType="vm:LoginViewModel"
+        x:Class="CoffeeSpace.AClient.Views.LoginWindow"
+        Classes="NakedWindow Blurred">
+
+    <Design.DataContext>
+        <vm:LoginViewModel />
+    </Design.DataContext>
+    <Window.Background>
+        <ImageBrush Source="../Assets/wepik-export-20240101010025UDZ2.png" Stretch="UniformToFill">
+        </ImageBrush>
+    </Window.Background>
+
+    <controls:GlassCard Width="300" Height="350" Margin="10">
+        <Grid ShowGridLines="False"
+              ColumnDefinitions="Auto,*,Auto"
+              RowDefinitions="Auto,Auto,Auto,Auto,*"
+              Margin="10">
+
+            <icons:HeroIcon Grid.Row="0" Grid.Column="1" Foreground="Azure" Type="FaceSmile" />
+
+            <TextBlock Grid.Row="1" Grid.Column="1"
+                       Text="Login" FontFamily="{StaticResource Montserrat-Regular}"
+                       Classes="h2" HorizontalAlignment="Center" />
+
+            <TextBox Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Margin="5"
+                     Text="{Binding LoginRequest.Username, Mode=OneWayToSource}" Watermark="Username"
+                     FontFamily="{StaticResource Montserrat-Regular}" HorizontalAlignment="Center"
+                     Width="200" />
+
+            <TextBox Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Margin="5"
+                     Text="{Binding LoginRequest.Password, Mode=OneWayToSource}" Watermark="Password"
+                     FontFamily="{StaticResource Montserrat-Regular}" HorizontalAlignment="Center"
+                     Width="200" />
+
+            <TextBlock Grid.Row="4" Grid.Column="1"
+                       Text="Register new account" HorizontalAlignment="Center" Foreground="SlateGray"
+                       PointerPressed="MoveToRegisterWindow" />
+
+            <controls:BusyArea Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4"
+                               IsBusy="{Binding LoginCommand.IsRunning}" VerticalAlignment="Bottom">
+                <Button
+                    Command="{Binding LoginCommand}"
+                    Classes="Flat Rounded" VerticalAlignment="Center" HorizontalAlignment="Center"
+                    Width="200" Height="45" Foreground="Azure" FontFamily="{StaticResource Montserrat-Regular}"
+                    FontWeight="SemiBold">
+                    <Button.Content>
+                        <icons:HeroIcon Foreground="Azure" HorizontalAlignment="Center" Type="Key" Min="True" />
+                    </Button.Content>
+                </Button>
+
+            </controls:BusyArea>
+        </Grid>
+    </controls:GlassCard>
+</Window>

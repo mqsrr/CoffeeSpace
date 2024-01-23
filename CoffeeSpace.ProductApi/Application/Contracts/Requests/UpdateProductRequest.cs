@@ -6,11 +6,11 @@ public sealed class UpdateProductRequest
     
     public required string Title { get; init; }
 
+    public required IFormFile Image { get; init; }
+    
     public required string Description { get; init; }
 
     public required float UnitPrice { get; init; }
-
-    public required float Discount { get; init; }
-
+    
     public  required int Quantity { get; init; }
 }
