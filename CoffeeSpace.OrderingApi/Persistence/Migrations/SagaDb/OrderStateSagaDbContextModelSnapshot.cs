@@ -17,7 +17,7 @@ namespace CoffeeSpace.OrderingApi.Persistence.Migrations.SagaDb
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("ProductVersion", "8.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -27,19 +27,15 @@ namespace CoffeeSpace.OrderingApi.Persistence.Migrations.SagaDb
                     b.Property<Guid>("CorrelationId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("BuyerId")
-                        .IsRequired()
-                        .IsUnicode(false)
-                        .HasColumnType("text");
+                    b.Property<Guid>("BuyerId")
+                        .HasColumnType("uuid");
 
                     b.Property<int>("CurrentState")
                         .IsUnicode(false)
                         .HasColumnType("integer");
 
-                    b.Property<string>("OrderId")
-                        .IsRequired()
-                        .IsUnicode(false)
-                        .HasColumnType("text");
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uuid");
 
                     b.Property<bool>("PaymentSuccess")
                         .HasColumnType("boolean");
@@ -47,9 +43,8 @@ namespace CoffeeSpace.OrderingApi.Persistence.Migrations.SagaDb
                     b.Property<bool>("StockValidationSuccess")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("UpdateOrderStatusCorrelationId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("UpdateOrderStatusCorrelationId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("CorrelationId");
 

@@ -3,9 +3,9 @@ name: coffeespace
 
 services:
   redis:
-    image: redis:7.0.9-alpine
+    image: redis:alpine3.18
     ports:
-      - 6379:6379
+      - "6379:6379"
 
   rabbitmq:
     image: rabbitmq:3.11.23-alpine

@@ -47,9 +47,9 @@ public sealed class PaymentRepositoryTests
     public async Task GetPaypalOrderByIdAsync_ShouldReturnOrder_WhenOrderExists()
     {
         // Arrange
-        var expectedOrder = _paypalOrders.First();
+        var expectedOrder = _paypalOrderInformations.First();
 
-        _paypalOrdersDbSet.FindAsync(Arg.Any<object[]>(), Arg.Any<CancellationToken>())
+        _paypalOrderInformationsDbSet.FindAsync(Arg.Any<object[]>(), Arg.Any<CancellationToken>())
             .Returns(expectedOrder);
 
         // Act
@@ -57,16 +57,16 @@ public sealed class PaymentRepositoryTests
 
         // Assert   
         result.Should().BeEquivalentTo(expectedOrder);
-        await _paypalOrdersDbSet.Received().FindAsync(Arg.Any<object[]>(), Arg.Any<CancellationToken>());
+        await _paypalOrderInformationsDbSet.Received().FindAsync(Arg.Any<object[]>(), Arg.Any<CancellationToken>());
     }
     
     [Fact]
     public async Task GetPaypalOrderByIdAsync_ShouldReturnNull_WhenOrderDoesNotExist()
     {
         // Arrange
-        var expectedOrder = _fixture.Create<Order>();
+        var expectedOrder = _fixture.Create<PaypalOrderInformation>();
         
-        _paypalOrdersDbSet.FindAsync(Arg.Any<object[]>(), Arg.Any<CancellationToken>())
+        _paypalOrderInformationsDbSet.FindAsync(Arg.Any<object[]>(), Arg.Any<CancellationToken>())
             .ReturnsNull();
         
         // Act
@@ -74,7 +74,7 @@ public sealed class PaymentRepositoryTests
 
         // Assert   
         result.Should().BeNull();
-        await _paypalOrdersDbSet.Received().FindAsync(Arg.Any<object[]>(), Arg.Any<CancellationToken>());
+        await _paypalOrderInformationsDbSet.Received().FindAsync(Arg.Any<object[]>(), Arg.Any<CancellationToken>());
     }
     
     [Fact]
@@ -82,17 +82,12 @@ public sealed class PaymentRepositoryTests
     {
         // Arrange
         var expectedOrderInformation = _paypalOrderInformations.First();
-
-        _paypalOrderInformationsDbSet.FindAsync(Arg.Any<object[]>(), Arg.Any<CancellationToken>())
-            .Returns(expectedOrderInformation);
-
         
         // Act
-        var result = await _paymentRepository.GetByApplicationOrderIdAsync(expectedOrderInformation.Id, CancellationToken.None);
+        var result = await _paymentRepository.GetByApplicationOrderIdAsync(expectedOrderInformation.ApplicationOrderId, CancellationToken.None);
 
         // Assert   
         result.Should().BeEquivalentTo(expectedOrderInformation);
-        await _paypalOrderInformationsDbSet.Received().FindAsync(Arg.Any<object[]>(), Arg.Any<CancellationToken>());
     }
     
     [Fact]
@@ -100,13 +95,12 @@ public sealed class PaymentRepositoryTests
     {
         // Arrange
         var expectedOrderInformation = _fixture.Create<PaypalOrderInformation>();
-
+        
         // Act
         var result = await _paymentRepository.GetByApplicationOrderIdAsync(expectedOrderInformation.Id, CancellationToken.None);
 
         // Assert   
         result.Should().BeNull();
-        await _paypalOrderInformationsDbSet.Received().FindAsync(Arg.Any<object[]>(), Arg.Any<CancellationToken>());
     }
     
     [Fact]

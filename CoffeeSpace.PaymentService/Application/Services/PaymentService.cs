@@ -37,7 +37,7 @@ internal sealed class PaymentService : IPaymentService
         return capturedPaypalOrder;
     }
 
-    public async Task<PaypalOrderInformation?> GetOrderPaymentByOrderIdAsync(string applicationOrderId, 
+    public async Task<PaypalOrderInformation?> GetOrderPaymentByOrderIdAsync(Guid applicationOrderId, 
         CancellationToken cancellationToken)
     {
         var paypalOrderInformation = await _sender.Send(new GetPaypalOrderInformationByOrderIdQuery

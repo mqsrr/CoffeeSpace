@@ -4,9 +4,6 @@ metadata:
   name: payment-service
   labels:
     app: payment-service
-    tags.datadoghq.com/env: Production
-    tags.datadoghq.com/service: payment-service
-    tags.datadoghq.com/version: 1.0.0
 spec:
   replicas: 1
   selector:
@@ -17,19 +14,13 @@ spec:
       name: payment-service
       labels:
         app: payment-service
-        tags.datadoghq.com/env: Production
-        tags.datadoghq.com/service: payment-service
-        tags.datadoghq.com/version: 1.0.0
-        admission.datadoghq.com/enabled: "true"
-      annotations:
-        admission.datadoghq.com/dotnet-lib.version: v2.38.0
     spec:
       containers:
         - name: payment-service
-          image: mqsr/coffeespace-payment-service:2.1.0
+          image: mqsr/coffeespace-payment-service:2.2.0
           imagePullPolicy: Always
           ports:
-            - containerPort: 80
+            - containerPort: 8080
           env:
             - name: "ASPNETCORE_ENVIRONMENT"
               value: "Production"
@@ -53,10 +44,5 @@ spec:
                 secretKeyRef:
                   key: "azure-vault-name"
                   name: "azure-key-vault"
-            - name: "DD_API_KEY"
-              valueFrom:
-                secretKeyRef:
-                  key: "api-key"
-                  name: "datadog-secret"
       restartPolicy: Always
       

@@ -2,7 +2,7 @@
 
 public sealed class Address
 {
-    public required string Id { get; init; }
+    public required Guid Id { get; init; }
 
     public required string Street { get; init; }
 

@@ -37,8 +37,8 @@ public sealed partial class DashboardWindowViewModel : ViewModelBase
 
     internal async Task InitializeAsync()
     {
-        var products = await _productsWebApi.GetAllProductsAsync(CancellationToken.None);
-        Products.AddRange(products);
+        // var products = await _productsWebApi.GetAllProductsAsync(CancellationToken.None);
+        // Products.AddRange(products);
     }
     
     [RelayCommand]

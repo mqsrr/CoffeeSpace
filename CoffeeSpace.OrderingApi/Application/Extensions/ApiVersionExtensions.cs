@@ -9,7 +9,7 @@ public static class ApiVersionExtensions
         return services.AddApiVersioning(x =>
             {
                 x.ApiVersionReader = reader;
-                x.DefaultApiVersion = new ApiVersion(1.1);
+                x.DefaultApiVersion = new ApiVersion(1.0);
                 x.ReportApiVersions = true;
                 x.AssumeDefaultVersionWhenUnspecified = assumeDefaultVersion;
             });

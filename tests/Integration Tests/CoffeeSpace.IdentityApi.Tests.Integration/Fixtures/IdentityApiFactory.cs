@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using Testcontainers.Kafka;
 using Testcontainers.PostgreSql;
 
 namespace CoffeeSpace.IdentityApi.Tests.Integration.Fixtures;
@@ -22,6 +23,7 @@ public sealed class IdentityApiFactory : WebApplicationFactory<AuthController>, 
     private static IModel _dbModel = default!;
 
     private readonly PostgreSqlContainer _identityPostgreSqlContainer;
+    private readonly KafkaContainer _kafkaContainer;
     
     public IdentityApiFactory()
     {
@@ -32,19 +34,21 @@ public sealed class IdentityApiFactory : WebApplicationFactory<AuthController>, 
             .WithPortBinding(5435, 5432)
             .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5432))
             .Build();
+
+        _kafkaContainer = new KafkaBuilder()
+            .WithPortBinding(9092, 9092)
+            .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(9092))
+            .Build();
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseSetting("IdentityDb:ConnectionString", _identityPostgreSqlContainer.GetConnectionString());
-        
-        builder.UseSetting("AWS:Region", "eu");
-        builder.UseSetting("AWS:AccessKey", "test");
-        builder.UseSetting("AWS:SecretKey", "test");
+        builder.UseSetting("Kafka:ConnectionString", _kafkaContainer.GetBootstrapAddress());
 
         builder.UseSetting("Jwt:Audience", "coffee-space.testing");
         builder.UseSetting("Jwt:Issuer", "coffee-space.testing");
-        builder.UseSetting("Jwt:Key", "testing-coffeespac!!23");
+        builder.UseSetting("Jwt:Key", "testing-coffeespac!!23LOOOOOONGKEY11111!!!!!!!!!!!!");
         builder.UseSetting("Jwt:Expire", "1");
         
         builder.UseSetting("Authorization:ApiKey", "1sdfsdfsdfsdfsdfdsfs");
@@ -91,10 +95,12 @@ public sealed class IdentityApiFactory : WebApplicationFactory<AuthController>, 
     public async Task InitializeAsync()
     {
         await _identityPostgreSqlContainer.StartAsync();
+        await _kafkaContainer.StartAsync();
     }
 
     public new async Task DisposeAsync()
     {
         await _identityPostgreSqlContainer.StopAsync();
+        await _kafkaContainer.StopAsync();
     }
 }

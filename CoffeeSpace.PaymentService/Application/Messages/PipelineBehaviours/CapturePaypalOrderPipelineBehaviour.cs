@@ -11,7 +11,7 @@ internal sealed class CapturePaypalOrderPipelineBehaviour : IPipelineBehavior<Ca
     private readonly IPaymentRepository _paymentRepository;
     private readonly IPublisher _publisher;
 
-    public CapturePaypalOrderPipelineBehaviour(IPaymentRepository paymentRepository, ISender sender, IPublisher publisher)
+    public CapturePaypalOrderPipelineBehaviour(IPaymentRepository paymentRepository, IPublisher publisher)
     {
         _paymentRepository = paymentRepository;
         _publisher = publisher;

@@ -37,7 +37,6 @@ public sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.Ignore(product => product.Total);
 
         builder.HasIndex(product => product.Id)
-            .IsUnique()
-            .IsDescending(false);
+            .IsUnique();
     }
 }

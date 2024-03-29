@@ -7,7 +7,7 @@ public interface IOrderingHub
 {
     Task OrderCreated(OrderResponse createdOrder);
 
-    Task OrderStatusUpdated(OrderStatus newOrderStatus, string orderId);
+    Task OrderStatusUpdated(OrderStatus newOrderStatus, Guid orderId);
     
-    Task OrderPaymentPageInitialized(string orderId, string paymentApprovalLink);
+    Task OrderPaymentPageInitialized(Guid orderId, string paymentApprovalLink);
 }

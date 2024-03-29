@@ -5,18 +5,20 @@ using MassTransit;
 
 namespace CoffeeSpace.ProductApi.Application.Messages.Consumers;
 
-internal sealed class OrderStockValidationConsumer : IConsumer<OrderStockValidation>
+internal sealed class OrderStockValidationConsumer : IConsumer<ValidateOrderStock>
 {
     private readonly IProductRepository _productRepository;
     private readonly ILogger<OrderStockValidationConsumer> _logger;
+    private readonly ITopicProducerProvider _topicProducerProvider;
 
-    public OrderStockValidationConsumer(IProductRepository productRepository, ILogger<OrderStockValidationConsumer> logger)
+    public OrderStockValidationConsumer(IProductRepository productRepository, ILogger<OrderStockValidationConsumer> logger, ITopicProducerProvider topicProducerProvider)
     {
         _productRepository = productRepository;
         _logger = logger;
+        _topicProducerProvider = topicProducerProvider;
     }
 
-    public async Task Consume(ConsumeContext<OrderStockValidation> context)
+    public async Task Consume(ConsumeContext<ValidateOrderStock> context)
     {
         var existingProducts = await _productRepository.GetAllProductsAsync(context.CancellationToken);
         var existingTitles = existingProducts.Select(product => product.Title);
@@ -25,13 +27,18 @@ internal sealed class OrderStockValidationConsumer : IConsumer<OrderStockValidat
         if (!isValid)
         {
             _logger.LogInformation("The order with ID {OrderId} has invalid products, which are no longer acceptable or out of stock", context.Message.Order.Id);
-            await context.RespondAsync<Fault<OrderStockValidation>>(context.Message);
-            
+            var faultTopicProducer = _topicProducerProvider.GetProducer<Fault<ValidateOrderStock>>(new Uri("topic:order-stock-confirmation-failed"));
+            await faultTopicProducer.Produce(new
+            {
+                context.Message
+            }, context.CancellationToken);
             return;
         }
         
         _logger.LogInformation("The order with ID {OrderId} has successfully completed product validation", context.Message.Order.Id);
-        await context.RespondAsync<OrderStockConfirmed>(new
+        
+        var topicProducer = _topicProducerProvider.GetProducer<OrderStockConfirmed>(new Uri("topic:order-stock-confirmed"));
+        await topicProducer.Produce(new
         {
             context.Message.Order,
             IsValid = isValid

@@ -4,7 +4,7 @@ namespace CoffeeSpace.Domain.Ordering.BuyerInfo;
 
 public sealed class Buyer
 {
-    public required string Id { get; init; }
+    public required Guid Id { get; init; }
     
     public required string Name { get; init; }
     

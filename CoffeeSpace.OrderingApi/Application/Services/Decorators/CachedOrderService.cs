@@ -24,21 +24,20 @@ internal sealed class CachedOrderService : IOrderService
 
     public Task<IEnumerable<Order>> GetAllByBuyerIdAsync(Guid buyerId, CancellationToken cancellationToken)
     {
-        return _cacheService.GetAllOrCreateAsync(CacheKeys.Order.GetAll(buyerId.ToString()), () =>
+        return _cacheService.GetAllOrCreateAsync(CacheKeys.Order.GetAll(buyerId), () =>
         {
             var orders = _orderService.GetAllByBuyerIdAsync(buyerId, cancellationToken);
             return orders;
-        });
+        }, cancellationToken);
     }
 
     public Task<Order?> GetByIdAsync(Guid id, Guid buyerId, CancellationToken cancellationToken)
     {
-        return _cacheService.GetOrCreateAsync(CacheKeys.Order.GetByCustomerId(id.ToString(), buyerId.ToString()), () =>
+        return _cacheService.GetOrCreateAsync(CacheKeys.Order.GetByCustomerId(id, buyerId), () =>
         {
             var order = _orderService.GetByIdAsync(id, buyerId, cancellationToken);
             return order;
-        });
-
+        }, cancellationToken);
     }
 
     public async Task<bool> CreateAsync(Order order, CancellationToken cancellationToken)
@@ -63,8 +62,8 @@ internal sealed class CachedOrderService : IOrderService
         {
             await _publisher.Publish(new DeleteOrderNotification
             {
-                Id = id.ToString(),
-                BuyerId = buyerId.ToString()
+                Id = id,
+                BuyerId = buyerId
             }, cancellationToken).ConfigureAwait(false);
         }
         

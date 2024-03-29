@@ -7,15 +7,18 @@ using CoffeeSpace.IdentityApi.Application.Validators;
 using CoffeeSpace.IdentityApi.Filters;
 using CoffeeSpace.IdentityApi.Persistence;
 using CoffeeSpace.IdentityApi.Settings;
+using CoffeeSpace.Messages.Buyers;
 using CoffeeSpace.Shared.Extensions;
 using CoffeeSpace.Shared.Settings;
+using Confluent.Kafka;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MassTransit;
-using Microsoft.Extensions.Options;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.AddOpenTelemetryWithInstrumentation();
 
 builder.Host.UseSerilog((context, configuration) => 
     configuration.ReadFrom.Configuration(context.Configuration));
@@ -25,16 +28,13 @@ builder.Configuration.AddJwtBearer(builder);
 
 builder.Services.AddControllers();
 
-builder.Services.AddApiVersioning(new MediaTypeApiVersionReader("api-version"));
-builder.Services.AddApplicationDb<ApplicationUsersDbContext>("Server=localhost;Port=5433;Database=testDb;User Id=test;Password=Tests123!;");
+builder.Services.AddApiVersioning(new HeaderApiVersionReader());
+builder.Services.AddApplicationDb<ApplicationUsersDbContext>(builder.Configuration["IdentityDb:ConnectionString"]!);
 
 builder.Services.AddApplicationService<IAuthService<ApplicationUser>>();
 builder.Services.AddApplicationService<ITokenWriter<ApplicationUser>>();
 
 builder.Services.AddApplicationServiceAsSelf<ApiKeyAuthorizationFilter>();
-
-builder.Services.AddOptionsWithValidateOnStart<AwsMessagingSettings>()
-    .Bind(builder.Configuration.GetRequiredSection(AwsMessagingSettings.SectionName));
 
 builder.Services.AddOptionsWithValidateOnStart<JwtSettings>()
     .Bind(builder.Configuration.GetRequiredSection(JwtSettings.SectionName));
@@ -47,31 +47,28 @@ builder.Services.AddFluentValidationAutoValidation()
 
 builder.Services.AddMassTransit(x =>
 {
-    x.SetKebabCaseEndpointNameFormatter();
-    
-    x.AddConsumer<DeleteBuyerConsumer>();
-    x.AddConsumer<UpdateBuyerConsumer>();
-    
-    x.UsingAmazonSqs((context, config) =>
+    x.UsingInMemory();
+    x.AddRider(configurator =>
     {
-        var awsSettings = context.GetRequiredService<IOptions<AwsMessagingSettings>>().Value;
-        config.Host(awsSettings.Region, hostConfig =>
-        {
-            hostConfig.AccessKey(awsSettings.AccessKey);
-            hostConfig.SecretKey(awsSettings.SecretKey);
-        });
+        configurator.AddProducer<RegisterNewBuyer>("register-customer");
 
-        config.ConfigureEndpoints(context);
-        
-        config.UseNewtonsoftJsonSerializer();
-        config.UseNewtonsoftJsonDeserializer();
+        configurator.AddConsumer<DeleteBuyerConsumer>();
+        configurator.AddConsumer<UpdateBuyerConsumer>();
+
+        configurator.UsingKafka((context, kafkaConfigurator) =>
+        {
+            kafkaConfigurator.Acks = Acks.All;
+            kafkaConfigurator.Host(builder.Configuration["Kafka:Host"]);
+            
+            kafkaConfigurator
+                .AddTopicEndpoint<DeleteBuyer, DeleteBuyerConsumer>(context, "delete-customer", "identity")
+                .AddTopicEndpoint<UpdateBuyer, UpdateBuyerConsumer>(context,"update-customer", "identity");
+        });
     });
 });
 
 builder.Services.AddIdentityConfiguration();
 builder.Services.AddServiceHealthChecks(builder);
-
-builder.Services.AddOpenTelemetryWithPrometheusExporter();
 
 var app = builder.Build();
 

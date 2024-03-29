@@ -9,8 +9,7 @@ using MassTransit.Testing;
 
 namespace CoffeeSpace.IdentityApi.Tests.Integration.Controllers;
 
-[UsesVerify]
-public sealed class AuthControllerTests : IClassFixture<IdentityApiFactory>, IAsyncLifetime
+public sealed class AuthControllerTests : IClassFixture<IdentityApiFactory>
 {
     private readonly HttpClient _httpClient;
     private readonly ITestHarness _testHarness;
@@ -25,6 +24,8 @@ public sealed class AuthControllerTests : IClassFixture<IdentityApiFactory>, IAs
     public async Task Register_ShouldReturn200WithJwtToken_AndRegisterNewUser()
     {
         // Arrange
+        Recording.Start("Register");
+
         const string request = ApiEndpoints.Authentication.Register;
         var userToCreate = AutoFaker.Generate<RegisterRequest, RegisterRequestFaker>();
         
@@ -32,7 +33,7 @@ public sealed class AuthControllerTests : IClassFixture<IdentityApiFactory>, IAs
         var response = await _httpClient.PostAsJsonAsync(request, userToCreate);
 
         // Assert
-        var sqlLogs =Recording.Stop("IdentityDb");
+        var sqlLogs = Recording.Stop("Register");
         await Verify(new
         {
             response,
@@ -45,6 +46,8 @@ public sealed class AuthControllerTests : IClassFixture<IdentityApiFactory>, IAs
     public async Task Login_ShouldReturn200WithJwtToken()
     {
         // Arrange
+        Recording.Start("Login");
+
         var registerUserRequest = AutoFaker.Generate<RegisterRequest, RegisterRequestFaker>(2).Last();
         await _httpClient.PostAsJsonAsync(ApiEndpoints.Authentication.Register, registerUserRequest);
         
@@ -56,22 +59,11 @@ public sealed class AuthControllerTests : IClassFixture<IdentityApiFactory>, IAs
         var response = await _httpClient.PostAsJsonAsync(request, userToCreate);
 
         // Assert
-        var sqlLogs =Recording.Stop("IdentityDb");
+        var sqlLogs = Recording.Stop("Login");
         await Verify(new
         {
             response,
             sqlLogs
         }).IgnoreMembers("Parameters", "Cookie", "Set-Cookie");
-    }
-
-    public Task InitializeAsync()
-    {
-        Recording.Start("IdentityDb");
-        return Task.CompletedTask;
-    }
-
-    public Task DisposeAsync()
-    {
-        return Task.CompletedTask;
     }
 }

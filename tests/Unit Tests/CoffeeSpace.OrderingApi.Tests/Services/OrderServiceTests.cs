@@ -18,7 +18,7 @@ namespace CoffeeSpace.OrderingApi.Tests.Services;
 
 public sealed class OrderServiceTests
 {
-    private readonly IPublishEndpoint _publishEndpoint;
+    private readonly ITopicProducer<SubmitOrder> _topicProducer;
     private readonly IOrderRepository _orderRepository;
     private readonly IEnumerable<Order> _orders;
     private readonly IHubContext<OrderingHub, IOrderingHub> _hubContext;
@@ -31,15 +31,15 @@ public sealed class OrderServiceTests
         _fixture = new Fixture();
         _fixture.Customize(new AutoNSubstituteCustomization());
         _orders = _fixture.Build<Order>()
-            .With(order => order.Id, Guid.NewGuid().ToString())
-            .With(order => order.BuyerId, Guid.NewGuid().ToString())
+            .With(order => order.Id, Guid.NewGuid())
+            .With(order => order.BuyerId, Guid.NewGuid())
             .CreateMany();
 
-        _publishEndpoint = _fixture.Create<IPublishEndpoint>();
+        _topicProducer = _fixture.Create<ITopicProducer<SubmitOrder>>();
         _orderRepository = _fixture.Create<IOrderRepository>();
         _hubContext = _fixture.Create<IHubContext<OrderingHub, IOrderingHub>>();
         
-        _orderService = new OrderService(_orderRepository, _publishEndpoint, _hubContext);
+        _orderService = new OrderService(_orderRepository, _topicProducer, _hubContext);
     }
 
     [Fact]
@@ -51,7 +51,7 @@ public sealed class OrderServiceTests
             .Returns(orders);
         
         // Act
-        var result = await _orderService.GetAllByBuyerIdAsync(Guid.Parse(orders[0].BuyerId), CancellationToken.None);
+        var result = await _orderService.GetAllByBuyerIdAsync(orders[0].BuyerId, CancellationToken.None);
 
         // Assert
         result.Should().BeEquivalentTo(orders);
@@ -67,7 +67,7 @@ public sealed class OrderServiceTests
             .Returns(expectedOrder);
 
         // Act
-        var result = await _orderService.GetByIdAsync(Guid.Parse(expectedOrder.Id), Guid.Parse(expectedOrder.BuyerId), CancellationToken.None);
+        var result = await _orderService.GetByIdAsync(expectedOrder.Id, expectedOrder.BuyerId, CancellationToken.None);
 
         // Assert
         result.Should().BeEquivalentTo(expectedOrder);
@@ -79,15 +79,15 @@ public sealed class OrderServiceTests
     {
         // Arrange
         var order = _fixture.Build<Order>()
-            .With(order => order.Id, Guid.NewGuid().ToString())
-            .With(order => order.BuyerId, Guid.NewGuid().ToString())
+            .With(order => order.Id, Guid.NewGuid())
+            .With(order => order.BuyerId, Guid.NewGuid())
             .Create();
         
         _orderRepository.GetByIdAsync(order.Id, Arg.Any<CancellationToken>())
             .ReturnsNull();
         
         // Act
-        var result = await _orderService.GetByIdAsync(Guid.Parse(order.Id), Guid.Parse(order.BuyerId), CancellationToken.None);
+        var result = await _orderService.GetByIdAsync(order.Id, order.BuyerId, CancellationToken.None);
  
         // Assert
         result.Should().BeNull();
@@ -103,7 +103,7 @@ public sealed class OrderServiceTests
         _orderRepository.CreateAsync(orderToCreate, Arg.Any<CancellationToken>())
             .Returns(true);
 
-        _publishEndpoint.Publish<SubmitOrder>(Arg.Any<object>())
+        _topicProducer.Produce(Arg.Any<object>())
             .Returns(Task.CompletedTask);
 
         // Act
@@ -144,7 +144,7 @@ public sealed class OrderServiceTests
             .Returns(true);
 
         // Act
-        bool result = await _orderService.DeleteByIdAsync(Guid.Parse(orderToDelete.Id), Guid.Parse(orderToDelete.BuyerId), CancellationToken.None);
+        bool result = await _orderService.DeleteByIdAsync(orderToDelete.Id, orderToDelete.BuyerId, CancellationToken.None);
  
         // Assert
         result.Should().BeTrue();
@@ -160,7 +160,7 @@ public sealed class OrderServiceTests
             .Returns(false);
 
         // Act
-        bool result = await _orderService.DeleteByIdAsync(Guid.Parse(orderToDelete.Id), Guid.Parse(orderToDelete.BuyerId), CancellationToken.None);
+        bool result = await _orderService.DeleteByIdAsync(orderToDelete.Id, orderToDelete.BuyerId, CancellationToken.None);
  
         // Assert
         result.Should().BeFalse();

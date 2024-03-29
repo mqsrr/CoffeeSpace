@@ -32,7 +32,7 @@ public class TokenWriterTests
         _userClaimsPrincipalFactory = _fixture.Create<IUserClaimsPrincipalFactory<ApplicationUser>>();
         _jwtSettings = Options.Create(new JwtSettings
         {
-            Key = "testKeysdl;fjsdlkf23",
+            Key = "testKeysdl;fjsdlkf23!!!sdfsdfesd!!!",
             Issuer = "test",
             Audience = "test",
             Expire = 60

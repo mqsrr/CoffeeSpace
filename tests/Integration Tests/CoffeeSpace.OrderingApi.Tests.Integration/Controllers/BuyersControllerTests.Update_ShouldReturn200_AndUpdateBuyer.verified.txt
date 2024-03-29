@@ -50,16 +50,18 @@
   },
   sqlLogs: [
     {
-      Type: ReaderExecutedAsync,
-      HasTransaction: false,
-      Parameters: {
-        @p0 (String): Salvador.Christiansen22@hotmail.com,
-        @p1 (String): Salvador,
-        @p2 (String): Guid_1
-      },
-      Text:
+      ef: {
+        Type: ReaderExecutedAsync,
+        HasTransaction: false,
+        Parameters: {
+          @p0 (String): Salvador.Christiansen22@hotmail.com,
+          @p1 (String): Salvador,
+          @p2 (Guid): Guid_1
+        },
+        Text:
 UPDATE "Buyers" SET "Email" = @p0, "Name" = @p1
 WHERE "Id" = @p2;
+      }
     }
   ]
 }

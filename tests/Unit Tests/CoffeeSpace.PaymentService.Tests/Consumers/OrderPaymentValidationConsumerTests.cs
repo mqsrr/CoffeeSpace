@@ -19,6 +19,7 @@ public sealed class OrderPaymentValidationConsumerTests : IAsyncLifetime
     private readonly ITestHarness _testHarness;
     private readonly IConsumerTestHarness<OrderPaymentValidationConsumer> _consumerTestHarness;
     private readonly IPaymentService _paymentService;
+    private readonly ITopicProducerProvider _topicProducerProvider;
     private readonly Fixture _fixture;
 
     public OrderPaymentValidationConsumerTests()
@@ -27,8 +28,11 @@ public sealed class OrderPaymentValidationConsumerTests : IAsyncLifetime
         _fixture.Customize(new AutoNSubstituteCustomization());
 
         _paymentService = _fixture.Create<IPaymentService>();
+        _topicProducerProvider = _fixture.Create<ITopicProducerProvider>();
+        
         var serviceProvider = new ServiceCollection()
             .AddScoped<IPaymentService>(_ => _paymentService)
+            .AddScoped<ITopicProducerProvider>(_ => _topicProducerProvider)
             .AddMassTransitTestHarness(config => config.AddConsumer<OrderPaymentValidationConsumer>())
             .BuildServiceProvider(true);
 

@@ -11,14 +11,9 @@ internal sealed class PaypalOrderInformationConfiguration : IEntityTypeConfigura
     {
         builder.ToTable("Paypal Orders")
             .HasKey(o => o.Id);
-        
-        builder.Property(o => o.Id)
-            .IsRequired()
-            .IsUnicode(false);
 
         builder.Property(o => o.BuyerId)
-            .IsRequired()
-            .IsUnicode(false);
+            .IsRequired();
 
         builder.HasOne(o => o.PaypalOrder)
             .WithOne()

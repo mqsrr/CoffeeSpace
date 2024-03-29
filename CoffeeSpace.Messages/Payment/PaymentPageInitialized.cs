@@ -2,9 +2,9 @@
 
 public interface PaymentPageInitialized
 {
-    string OrderId { get; }
+    Guid OrderId { get; }
     
-    string BuyerId { get; }
+    Guid BuyerId { get; }
     
     string PaymentApprovalLink { get; }
 }

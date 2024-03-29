@@ -10,7 +10,6 @@ using CoffeeSpace.OrderingApi.Tests.Integration.Fixtures;
 
 namespace CoffeeSpace.OrderingApi.Tests.Integration.Controllers;
 
-[UsesVerify]
 [Collection("Ordering Dependencies")]
 public sealed class BuyersControllerTests : IAsyncLifetime
 {
@@ -28,7 +27,7 @@ public sealed class BuyersControllerTests : IAsyncLifetime
     {
         // Arrange
         var buyer = _buyers.First();
-        string request = ApiEndpoints.Buyer.Get.Replace("{id:guid}", buyer.Id);
+        string request = ApiEndpoints.Buyer.Get.Replace("{id:guid}", buyer.Id.ToString());
 
         // Act
         var response = await _httpClient.GetAsync(request);
@@ -91,7 +90,7 @@ public sealed class BuyersControllerTests : IAsyncLifetime
         var buyer = _buyers.ElementAt(1);
         var buyerToUpdate = AutoFaker.Generate<Buyer, BuyerFaker>(3).Last();
         
-        string request = ApiEndpoints.Buyer.Update.Replace("{id:guid}", buyer.Id);
+        string request = ApiEndpoints.Buyer.Update.Replace("{id:guid}", buyer.Id.ToString());
         
         // Act
         var response = await _httpClient.PutAsJsonAsync(request, buyerToUpdate);
@@ -113,7 +112,7 @@ public sealed class BuyersControllerTests : IAsyncLifetime
     {
         // Arrange
         var buyerToDelete = _buyers.Last();
-        string request = ApiEndpoints.Buyer.Delete.Replace("{id:guid}", buyerToDelete.Id);
+        string request = ApiEndpoints.Buyer.Delete.Replace("{id:guid}", buyerToDelete.Id.ToString());
 
         // Act
         var response = await _httpClient.DeleteAsync(request);

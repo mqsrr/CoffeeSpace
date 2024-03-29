@@ -1,5 +1,7 @@
 ﻿using AutoBogus;
 using CoffeeSpace.Domain.Products;
+using Microsoft.AspNetCore.Http;
+using SixLabors.ImageSharp;
 
 namespace CoffeeSpace.ProductApi.Tests.Integration.Fakers;
 
@@ -9,11 +11,18 @@ public sealed class ProductFaker : AutoFaker<Product>
     {
         UseSeed(69);
         
-        RuleFor(product => product.Id, faker => faker.Random.Guid().ToString());
+        RuleFor(product => product.Id, faker => faker.Random.Guid());
         RuleFor(product => product.Title, faker => faker.Commerce.ProductName());
         RuleFor(product => product.Description, faker => faker.Commerce.ProductDescription());
         RuleFor(product => product.Quantity, faker => faker.Random.Int(0, 99));
-        RuleFor(product => product.Discount, faker => faker.Random.Float());
         RuleFor(product => product.UnitPrice, faker => faker.Random.Float(0, 10));
+        RuleFor(product => product.Image, faker =>
+        {
+            var image = Image.Load("..//..//..//1.jpg"); 
+            var memoryStream = new MemoryStream();
+            image.SaveAsJpeg(memoryStream);
+
+            return memoryStream.ToArray();
+        });
     }
 }

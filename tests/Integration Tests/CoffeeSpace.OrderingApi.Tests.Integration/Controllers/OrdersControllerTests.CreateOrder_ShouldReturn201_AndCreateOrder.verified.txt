@@ -40,15 +40,17 @@
   },
   sqlLogs: [
     {
-      Type: ReaderExecutedAsync,
-      HasTransaction: true,
-      Text:
+      ef: {
+        Type: ReaderExecutedAsync,
+        HasTransaction: true,
+        Text:
 INSERT INTO "Addresses" ("Id", "City", "Country", "Street")
 VALUES (@p0, @p1, @p2, @p3);
 INSERT INTO "Orders" ("Id", "AddressId", "BuyerId", "Status")
 VALUES (@p4, @p5, @p6, @p7);
 INSERT INTO "OrderItems" ("Id", "Description", "Discount", "OrderId", "Quantity", "Title", "UnitPrice")
 VALUES (@p8, @p9, @p10, @p11, @p12, @p13, @p14);
+      }
     }
   ]
 }

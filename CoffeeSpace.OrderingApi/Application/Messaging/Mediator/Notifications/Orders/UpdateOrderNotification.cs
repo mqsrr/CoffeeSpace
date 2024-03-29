@@ -4,7 +4,7 @@ namespace CoffeeSpace.OrderingApi.Application.Messaging.Mediator.Notifications.O
 
 public sealed class UpdateOrderNotification : INotification
 {
-    public required string Id { get; init; }
+    public required Guid Id { get; init; }
 
-    public required string BuyerId { get; init; }
+    public required Guid BuyerId { get; init; }
 }

@@ -14,21 +14,17 @@
     <ItemGroup>
       <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="8.0.0" />
       <PackageReference Include="AspNetCore.HealthChecks.Redis" Version="8.0.0" />
-      <PackageReference Include="FastEndpoints" Version="5.21.2" />
-      <PackageReference Include="MassTransit.AmazonSQS" Version="8.1.3" />
-      <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.3.1" />
-      <PackageReference Include="MassTransit.Newtonsoft" Version="8.1.3" />
-      <PackageReference Include="MassTransit.RabbitMQ" Version="8.1.3" />
+      <PackageReference Include="FastEndpoints" Version="5.23.0" />
       <PackageReference Include="Mediator.Abstractions" Version="2.1.7" />
       <PackageReference Include="Mediator.SourceGenerator" Version="2.1.7">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.1">
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.3">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
-      <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.1" />
+      <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.3" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
       <PackageReference Include="PayPalCheckoutSdk" Version="1.0.4" />
     </ItemGroup>
@@ -39,13 +35,14 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
+      <Folder Include="Application\" />
+      <Folder Include="Persistence\Migrations\" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Application\" />
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
 
 </Project>

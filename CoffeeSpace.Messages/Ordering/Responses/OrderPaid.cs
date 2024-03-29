@@ -2,7 +2,7 @@ using CoffeeSpace.Domain.Ordering.Orders;
 
 namespace CoffeeSpace.Messages.Ordering.Responses;
 
-public interface OrderPaymentSuccess
+public interface OrderPaid
 {
     string PaypalOrderId { get; }
     

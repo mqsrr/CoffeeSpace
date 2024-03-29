@@ -28,12 +28,13 @@
   },
   sqlLogs: [
     {
-      Type: ReaderExecutedAsync,
-      HasTransaction: false,
-      Parameters: {
-        @__id_0 (String?): Guid_1
-      },
-      Text:
+      ef: {
+        Type: ReaderExecutedAsync,
+        HasTransaction: false,
+        Parameters: {
+          @__id_0 (Guid): Guid_1
+        },
+        Text:
 SELECT t."Id", t."AddressId", t."BuyerId", t."Status", t."Id0", o0."Id", o0."Description", o0."Discount", o0."OrderId", o0."Quantity", o0."Title", o0."UnitPrice", t."City", t."Country", t."Street"
 FROM (
     SELECT o."Id", o."AddressId", o."BuyerId", o."Status", a."Id" AS "Id0", a."City", a."Country", a."Street"
@@ -44,6 +45,7 @@ FROM (
 ) AS t
 LEFT JOIN "OrderItems" AS o0 ON t."Id" = o0."OrderId"
 ORDER BY t."Id", t."Id0"
+      }
     }
   ]
 }

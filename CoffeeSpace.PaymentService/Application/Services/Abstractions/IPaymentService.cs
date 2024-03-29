@@ -5,7 +5,7 @@ namespace CoffeeSpace.PaymentService.Application.Services.Abstractions;
 
 public interface IPaymentService
 {
-    Task<PaypalOrderInformation?> GetOrderPaymentByOrderIdAsync(string paypalOrderId, CancellationToken cancellationToken);
+    Task<PaypalOrderInformation?> GetOrderPaymentByOrderIdAsync(Guid paypalOrderId, CancellationToken cancellationToken);
     
     Task<PayPalCheckoutSdk.Orders.Order?> CreateOrderAsync(Order order, CancellationToken cancellationToken);
 

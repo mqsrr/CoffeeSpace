@@ -14,7 +14,7 @@ internal sealed class BuyerRepository : IBuyerRepository
         _orderingDbContext = orderingDbContext;
     }
 
-    public async Task<Buyer?> GetByIdAsync(string id, CancellationToken cancellationToken)
+    public async Task<Buyer?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         var buyer = await _orderingDbContext.Buyers
             .AsSplitQuery()
@@ -58,7 +58,7 @@ internal sealed class BuyerRepository : IBuyerRepository
             : null;
     }
 
-    public async Task<bool> DeleteByIdAsync(string id, CancellationToken cancellationToken)
+    public async Task<bool> DeleteByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         int result = await _orderingDbContext.Buyers
             .Where(buyer => buyer.Id == id)

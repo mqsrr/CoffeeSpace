@@ -24,11 +24,11 @@ internal sealed class CachedBuyerService : IBuyerService
 
     public Task<Buyer?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        return _cacheService.GetOrCreateAsync(CacheKeys.Buyers.Get(id.ToString()), () =>
+        return _cacheService.GetOrCreateAsync(CacheKeys.Buyers.Get(id), () =>
         {
             var buyer = _buyerService.GetByIdAsync(id, cancellationToken);
             return buyer;
-        });
+        }, cancellationToken);
     }
 
     public Task<Buyer?> GetByEmailAsync(string email, CancellationToken cancellationToken)
@@ -37,7 +37,7 @@ internal sealed class CachedBuyerService : IBuyerService
         {
             var buyer = _buyerService.GetByEmailAsync(email, cancellationToken);
             return buyer;
-        });
+        }, cancellationToken);
     }
 
     public async Task<bool> CreateAsync(Buyer buyer, CancellationToken cancellationToken)
@@ -77,7 +77,7 @@ internal sealed class CachedBuyerService : IBuyerService
         {
             await _publisher.Publish(new DeleteBuyerNotification
             {
-                Id = id.ToString()
+                Id = id
             }, cancellationToken).ConfigureAwait(false);
         }
 

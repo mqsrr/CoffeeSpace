@@ -19,7 +19,7 @@ public sealed class AuthServiceTests
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ITokenWriter<ApplicationUser> _tokenWriter;
-    private readonly ISendEndpointProvider _endpointProvider;
+    private readonly ITopicProducer<RegisterNewBuyer> _topicProducer;
     private readonly Fixture _fixture;
 
     private readonly AuthService _authService;
@@ -33,9 +33,9 @@ public sealed class AuthServiceTests
         _signInManager = GetSignInManagerMock(_userManager);
 
         _tokenWriter = _fixture.Create<ITokenWriter<ApplicationUser>>();
-        _endpointProvider = _fixture.Create<ISendEndpointProvider>();
+        _topicProducer = _fixture.Create<ITopicProducer<RegisterNewBuyer>>();
 
-        _authService = new AuthService(_signInManager, _tokenWriter, _endpointProvider);
+        _authService = new AuthService(_signInManager, _tokenWriter, _topicProducer);
     }
     
     private static SignInManager<ApplicationUser> GetSignInManagerMock(UserManager<ApplicationUser> userManager)
@@ -105,7 +105,7 @@ public sealed class AuthServiceTests
 
         // Assert     
         jwtToken.Should().BeEquivalentTo(expectedToken);
-        await _endpointProvider.Received().GetSendEndpoint(Arg.Any<Uri>());
+        await _topicProducer.Received().Produce(Arg.Any<object>());
     }
     
     [Fact]
@@ -125,7 +125,7 @@ public sealed class AuthServiceTests
 
         // Assert     
         jwtToken.Should().BeNull();
-        await _endpointProvider.DidNotReceive().GetSendEndpoint(Arg.Any<Uri>());
+        await _topicProducer.DidNotReceive().Produce(Arg.Any<object>());
     }
     
     [Fact]
@@ -142,7 +142,7 @@ public sealed class AuthServiceTests
 
         // Assert     
         jwtToken.Should().BeNull();
-        await _endpointProvider.DidNotReceive().GetSendEndpoint(Arg.Any<Uri>());
+        await _topicProducer.DidNotReceive().Produce(Arg.Any<object>());
     }
 
     [Fact]
