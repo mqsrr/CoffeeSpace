@@ -3,6 +3,7 @@ using AutoFixture.AutoNSubstitute;
 using CoffeeSpace.Domain.Products;
 using CoffeeSpace.ProductApi.Application.Repositories;
 using CoffeeSpace.ProductApi.Application.Repositories.Abstractions;
+using CoffeeSpace.Shared.Services.Abstractions;
 using FluentAssertions;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
@@ -12,7 +13,7 @@ namespace CoffeeSpace.ProductApi.Tests.Repositories;
 
 public sealed class CachedProductRepositoryTests
 {
-    private readonly ICacheService<Product> _cacheService;
+    private readonly ICacheService _cacheService;
     private readonly IProductRepository _productRepository;
     private readonly IEnumerable<Product> _products;
     private readonly Fixture _fixture;
@@ -24,7 +25,7 @@ public sealed class CachedProductRepositoryTests
         _fixture = new Fixture();
         _fixture.Customize(new AutoNSubstituteCustomization());
 
-        _cacheService = _fixture.Create<ICacheService<Product>>();
+        _cacheService = _fixture.Create<ICacheService>();
         _productRepository = _fixture.Create<IProductRepository>();
         _products = _fixture.CreateMany<Product>();
 
@@ -56,7 +57,7 @@ public sealed class CachedProductRepositoryTests
         _productRepository.GetAllProductsAsync(Arg.Any<CancellationToken>())
             .Returns(_products);
 
-        _cacheService.GetAllOrCreateAsync(Arg.Any<string>(), Arg.Any<Func<Task<IEnumerable<Product>>>>(),Arg.Any<CancellationToken>())
+        _cacheService.GetAllOrCreateAsync(Arg.Any<string>(), Arg.Any<Func<Task<IEnumerable<Product>>>>(), Arg.Any<CancellationToken>())
             .Returns(callInfo => callInfo.Arg<Func<Task<IEnumerable<Product>>>>().Invoke());
 
         // Act

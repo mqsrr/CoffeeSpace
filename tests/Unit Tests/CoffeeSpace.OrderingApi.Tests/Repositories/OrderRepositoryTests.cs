@@ -44,7 +44,7 @@ public sealed class OrderRepositoryTests
     {
         // Arrange
         var expectedOrder = _orders.First();
-        string buyerId = expectedOrder.BuyerId;
+        var buyerId = expectedOrder.BuyerId;
 
         // Act
         var result = await _orderRepository.GetAllByBuyerIdAsync(buyerId, CancellationToken.None);
@@ -72,7 +72,7 @@ public sealed class OrderRepositoryTests
     public async Task GetByIdAsync_ShouldReturnNull_WhenOrderDoesNotExist()
     {
         // Arrange
-        string orderId = string.Empty;
+        var orderId = Guid.Empty;
         
         // Act
         var result = await _orderRepository.GetByIdAsync(orderId, CancellationToken.None);

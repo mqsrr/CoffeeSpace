@@ -1,24 +1,40 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
+using OpenTelemetry.Trace;
 
 namespace CoffeeSpace.Shared.Extensions;
 
 public static class OpenTelemetryExtensions
 {
-    public static IServiceCollection AddOpenTelemetryWithPrometheusExporter(this IServiceCollection services)
+    public static WebApplicationBuilder AddOpenTelemetryWithInstrumentation(this WebApplicationBuilder builder)
     {
-        services.AddOpenTelemetry()
+        builder.Services.AddOpenTelemetry()
             .WithMetrics(providerBuilder =>
             {
-                providerBuilder.AddPrometheusExporter();
-                providerBuilder.AddMeter("Microsoft.AspNetCore.Hosting", "Microsoft.AspNetCore.Server.Kestrel");
-
-                providerBuilder.AddView("request-duration", new ExplicitBucketHistogramConfiguration
-                {
-                    Boundaries = [0, .005, .01, .025, .05, .075, .1, .25, .5, .7, .9]
-                });
+                providerBuilder.AddRuntimeInstrumentation()
+                    .AddMeter("Microsoft.AspNetCore.Hosting", "Microsoft.AspNetCore.Server.Kestrel","System.Net.Http");
+            })
+            .WithTracing(providerBuilder =>
+            {
+                providerBuilder.AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation();
             });
+
+        builder.Services.Configure<OpenTelemetryLoggerOptions>(logging => logging.AddOtlpExporter());
+        builder.Services.ConfigureOpenTelemetryMeterProvider(logging => logging.AddOtlpExporter());
+        builder.Services.ConfigureOpenTelemetryTracerProvider(logging => logging.AddOtlpExporter());
         
-        return services;
+        builder.Services.AddOpenTelemetry().WithMetrics(providerBuilder => providerBuilder.AddPrometheusExporter());
+        
+        builder.Logging.AddOpenTelemetry(options =>
+        {
+            options.IncludeScopes = true;
+            options.IncludeFormattedMessage = true;
+        });
+        
+        return builder;
     }
 }

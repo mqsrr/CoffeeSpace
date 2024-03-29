@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace CoffeeSpace.IdentityApi.Application.Messages.Consumers;
 
-internal sealed class DeleteBuyerConsumer : IConsumer<DeleteBuyer>
+public sealed class DeleteBuyerConsumer : IConsumer<DeleteBuyer>
 {
     private readonly UserManager<ApplicationUser> _userManager;
 

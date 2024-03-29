@@ -35,34 +35,34 @@ public sealed partial class OrderHistoryWindowViewModel : ViewModelBase
 
     internal async Task InitializeAsync(CancellationToken cancellationToken)
     {
-        string? buyerId = StaticStorage.BuyerId;
-        if (buyerId is null)
-        {
-            return;
-        }
-
-        if (_hubConnection.IsConnected)
-        {
-            return;
-        }
-        
-        await _hubConnection.StartConnectionAsync(buyerId, cancellationToken);
-        
-        _hubConnection.OnOrderCreated(order => Orders.Add(order));
-        _hubConnection.OnOrderStatusUpdated((status, orderId) =>
-        {
-            var orderToUpdate = Orders.FirstOrDefault(order => order.Id == orderId);
-            if (orderToUpdate is null)
-            {
-                return;
-            }
-
-            orderToUpdate.Status = status;
-        });
-        
-        _hubConnection.OnOrderPaymentPageInitialized((orderId, paymentLink) =>
-        {
-            _logger.LogInformation("Payment Link has been initialized for {OrderId}: {PaymentLink}", orderId, paymentLink);                        
-        });
+        // string? buyerId = StaticStorage.BuyerId;
+        // if (buyerId is null)
+        // {
+        //     return;
+        // }
+        //
+        // if (_hubConnection.IsConnected)
+        // {
+        //     return;
+        // }
+        //
+        // await _hubConnection.StartConnectionAsync(buyerId, cancellationToken);
+        //
+        // _hubConnection.OnOrderCreated(order => Orders.Add(order));
+        // _hubConnection.OnOrderStatusUpdated((status, orderId) =>
+        // {
+        //     var orderToUpdate = Orders.FirstOrDefault(order => order.Id == orderId);
+        //     if (orderToUpdate is null)
+        //     {
+        //         return;
+        //     }
+        //
+        //     orderToUpdate.Status = status;
+        // });
+        //
+        // _hubConnection.OnOrderPaymentPageInitialized((orderId, paymentLink) =>
+        // {
+        //     _logger.LogInformation("Payment Link has been initialized for {OrderId}: {PaymentLink}", orderId, paymentLink);                        
+        // });
     }
 }

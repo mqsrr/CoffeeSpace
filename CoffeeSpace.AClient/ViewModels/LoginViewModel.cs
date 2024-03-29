@@ -41,19 +41,19 @@ public sealed partial class LoginViewModel : ViewModelBase
         
         try
         {
-            string? token = await _identityWebApi.LoginAsync(LoginRequest, cancellationToken);
-            if (string.IsNullOrEmpty(token))
-            {
-                return;
-            }
-
-            var tokenHandler = new JwtSecurityTokenHandler().ReadJwtToken(token);
-
-            string email = tokenHandler.Claims.First(claim => claim.Type is ClaimTypes.Email).Value;
-            var buyer = await _buyersWebApi.GetBuyerByEmailAsync(email, cancellationToken);
-
-            StaticStorage.JwtToken = token;
-            StaticStorage.BuyerId = buyer.Id;
+            // string? token = await _identityWebApi.LoginAsync(LoginRequest, cancellationToken);
+            // if (string.IsNullOrEmpty(token))
+            // {
+            //     return;
+            // }
+            //
+            // var tokenHandler = new JwtSecurityTokenHandler().ReadJwtToken(token);
+            //
+            // string email = tokenHandler.Claims.First(claim => claim.Type is ClaimTypes.Email).Value;
+            // var buyer = await _buyersWebApi.GetBuyerByEmailAsync(email, cancellationToken);
+            //
+            // StaticStorage.JwtToken = token;
+            // StaticStorage.BuyerId = buyer.Id;
             
             MoveToMainDashBoard();
         }

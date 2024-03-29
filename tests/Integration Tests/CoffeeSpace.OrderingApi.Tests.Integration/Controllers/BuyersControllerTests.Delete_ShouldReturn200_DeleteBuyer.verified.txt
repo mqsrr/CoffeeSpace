@@ -22,25 +22,28 @@
   },
   sqlLogs: [
     {
-      Type: ReaderExecutedAsync,
-      HasTransaction: false,
-      Parameters: {
-        @__id_0 (String?): Guid_1
-      },
-      Text:
+      ef: {
+        Type: ReaderExecutedAsync,
+        HasTransaction: false,
+        Parameters: {
+          @__id_0 (Guid): Guid_1
+        },
+        Text:
 SELECT b."Id", b."Email", b."Name"
 FROM "Buyers" AS b
 WHERE b."Id" = @__id_0
 ORDER BY b."Id"
 LIMIT 1
+      }
     },
     {
-      Type: ReaderExecutedAsync,
-      HasTransaction: false,
-      Parameters: {
-        @__id_0 (String?): Guid_1
-      },
-      Text:
+      ef: {
+        Type: ReaderExecutedAsync,
+        HasTransaction: false,
+        Parameters: {
+          @__id_0 (Guid): Guid_1
+        },
+        Text:
 SELECT t0."Id", t0."AddressId", t0."BuyerId", t0."Status", t."Id", t0."Id0", t0."City", t0."Country", t0."Street"
 FROM (
     SELECT b."Id"
@@ -54,16 +57,19 @@ INNER JOIN (
     INNER JOIN "Addresses" AS a ON o."AddressId" = a."Id"
 ) AS t0 ON t."Id" = t0."BuyerId"
 ORDER BY t."Id", t0."Id", t0."Id0"
+      }
     },
     {
-      Type: NonQueryExecutedAsync,
-      HasTransaction: false,
-      Parameters: {
-        @__id_0 (String?): Guid_1
-      },
-      Text:
+      ef: {
+        Type: NonQueryExecutedAsync,
+        HasTransaction: false,
+        Parameters: {
+          @__id_0 (Guid): Guid_1
+        },
+        Text:
 DELETE FROM "Buyers" AS b
 WHERE b."Id" = @__id_0
+      }
     }
   ]
 }

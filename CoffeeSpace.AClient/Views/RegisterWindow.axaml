@@ -12,7 +12,7 @@
         <vm:RegisterViewModel />
     </Design.DataContext>
     <Window.Background>
-        <ImageBrush Source="../Assets/wepik-export-20240101010025UDZ2.png" Stretch="UniformToFill"/>
+        <ImageBrush Source="../Assets/default-bg.png" Stretch="UniformToFill"/>
     </Window.Background>
     
     <controls:GlassCard Width="400" Height="400" Margin="10">

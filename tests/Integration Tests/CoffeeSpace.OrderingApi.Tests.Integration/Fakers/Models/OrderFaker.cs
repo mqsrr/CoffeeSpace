@@ -6,9 +6,9 @@ namespace CoffeeSpace.OrderingApi.Tests.Integration.Fakers.Models;
 
 public sealed class OrderFaker : AutoFaker<Order>
 {
-    public OrderFaker(string buyerId, Address address, IEnumerable<OrderItem> orderItems)
+    public OrderFaker(Guid buyerId, Address address, IEnumerable<OrderItem> orderItems)
     {
-        RuleFor(order => order.Id, faker => faker.Random.Guid().ToString());
+        RuleFor(order => order.Id, faker => faker.Random.Guid());
         UseSeed(69);
 
         RuleFor(order => order.BuyerId, buyerId);

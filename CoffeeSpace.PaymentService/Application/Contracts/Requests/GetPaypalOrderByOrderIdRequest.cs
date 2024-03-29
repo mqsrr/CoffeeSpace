@@ -2,5 +2,5 @@
 
 internal sealed class GetPaypalOrderByOrderIdRequest
 {
-    public required string OrderId { get; init; }
+    public required Guid OrderId { get; init; }
 }

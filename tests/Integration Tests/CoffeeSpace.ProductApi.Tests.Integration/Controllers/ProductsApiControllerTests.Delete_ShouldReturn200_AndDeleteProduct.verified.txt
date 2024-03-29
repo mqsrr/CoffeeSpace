@@ -24,17 +24,5 @@
       ]
     },
     IsSuccessStatusCode: true
-  },
-  sqlLogs: [
-    {
-      Type: NonQueryExecutedAsync,
-      HasTransaction: false,
-      Parameters: {
-        @__id_0 (String?): Guid_1
-      },
-      Text:
-DELETE FROM "Products" AS p
-WHERE p."Id" = @__id_0
-    }
-  ]
+  }
 }

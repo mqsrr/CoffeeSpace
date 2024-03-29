@@ -26,7 +26,7 @@ public sealed class ProductRepository : IProductRepository
         return products;
     }
 
-    public async Task<Product?> GetProductByIdAsync(string id, CancellationToken cancellationToken)
+    public async Task<Product?> GetProductByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         var product = await _productDbContext.Products.FindAsync([id], cancellationToken);
         return product;
@@ -50,7 +50,7 @@ public sealed class ProductRepository : IProductRepository
             : null;
     }
 
-    public async Task<bool> DeleteProductByIdAsync(string id, CancellationToken cancellationToken)
+    public async Task<bool> DeleteProductByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         int result = await _productDbContext.Products
             .Where(product => product.Id == id)

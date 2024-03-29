@@ -28,25 +28,28 @@
   },
   sqlLogs: [
     {
-      Type: ReaderExecutedAsync,
-      HasTransaction: false,
-      Parameters: {
-        @__email_0 (String?): Krista.Little@hotmail.com
-      },
-      Text:
+      ef: {
+        Type: ReaderExecutedAsync,
+        HasTransaction: false,
+        Parameters: {
+          @__email_0 (String?): Krista.Little@hotmail.com
+        },
+        Text:
 SELECT b."Id", b."Email", b."Name"
 FROM "Buyers" AS b
 WHERE b."Email" = @__email_0
 ORDER BY b."Id"
 LIMIT 1
+      }
     },
     {
-      Type: ReaderExecutedAsync,
-      HasTransaction: false,
-      Parameters: {
-        @__email_0 (String?): Krista.Little@hotmail.com
-      },
-      Text:
+      ef: {
+        Type: ReaderExecutedAsync,
+        HasTransaction: false,
+        Parameters: {
+          @__email_0 (String?): Krista.Little@hotmail.com
+        },
+        Text:
 SELECT t0."Id", t0."AddressId", t0."BuyerId", t0."Status", t."Id", t0."Id0", t0."City", t0."Country", t0."Street"
 FROM (
     SELECT b."Id"
@@ -60,14 +63,16 @@ INNER JOIN (
     INNER JOIN "Addresses" AS a ON o."AddressId" = a."Id"
 ) AS t0 ON t."Id" = t0."BuyerId"
 ORDER BY t."Id", t0."Id", t0."Id0"
+      }
     },
     {
-      Type: ReaderExecutedAsync,
-      HasTransaction: false,
-      Parameters: {
-        @__email_0 (String?): Krista.Little@hotmail.com
-      },
-      Text:
+      ef: {
+        Type: ReaderExecutedAsync,
+        HasTransaction: false,
+        Parameters: {
+          @__email_0 (String?): Krista.Little@hotmail.com
+        },
+        Text:
 SELECT o0."Id", o0."Description", o0."Discount", o0."OrderId", o0."Quantity", o0."Title", o0."UnitPrice", t."Id", t0."Id", t0."Id0"
 FROM (
     SELECT b."Id"
@@ -82,6 +87,7 @@ INNER JOIN (
 ) AS t0 ON t."Id" = t0."BuyerId"
 INNER JOIN "OrderItems" AS o0 ON t0."Id" = o0."OrderId"
 ORDER BY t."Id", t0."Id", t0."Id0"
+      }
     }
   ]
 }

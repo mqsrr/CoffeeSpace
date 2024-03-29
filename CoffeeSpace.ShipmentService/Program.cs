@@ -1,44 +1,44 @@
+using CoffeeSpace.Messages.Shipment.Commands;
+using CoffeeSpace.Messages.Shipment.Responses;
 using CoffeeSpace.Shared.Extensions;
-using CoffeeSpace.Shared.Settings;
 using CoffeeSpace.ShipmentService.Consumers;
+using Confluent.Kafka;
 using MassTransit;
-using Microsoft.Extensions.Options;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.AddAzureKeyVault();
+builder.AddOpenTelemetryWithInstrumentation();
 
 builder.Host.UseSerilog((context, configuration) =>
-    configuration.ReadFrom.Configuration(context.Configuration)
-        .AddDatadogLogging("Shipment Service"));
+    configuration.ReadFrom.Configuration(context.Configuration));
 
-builder.Services.AddOptionsWithValidateOnStart<AwsMessagingSettings>()
-     .Bind(builder.Configuration.GetRequiredSection(AwsMessagingSettings.SectionName));
-
+builder.Configuration.AddAzureKeyVault();
 builder.Services.AddMassTransit(x =>
 {
-    x.SetKebabCaseEndpointNameFormatter();
-    x.AddConsumer<RequestOrderShipmentConsumer>();
-    
-    x.UsingAmazonSqs((context, config) =>
+    x.UsingInMemory();
+    x.AddRider(configurator =>
     {
-        var awsSettings = context.GetRequiredService<IOptions<AwsMessagingSettings>>().Value;
-        config.Host(awsSettings.Region, hostConfig =>
+        configurator.SetKebabCaseEndpointNameFormatter();
+        configurator.AddProducer<OrderShipped>("order-shipped");
+        
+        configurator.AddConsumer<RequestOrderShipmentConsumer>();
+        configurator.UsingKafka((context, kafkaConfigurator) =>
         {
-            hostConfig.AccessKey(awsSettings.AccessKey);
-            hostConfig.SecretKey(awsSettings.SecretKey);
-        });   
-        config.UseNewtonsoftJsonSerializer();
-        config.UseNewtonsoftJsonDeserializer();
+            kafkaConfigurator.Acks = Acks.All;
+            kafkaConfigurator.Host(builder.Configuration["Kafka:Host"]);
 
-        config.ConfigureEndpoints(context);
+            kafkaConfigurator.AddTopicEndpoint<RequestOrderShipment, RequestOrderShipmentConsumer>(context, "request-order-shipment", "shipment");
+        });
     });
 });
 
 builder.Services.AddHealthChecks();
+
 var app = builder.Build();
 
-app.UseHealthChecks("/_health");
+app.UseSerilogRequestLogging();
+app.MapPrometheusScrapingEndpoint();
 
+app.UseHealthChecks("/_health");
 app.Run();

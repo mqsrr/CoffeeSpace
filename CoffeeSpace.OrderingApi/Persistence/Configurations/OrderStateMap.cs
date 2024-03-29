@@ -12,12 +12,10 @@ internal sealed class OrderStateMap : SagaClassMap<OrderStateInstance>
         entity.HasKey(x => x.CorrelationId);
 
         entity.Property(x => x.OrderId)
-            .IsRequired()
-            .IsUnicode(false);
+            .IsRequired();
         
         entity.Property(x => x.BuyerId)
-            .IsRequired()
-            .IsUnicode(false);
+            .IsRequired();
         
         entity.Property(x => x.CurrentState)
             .IsRequired()

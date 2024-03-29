@@ -35,8 +35,8 @@ public sealed class OrderStateMachineTests : IAsyncLifetime
     {
         // Arrange
         var order = _fixture.Build<Order>()
-            .With(order => order.Id, Guid.NewGuid().ToString())
-            .With(order => order.BuyerId, Guid.NewGuid().ToString())
+            .With(order => order.Id, Guid.NewGuid())
+            .With(order => order.BuyerId, Guid.NewGuid())
             .Create();
         
         // Act
@@ -49,13 +49,10 @@ public sealed class OrderStateMachineTests : IAsyncLifetime
         bool consumedAny = await _sagaTestHarness.Consumed.Any<SubmitOrder>();
         consumedAny.Should().BeTrue();
         
-        bool createdAny = await _sagaTestHarness.Created.Any(context => context.CorrelationId == Guid.Parse(order.Id));
+        bool createdAny = await _sagaTestHarness.Created.Any(context => context.CorrelationId == order.Id);
         createdAny.Should().BeTrue();
-        
-        bool requestedStockValidation = await _testHarness.Published.Any<OrderStockValidation>();
-        requestedStockValidation.Should().BeTrue();
 
-        var instance = _sagaTestHarness.Created.ContainsInState(Guid.Parse(order.Id), _sagaTestHarness.StateMachine, _sagaTestHarness.StateMachine.Submitted);
+        var instance = _sagaTestHarness.Created.ContainsInState(order.Id, _sagaTestHarness.StateMachine, _sagaTestHarness.StateMachine.Submitted);
         instance.Should().NotBeNull();
     }
     

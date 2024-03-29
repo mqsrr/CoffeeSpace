@@ -8,18 +8,18 @@ namespace CoffeeSpace.OrderingApi.Application.Services;
 
 internal sealed class BuyerService : IBuyerService
 {
-    private readonly ISendEndpointProvider _sendEndpointProvider;
+    private readonly ITopicProducer<UpdateBuyer> _topicProducer;
     private readonly IBuyerRepository _buyerRepository;
 
-    public BuyerService(IBuyerRepository buyerRepository, ISendEndpointProvider sendEndpointProvider)
+    public BuyerService(IBuyerRepository buyerRepository, ITopicProducer<UpdateBuyer> topicProducer)
     {
         _buyerRepository = buyerRepository;
-        _sendEndpointProvider = sendEndpointProvider;
+        _topicProducer = topicProducer;
     }
 
     public Task<Buyer?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        var buyer = _buyerRepository.GetByIdAsync(id.ToString(), cancellationToken);
+        var buyer = _buyerRepository.GetByIdAsync(id, cancellationToken);
         return buyer;
     }
 
@@ -43,8 +43,7 @@ internal sealed class BuyerService : IBuyerService
             return null;
         }
 
-        var sendEndpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri("queue:update-buyer"));
-        await sendEndpoint.Send<UpdateBuyer>(new
+        await _topicProducer.Produce(new
         {
             Buyer = updatedBuyer
         }, cancellationToken).ConfigureAwait(false);
@@ -54,20 +53,19 @@ internal sealed class BuyerService : IBuyerService
 
     public async Task<bool> DeleteByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        var buyerToDelete = await _buyerRepository.GetByIdAsync(id.ToString(), cancellationToken);
+        var buyerToDelete = await _buyerRepository.GetByIdAsync(id, cancellationToken);
         if (buyerToDelete is null)
         {
             return false;
         }
 
-        bool isDeleted = await _buyerRepository.DeleteByIdAsync(id.ToString(), cancellationToken);
+        bool isDeleted = await _buyerRepository.DeleteByIdAsync(id, cancellationToken);
         if (!isDeleted)
         {
             return false;
         }
 
-        var sendEndpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri("queue:delete-buyer"));
-        await sendEndpoint.Send<DeleteBuyer>(new
+        await _topicProducer.Produce(new
         {
             buyerToDelete.Name,
             buyerToDelete.Email

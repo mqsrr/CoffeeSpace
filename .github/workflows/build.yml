@@ -18,7 +18,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '7.0.x'
+          dotnet-version: '8.0.x'
       - name: Restore dependencies
         run: dotnet restore CoffeeSpace.OrderingApi/CoffeeSpace.OrderingApi.csproj
 
@@ -32,7 +32,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '7.0.x'
+          dotnet-version: '8.0.x'
       - name: Restore dependencies
         run: dotnet restore CoffeeSpace.ProductApi/CoffeeSpace.ProductApi.csproj
 
@@ -46,7 +46,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '7.0.x'
+          dotnet-version: '8.0.x'
       - name: Restore dependencies
         run: dotnet restore CoffeeSpace.IdentityApi/CoffeeSpace.IdentityApi.csproj
 
@@ -60,7 +60,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '7.0.x'
+          dotnet-version: '8.0.x'
       - name: Restore dependencies
         run: dotnet restore CoffeeSpace.PaymentService/CoffeeSpace.PaymentService.csproj
 
@@ -74,7 +74,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '7.0.x'
+          dotnet-version: '8.0.x'
       - name: Restore dependencies
         run: dotnet restore CoffeeSpace.ShipmentService/CoffeeSpace.ShipmentService.csproj
 
@@ -88,26 +88,26 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '7.0.x'
+          dotnet-version: '8.0.x'
       - name: Restore dependencies
         run: dotnet restore CoffeeSpace.ApiGateway/CoffeeSpace.ApiGateway.csproj
 
       - name: Build
         run: dotnet build --configuration Release CoffeeSpace.ApiGateway/CoffeeSpace.ApiGateway.csproj
   
-  Core-Library:
+  Shared-Library:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '7.0.x'
+          dotnet-version: '8.0.x'
       - name: Restore dependencies
-        run: dotnet restore CoffeeSpace.Core/CoffeeSpace.Core.csproj
+        run: dotnet restore CoffeeSpace.Shared/CoffeeSpace.Shared.csproj
 
       - name: Build
-        run: dotnet build --configuration Release CoffeeSpace.Core/CoffeeSpace.Core.csproj
+        run: dotnet build --configuration Release CoffeeSpace.Shared/CoffeeSpace.Shared.csproj
   
   Messages-Library:
     runs-on: ubuntu-latest
@@ -116,7 +116,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '7.0.x'
+          dotnet-version: '8.0.x'
       - name: Restore dependencies
         run: dotnet restore CoffeeSpace.Messages/CoffeeSpace.Messages.csproj
 
@@ -130,7 +130,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '7.0.x'
+          dotnet-version: '8.0.x'
       - name: Restore dependencies
         run: dotnet restore CoffeeSpace.Domain/CoffeeSpace.Domain.csproj
 

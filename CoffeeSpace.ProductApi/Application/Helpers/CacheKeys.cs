@@ -10,6 +10,6 @@ internal static class CacheKeys
         
         public static string GetPaged(int page, int pageSize) => $"products-page-{page}-pageSize-{pageSize}";
         
-        public static string GetById(string id) => $"products-{id}";
+        public static string GetById(Guid id) => $"products-{id}";
     }
 }

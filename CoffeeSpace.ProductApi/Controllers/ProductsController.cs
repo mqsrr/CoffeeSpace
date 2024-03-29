@@ -32,7 +32,7 @@ public sealed class ProductsController : ControllerBase
     [HttpGet(ApiEndpoints.Products.Get)]
     public async Task<IActionResult> GetById([FromRoute] GetProductByIdRequest request, CancellationToken cancellationToken)
     {
-        var product = await _productRepository.GetProductByIdAsync(request.Id.ToString(), cancellationToken);
+        var product = await _productRepository.GetProductByIdAsync(request.Id, cancellationToken);
         return product is not null
             ? Ok(product.ToResponse())
             : NotFound();
@@ -62,7 +62,7 @@ public sealed class ProductsController : ControllerBase
     [HttpDelete(ApiEndpoints.Products.Delete)]
     public async Task<IActionResult> Delete([FromRoute] DeleteProductByIdRequest request, CancellationToken cancellationToken)
     {
-        bool deleted = await _productRepository.DeleteProductByIdAsync(request.Id.ToString(), cancellationToken);
+        bool deleted = await _productRepository.DeleteProductByIdAsync(request.Id, cancellationToken);
         return deleted
             ? NoContent()
             : NotFound();

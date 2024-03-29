@@ -20,6 +20,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Testcontainers.Kafka;
 using Testcontainers.PostgreSql;
 using Testcontainers.Redis;
 using VerifyTests.EntityFramework;
@@ -32,6 +33,7 @@ public class ProductApiFactory : WebApplicationFactory<ProductsController>, IAsy
 
     private readonly PostgreSqlContainer _postgreSqlContainer;
     private readonly RedisContainer _redisContainer;
+    private readonly KafkaContainer _kafkaContainer;
 
     public IEnumerable<Product> Products { get; init; }
 
@@ -45,6 +47,11 @@ public class ProductApiFactory : WebApplicationFactory<ProductsController>, IAsy
             .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5432))
             .Build();
 
+        _kafkaContainer = new KafkaBuilder()
+            .WithPortBinding(9092, 9092)
+            .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(9092))
+            .Build();
+        
         _redisContainer = new RedisBuilder()
             .WithPortBinding(6379)
             .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(6379))
@@ -57,15 +64,12 @@ public class ProductApiFactory : WebApplicationFactory<ProductsController>, IAsy
     {
         builder.UseSetting("ProductsDb:ConnectionString", _postgreSqlContainer.GetConnectionString());
         builder.UseSetting("Redis:ConnectionString", _redisContainer.GetConnectionString());
-
-        builder.UseSetting("AWS:Region", "eu");
-        builder.UseSetting("AWS:AccessKey", "test");
-        builder.UseSetting("AWS:SecretKey", "test");
+        builder.UseSetting("Kafka:ConnectionString", _kafkaContainer.GetBootstrapAddress());
 
         builder.UseSetting("Jwt:Audience", "coffee-space.testing");
         builder.UseSetting("Jwt:Issuer", "coffee-space.testing");
-        builder.UseSetting("Jwt:Key", "testing-coffeespac!!23");
-        builder.UseSetting("Jwt:Expire", "1");
+        builder.UseSetting("Jwt:Key", "testing-coffeespac!!!!!!!2sdfsdff3");
+        builder.UseSetting("Jwt:Expire", "5");
 
         Environment.SetEnvironmentVariable(Environments.Staging, "Testing");
         builder.ConfigureTestServices(services =>
@@ -104,12 +108,14 @@ public class ProductApiFactory : WebApplicationFactory<ProductsController>, IAsy
     {
         await _postgreSqlContainer.StartAsync();
         await _redisContainer.StartAsync();
+        await _kafkaContainer.StartAsync();
     }
 
     public new async Task DisposeAsync()
     {
         await _postgreSqlContainer.StopAsync();
         await _redisContainer.StopAsync();
+        await _kafkaContainer.StopAsync();
     }
 
     private static string WriteToken(JwtSettings jwtSettings)

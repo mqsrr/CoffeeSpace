@@ -12,7 +12,7 @@
         <vm:FindMyCoffeeViewModel />
     </Design.DataContext>
     <UserControl.Background>
-        <ImageBrush Source="../Assets/wepik-export-20240101010025UDZ2.png" Stretch="UniformToFill">
+        <ImageBrush Source="../Assets/default-bg.png" Stretch="UniformToFill">
         </ImageBrush>
     </UserControl.Background>
 

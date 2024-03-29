@@ -86,7 +86,7 @@ public sealed class ProductRepositoryTests
     public async Task GetByIdAsync_ShouldReturnNull_WhenProductDoesNotExist()
     {
         // Arrange
-        string productId = string.Empty;
+        var productId = Guid.Empty;
         
         // Act
         var result = await _productRepository.GetProductByIdAsync(productId, CancellationToken.None);

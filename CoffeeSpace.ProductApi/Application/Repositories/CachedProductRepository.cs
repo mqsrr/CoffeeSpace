@@ -29,16 +29,16 @@ internal sealed class CachedProductRepository : IProductRepository
         {
             var products = _productRepository.GetAllProductsAsync(cancellationToken);
             return products;
-        });
+        }, cancellationToken);
     }
     
-    public Task<Product?> GetProductByIdAsync(string id, CancellationToken cancellationToken)
+    public Task<Product?> GetProductByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         return _cacheService.GetOrCreateAsync(CacheKeys.Products.GetById(id), () =>
         {
             var product = _productRepository.GetProductByIdAsync(id, cancellationToken);
             return product;
-        });
+        }, cancellationToken);
     }
 
     public async Task<bool> CreateProductAsync(Product product, CancellationToken cancellationToken)
@@ -46,7 +46,7 @@ internal sealed class CachedProductRepository : IProductRepository
         bool created = await _productRepository.CreateProductAsync(product, cancellationToken);
         if (created)
         {
-            await _cacheService.RemoveAsync(CacheKeys.Products.GetAll);
+            await _cacheService.RemoveAsync(CacheKeys.Products.GetAll, cancellationToken);
         }
 
         return created;
@@ -57,20 +57,20 @@ internal sealed class CachedProductRepository : IProductRepository
         var updatedProduct = await _productRepository.UpdateProductAsync(product, cancellationToken);
         if (updatedProduct is not null)
         {
-            await _cacheService.RemoveAsync(CacheKeys.Products.GetAll);
-            await _cacheService.RemoveAsync(CacheKeys.Products.GetById(updatedProduct.Id));
+            await _cacheService.RemoveAsync(CacheKeys.Products.GetAll, cancellationToken);
+            await _cacheService.RemoveAsync(CacheKeys.Products.GetById(updatedProduct.Id), cancellationToken);
         }
 
         return updatedProduct;
     }
 
-    public async Task<bool> DeleteProductByIdAsync(string id, CancellationToken cancellationToken)
+    public async Task<bool> DeleteProductByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         bool deleted = await _productRepository.DeleteProductByIdAsync(id, cancellationToken);
         if (deleted)
         {
-            await _cacheService.RemoveAsync(CacheKeys.Products.GetAll);
-            await _cacheService.RemoveAsync(CacheKeys.Products.GetById(id));
+            await _cacheService.RemoveAsync(CacheKeys.Products.GetAll, cancellationToken);
+            await _cacheService.RemoveAsync(CacheKeys.Products.GetById(id), cancellationToken);
         }
 
         return deleted;

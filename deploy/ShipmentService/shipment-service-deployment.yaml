@@ -4,9 +4,6 @@ metadata:
   name: shipment-service
   labels:
     app: shipment-service
-    tags.datadoghq.com/env: Production
-    tags.datadoghq.com/service: shipment-service
-    tags.datadoghq.com/version: 1.0.0
 spec:
   replicas: 1
   selector:
@@ -17,16 +14,10 @@ spec:
       name: shipment-service
       labels:
         app: shipment-service
-        tags.datadoghq.com/env: Production
-        tags.datadoghq.com/service: shipment-service
-        tags.datadoghq.com/version: 1.0.0
-        admission.datadoghq.com/enabled: "true"
-      annotations:
-          admission.datadoghq.com/dotnet-lib.version: v2.38.0
     spec:
       containers:
         - name: shipment-service
-          image: mqsr/coffeespace-shipment-service:2.0.0
+          image: mqsr/coffeespace-shipment-service:2.1.0
           imagePullPolicy: Always
           env:
           - name: "ASPNETCORE_ENVIRONMENT"
@@ -51,10 +42,5 @@ spec:
               secretKeyRef:
                 key: "azure-vault-name"
                 name: "azure-key-vault"
-          - name: "DD_API_KEY"
-            valueFrom:
-              secretKeyRef:
-                key: "api-key"
-                name: "datadog-secret"
       restartPolicy: Always
       

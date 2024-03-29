@@ -18,8 +18,7 @@ builder.Services
     .AddKubernetes();
 
 builder.Host.UseSerilog((context, configuration) =>
-    configuration.ReadFrom.Configuration(context.Configuration)
-        .AddDatadogLogging("API Gateway"));
+    configuration.ReadFrom.Configuration(context.Configuration));
 
 var app = builder.Build();
 

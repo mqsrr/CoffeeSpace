@@ -1,4 +1,6 @@
 using Asp.Versioning;
+using CoffeeSpace.Messages.Products.Commands;
+using CoffeeSpace.Messages.Products.Responses;
 using CoffeeSpace.ProductApi.Application.Extensions;
 using CoffeeSpace.ProductApi.Application.Messages.Consumers;
 using CoffeeSpace.ProductApi.Application.Repositories;
@@ -7,62 +9,64 @@ using CoffeeSpace.ProductApi.Application.Validators;
 using CoffeeSpace.ProductApi.Persistence;
 using CoffeeSpace.ProductApi.Persistence.Abstractions;
 using CoffeeSpace.Shared.Extensions;
+using CoffeeSpace.Shared.Services.Abstractions;
 using CoffeeSpace.Shared.Settings;
+using Confluent.Kafka;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MassTransit;
-using Microsoft.Extensions.Options;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.AddAzureKeyVault();
-builder.Configuration.AddJwtBearer(builder);
+builder.AddOpenTelemetryWithInstrumentation();
 
 builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration));
 
-builder.Services.AddControllers();
-builder.Services.AddApiVersioning(new MediaTypeApiVersionReader("api-version"));
+builder.Configuration.AddAzureKeyVault();
+builder.Configuration.AddJwtBearer(builder);
 
-builder.Services.AddApplicationDb<IProductDbContext, ProductDbContext>("Server=localhost;Port=5432;Database=testDb;User Id=test;Password=Tests123!");
+builder.Services.AddControllers();
+builder.Services.AddApiVersioning(new HeaderApiVersionReader());
+
+builder.Services.AddApplicationDb<IProductDbContext, ProductDbContext>(builder.Configuration["ProductsDb:ConnectionString"]!);
 builder.Services.AddApplicationService<IProductRepository>();
+
+builder.Services.AddStackExchangeRedisCache(options => options.Configuration = builder.Configuration["Redis:ConnectionString"]);
+builder.Services.AddApplicationService<ICacheService>();
 
 builder.Services.Decorate<IProductRepository, CachedProductRepository>();
 
 builder.Services.AddFluentValidationAutoValidation()
     .AddValidatorsFromAssemblyContaining<CreateProductRequestValidator>(ServiceLifetime.Singleton, includeInternalTypes: true);
 
-builder.Services.AddOptionsWithValidateOnStart<AwsMessagingSettings>()
-    .Bind(builder.Configuration.GetRequiredSection(AwsMessagingSettings.SectionName));
-
 builder.Services.AddOptionsWithValidateOnStart<JwtSettings>()
     .Bind(builder.Configuration.GetRequiredSection(JwtSettings.SectionName));
 
 builder.Services.AddMassTransit(x =>
 {
-    x.SetKebabCaseEndpointNameFormatter();
-    x.AddConsumer<OrderStockValidationConsumer>();
-
-    x.AddInMemoryInboxOutbox();
-    x.UsingAmazonSqs((context, configurator) =>
+    x.UsingInMemory();
+    x.AddRider(configurator =>
     {
-        var awsSettings = context.GetRequiredService<IOptions<AwsMessagingSettings>>().Value;
-        configurator.Host(awsSettings.Region, hostConfigurator =>
+        configurator.SetKebabCaseEndpointNameFormatter();
+        configurator.AddConsumer<OrderStockValidationConsumer>();
+
+        configurator.AddProducer<OrderStockConfirmed>("order-stock-confirmed");
+        configurator.AddProducer<Fault<ValidateOrderStock>>("order-stock-confirmation-failed");
+
+        configurator.AddInMemoryInboxOutbox();
+        configurator.UsingKafka((context, factoryConfigurator) =>
         {
-            hostConfigurator.AccessKey(awsSettings.AccessKey);
-            hostConfigurator.SecretKey(awsSettings.SecretKey);
+            factoryConfigurator.Acks = Acks.All;
+            factoryConfigurator.Host(builder.Configuration["Kafka:Host"]);
+
+            factoryConfigurator.AddTopicEndpoint<ValidateOrderStock, OrderStockValidationConsumer>(context, "validate-order-stock", "products");
         });
-        
-        configurator.ConfigureEndpoints(context);
-        
-        configurator.UseNewtonsoftJsonSerializer();
-        configurator.UseNewtonsoftJsonDeserializer();
     });
 });
 
 builder.Services.AddServiceHealthChecks(builder);
-builder.Services.AddOpenTelemetryWithPrometheusExporter();
 
 var app = builder.Build();
 
@@ -75,5 +79,4 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
 app.Run();

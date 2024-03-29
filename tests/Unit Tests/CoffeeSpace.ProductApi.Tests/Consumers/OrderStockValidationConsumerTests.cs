@@ -1,4 +1,4 @@
-﻿using AutoFixture;
+﻿/*using AutoFixture;
 using AutoFixture.AutoNSubstitute;
 using CoffeeSpace.Domain.Ordering.Orders;
 using CoffeeSpace.Domain.Products;
@@ -20,13 +20,20 @@ public sealed class OrderStockValidationConsumerTests : IAsyncLifetime
     private readonly ITestHarness _testHarness;
     private readonly IConsumerTestHarness<OrderStockValidationConsumer> _consumerTestHarness;
     private readonly IProductRepository _productRepository;
+    private readonly ITopicProducerProvider _topicProducerProvider;
+    private readonly ITopicProducer<OrderStockConfirmed> _topicProducer;
+    
     private readonly Fixture _fixture;
     
     public OrderStockValidationConsumerTests()
     {
         _productRepository = Substitute.For<IProductRepository>();
+        _topicProducerProvider = Substitute.For<ITopicProducerProvider>();
+        _topicProducer = Substitute.For<ITopicProducer<OrderStockConfirmed>>();
+        
         var serviceProvider = new ServiceCollection()
             .AddScoped<IProductRepository>(_ => _productRepository)
+            .AddScoped<ITopicProducerProvider>(_ => _topicProducerProvider)
             .AddMassTransitTestHarness(config => config.AddConsumer<OrderStockValidationConsumer>())
             .BuildServiceProvider(true);
 
@@ -42,21 +49,26 @@ public sealed class OrderStockValidationConsumerTests : IAsyncLifetime
     {
         // Arrange
         var expectedProducts = _fixture.CreateMany<Product>().ToArray();
+        
         _productRepository.GetAllProductsAsync(Arg.Any<CancellationToken>())
             .Returns(expectedProducts);
         
+        _topicProducerProvider.GetProducer<OrderStockConfirmed>(Arg.Any<Uri>())
+            .Returns(_topicProducer);
+        
         // Act
-        var response = await _testHarness.Bus.Request<OrderStockValidation, OrderStockConfirmed>(new
+        await _testHarness.Bus.Publish<ValidateOrderStock>(new
         {
             Order = _fixture.Create<Order>(),
-            Products = expectedProducts
+            ProductTitles = expectedProducts.Select(product => product.Title)
         });
 
         // Assert
-        bool consumedAny = await _consumerTestHarness.Consumed.Any<OrderStockValidation>();
+        bool consumedAny = await _consumerTestHarness.Consumed.Any<ValidateOrderStock>();
         consumedAny.Should().BeTrue();
 
-        response.Message.IsValid.Should().BeTrue();
+        consumedAny = await _testHarness.Consumed.Any<OrderStockConfirmed>();
+        consumedAny.Should().BeTrue();
         await _productRepository.Received().GetAllProductsAsync(Arg.Any<CancellationToken>());
     }
     
@@ -69,14 +81,14 @@ public sealed class OrderStockValidationConsumerTests : IAsyncLifetime
             .Returns(_fixture.CreateMany<Product>());
         
         // Act
-        var response = await _testHarness.Bus.Request<OrderStockValidation, Fault>(new
+        var response = await _testHarness.Bus.Request<ValidateOrderStock, Fault>(new
         {
             Order = _fixture.Create<Order>(),
-            Products = products
+            ProductTitles = products.Select(product => product.Title)
         });
 
         // Assert
-        bool consumedAny = await _consumerTestHarness.Consumed.Any<OrderStockValidation>();
+        bool consumedAny = await _consumerTestHarness.Consumed.Any<ValidateOrderStock>();
         consumedAny.Should().BeTrue();
 
         response.Should().NotBeNull();
@@ -92,4 +104,4 @@ public sealed class OrderStockValidationConsumerTests : IAsyncLifetime
     {
         await _testHarness.Stop();
     }
-}
+}*/

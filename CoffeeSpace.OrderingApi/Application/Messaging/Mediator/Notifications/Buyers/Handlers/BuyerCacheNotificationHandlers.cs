@@ -19,19 +19,19 @@ internal sealed class BuyerCacheNotificationHandlers :
 
     public async ValueTask Handle(CreateBuyerNotification notification, CancellationToken cancellationToken)
     {
-        await _cacheService.RemoveAsync(CacheKeys.Buyers.Get(notification.Id));
-        await _cacheService.RemoveAsync(CacheKeys.Buyers.GetByEmail(notification.Email));
+        await _cacheService.RemoveAsync(CacheKeys.Buyers.Get(notification.Id), cancellationToken);
+        await _cacheService.RemoveAsync(CacheKeys.Buyers.GetByEmail(notification.Email), cancellationToken);
     }
 
     public async ValueTask Handle(UpdateBuyerNotification notification, CancellationToken cancellationToken)
     {
-        await _cacheService.RemoveAsync(CacheKeys.Buyers.Get(notification.Id));
-        await _cacheService.RemoveAsync(CacheKeys.Buyers.GetByEmail(notification.Email));
+        await _cacheService.RemoveAsync(CacheKeys.Buyers.Get(notification.Id), cancellationToken);
+        await _cacheService.RemoveAsync(CacheKeys.Buyers.GetByEmail(notification.Email), cancellationToken);
     }
 
     public async ValueTask Handle(DeleteBuyerNotification notification, CancellationToken cancellationToken)
     {
-        await _cacheService.RemoveAsync(CacheKeys.Buyers.Get(notification.Id));
-        await _cacheService.RemoveAsync(CacheKeys.Order.GetAll(notification.Id));
+        await _cacheService.RemoveAsync(CacheKeys.Buyers.Get(notification.Id), cancellationToken);
+        await _cacheService.RemoveAsync(CacheKeys.Order.GetAll(notification.Id), cancellationToken);
     }
 }

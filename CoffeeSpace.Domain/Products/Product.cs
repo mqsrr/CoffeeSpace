@@ -2,7 +2,7 @@ namespace CoffeeSpace.Domain.Products;
 
 public sealed class Product
 {
-    public required string Id { get; init; }
+    public required Guid Id { get; init; }
 
     public required byte[] Image { get; init; }
     

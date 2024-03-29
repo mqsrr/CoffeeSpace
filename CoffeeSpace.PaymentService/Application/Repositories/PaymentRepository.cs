@@ -14,13 +14,13 @@ internal sealed class PaymentRepository : IPaymentRepository
         _dbContext = dbContext;
     }
 
-    public async Task<PaypalOrderInformation?> GetPaypalOrderByIdAsync(string paypalOrderId, CancellationToken cancellationToken)
+    public async Task<PaypalOrderInformation?> GetPaypalOrderByIdAsync(Guid paypalOrderId, CancellationToken cancellationToken)
     {
         var paypalOrderInformation = await _dbContext.PaypalOrders.FindAsync([paypalOrderId], cancellationToken);
         return paypalOrderInformation;
     }
 
-    public async Task<PaypalOrderInformation?> GetByApplicationOrderIdAsync(string applicationOrderId,
+    public async Task<PaypalOrderInformation?> GetByApplicationOrderIdAsync(Guid applicationOrderId,
         CancellationToken cancellationToken)
     {
         var paypalOrderInformation = await _dbContext.PaypalOrders.FirstOrDefaultAsync(order => 
@@ -46,7 +46,7 @@ internal sealed class PaymentRepository : IPaymentRepository
         return result > 0;
     }
 
-    public async Task<bool> DeletePaymentByIdAsync(string paypalOrderId, CancellationToken cancellationToken)
+    public async Task<bool> DeletePaymentByIdAsync(Guid paypalOrderId, CancellationToken cancellationToken)
     {
         int result = await _dbContext.PaypalOrders
             .Where(order => order.Id == paypalOrderId)

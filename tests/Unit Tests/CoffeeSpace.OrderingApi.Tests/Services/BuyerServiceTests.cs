@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices.ComTypes;
-using AutoFixture;
+﻿using AutoFixture;
 using AutoFixture.AutoNSubstitute;
 using CoffeeSpace.Domain.Ordering.BuyerInfo;
 using CoffeeSpace.Messages.Buyers;
@@ -7,7 +6,6 @@ using CoffeeSpace.OrderingApi.Application.Repositories.Abstractions;
 using CoffeeSpace.OrderingApi.Application.Services;
 using FluentAssertions;
 using MassTransit;
-using Microsoft.EntityFrameworkCore;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
 using Xunit;
@@ -16,7 +14,7 @@ namespace CoffeeSpace.OrderingApi.Tests.Services;
 
 public sealed class BuyerServiceTests
 {
-    private readonly ISendEndpointProvider _sendEndpointProvider;
+    private readonly ITopicProducer<UpdateBuyer> _topicProducer;
     private readonly IBuyerRepository _buyerRepository;
     private readonly IEnumerable<Buyer> _buyers;
     private readonly Fixture _fixture;
@@ -29,13 +27,13 @@ public sealed class BuyerServiceTests
         _fixture.Customize(new AutoNSubstituteCustomization());
         
         _buyers = _fixture.Build<Buyer>()
-            .With(buyer => buyer.Id, Guid.NewGuid().ToString())
+            .With(buyer => buyer.Id, Guid.NewGuid())
             .CreateMany();
 
-        _sendEndpointProvider = _fixture.Create<ISendEndpointProvider>();
+        _topicProducer = _fixture.Create<ITopicProducer<UpdateBuyer>>();
         _buyerRepository = _fixture.Create<IBuyerRepository>();
 
-        _buyerService = new BuyerService(_buyerRepository, _sendEndpointProvider);
+        _buyerService = new BuyerService(_buyerRepository, _topicProducer);
     }
     
     [Fact]
@@ -79,7 +77,7 @@ public sealed class BuyerServiceTests
             .Returns(expectedBuyer);
 
         // Act
-        var result = await _buyerService.GetByIdAsync(Guid.Parse(expectedBuyer.Id), CancellationToken.None);
+        var result = await _buyerService.GetByIdAsync(expectedBuyer.Id, CancellationToken.None);
 
         // Assert
         result.Should().BeEquivalentTo(expectedBuyer);
@@ -95,7 +93,7 @@ public sealed class BuyerServiceTests
             .ReturnsNull();
 
         // Act
-        var result = await _buyerService.GetByIdAsync(Guid.Parse(expectedBuyer.Id), CancellationToken.None);
+        var result = await _buyerService.GetByIdAsync(expectedBuyer.Id, CancellationToken.None);
  
         // Assert
         result.Should().BeNull();
@@ -164,7 +162,7 @@ public sealed class BuyerServiceTests
             .Returns(false);
         
         // Act
-        bool result = await _buyerService.DeleteByIdAsync(Guid.Parse(buyerToDelete.Id), CancellationToken.None);
+        bool result = await _buyerService.DeleteByIdAsync(buyerToDelete.Id, CancellationToken.None);
  
         // Assert
         result.Should().BeFalse();

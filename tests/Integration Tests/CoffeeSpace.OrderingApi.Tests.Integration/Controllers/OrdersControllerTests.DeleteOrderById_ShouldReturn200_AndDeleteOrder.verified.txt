@@ -22,14 +22,16 @@
   },
   sqlLogs: [
     {
-      Type: NonQueryExecutedAsync,
-      HasTransaction: false,
-      Parameters: {
-        @__id_0 (String?): Guid_1
-      },
-      Text:
+      ef: {
+        Type: NonQueryExecutedAsync,
+        HasTransaction: false,
+        Parameters: {
+          @__id_0 (Guid): Guid_1
+        },
+        Text:
 DELETE FROM "Orders" AS o
 WHERE o."Id" = @__id_0
+      }
     }
   ]
 }

@@ -52,7 +52,7 @@ public sealed class BuyerRepositoryTests
     public async Task GetByIdAsync_ShouldReturnNull_WhenBuyerDoesNotExist()
     {
         // Arrange
-        string buyerId = string.Empty;
+        var buyerId = Guid.Empty;
 
         // Act
         var result = await _buyerRepository.GetByIdAsync(buyerId, CancellationToken.None);

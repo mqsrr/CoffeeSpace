@@ -12,7 +12,6 @@ using CoffeeSpace.OrderingApi.Tests.Integration.Fixtures;
 
 namespace CoffeeSpace.OrderingApi.Tests.Integration.Controllers;
 
-[UsesVerify]
 [Collection("Ordering Dependencies")]
 public sealed class OrdersControllerTests : IAsyncLifetime
 {
@@ -32,7 +31,7 @@ public sealed class OrdersControllerTests : IAsyncLifetime
     {
         // Arrange
         var buyer = _buyers.First();
-        string request = ApiEndpoints.Orders.GetAll.Replace("{buyerId:guid}", buyer.Id);
+        string request = ApiEndpoints.Orders.GetAll.Replace("{buyerId:guid}", buyer.Id.ToString());
         
         // Act
         var response = await _httpClient.GetAsync(request);
@@ -55,8 +54,8 @@ public sealed class OrdersControllerTests : IAsyncLifetime
         var order = _orders.First();
         var buyer = _buyers.First();
         string request = ApiEndpoints.Orders.Get
-            .Replace("{buyerId:guid}", buyer.Id)
-            .Replace("{id:guid}", order.Id);
+            .Replace("{buyerId:guid}", buyer.Id.ToString())
+            .Replace("{id:guid}", order.Id.ToString());
         
         // Act
         var response = await _httpClient.GetAsync(request);
@@ -82,7 +81,7 @@ public sealed class OrdersControllerTests : IAsyncLifetime
             Status = OrderStatus.Submitted
         };
         var buyer = _buyers.ElementAt(1);
-        string request = ApiEndpoints.Orders.Create.Replace("{buyerId:guid}", buyer.Id);
+        string request = ApiEndpoints.Orders.Create.Replace("{buyerId:guid}", buyer.Id.ToString());
         
         // Act
         var response = await _httpClient.PostAsJsonAsync(request, order);
@@ -102,8 +101,8 @@ public sealed class OrdersControllerTests : IAsyncLifetime
         // Arrange
         var order = _orders.Last();
         string request = ApiEndpoints.Orders.Delete
-            .Replace("{buyerId:guid}", order.BuyerId)
-            .Replace("{id:guid}", order.Id);
+            .Replace("{buyerId:guid}", order.BuyerId.ToString())
+            .Replace("{id:guid}", order.Id.ToString());
         
         // Act
         var response = await _httpClient.DeleteAsync(request);

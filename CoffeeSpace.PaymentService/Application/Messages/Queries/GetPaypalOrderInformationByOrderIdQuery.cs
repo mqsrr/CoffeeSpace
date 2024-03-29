@@ -5,5 +5,5 @@ namespace CoffeeSpace.PaymentService.Application.Messages.Queries;
 
 public sealed class GetPaypalOrderInformationByOrderIdQuery : IQuery<PaypalOrderInformation>
 {
-    public required string Id { get; init; }   
+    public required Guid Id { get; init; }   
 }

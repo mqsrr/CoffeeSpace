@@ -13,25 +13,25 @@ namespace CoffeeSpace.OrderingApi.Application.Services;
 internal sealed class OrderService : IOrderService
 {
     private readonly IOrderRepository _orderRepository;
-    private readonly IPublishEndpoint _publishEndpoint;
+    private readonly ITopicProducer<SubmitOrder> _topicProducer;
     private readonly IHubContext<OrderingHub, IOrderingHub> _hubContext;
 
-    public OrderService(IOrderRepository orderRepository, IPublishEndpoint publishEndpoint, IHubContext<OrderingHub, IOrderingHub> hubContext)
+    public OrderService(IOrderRepository orderRepository, ITopicProducer<SubmitOrder> topicProducer, IHubContext<OrderingHub, IOrderingHub> hubContext)
     {
         _orderRepository = orderRepository;
-        _publishEndpoint = publishEndpoint;
+        _topicProducer = topicProducer;
         _hubContext = hubContext;
     }
 
     public Task<IEnumerable<Order>> GetAllByBuyerIdAsync(Guid buyerId, CancellationToken cancellationToken)
     {
-        var orders = _orderRepository.GetAllByBuyerIdAsync(buyerId.ToString(), cancellationToken);
+        var orders = _orderRepository.GetAllByBuyerIdAsync(buyerId, cancellationToken);
         return orders;
     }
 
     public Task<Order?> GetByIdAsync(Guid id, Guid buyerId, CancellationToken cancellationToken)
     {
-        var order = _orderRepository.GetByIdAsync(id.ToString(), cancellationToken);
+        var order = _orderRepository.GetByIdAsync(id, cancellationToken);
         return order;
     }
 
@@ -43,8 +43,8 @@ internal sealed class OrderService : IOrderService
             return isCreated;
         }
 
-        await _hubContext.Clients.Groups(order.BuyerId, "Web Dashboard").OrderCreated(order.ToResponse());
-        await _publishEndpoint.Publish<SubmitOrder>(new
+        await _hubContext.Clients.Groups(order.BuyerId.ToString(), "Web Dashboard").OrderCreated(order.ToResponse());
+        await _topicProducer.Produce(new
         {
             Order = order
         }, cancellationToken).ConfigureAwait(false);
@@ -54,7 +54,7 @@ internal sealed class OrderService : IOrderService
 
     public Task<bool> DeleteByIdAsync(Guid id, Guid buyerId, CancellationToken cancellationToken)
     {
-        var isDeleted = _orderRepository.DeleteByIdAsync(id.ToString(), cancellationToken);
+        var isDeleted = _orderRepository.DeleteByIdAsync(id, cancellationToken);
         return isDeleted;
     }
 }

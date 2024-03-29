@@ -31,7 +31,7 @@ internal sealed class CreateOrderInformationPipelineBehaviour : IPipelineBehavio
         var applicationOrder = message.ApplicationOrder;
         var paypalOrderInformation = createdPaypalOrder.ToPaypalOrderInformation(applicationOrder);
 
-        await _cacheService.HashSetAsync(CacheKeys.Payments.HashKey, CacheKeys.Payments.GetById(createdPaypalOrder.Id), JsonConvert.SerializeObject(applicationOrder));
+        await _cacheService.SetAsync(CacheKeys.Payments.GetById(createdPaypalOrder.Id), JsonConvert.SerializeObject(applicationOrder), cancellationToken);
         await _paymentRepository.CreatePaymentAsync(paypalOrderInformation, cancellationToken);
 
         return createdPaypalOrder;

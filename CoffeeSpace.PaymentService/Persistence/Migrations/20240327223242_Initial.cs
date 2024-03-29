@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -6,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CoffeeSpace.PaymentService.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class Added_PaypalOrder_Model : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,9 +19,9 @@ namespace CoffeeSpace.PaymentService.Persistence.Migrations
                     Id = table.Column<string>(type: "text", nullable: false),
                     CheckoutPaymentIntent = table.Column<string>(type: "character varying(50)", unicode: false, maxLength: 50, nullable: false),
                     CreateTime = table.Column<string>(type: "text", unicode: false, nullable: false),
-                    ExpirationTime = table.Column<string>(type: "text", unicode: false, nullable: false),
+                    ExpirationTime = table.Column<string>(type: "text", unicode: false, nullable: true),
                     Status = table.Column<string>(type: "character varying(50)", unicode: false, maxLength: 50, nullable: false),
-                    UpdateTime = table.Column<string>(type: "text", unicode: false, nullable: false)
+                    UpdateTime = table.Column<string>(type: "text", unicode: false, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -31,17 +32,17 @@ namespace CoffeeSpace.PaymentService.Persistence.Migrations
                 name: "Paypal Orders",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", unicode: false, nullable: false),
-                    OrderId = table.Column<string>(type: "text", nullable: false),
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    ApplicationOrderId = table.Column<Guid>(type: "uuid", nullable: false),
                     PaypalOrderId = table.Column<string>(type: "text", nullable: false),
-                    BuyerId = table.Column<string>(type: "text", unicode: false, nullable: false)
+                    BuyerId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Paypal Orders", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Paypal Orders_Orders_OrderId",
-                        column: x => x.OrderId,
+                        name: "FK_Paypal Orders_Orders_PaypalOrderId",
+                        column: x => x.PaypalOrderId,
                         principalTable: "Orders",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -51,9 +52,9 @@ namespace CoffeeSpace.PaymentService.Persistence.Migrations
                 name: "PurchaseUnits",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", nullable: false),
+                    Id = table.Column<string>(type: "text", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    CustomId = table.Column<string>(type: "character varying(50)", unicode: false, maxLength: 50, nullable: false),
                     Description = table.Column<string>(type: "character varying(250)", unicode: false, maxLength: 250, nullable: false),
-                    InvoiceId = table.Column<string>(type: "character varying(50)", unicode: false, maxLength: 50, nullable: false),
                     OrderId = table.Column<string>(type: "text", nullable: true),
                     SoftDescriptor = table.Column<string>(type: "character varying(50)", unicode: false, maxLength: 50, nullable: false)
                 },
@@ -98,12 +99,6 @@ namespace CoffeeSpace.PaymentService.Persistence.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Paypal Orders_OrderId",
-                table: "Paypal Orders",
-                column: "OrderId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Paypal Orders_PaypalOrderId",
                 table: "Paypal Orders",
                 column: "PaypalOrderId",
@@ -113,12 +108,6 @@ namespace CoffeeSpace.PaymentService.Persistence.Migrations
                 name: "IX_PurchaseUnits_Id",
                 table: "PurchaseUnits",
                 column: "Id",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PurchaseUnits_InvoiceId",
-                table: "PurchaseUnits",
-                column: "InvoiceId",
                 unique: true);
 
             migrationBuilder.CreateIndex(

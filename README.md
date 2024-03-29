@@ -1,4 +1,4 @@
-# CoffeeSpace [![codecov](https://codecov.io/gh/Marsik424/CoffeeSpace/graph/badge.svg?token=CRRETNTN9W)](https://codecov.io/gh/Marsik424/CoffeeSpace) [![Build](https://github.com/Marsik424/CoffeeSpace/actions/workflows/build.yml/badge.svg)](https://github.com/Marsik424/CoffeeSpace/actions/workflows/build.yml)
+# CoffeeSpace [![codecov](https://codecov.io/gh/mqsrr/CoffeeSpace/graph/badge.svg?token=CRRETNTN9W)](https://codecov.io/gh/Marsik424/CoffeeSpace) [![Build](https://github.com/mqsrr/CoffeeSpace/actions/workflows/build.yml/badge.svg)](https://github.com/Marsik424/CoffeeSpace/actions/workflows/build.yml)
 
 ![Coffee_Space](https://github.com/Marsik424/CoffeeSpace/assets/82763271/20ac4493-da08-4b40-9da3-91f1b06b6c9b)
 

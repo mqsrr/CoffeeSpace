@@ -9,7 +9,7 @@ public static class PaypalOrderInformationMapper
     {
         return new PaypalOrderInformation
         {
-            Id = Guid.NewGuid().ToString(),
+            Id = Guid.NewGuid(),
             ApplicationOrderId = applicationOrder.Id,
             BuyerId = applicationOrder.BuyerId,
             PaypalOrder = paypalOrder,

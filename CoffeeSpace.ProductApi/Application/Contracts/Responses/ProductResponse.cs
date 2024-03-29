@@ -4,7 +4,7 @@ namespace CoffeeSpace.ProductApi.Application.Contracts.Responses;
 
 public sealed class ProductResponse
 {
-    public required string Id { get; init; }
+    public required Guid Id { get; init; }
 
     public required ImageInformation Image { get; init; }    
     
