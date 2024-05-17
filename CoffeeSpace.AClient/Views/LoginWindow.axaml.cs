@@ -1,6 +1,7 @@
 ﻿using System;
 using Avalonia.Controls;
 using Avalonia.Input;
+using CoffeeSpace.AClient.Services;
 using CoffeeSpace.AClient.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -19,7 +20,7 @@ public sealed partial class LoginWindow : Window
         _registerView.Closing += OnClosingRegisterView;
         Closing += (_, _) => _registerView.Closing -= OnClosingRegisterView;
     }
-
+    
     protected override void OnClosed(EventArgs e)
     {
         _registerView.Close();

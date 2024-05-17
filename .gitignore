@@ -353,3 +353,4 @@ MigrationBackup/
 DigiCertGlobalRootCA.crt.pem
 
 /.idea
+.env

@@ -2,22 +2,25 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using AvaloniaWebView;
 using CoffeeSpace.AClient.Extensions;
 using CoffeeSpace.AClient.HttpHandlers;
 using CoffeeSpace.AClient.RefitClients;
-using CoffeeSpace.AClient.Settings;
-using CoffeeSpace.AClient.ViewModels;
+using CoffeeSpace.AClient.Services;
+using CoffeeSpace.AClient.Services.Abstractions;
 using CoffeeSpace.AClient.Views;
 using HotAvalonia;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CoffeeSpace.AClient;
 
-public partial class App : Application
+public class App : Application
 {
     public override void Initialize()
     {
         this.EnableHotReload();
+
+        AvaloniaWebViewBuilder.Initialize(default);
         AvaloniaXamlLoader.Load(this);
     }
 
@@ -27,18 +30,20 @@ public partial class App : Application
     {
         var services = new ServiceCollection();
         services.AddMediator();
+        
+        services.RegisterViews();
         services.RegisterViewModels();
 
         services.AddTransient<BearerAuthorizationMessageHandler>();
         services.AddTransient<ApiKeyAuthorizationMessageHandler>();
         
+        services.AddSingleton<IHubConnectionService, HubConnectionService>();
         services.AddWebApiClient<IIdentityWebApi, ApiKeyAuthorizationMessageHandler>()
             .AddWebApiClient<IProductsWebApi>()
             .AddWebApiClient<IOrderingWebApi>()
             .AddWebApiClient<IBuyersWebApi>();
         
         Services = services.BuildServiceProvider(true);
-        
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.ShutdownMode = ShutdownMode.OnLastWindowClose;

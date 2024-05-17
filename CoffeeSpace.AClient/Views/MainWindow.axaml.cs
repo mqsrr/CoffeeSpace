@@ -1,10 +1,10 @@
 using Avalonia;
-using Avalonia.Controls;
 using CoffeeSpace.AClient.ViewModels;
+using SukiUI.Controls;
 
 namespace CoffeeSpace.AClient.Views;
 
-public sealed partial class MainWindow : Window
+public sealed partial class MainWindow : SukiWindow
 {
     public MainWindow()
     {

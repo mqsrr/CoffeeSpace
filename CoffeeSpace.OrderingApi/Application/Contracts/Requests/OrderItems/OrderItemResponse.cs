@@ -1,11 +1,11 @@
-﻿namespace CoffeeSpace.AClient.Models;
+namespace CoffeeSpace.OrderingApi.Application.Contracts.Requests.OrderItems;
 
-public sealed class OrderItem
+public sealed class OrderItemResponse
 {
-    public required string Id { get; init; }
+    public required Guid Id { get; init; }
     
     public required string Title { get; init; }
-    
+
     public required string Description { get; init; }
 
     public required float UnitPrice { get; init; }

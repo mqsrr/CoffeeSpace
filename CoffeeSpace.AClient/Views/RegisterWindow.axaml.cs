@@ -1,8 +1,6 @@
 ﻿using Avalonia.Controls;
-using Avalonia.Input;
 using CoffeeSpace.AClient.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
-using SukiUI.Controls;
 
 namespace CoffeeSpace.AClient.Views;
 

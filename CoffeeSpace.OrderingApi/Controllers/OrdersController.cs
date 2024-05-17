@@ -10,7 +10,7 @@ namespace CoffeeSpace.OrderingApi.Controllers;
 
 [Authorize]
 [ApiController]
-[ApiVersion(1.1)]
+[ApiVersion(1.0)]
 public sealed class OrdersController : ControllerBase
 {
     private readonly IOrderService _orderService;

@@ -4,8 +4,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:icons="clr-namespace:HeroIconsAvalonia.Controls;assembly=HeroIconsAvalonia"
-             xmlns:glassMorphism="clr-namespace:SukiUI.Controls.GlassMorphism;assembly=SukiUI"
              xmlns:controls="clr-namespace:SukiUI.Controls;assembly=SukiUI"
+             xmlns:converters="clr-namespace:CoffeeSpace.AClient.Converters"
              mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="650"
              x:DataType="vm:CartWindowViewModel"
              x:Class="CoffeeSpace.AClient.Views.CartView">
@@ -18,6 +18,12 @@
         </ImageBrush>
     </UserControl.Background>
 
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters:ImageInformationToBitMap x:Key="ImageInformationToBitMap" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
     <DockPanel Margin="10" Name="Panel">
         <controls:GlassCard Width="600" Height="600">
             <ScrollViewer AllowAutoHide="True">
@@ -30,17 +36,17 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Grid ShowGridLines="False"
-                                  ColumnDefinitions="Auto,Auto,*"
+                                  ColumnDefinitions="Auto,100*,240"
                                   RowDefinitions="Auto,Auto,Auto">
                                 <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
                                         ClipToBounds="True" CornerRadius="30">
-                                    <Viewbox Stretch="Uniform" Width="140">
-                                        <Image Source="../Assets/ImagePlaceHolder.jpeg" />
+                                    <Viewbox Stretch="Uniform" Width="140" Height="140">
+                                        <Image Source="{Binding Image, Converter={StaticResource ImageInformationToBitMap}}" />
                                     </Viewbox>
                                 </Border>
-                                <TextBlock Grid.Row="0" Grid.Column="1" FontWeight="Bold" FontSize="18"
+                                <TextBlock Grid.Row="0" Grid.Column="1" FontWeight="Bold" FontSize="17"
                                            Text="{Binding Title}" VerticalAlignment="Bottom" Margin="10" />
-                                <TextBlock Grid.Row="1" Grid.Column="1" LineSpacing="1" Foreground="Gray" FontSize="16"
+                                <TextBlock Grid.Row="1" Grid.Column="1" LineSpacing="1" Foreground="Gray" FontSize="15"
                                            Text="{Binding UnitPrice, StringFormat='$ {0}'}"
                                            VerticalAlignment="Top" Margin="10" />
                                 <Button Grid.Row="0" Grid.Column="2"
@@ -51,9 +57,11 @@
                                     <icons:HeroIcon Type="XMark" Foreground="WhiteSmoke" Width="13" />
                                 </Button>
 
-                                <NumericUpDown Grid.Row="1" Grid.Column="2" BorderThickness="0" Margin="10"
+                                <NumericUpDown Grid.Row="1" Grid.Column="2" Grid.IsSharedSizeScope="True"
+                                               BorderThickness="0" Margin="10"
                                                VerticalAlignment="Center" Minimum="1" Maximum="9"
                                                ParsingNumberStyle="Number" Increment="1" Watermark="0" Width="120"
+                                               HorizontalAlignment="Right"
                                                Value="{Binding Quantity}" HorizontalContentAlignment="Center" />
 
                                 <Separator Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
@@ -64,54 +72,38 @@
                 </ItemsControl>
             </ScrollViewer>
         </controls:GlassCard>
-        <controls:GlassCard Width="400" MinHeight="350" VerticalAlignment="Center" Margin="10 0 0 0">
+        <controls:GlassCard Width="400" MinHeight="100" VerticalAlignment="Center" Margin="10 0 0 0">
             <Panel>
                 <Grid ShowGridLines="False"
                       ColumnDefinitions="170,170, *"
-                      RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
+                      RowDefinitions="Auto,Auto,Auto,Auto">
                     <TextBox Margin="5" Watermark="Country"
-                             Text="{Binding Address.Country, Mode=OneWayToSource}" />
+                             Text="{Binding Address.Country}" />
                     
                     <TextBox Grid.Row="0" Grid.Column="1"
                              Margin="5" Watermark="City"
-                             Text="{Binding Address.City, Mode=OneWayToSource}" />
+                             Text="{Binding Address.City}" />
                     
                     <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
                              Margin="5" Watermark="Street"
-                             Text="{Binding Address.Street, Mode=OneWayToSource}" />
-
-                    <ScrollViewer Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="5" BorderThickness="10 0">
-                        <ItemsControl
-                            HorizontalAlignment="Center"
-                            ItemsSource="{Binding CartProducts}">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid ShowGridLines="False" Margin="5"
-                                          RowDefinitions="Auto,Auto,Auto"
-                                          ColumnDefinitions="Auto,Auto">
-                                        <TextBlock Grid.Column="0" Grid.Row="0"
-                                                   Text="{Binding Quantity, StringFormat='{}{0}x '}" />
-                                        <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding Title}" />
-                                    </Grid>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </ScrollViewer>
-                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Total Sum: $1010" FontWeight="ExtraBold" Margin="10" />
-                    <Button Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
-                            Content="Place Order" Foreground="WhiteSmoke"
-                            VerticalAlignment="Bottom" Margin="10"
-                            Command="{Binding CreateOrderCommand}" />
+                             Text="{Binding Address.Street}" />
+                    
+                    <TextBlock Grid.Row="2" Grid.Column="1" Text="$ 1010"
+                               FontWeight="ExtraBold" Margin="10" HorizontalAlignment="Right" />
+                    <controls:BusyArea x:Name="BusyArea" IsBusy="{Binding CreateOrderCommand.IsRunning}"  
+                                       Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">
+                        <Button Content="Place Order" Foreground="WhiteSmoke"
+                                VerticalAlignment="Bottom" Margin="10"
+                                Command="{Binding CreateOrderCommand}" />
+                    </controls:BusyArea>
                 </Grid>
-
+                <Label Content="Check the label" FontFamily="{StaticResource Montserrat-Regular}"
+                       FontSize="12" FontWeight="Bold"/>
             </Panel>
         </controls:GlassCard>
-
+        <Panel>
+            <Label Content="Order status: "/>
+        </Panel>
     </DockPanel>
 
 </UserControl>

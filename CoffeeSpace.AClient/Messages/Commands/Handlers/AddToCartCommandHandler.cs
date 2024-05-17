@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using CoffeeSpace.AClient.ViewModels;
 using Mediator;
@@ -18,7 +19,6 @@ public sealed class AddToCartCommandHandler : ICommandHandler<AddToCartCommand>
     {
         var addedProduct = command.Product;
         bool isContains = _cartWindowViewModel.CartProducts.Contains(addedProduct);
-        
         if (!isContains)
         {
             _cartWindowViewModel.CartProducts.Add(addedProduct);
@@ -26,6 +26,10 @@ public sealed class AddToCartCommandHandler : ICommandHandler<AddToCartCommand>
         }
 
         addedProduct.Quantity++;
+        
+        _cartWindowViewModel.CartProducts.Remove(addedProduct);
+        _cartWindowViewModel.CartProducts.Add(addedProduct);
+        
         return Unit.ValueTask;
     }
 }

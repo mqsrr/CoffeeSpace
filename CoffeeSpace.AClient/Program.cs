@@ -1,5 +1,6 @@
 ﻿using Avalonia;
 using System;
+using Avalonia.WebView.Desktop;
 
 namespace CoffeeSpace.AClient;
 
@@ -16,5 +17,6 @@ internal sealed class Program
     private static AppBuilder BuildAvaloniaApp()
         => AppBuilder.Configure<App>()
             .UsePlatformDetect()
-            .LogToTrace();
+            .LogToTrace()
+            .UseDesktopWebView();
 }

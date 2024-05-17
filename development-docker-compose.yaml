@@ -1,0 +1,37 @@
+version: "1.0"
+
+services:
+  identityApi:
+    image: mqsr/coffeespace-identity-api:2.1.0
+    ports:
+      - 8080:80
+    env_file:
+      - .env
+    
+  orderingApi:
+    image: mqsr/coffeespace-ordering-api:2.1.0
+    ports:
+      - 8081:80
+    env_file:
+      - .env 
+      
+  productApi:
+    image: mqsr/coffeespace-products-api:2.1.0
+    ports:
+      - 8082:80
+    env_file:
+      - .env 
+  
+  paymentService:
+    image: mqsr/coffeespace-payment-service:2.2.0
+    ports:
+      - 8083:80
+    env_file:
+      - .env 
+      
+  shipmentService:
+    image: mqsr/coffeespace-shipment-service:2.1.0
+    ports:
+      - 8084:80
+    env_file:
+      - .env 

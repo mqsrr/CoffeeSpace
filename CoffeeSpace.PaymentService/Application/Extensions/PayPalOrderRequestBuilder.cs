@@ -1,4 +1,5 @@
-﻿using CoffeeSpace.Domain.Ordering.Orders;
+﻿using System.Globalization;
+using CoffeeSpace.Domain.Ordering.Orders;
 using CoffeeSpace.PaymentService.Application.Helpers;
 using PayPalCheckoutSdk.Orders;
 
@@ -31,7 +32,7 @@ public class PayPalOrderRequestBuilder
 
     public PayPalOrderRequestBuilder WithPurchaseUnits(ICollection<OrderItem> orderItems)
     {
-        string orderItemsSum = orderItems.Sum(orderItem => orderItem.Total).ToString("F");
+        string orderItemsSum = orderItems.Sum(orderItem => orderItem.Total).ToString("F1", new CultureInfo("en"));
         var purchaseUnitRequest = new PurchaseUnitRequest
         {
             ReferenceId = PaymentConstants.ReferenceId,
@@ -59,13 +60,13 @@ public class PayPalOrderRequestBuilder
                 UnitAmount = new Money
                 {
                     CurrencyCode = "USD",
-                    Value = orderItem.UnitPrice.ToString("F")
+                    Value = orderItem.UnitPrice.ToString("F1", new CultureInfo("en"))
                 },
                 Category = "PHYSICAL_GOODS",
             }).ToList()
         };
 
-        _orderRequest.PurchaseUnits = new List<PurchaseUnitRequest> { purchaseUnitRequest };
+        _orderRequest.PurchaseUnits = [purchaseUnitRequest];
         return this;
     }
 

@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:CoffeeSpace.AClient.ViewModels"
+             xmlns:converters="clr-namespace:CoffeeSpace.AClient.Converters"
              mc:Ignorable="d"  d:DesignWidth="1280" d:DesignHeight="650"
              x:DataType="vm:DashboardWindowViewModel"
              x:Class="CoffeeSpace.AClient.Views.DashboardView">
@@ -11,14 +12,20 @@
         <vm:DashboardWindowViewModel />
     </Design.DataContext>
     <UserControl.Background>
-        <ImageBrush Source="../Assets/default-bg.png" Stretch="UniformToFill">
-        </ImageBrush>
+        <ImageBrush Source="../Assets/default-bg.png" Stretch="UniformToFill"/>
     </UserControl.Background>
+    
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters:ImageInformationToBitMap x:Key="ImageInformationToBitMap" />
+        </ResourceDictionary>
+    </UserControl.Resources>
     
     <Panel Name="MainPanel">
         <Grid ShowGridLines="False"
               ColumnDefinitions="Auto,*"
-              RowDefinitions="Auto,*">
+              RowDefinitions="Auto,*"
+              Margin="30">
             <ScrollViewer Grid.Row="1" Grid.Column="1">
                 <ItemsControl
                     ItemsSource="{Binding Products}">
@@ -34,8 +41,8 @@
                                   RowDefinitions="Auto,Auto" Margin="10">
                                 <Border Grid.ColumnSpan="2" Grid.RowSpan="2"
                                         CornerRadius="15" ClipToBounds="True">
-                                    <Viewbox Height="150" Stretch="Uniform">
-                                        <Image Source="../Assets/ImagePlaceHolder.jpeg" />
+                                    <Viewbox Height="150" Width="150" Stretch="Uniform">
+                                        <Image Source="{Binding Image, Converter={StaticResource ImageInformationToBitMap}}"/>
                                     </Viewbox>
                                 </Border>
                                 <Label Grid.Row="0" Grid.Column="1"

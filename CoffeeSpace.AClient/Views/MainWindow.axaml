@@ -1,4 +1,4 @@
-<Window xmlns="https://github.com/avaloniaui"
+<suki:SukiWindow xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:CoffeeSpace.AClient.ViewModels"
         xmlns:view="using:CoffeeSpace.AClient.Views"
@@ -20,7 +20,7 @@
         <ImageBrush Source="../Assets/default-bg.png" Stretch="UniformToFill" />
     </Window.Background>
 
-    <suki:SukiSideMenu HeaderContentOverlapsToggleButton="False">
+    <suki:SukiSideMenu HeaderContentOverlapsToggleButton="False" suki:SukiHost.ToastLimit="4" suki:SukiHost.ToastLocation="BottomLeft">
         <suki:SukiSideMenu.Items>
             <suki:SukiSideMenuItem Header="DashBoard">
                 <suki:SukiSideMenuItem.Icon>
@@ -46,14 +46,6 @@
                     <view:OrderHistoryView />
                 </suki:SukiSideMenuItem.PageContent>
             </suki:SukiSideMenuItem>
-            <suki:SukiSideMenuItem>
-                <suki:SukiSideMenuItem.Icon>
-                    <heroIcons:HeroIcon Foreground="WhiteSmoke" Type="Phone"/>
-                </suki:SukiSideMenuItem.Icon>
-                <suki:SukiSideMenuItem.PageContent>
-                    <view:FindMyCoffeeView/>
-                </suki:SukiSideMenuItem.PageContent>
-            </suki:SukiSideMenuItem>
         </suki:SukiSideMenu.Items>
     </suki:SukiSideMenu>
-</Window>
+</suki:SukiWindow>

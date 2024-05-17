@@ -38,33 +38,31 @@ public sealed partial class LoginViewModel : ViewModelBase
     [RelayCommand]
     private async Task LoginAsync(CancellationToken cancellationToken)
     {
-        
         try
         {
-            // string? token = await _identityWebApi.LoginAsync(LoginRequest, cancellationToken);
-            // if (string.IsNullOrEmpty(token))
-            // {
-            //     return;
-            // }
-            //
-            // var tokenHandler = new JwtSecurityTokenHandler().ReadJwtToken(token);
-            //
-            // string email = tokenHandler.Claims.First(claim => claim.Type is ClaimTypes.Email).Value;
-            // var buyer = await _buyersWebApi.GetBuyerByEmailAsync(email, cancellationToken);
-            //
-            // StaticStorage.JwtToken = token;
-            // StaticStorage.BuyerId = buyer.Id;
+            string? token = await _identityWebApi.LoginAsync(LoginRequest, cancellationToken);
+            if (string.IsNullOrEmpty(token))
+            {
+                return;
+            }
+            
+            var tokenHandler = new JwtSecurityTokenHandler().ReadJwtToken(token);
+            string email = tokenHandler.Claims.First(claim => claim.Type is ClaimTypes.Email).Value;
+            StaticStorage.JwtToken = token;
+            
+            var buyer = await _buyersWebApi.GetBuyerByEmailAsync(email, cancellationToken);
+            StaticStorage.Buyer = buyer;
             
             MoveToMainDashBoard();
         }
-        catch (Exception _)
+        catch (Exception e)
         {
-            // ignored
+            Console.WriteLine(e);
         }
 
     }
 
-    private static void MoveToMainDashBoard()
+    internal static void MoveToMainDashBoard()
     {
         var desktop = (IClassicDesktopStyleApplicationLifetime)Application.Current!.ApplicationLifetime!;
         var mainWindow = new MainWindow();

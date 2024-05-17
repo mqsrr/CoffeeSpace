@@ -2,8 +2,10 @@
 using System.Threading;
 using Avalonia.Controls;
 using Avalonia.Input;
+using CoffeeSpace.AClient.Models;
 using CoffeeSpace.AClient.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
+using SukiUI.Controls;
 
 namespace CoffeeSpace.AClient.Views;
 
@@ -26,6 +28,10 @@ public sealed partial class OrderHistoryView : UserControl
 
     private void InputElement_OnDoubleTapped(object? sender, TappedEventArgs e)
     {
-        Console.WriteLine("Here");
+        var tappedGlassCard = sender as GlassCard;
+        var tappedOrder = tappedGlassCard!.DataContext as Order;
+        var orderDetails = new OrderDetailsView(tappedOrder!);
+        
+        SukiHost.ShowDialog(orderDetails, allowBackgroundClose: true);
     }
 }

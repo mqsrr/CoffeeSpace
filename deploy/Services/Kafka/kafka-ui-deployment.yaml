@@ -18,8 +18,3 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
-          env:
-            - name: KAFKA_CLUSTERS_0_NAME
-              value: "CoffeeSpace Kafka Cluster"
-            - name: KAFKA_CLUSTERS_0_BOOTSTRAPSERVER
-              value: "kafka:9092"

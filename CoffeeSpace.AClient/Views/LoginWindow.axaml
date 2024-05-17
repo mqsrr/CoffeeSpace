@@ -38,7 +38,7 @@
             <TextBox Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Margin="5"
                      Text="{Binding LoginRequest.Password, Mode=OneWayToSource}" Watermark="Password"
                      FontFamily="{StaticResource Montserrat-Regular}" HorizontalAlignment="Center"
-                     Width="200" />
+                     Width="200" PasswordChar="*"/>
 
             <TextBlock Grid.Row="4" Grid.Column="1"
                        Text="Register new account" HorizontalAlignment="Center" Foreground="SlateGray"
