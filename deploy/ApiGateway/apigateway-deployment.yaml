@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: apigateway
-          image: mqsr/coffeespace-apigateway:1.2.0
+          image: mqsr/coffeespace-apigateway:1.2.1
           imagePullPolicy: Always
           ports:
             - containerPort: 8080

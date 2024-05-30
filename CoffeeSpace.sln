@@ -66,14 +66,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Products Api", "Products Ap
 		tests\Load Tests\Product Api\stress_test.js = tests\Load Tests\Product Api\stress_test.js
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Acceptance Tests", "Acceptance Tests", "{8FC8A6F7-7A9B-440C-B9B7-2F998EA78DDB}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeSpace.ProductApi.Tests.Acceptance", "tests\Acceptance Tests\CoffeeSpace.ProductApi.Tests.Acceptance\CoffeeSpace.ProductApi.Tests.Acceptance.csproj", "{E2F20195-E24D-44DA-896C-CDBEF7BA1868}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeSpace.OrderingApi.Tests.Acceptance", "tests\Acceptance Tests\CoffeeSpace.OrderingApi.Tests.Acceptance\CoffeeSpace.OrderingApi.Tests.Acceptance.csproj", "{B8F39595-6AE2-4D5C-976F-EE9BBF8E03A3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeSpace.IdentityApi.Tests.Acceptance", "tests\Acceptance Tests\CoffeeSpace.IdentityApi.Tests.Acceptance\CoffeeSpace.IdentityApi.Tests.Acceptance.csproj", "{3BC16607-1D7D-4091-A4E3-90E9E2BA2278}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoffeeSpace.AClient", "CoffeeSpace.AClient\CoffeeSpace.AClient.csproj", "{3B79308F-801F-4405-88EF-3D1A8F75F90B}"
 EndProject
 Global
@@ -150,18 +142,6 @@ Global
 		{22B29BA7-B8A8-40E4-AAC2-A1C491B69592}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{22B29BA7-B8A8-40E4-AAC2-A1C491B69592}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{22B29BA7-B8A8-40E4-AAC2-A1C491B69592}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E2F20195-E24D-44DA-896C-CDBEF7BA1868}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E2F20195-E24D-44DA-896C-CDBEF7BA1868}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E2F20195-E24D-44DA-896C-CDBEF7BA1868}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E2F20195-E24D-44DA-896C-CDBEF7BA1868}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B8F39595-6AE2-4D5C-976F-EE9BBF8E03A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B8F39595-6AE2-4D5C-976F-EE9BBF8E03A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B8F39595-6AE2-4D5C-976F-EE9BBF8E03A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B8F39595-6AE2-4D5C-976F-EE9BBF8E03A3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3BC16607-1D7D-4091-A4E3-90E9E2BA2278}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3BC16607-1D7D-4091-A4E3-90E9E2BA2278}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3BC16607-1D7D-4091-A4E3-90E9E2BA2278}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3BC16607-1D7D-4091-A4E3-90E9E2BA2278}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3B79308F-801F-4405-88EF-3D1A8F75F90B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3B79308F-801F-4405-88EF-3D1A8F75F90B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B79308F-801F-4405-88EF-3D1A8F75F90B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -184,10 +164,6 @@ Global
 		{FC464C4B-B358-4E77-BDE6-808C414252CA} = {769DECC0-73E6-47E7-9F33-3325C5367645}
 		{8D2696C6-9528-4344-B926-5604CB7459AE} = {FC464C4B-B358-4E77-BDE6-808C414252CA}
 		{5CBE07CC-825F-4C3F-B52A-FEC33B065B4C} = {FC464C4B-B358-4E77-BDE6-808C414252CA}
-		{8FC8A6F7-7A9B-440C-B9B7-2F998EA78DDB} = {769DECC0-73E6-47E7-9F33-3325C5367645}
-		{E2F20195-E24D-44DA-896C-CDBEF7BA1868} = {8FC8A6F7-7A9B-440C-B9B7-2F998EA78DDB}
-		{B8F39595-6AE2-4D5C-976F-EE9BBF8E03A3} = {8FC8A6F7-7A9B-440C-B9B7-2F998EA78DDB}
-		{3BC16607-1D7D-4091-A4E3-90E9E2BA2278} = {8FC8A6F7-7A9B-440C-B9B7-2F998EA78DDB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {61F7FB11-1E47-470C-91E2-47F8143E1572}

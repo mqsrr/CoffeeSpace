@@ -2,11 +2,13 @@
 using AutoFixture.AutoNSubstitute;
 using CoffeeSpace.Domain.Ordering.Orders;
 using CoffeeSpace.Messages.Shipment.Commands;
+using CoffeeSpace.Messages.Shipment.Responses;
 using CoffeeSpace.ShipmentService.Consumers;
 using FluentAssertions;
 using MassTransit;
 using MassTransit.Testing;
 using Microsoft.Extensions.DependencyInjection;
+using NSubstitute;
 using Xunit;
 
 namespace CoffeeSpace.ShipmentService.Tests.Consumers;
@@ -21,6 +23,7 @@ public sealed class RequestOrderShipmentConsumerTests : IAsyncLifetime
     {
         _fixture = new Fixture();
         var serviceProvider = new ServiceCollection()
+            .AddScoped<ITopicProducer<OrderShipped>>(_ => Substitute.For<ITopicProducer<OrderShipped>>())
             .AddMassTransitTestHarness(config => config.AddConsumer<RequestOrderShipmentConsumer>())
             .BuildServiceProvider(true);
 

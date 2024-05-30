@@ -21,8 +21,8 @@
         <PackageReference Condition="$(DefineConstants.Contains(ENABLE_XAML_HOT_RELOAD))" Include="Avalonia.Markup.Xaml.Loader" Version="11.0.10" />
         <PackageReference Condition="$(DefineConstants.Contains(ENABLE_XAML_HOT_RELOAD))" Include="HotAvalonia" Version="1.1.1" />
         <PackageReference Include="HotAvalonia.Extensions" Version="1.1.1" PrivateAssets="All" />
-        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.5" />
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.5.2" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.6" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.6.0" />
         <PackageReference Include="WebView.Avalonia" Version="11.0.0.1" />
         <PackageReference Include="WebView.Avalonia.Desktop" Version="11.0.0.1" />
         <PackageReference Include="WebView.Avalonia.MacCatalyst" Version="11.0.0.1" />

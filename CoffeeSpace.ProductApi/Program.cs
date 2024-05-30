@@ -15,6 +15,8 @@ using Confluent.Kafka;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MassTransit;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -44,6 +46,10 @@ builder.Services.AddFluentValidationAutoValidation()
 builder.Services.AddOptionsWithValidateOnStart<JwtSettings>()
     .Bind(builder.Configuration.GetRequiredSection(JwtSettings.SectionName));
 
+builder.Services.AddOptionsWithValidateOnStart<KafkaSettings>()
+    .Bind(builder.Configuration.GetRequiredSection(KafkaSettings.SectionName))
+    .Configure(settings => settings.Hosts = JsonConvert.DeserializeObject<IReadOnlyList<string>>(builder.Configuration["Kafka:Hosts"]!)!);
+
 builder.Services.AddMassTransit(x =>
 {
     x.UsingInMemory();
@@ -58,9 +64,10 @@ builder.Services.AddMassTransit(x =>
         configurator.AddInMemoryInboxOutbox();
         configurator.UsingKafka((context, factoryConfigurator) =>
         {
+            var kafkaSettings = context.GetRequiredService<IOptions<KafkaSettings>>().Value;
             factoryConfigurator.Acks = Acks.All;
-            factoryConfigurator.Host(builder.Configuration["Kafka:Host"]);
-
+            
+            factoryConfigurator.Host(kafkaSettings.Hosts);
             factoryConfigurator.AddTopicEndpoint<ValidateOrderStock, OrderStockValidationConsumer>(context, "validate-order-stock", "products");
         });
     });

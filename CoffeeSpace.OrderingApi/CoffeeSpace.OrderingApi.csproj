@@ -32,11 +32,11 @@
       </PackageReference>
         
       <PackageReference Include="Microsoft.Azure.SignalR" Version="1.25.2" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.5">
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.6">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
-      <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.5" />
+      <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.6" />
       <PackageReference Include="Riok.Mapperly" Version="3.5.1" />
     </ItemGroup>
 
