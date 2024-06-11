@@ -1,7 +1,6 @@
 ﻿using AutoFixture;
 using AutoFixture.AutoNSubstitute;
 using CoffeeSpace.Domain.Ordering.BuyerInfo;
-using CoffeeSpace.Messages.Buyers;
 using CoffeeSpace.OrderingApi.Application.Repositories.Abstractions;
 using CoffeeSpace.OrderingApi.Application.Services;
 using FluentAssertions;
@@ -14,9 +13,9 @@ namespace CoffeeSpace.OrderingApi.Tests.Services;
 
 public sealed class BuyerServiceTests
 {
-    private readonly ITopicProducer<UpdateBuyer> _topicProducer;
     private readonly IBuyerRepository _buyerRepository;
     private readonly IEnumerable<Buyer> _buyers;
+    private readonly ISendEndpointProvider _sendEndpointProvider;
     private readonly Fixture _fixture;
 
     private readonly BuyerService _buyerService;
@@ -30,10 +29,10 @@ public sealed class BuyerServiceTests
             .With(buyer => buyer.Id, Guid.NewGuid())
             .CreateMany();
 
-        _topicProducer = _fixture.Create<ITopicProducer<UpdateBuyer>>();
         _buyerRepository = _fixture.Create<IBuyerRepository>();
+        _sendEndpointProvider = _fixture.Create<ISendEndpointProvider>();
 
-        _buyerService = new BuyerService(_buyerRepository, _topicProducer);
+        _buyerService = new BuyerService(_buyerRepository, _sendEndpointProvider);
     }
     
     [Fact]

@@ -18,7 +18,7 @@ namespace CoffeeSpace.OrderingApi.Tests.Services;
 
 public sealed class OrderServiceTests
 {
-    private readonly ITopicProducer<SubmitOrder> _topicProducer;
+    private readonly ISendEndpointProvider _sendEndpointProvider;
     private readonly IOrderRepository _orderRepository;
     private readonly IEnumerable<Order> _orders;
     private readonly IHubContext<OrderingHub, IOrderingHub> _hubContext;
@@ -35,11 +35,11 @@ public sealed class OrderServiceTests
             .With(order => order.BuyerId, Guid.NewGuid())
             .CreateMany();
 
-        _topicProducer = _fixture.Create<ITopicProducer<SubmitOrder>>();
+        _sendEndpointProvider = _fixture.Create<ISendEndpointProvider>();
         _orderRepository = _fixture.Create<IOrderRepository>();
         _hubContext = _fixture.Create<IHubContext<OrderingHub, IOrderingHub>>();
         
-        _orderService = new OrderService(_orderRepository, _topicProducer, _hubContext);
+        _orderService = new OrderService(_orderRepository, _sendEndpointProvider, _hubContext);
     }
 
     [Fact]
@@ -103,7 +103,7 @@ public sealed class OrderServiceTests
         _orderRepository.CreateAsync(orderToCreate, Arg.Any<CancellationToken>())
             .Returns(true);
 
-        _topicProducer.Produce(Arg.Any<object>())
+        _sendEndpointProvider.Send(Arg.Any<object>())
             .Returns(Task.CompletedTask);
 
         // Act

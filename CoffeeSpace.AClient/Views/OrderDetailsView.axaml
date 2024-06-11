@@ -54,29 +54,23 @@
                 </ItemsControl>
             </ScrollViewer>
            <Panel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Margin="10">
-               <TextBlock Text="{Binding Order.Id}" Opacity="0.4"
-                          FontFamily="{StaticResource Montserrat-Regular}"/>
+               <TextBlock Text="{Binding Order.Id}" Opacity="0.4"/>
            </Panel>           
             <Panel Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" 
                    HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10">
                 <StackPanel Spacing="10">
-                    <TextBlock Text="{Binding Order.Address.Country, StringFormat='Country: {0}'}" FontSize="20"
-                               FontFamily="{StaticResource Montserrat-Regular}"/>
-                    <TextBlock Text="{Binding Order.Address.Street, StringFormat='Street: {0}'}" FontSize="20"
-                               FontFamily="{StaticResource Montserrat-Regular}"/>
-                    <TextBlock Text="{Binding Order.Address.City, StringFormat='City: {0}'}" FontSize="20"
-                               FontFamily="{StaticResource Montserrat-Regular}"/>
+                    <TextBlock Text="{Binding Order.Address.Country, StringFormat='Country: {0}'}" FontSize="20"/>
+                    <TextBlock Text="{Binding Order.Address.Street, StringFormat='Street: {0}'}" FontSize="20"/>
+                    <TextBlock Text="{Binding Order.Address.City, StringFormat='City: {0}'}" FontSize="20"/>
                 </StackPanel>
             </Panel>
             <Panel Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top">
-                <TextBlock Text="{Binding Order, Converter={StaticResource TotalSumOfOrderConverter}, StringFormat='Total Sum: {0}'}"
-                           FontFamily="{StaticResource Montserrat-Regular}"/>
+                <TextBlock Text="{Binding Order, Converter={StaticResource TotalSumOfOrderConverter}, StringFormat='Total Sum: {0}'}"/>
             </Panel>
             <Border Grid.Row="2" Grid.Column="1" CornerRadius="7" ClipToBounds="True"
                     HorizontalAlignment="Right" VerticalAlignment="Center">
                 <TextBlock Text="{Binding Order.Status}" Padding="4" FontWeight="Medium"
-                           LetterSpacing="0.5" FontFamily="{StaticResource Montserrat-Regular}"
-                           FontSize="20">
+                           LetterSpacing="0.5" FontSize="20">
                     <TextBlock.Background>
                         <SolidColorBrush Color="PaleGreen" Opacity="0.1" />
                     </TextBlock.Background>                                   

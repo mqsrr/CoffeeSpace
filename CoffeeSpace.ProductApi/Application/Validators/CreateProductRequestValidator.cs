@@ -41,7 +41,7 @@ internal sealed class CreateProductRequestValidator : AbstractValidator<CreatePr
         RuleFor(x => x.UnitPrice)
             .NotNull()
             .GreaterThan(0)
-            .LessThan(99);
+            .LessThan(99f);
 
         RuleFor(x => x.Quantity)
             .NotNull()

@@ -4,13 +4,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:CoffeeSpace.AClient.ViewModels"
         xmlns:controls="clr-namespace:SukiUI.Controls;assembly=SukiUI"
+        xmlns:icons="clr-namespace:HeroIconsAvalonia.Controls;assembly=HeroIconsAvalonia"
         mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="680"
         x:Class="CoffeeSpace.AClient.Views.RegisterWindow"
-        x:DataType="vm:RegisterViewModel">
+        x:DataType="vm:RegisterViewModel"
+        FontFamily="{StaticResource Montserrat-Regular}">
     
     <Design.DataContext>
         <vm:RegisterViewModel />
     </Design.DataContext>
+    
     <Window.Background>
         <ImageBrush Source="../Assets/default-bg.png" Stretch="UniformToFill"/>
     </Window.Background>
@@ -20,8 +23,7 @@
               RowDefinitions="Auto,Auto,Auto,Auto,Auto"
               ColumnDefinitions="Auto,*,*">
             <TextBlock Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2"
-                       Text="Register Form" Classes="h2" 
-                       FontFamily="{StaticResource Montserrat-Regular}" HorizontalAlignment="Center"/>
+                       Text="Register Form" Classes="h2" HorizontalAlignment="Center"/>
             
             <TextBox Grid.Row="1" Grid.Column="1"
                      Watermark="Name" Margin="5" Text="{Binding RegisterRequest.Name, Mode=OneWayToSource}"/>
@@ -36,12 +38,15 @@
             
             <TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2"
                        HorizontalAlignment="Center" Foreground="SlateGray"
-                       Text="Already have an account? | Close current window"/>
+                       Text="Already have an account?" PointerPressed="MoveToLoginWindow"/>
             
             <Button Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2"
                     VerticalAlignment="Bottom" Margin="0 70 0 0"
-                    Classes="Flat Rounded" Content="Register"
-                    Command="{Binding RegisterCommand}"/>
+                    Classes="Flat Rounded" Command="{Binding RegisterCommand}">
+                <Button.Content>
+                    <icons:HeroIcon Foreground="Azure" HorizontalAlignment="Center" Type="Key" Min="True" />
+                </Button.Content>
+            </Button>
         </Grid>
     </controls:GlassCard>
 </Window>

@@ -1,7 +1,6 @@
 using CoffeeSpace.ApiGateway.Extensions;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
-using Ocelot.Provider.Docker;
 using Ocelot.Provider.Kubernetes;
 using Ocelot.Provider.Polly;
 using Serilog;

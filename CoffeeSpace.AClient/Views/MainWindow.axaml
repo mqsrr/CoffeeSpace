@@ -11,6 +11,7 @@
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="CClient"
+        FontFamily="{StaticResource Montserrat-Regular}"
         Classes="NakedWindow">
 
     <Design.DataContext>

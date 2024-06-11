@@ -27,7 +27,6 @@ public sealed class OrderStockValidationConsumerTests : IAsyncLifetime
         _productRepository = Substitute.For<IProductRepository>();
         var serviceProvider = new ServiceCollection()
             .AddScoped<IProductRepository>(_ => _productRepository)
-            .AddScoped<ITopicProducerProvider>(_ => Substitute.For<ITopicProducerProvider>())
             .AddMassTransitTestHarness(config => config.AddConsumer<OrderStockValidationConsumer>())
             .BuildServiceProvider(true);
 

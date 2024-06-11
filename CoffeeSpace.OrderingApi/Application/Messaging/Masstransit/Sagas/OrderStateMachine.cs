@@ -5,7 +5,6 @@ using CoffeeSpace.Messages.Products.Responses;
 using CoffeeSpace.Messages.Shipment.Commands;
 using CoffeeSpace.Messages.Shipment.Responses;
 using CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Activities;
-using CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Configurations;
 using MassTransit;
 
 namespace CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Sagas;
@@ -22,24 +21,22 @@ internal sealed class OrderStateMachine : MassTransitStateMachine<OrderStateInst
 
     public required State Canceled { get; init; }
 
-    public OrderStateMachine()
+    public OrderStateMachine(ILogger<OrderStateMachine> logger)
     {
-        MessageCorrelationConfiguration.ConfigureStateMachineMessages();
-        
-        Event(() => SubmitOrder);
-        Event(() => CancelOrder);
+        Event(() => SubmitOrder, x => 
+            x.CorrelateById(context => context.Message.Order.Id));
 
-        Event(() => RequestOrderStockValidation);
-        Event(() => OrderStockConfirmed);
-        Event(() => FailedToConfirmOrderStock);
+        Event(() => CancelOrder, x =>
+            x.CorrelateById(context => context.Message.Order.Id));
 
-        Event(() => RequestOrderPayment);
-        Event(() => OrderPaid);
-        Event(() => FailedToRequestOrderPayment);
+        Request(() => RequestOrderStockValidation, x =>
+            x.Timeout = TimeSpan.FromSeconds(60));
 
-        Event(() => RequestOrderShipment);
-        Event(() => OrderShipped);
-        Event(() => FailedToRequestOrderShipment);
+        Request(() => RequestOrderPayment, x =>
+            x.Timeout = TimeSpan.FromMinutes(10));
+
+        Request(() => RequestOrderShipment, x =>
+            x.Timeout = TimeSpan.FromSeconds(60));
 
         InstanceState(x => x.CurrentState,
             Submitted,
@@ -58,66 +55,77 @@ internal sealed class OrderStateMachine : MassTransitStateMachine<OrderStateInst
                     context.Saga.StockValidationSuccess = false;
                     context.Saga.PaymentSuccess = false;
                 })
-                .TransitionTo(Submitted)
-                .Produce(context => context.Init<ValidateOrderStock>(new
+                .Request(RequestOrderStockValidation, context => context.Init<ValidateOrderStock>(new
                 {
                     context.Message.Order,
                     ProductTitles = context.Message.Order.OrderItems.Select(item => item.Title)
                 }))
-        );
+                .TransitionTo(Submitted));
 
-        WhenEnterAny(binder => binder.If(context => context.Saga.CurrentState > 2, 
+        WhenEnterAny(binder => binder.If(context => context.Saga.CurrentState > 2,
             activityBinder => activityBinder.Activity(selector => selector.OfType<UpdateOrderStatusActivity>())));
 
         WhenEnter(Canceled, binder => binder.Finalize());
 
         DuringAny(
-            When(FailedToConfirmOrderStock)
+            When(RequestOrderStockValidation!.Faulted)
                 .TransitionTo(Canceled),
-            When(FailedToRequestOrderPayment)
+            When(RequestOrderPayment!.Faulted)
                 .TransitionTo(Canceled),
-            When(FailedToRequestOrderShipment)
+            When(RequestOrderShipment!.Faulted)
                 .TransitionTo(Canceled));
 
         During(Submitted,
-            When(OrderStockConfirmed)
-                .Produce(context => context.Init<RequestOrderPayment>(new
+            When(RequestOrderStockValidation.TimeoutExpired)
+                .Then(context =>
+                    logger.LogWarning("The order with ID {OrderId} has reached the timeout value for product validation",
+                        context.Saga.OrderId))
+                .TransitionTo(Canceled),
+            When(RequestOrderStockValidation.Completed)
+                .Request(RequestOrderPayment, context => context.Init<RequestOrderPayment>(new
                 {
                     context.Message.Order
                 }))
-                .TransitionTo(StockConfirmed)
-                .Then(context => context.Saga.StockValidationSuccess = true));
+                .Then(context => context.Saga.StockValidationSuccess = true)
+                .TransitionTo(StockConfirmed));
 
         During(StockConfirmed,
-            When(OrderPaid)
-                .Produce(context => context.Init<RequestOrderShipment>(new
+            When(RequestOrderPayment.TimeoutExpired)
+                .Then(context =>
+                    logger.LogWarning("The order with ID {OrderId} has reached the timeout value for payment request",
+                        context.Saga.OrderId))
+                .TransitionTo(Canceled),
+            When(RequestOrderPayment.Completed)
+                .Request(RequestOrderShipment, context => context.Init<RequestOrderShipment>(new
                 {
                     context.Message.Order
                 }))
-                .TransitionTo(Paid)
-                .Then(context => context.Saga.PaymentSuccess = true));
+                .Then(context => context.Saga.PaymentSuccess = true)
+                .TransitionTo(Paid),
+            Ignore(RequestOrderStockValidation.TimeoutExpired));
 
         During(Paid,
-            When(OrderShipped)
+            When(RequestOrderShipment.TimeoutExpired)
+                .Then(context =>
+                    logger.LogWarning("The order with ID {OrderId} has reached the timeout value for shipment request",
+                        context.Saga.OrderId))
+                .TransitionTo(Canceled),
+            When(RequestOrderShipment.Completed)
                 .Activity(selector => selector.OfInstanceType<UpdateOrderStatusActivity>())
                 .TransitionTo(Shipped)
-                .Finalize());
+                .Finalize(),
+            Ignore(RequestOrderPayment.TimeoutExpired));
 
         SetCompletedWhenFinalized();
     }
 
     public required Event<SubmitOrder> SubmitOrder { get; init; }
+
     public required Event<CancelOrder> CancelOrder { get; init; }
-    
-    public required Event<ValidateOrderStock> RequestOrderStockValidation { get; init; }
-    public required Event<OrderStockConfirmed> OrderStockConfirmed { get; init; }
-    public required Event<Fault<ValidateOrderStock>> FailedToConfirmOrderStock { get; init; }
 
-    public required Event<RequestOrderPayment> RequestOrderPayment { get; init; }
-    public required Event<OrderPaid> OrderPaid { get; init; }
-    public required Event<Fault<RequestOrderPayment>> FailedToRequestOrderPayment { get; init; }
+    public Request<OrderStateInstance, RequestOrderPayment, OrderPaid> RequestOrderPayment { get; init; }
 
-    public required Event<RequestOrderShipment> RequestOrderShipment { get; init; }
-    public required Event<OrderShipped> OrderShipped { get; init; }
-    public required Event<Fault<RequestOrderShipment>> FailedToRequestOrderShipment { get; init; }
+    public Request<OrderStateInstance, ValidateOrderStock, OrderStockConfirmed> RequestOrderStockValidation { get; init; }
+
+    public Request<OrderStateInstance, RequestOrderShipment, OrderShipped> RequestOrderShipment { get; init; }
 }

@@ -17,7 +17,7 @@ public static class AzureKeyVaultExtensions
         
         return configuration.AddEnvironmentVariables()
             .AddAzureKeyVault(new Uri($"https://{Environment.GetEnvironmentVariable("AZURE_VAULT_NAME")}.vault.azure.net/"),
-                new EnvironmentCredential(),
+                new DefaultAzureCredential(),
                 new PrefixKeyVaultSecretManager("CoffeeSpace"));
     }
 }

@@ -66,7 +66,7 @@ public sealed partial class CartWindowViewModel : ViewModelBase
             {
                 var paymentView = new PaymentView();
                 paymentView.WebView.Url = new Uri(paymentUri);
-                paymentView.WebView.WebMessageReceived += (sender, args) =>
+                paymentView.WebView.WebMessageReceived += (_, args) =>
                 {
                     if (args.Source.Port == 8085)
                     {
@@ -82,16 +82,22 @@ public sealed partial class CartWindowViewModel : ViewModelBase
     private async Task CreateOrder(CancellationToken cancellationToken)
     {
         string buyerId = StaticStorage.Buyer!.Id;
-        var orderResponse = await _orderingWebApi.CreateOrder(Guid.Parse(buyerId), new CreateOrderRequest
+        var createdOrderResponse = await _orderingWebApi.CreateOrder(Guid.Parse(buyerId), new CreateOrderRequest
         {
             Address = Address,
             OrderItems = CartProducts.Select(product => product.ToOrderItemRequest()),
             Status = 0
         }, cancellationToken);
+
+        if (!createdOrderResponse.IsSuccessStatusCode)
+        {
+            await SukiHost.ShowToast("Failure", "We couldn't create order. Please try again!");
+            return;
+        }
         
         await _sender.Send(new CreateOrderHistoryCommand
         {
-            Order = orderResponse
+            Order = createdOrderResponse.Content!
         }, cancellationToken);
         
         CartProducts.Clear();

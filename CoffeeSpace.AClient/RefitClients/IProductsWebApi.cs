@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,12 +7,9 @@ using Refit;
 
 namespace CoffeeSpace.AClient.RefitClients;
 
-[Headers("Authorization: Bearer")]
+[Headers("Bearer")]
 public interface IProductsWebApi
 {
     [Get(ApiEndpoints.Products.GetAll)]
-    Task<IEnumerable<Product>> GetAllProductsAsync(CancellationToken cancellationToken);
-
-    [Get(ApiEndpoints.Products.GetById)]
-    Task<Product> GetProductByIdAsync(Guid id, CancellationToken cancellationToken);
+    Task<IApiResponse<IEnumerable<Product>>> GetAllProductsAsync(CancellationToken cancellationToken);
 }

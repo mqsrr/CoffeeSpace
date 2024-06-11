@@ -1,5 +1,3 @@
-using CoffeeSpace.Messages.Ordering.Commands;
-using CoffeeSpace.Messages.Ordering.Responses;
 using CoffeeSpace.Messages.Payment;
 using CoffeeSpace.PaymentService.Application.Extensions;
 using CoffeeSpace.PaymentService.Application.Messages.Consumers;
@@ -11,10 +9,12 @@ using CoffeeSpace.PaymentService.Persistence;
 using CoffeeSpace.PaymentService.Persistence.Abstractions;
 using CoffeeSpace.Shared.Extensions;
 using CoffeeSpace.Shared.Services.Abstractions;
-using Confluent.Kafka;
+using CoffeeSpace.Shared.Settings;
 using FastEndpoints;
 using MassTransit;
+using MassTransit.Configuration;
 using Mediator;
+using Microsoft.Extensions.Options;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,7 +27,7 @@ builder.Host.UseSerilog((context, configuration) =>
 builder.Configuration.AddAzureKeyVault();
 builder.Configuration.AddJwtBearer(builder);
 
-builder.Services.AddApplicationDb<IPaymentDbContext, PaymentDbContext>(builder.Configuration["PaymentDb:ConnectionString"]!);
+builder.Services.AddApplicationDb<IPaymentDbContext, PaymentDbContext>("Server=localhost;Port=5436;Database=testDb;User Id=test;Password=Test1234!;");
 
 builder.Services.AddApplicationService<IPaymentRepository>();
 builder.Services.AddApplicationService<IPaymentService>();
@@ -37,33 +37,39 @@ builder.Services.AddFastEndpoints();
 
 builder.Services.AddApplicationService(typeof(IPipelineBehavior<,>), typeof(IPipelineAssemblyMarker));
 
-builder.Services.AddStackExchangeRedisCache(options => options.Configuration = builder.Configuration["Redis:ConnectionString"]);
+builder.Services.AddStackExchangeRedisCache(options => options.Configuration = "localhost:6379");
 builder.Services.AddApplicationService<ICacheService>();
 
 builder.Services.AddOptionsWithValidateOnStart<PaypalAuthenticationSettings>()
     .Bind(builder.Configuration.GetRequiredSection(PaypalAuthenticationSettings.SectionName));
 
-builder.Services.AddMassTransit(x =>
-{
-    x.UsingInMemory();
-    x.AddRider(configurator =>
-    {
-        configurator.SetKebabCaseEndpointNameFormatter();
+builder.Services.AddOptionsWithValidateOnStart<AwsMessagingSettings>()
+    .Bind(builder.Configuration.GetRequiredSection(AwsMessagingSettings.SectionName));
 
-        configurator.AddProducer<PaymentPageInitialized>("order-payment-initialized");
-        configurator.AddProducer<OrderPaid>("order-paid");
-        configurator.AddProducer<Fault<RequestOrderPayment>>("order-payment-failed");
-        
-        configurator.AddConsumer<OrderPaymentValidationConsumer>();
-        configurator.UsingKafka((context, kafkaConfigurator) =>
+builder.Services.AddMassTransit(busConfigurator =>
+{
+    busConfigurator.SetKebabCaseEndpointNameFormatter();
+
+    busConfigurator.AddConsumer<OrderPaymentValidationConsumer>();
+    busConfigurator.AddInMemoryInboxOutbox();
+    
+    busConfigurator.UsingAmazonSqs((context, configurator) =>
+    {
+        var awsSettings = context.GetRequiredService<IOptions<AwsMessagingSettings>>().Value;
+        configurator.Host(awsSettings.Region, hostConfigurator =>
         {
-            kafkaConfigurator.Host(builder.Configuration["Kafka:Host"]);
-            
-            kafkaConfigurator.Acks = Acks.All;
-            kafkaConfigurator.AddTopicEndpoint<RequestOrderPayment, OrderPaymentValidationConsumer>(context, "request-order-payment", "payment");
+            hostConfigurator.AccessKey(awsSettings.AccessKey);
+            hostConfigurator.SecretKey(awsSettings.SecretKey);
         });
+        configurator.ConfigureEndpoints(context);
+
+        configurator.UseNewtonsoftJsonSerializer();
+        configurator.UseNewtonsoftJsonDeserializer();
+        
+        EndpointConvention.Map<PaymentPageInitialized>(new Uri("queue:payment-page-initialized"));
     });
 });
+
 
 builder.Services.AddServiceHealthChecks(builder);
 

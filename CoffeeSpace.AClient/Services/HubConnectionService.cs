@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using CoffeeSpace.AClient.Helpers;
 using CoffeeSpace.AClient.Models;
 using CoffeeSpace.AClient.Services.Abstractions;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -17,7 +18,7 @@ internal sealed class HubConnectionService : IHubConnectionService, IAsyncDispos
     public HubConnectionService()
     {
         _hubConnection = new HubConnectionBuilder()
-            .WithUrl("http://localhost:8085/ordering-hub")
+            .WithUrl($"{ApiEndpoints.BaseAddress}/ordering-hub")
             .WithAutomaticReconnect()
             .Build();
     }

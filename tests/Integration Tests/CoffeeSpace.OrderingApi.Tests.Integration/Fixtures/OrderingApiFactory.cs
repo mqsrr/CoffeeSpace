@@ -30,7 +30,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using NSubstitute;
 using Quartz;
-using Testcontainers.Kafka;
 using Testcontainers.PostgreSql;
 using Testcontainers.Redis;
 
@@ -42,7 +41,6 @@ public sealed class OrderingApiFactory : WebApplicationFactory<BuyersController>
 
     private readonly PostgreSqlContainer _orderingPostgreSqlContainer;
     private readonly PostgreSqlContainer _orderStateSagaPostgreSqlContainer;
-    private readonly KafkaContainer _kafkaContainer;
     private readonly RedisContainer _redisContainer;
 
     public IEnumerable<Address> Addresses { get; init; }
@@ -67,11 +65,6 @@ public sealed class OrderingApiFactory : WebApplicationFactory<BuyersController>
             .WithPortBinding(5434, 5432)
             .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5432))
             .Build();
-        
-        _kafkaContainer = new KafkaBuilder()
-            .WithPortBinding(9092, 9092)
-            .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(9092))
-            .Build();
 
         _redisContainer = new RedisBuilder()
             .WithPortBinding(6378, 6379)
@@ -84,8 +77,8 @@ public sealed class OrderingApiFactory : WebApplicationFactory<BuyersController>
         
         Orders = AutoFaker.Generate<Order, OrderFaker>( 1, builder => 
             builder.WithArgs(Buyers.First().Id, Addresses.First(), OrderItems.Take(3)));
-        Orders = Orders.Append(AutoFaker.Generate<Order, OrderFaker>(2, builder =>
-            builder.WithArgs(Buyers.First().Id, Addresses.Last(), OrderItems.Take(3))).Last());
+        Orders = Orders.Append(AutoFaker.Generate<Order, OrderFaker>(1, builder =>
+            builder.WithArgs(Buyers.Last().Id, Addresses.Last(), OrderItems.TakeLast(3))).First());
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -93,8 +86,11 @@ public sealed class OrderingApiFactory : WebApplicationFactory<BuyersController>
         builder.UseSetting("OrderingDb:ConnectionString", _orderingPostgreSqlContainer.GetConnectionString());
         builder.UseSetting("OrderStateSagaDb:ConnectionString", _orderStateSagaPostgreSqlContainer.GetConnectionString());
         builder.UseSetting("Redis:ConnectionString", _redisContainer.GetConnectionString());
-        builder.UseSetting("Kafka:ConnectionString", _kafkaContainer.GetBootstrapAddress());
 
+        builder.UseSetting("AWS:Region", "eu");
+        builder.UseSetting("AWS:AccessKey", "test");
+        builder.UseSetting("AWS:SecretKey", "test");
+        
         builder.UseSetting("Jwt:Audience", "coffee-space.testing");
         builder.UseSetting("Jwt:Issuer", "coffee-space.testing");
         builder.UseSetting("Jwt:Key", "testing-coffeespac!!23LOOOOOONGKEYYY!!!!");
@@ -166,7 +162,6 @@ public sealed class OrderingApiFactory : WebApplicationFactory<BuyersController>
     {
         await _orderingPostgreSqlContainer.StartAsync();
         await _orderStateSagaPostgreSqlContainer.StartAsync();
-        await _kafkaContainer.StartAsync();
         await _redisContainer.StartAsync();
     }
 
@@ -174,7 +169,6 @@ public sealed class OrderingApiFactory : WebApplicationFactory<BuyersController>
     {
         await _orderingPostgreSqlContainer.StopAsync();
         await _orderStateSagaPostgreSqlContainer.StopAsync();
-        await _kafkaContainer.StopAsync();
         await _redisContainer.StopAsync();
     }
 

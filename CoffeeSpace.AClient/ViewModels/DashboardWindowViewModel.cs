@@ -38,8 +38,14 @@ public sealed partial class DashboardWindowViewModel : ViewModelBase
 
     internal async Task InitializeAsync()
     {
-        var products = await _productsWebApi.GetAllProductsAsync(CancellationToken.None);
-        Products.AddRange(products);
+        var productsResponse = await _productsWebApi.GetAllProductsAsync(CancellationToken.None);
+        if (!productsResponse.IsSuccessStatusCode)
+        {
+            await SukiHost.ShowToast("Failure!", "Products could not be fetched");
+            return;
+        }
+        
+        Products.AddRange(productsResponse.Content!);
     }
     
     [RelayCommand]
@@ -50,6 +56,6 @@ public sealed partial class DashboardWindowViewModel : ViewModelBase
             Product = product
         }, cancellationToken);
 
-        await SukiHost.ShowToast("Cart is updated", "Item has been added!", TimeSpan.FromSeconds(5));
+        await SukiHost.ShowToast("Cart is updated", "Item has been added!");
     }
 }

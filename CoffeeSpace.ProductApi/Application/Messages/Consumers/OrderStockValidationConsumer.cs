@@ -9,13 +9,11 @@ internal sealed class OrderStockValidationConsumer : IConsumer<ValidateOrderStoc
 {
     private readonly IProductRepository _productRepository;
     private readonly ILogger<OrderStockValidationConsumer> _logger;
-    private readonly ITopicProducerProvider _topicProducerProvider;
 
-    public OrderStockValidationConsumer(IProductRepository productRepository, ILogger<OrderStockValidationConsumer> logger, ITopicProducerProvider topicProducerProvider)
+    public OrderStockValidationConsumer(IProductRepository productRepository, ILogger<OrderStockValidationConsumer> logger)
     {
         _productRepository = productRepository;
         _logger = logger;
-        _topicProducerProvider = topicProducerProvider;
     }
 
     public async Task Consume(ConsumeContext<ValidateOrderStock> context)
@@ -27,18 +25,12 @@ internal sealed class OrderStockValidationConsumer : IConsumer<ValidateOrderStoc
         if (!isValid)
         {
             _logger.LogInformation("The order with ID {OrderId} has invalid products, which are no longer acceptable or out of stock", context.Message.Order.Id);
-            var faultTopicProducer = _topicProducerProvider.GetProducer<Fault<ValidateOrderStock>>(new Uri("topic:order-stock-confirmation-failed"));
-            await faultTopicProducer.Produce(new
-            {
-                context.Message
-            }, context.CancellationToken);
+            await context.RespondAsync<Fault<ValidateOrderStock>>(context.Message);
             return;
         }
         
         _logger.LogInformation("The order with ID {OrderId} has successfully completed product validation", context.Message.Order.Id);
-        
-        var topicProducer = _topicProducerProvider.GetProducer<OrderStockConfirmed>(new Uri("topic:order-stock-confirmed"));
-        await topicProducer.Produce(new
+        await context.RespondAsync<OrderStockConfirmed>(new
         {
             context.Message.Order,
             IsValid = isValid

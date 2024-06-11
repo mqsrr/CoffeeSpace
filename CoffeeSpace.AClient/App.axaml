@@ -6,13 +6,10 @@
              RequestedThemeVariant="Dark">
     <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
-    <Application.DataTemplates>
-        <local:ViewLocator />
-    </Application.DataTemplates>
-
     <Application.Styles>
         <sukiUi:SukiTheme ThemeColor="Blue"  /> 
     </Application.Styles>
+    
     <Application.Resources>
         <FontFamily x:Key="Montserrat-Regular">avares://GoogleFonts/Assets/Fonts/Montserrat-Regular.ttf</FontFamily>
     </Application.Resources>

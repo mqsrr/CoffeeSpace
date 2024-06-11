@@ -10,13 +10,13 @@ internal sealed class AuthService : IAuthService<ApplicationUser>
 {
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly ITokenWriter<ApplicationUser> _tokenWriter;
-    private readonly ITopicProducer<RegisterNewBuyer> _topicProducer;
+    private readonly ISendEndpointProvider _endpointProvider;
 
-    public AuthService(SignInManager<ApplicationUser> signInManager, ITokenWriter<ApplicationUser> tokenWriter, ITopicProducer<RegisterNewBuyer> topicProducer)
+    public AuthService(SignInManager<ApplicationUser> signInManager, ITokenWriter<ApplicationUser> tokenWriter, ISendEndpointProvider endpointProvider)
     {
         _signInManager = signInManager;
         _tokenWriter = tokenWriter;
-        _topicProducer = topicProducer;
+        _endpointProvider = endpointProvider;
     }
 
     public async Task<string?> RegisterAsync(ApplicationUser user, CancellationToken cancellationToken)
@@ -32,12 +32,12 @@ internal sealed class AuthService : IAuthService<ApplicationUser>
         {
             return null;
         }
-        
-        await _topicProducer.Produce(new
+
+        await _endpointProvider.Send<RegisterNewBuyer>(new
         {
             Name = user.UserName,
             Email = user.Email
-        }, cancellationToken);
+        }, cancellationToken).ConfigureAwait(false);
 
         var claims = await _signInManager.CreateUserPrincipalAsync(user);
         await _signInManager.UserManager.AddClaimsAsync(user, claims.Claims);

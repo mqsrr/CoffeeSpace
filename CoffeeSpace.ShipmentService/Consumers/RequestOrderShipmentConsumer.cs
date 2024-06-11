@@ -7,12 +7,10 @@ namespace CoffeeSpace.ShipmentService.Consumers;
 internal sealed class RequestOrderShipmentConsumer : IConsumer<RequestOrderShipment>
 {
     private readonly ILogger<RequestOrderShipmentConsumer> _logger;
-    private readonly ITopicProducer<OrderShipped> _topicProducer;
 
-    public RequestOrderShipmentConsumer(ILogger<RequestOrderShipmentConsumer> logger, ITopicProducer<OrderShipped> topicProducer)
+    public RequestOrderShipmentConsumer(ILogger<RequestOrderShipmentConsumer> logger)
     {
         _logger = logger;
-        _topicProducer = topicProducer;
     }
 
     public async Task Consume(ConsumeContext<RequestOrderShipment> context)
@@ -21,10 +19,10 @@ internal sealed class RequestOrderShipmentConsumer : IConsumer<RequestOrderShipm
         await Task.Delay(TimeSpan.FromSeconds(3));
         
         _logger.LogInformation("Order with ID {OrderId} was successfully transferred to the shipment service", context.Message.Order.Id);
-        await _topicProducer.Produce(new
+        await context.RespondAsync<OrderShipped>(new
         {
             context.Message.Order,
-            ShipmentAvailable = true
+            ShippingAvailable = true
         });
     }
 }

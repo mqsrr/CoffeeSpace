@@ -43,7 +43,8 @@
                                        FontFamily="{StaticResource Montserrat-Regular}" />
                             <Border Grid.Row="1" Grid.Column="0" CornerRadius="7" ClipToBounds="True" MaxWidth="130" 
                                     VerticalAlignment="Bottom" HorizontalAlignment="Left">
-                                <TextBlock Text="{Binding Status}" Padding="4" FontWeight="Medium" LetterSpacing="0.5" FontFamily="{StaticResource Montserrat-Regular}">
+                                <TextBlock Text="{Binding Status}" Padding="4" 
+                                           FontWeight="Medium" LetterSpacing="0.5">
                                     <TextBlock.Background>
                                         <SolidColorBrush Color="PaleGreen" Opacity="0.1" />
                                     </TextBlock.Background>                                   
@@ -55,10 +56,9 @@
 
                             <TextBlock Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right"
                                        VerticalAlignment="Center" Text="{Binding ., Converter={StaticResource OrderItemsCounterConverter}}" 
-                                       FontFamily="{StaticResource Montserrat-Regular}" 
                                        FontWeight="Medium" LetterSpacing="0.4"/>
                             <TextBlock Grid.Row="1" Grid.Column="2" HorizontalAlignment="Right"
-                                       VerticalAlignment="Bottom" Text="{Binding ., Converter={StaticResource TotalSumOfOrderConverter}}" FontFamily="{StaticResource Montserrat-Regular}"
+                                       VerticalAlignment="Bottom" Text="{Binding ., Converter={StaticResource TotalSumOfOrderConverter}}"
                                        FontWeight="Medium" LetterSpacing="0.4"/>
                         </Grid>
                     </controls:GlassCard>

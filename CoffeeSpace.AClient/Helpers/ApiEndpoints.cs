@@ -2,6 +2,10 @@ namespace CoffeeSpace.AClient.Helpers;
 
 public static class ApiEndpoints
 {
+    public const string BaseAddress = "http://localhost:8085";
+    
+    public const string BasePhoneAddress = "http://10.0.2.2:8085";
+    
     public static class Authentication
     {
         private const string Base = "/api/auth";

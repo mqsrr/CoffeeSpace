@@ -10,7 +10,6 @@ internal sealed class BearerAuthorizationMessageHandler : DelegatingHandler
 {
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", StaticStorage.JwtToken);
         return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
     }

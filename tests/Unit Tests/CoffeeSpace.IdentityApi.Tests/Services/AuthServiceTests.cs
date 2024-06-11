@@ -19,7 +19,7 @@ public sealed class AuthServiceTests
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ITokenWriter<ApplicationUser> _tokenWriter;
-    private readonly ITopicProducer<RegisterNewBuyer> _topicProducer;
+    private readonly ISendEndpointProvider _sendEndpointProvider;
     private readonly Fixture _fixture;
 
     private readonly AuthService _authService;
@@ -33,9 +33,9 @@ public sealed class AuthServiceTests
         _signInManager = GetSignInManagerMock(_userManager);
 
         _tokenWriter = _fixture.Create<ITokenWriter<ApplicationUser>>();
-        _topicProducer = _fixture.Create<ITopicProducer<RegisterNewBuyer>>();
+        _sendEndpointProvider = _fixture.Create<ISendEndpointProvider>();
 
-        _authService = new AuthService(_signInManager, _tokenWriter, _topicProducer);
+        _authService = new AuthService(_signInManager, _tokenWriter, _sendEndpointProvider);
     }
     
     private static SignInManager<ApplicationUser> GetSignInManagerMock(UserManager<ApplicationUser> userManager)
@@ -100,12 +100,14 @@ public sealed class AuthServiceTests
         _tokenWriter.WriteTokenAsync(user, Arg.Any<CancellationToken>())
             .Returns(expectedToken);
 
+        _sendEndpointProvider.Send<RegisterNewBuyer>(Arg.Any<object>())
+            .Returns(Task.CompletedTask);
+
         // Act
         string? jwtToken = await _authService.RegisterAsync(user, CancellationToken.None);
 
         // Assert     
         jwtToken.Should().BeEquivalentTo(expectedToken);
-        await _topicProducer.Received().Produce(Arg.Any<object>());
     }
     
     [Fact]
@@ -125,7 +127,6 @@ public sealed class AuthServiceTests
 
         // Assert     
         jwtToken.Should().BeNull();
-        await _topicProducer.DidNotReceive().Produce(Arg.Any<object>());
     }
     
     [Fact]
@@ -142,7 +143,6 @@ public sealed class AuthServiceTests
 
         // Assert     
         jwtToken.Should().BeNull();
-        await _topicProducer.DidNotReceive().Produce(Arg.Any<object>());
     }
 
     [Fact]

@@ -8,11 +8,13 @@
         mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="650"
         x:DataType="vm:LoginViewModel"
         x:Class="CoffeeSpace.AClient.Views.LoginWindow"
-        Classes="NakedWindow Blurred">
+        Classes="NakedWindow Blurred"
+        FontFamily="{StaticResource Montserrat-Regular}">
 
     <Design.DataContext>
         <vm:LoginViewModel />
     </Design.DataContext>
+    
     <Window.Background>
         <ImageBrush Source="../Assets/default-bg.png" Stretch="UniformToFill">
         </ImageBrush>
@@ -27,18 +29,15 @@
             <icons:HeroIcon Grid.Row="0" Grid.Column="1" Foreground="Azure" Type="FaceSmile" />
 
             <TextBlock Grid.Row="1" Grid.Column="1"
-                       Text="Login" FontFamily="{StaticResource Montserrat-Regular}"
-                       Classes="h2" HorizontalAlignment="Center" />
+                       Text="Login" Classes="h2" HorizontalAlignment="Center" />
 
             <TextBox Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Margin="5"
                      Text="{Binding LoginRequest.Username, Mode=OneWayToSource}" Watermark="Username"
-                     FontFamily="{StaticResource Montserrat-Regular}" HorizontalAlignment="Center"
-                     Width="200" />
+                     HorizontalAlignment="Center" Width="200" />
 
             <TextBox Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Margin="5"
-                     Text="{Binding LoginRequest.Password, Mode=OneWayToSource}" Watermark="Password"
-                     FontFamily="{StaticResource Montserrat-Regular}" HorizontalAlignment="Center"
-                     Width="200" PasswordChar="*"/>
+                     Text="{Binding LoginRequest.Password, Mode=OneWayToSource}" Watermark="Password" 
+                     HorizontalAlignment="Center" Width="200" PasswordChar="*"/>
 
             <TextBlock Grid.Row="4" Grid.Column="1"
                        Text="Register new account" HorizontalAlignment="Center" Foreground="SlateGray"
@@ -49,8 +48,7 @@
                 <Button
                     Command="{Binding LoginCommand}"
                     Classes="Flat Rounded" VerticalAlignment="Center" HorizontalAlignment="Center"
-                    Width="200" Height="45" Foreground="Azure" FontFamily="{StaticResource Montserrat-Regular}"
-                    FontWeight="SemiBold">
+                    Width="200" Height="45" Foreground="Azure" FontWeight="SemiBold">
                     <Button.Content>
                         <icons:HeroIcon Foreground="Azure" HorizontalAlignment="Center" Type="Key" Min="True" />
                     </Button.Content>

@@ -1,4 +1,5 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Input;
 using CoffeeSpace.AClient.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,5 +11,10 @@ public sealed partial class RegisterWindow : Window
     {
         InitializeComponent();
         DataContext = App.Services.GetRequiredService<RegisterViewModel>();
+    }
+
+    private void MoveToLoginWindow(object? sender, PointerPressedEventArgs e)
+    {
+        Close();
     }
 }

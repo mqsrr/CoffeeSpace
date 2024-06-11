@@ -9,8 +9,6 @@ public sealed class BuyerFaker : AutoFaker<Buyer>
     public BuyerFaker()
     {
         RuleFor(buyer => buyer.Id, faker => faker.Random.Guid());
-        UseSeed(69);
-        
         RuleFor(buyer => buyer.Email, faker => faker.Person.Email);
         RuleFor(buyer => buyer.Name, faker => faker.Person.FirstName);
         RuleFor(buyer => buyer.Orders, new List<Order>());

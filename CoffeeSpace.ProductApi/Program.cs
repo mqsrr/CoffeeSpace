@@ -1,6 +1,4 @@
 using Asp.Versioning;
-using CoffeeSpace.Messages.Products.Commands;
-using CoffeeSpace.Messages.Products.Responses;
 using CoffeeSpace.ProductApi.Application.Extensions;
 using CoffeeSpace.ProductApi.Application.Messages.Consumers;
 using CoffeeSpace.ProductApi.Application.Repositories;
@@ -11,12 +9,10 @@ using CoffeeSpace.ProductApi.Persistence.Abstractions;
 using CoffeeSpace.Shared.Extensions;
 using CoffeeSpace.Shared.Services.Abstractions;
 using CoffeeSpace.Shared.Settings;
-using Confluent.Kafka;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MassTransit;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,10 +28,10 @@ builder.Configuration.AddJwtBearer(builder);
 builder.Services.AddControllers();
 builder.Services.AddApiVersioning(new HeaderApiVersionReader());
 
-builder.Services.AddApplicationDb<IProductDbContext, ProductDbContext>(builder.Configuration["ProductsDb:ConnectionString"]!);
+builder.Services.AddApplicationDb<IProductDbContext, ProductDbContext>("Server=localhost;Port=5432;Database=testDb;User Id=test;Password=Test1234!;"!);
 builder.Services.AddApplicationService<IProductRepository>();
 
-builder.Services.AddStackExchangeRedisCache(options => options.Configuration = builder.Configuration["Redis:ConnectionString"]);
+builder.Services.AddStackExchangeRedisCache(options => options.Configuration = "localhost:6379");
 builder.Services.AddApplicationService<ICacheService>();
 
 builder.Services.Decorate<IProductRepository, CachedProductRepository>();
@@ -46,30 +42,28 @@ builder.Services.AddFluentValidationAutoValidation()
 builder.Services.AddOptionsWithValidateOnStart<JwtSettings>()
     .Bind(builder.Configuration.GetRequiredSection(JwtSettings.SectionName));
 
-builder.Services.AddOptionsWithValidateOnStart<KafkaSettings>()
-    .Bind(builder.Configuration.GetRequiredSection(KafkaSettings.SectionName))
-    .Configure(settings => settings.Hosts = JsonConvert.DeserializeObject<IReadOnlyList<string>>(builder.Configuration["Kafka:Hosts"]!)!);
+builder.Services.AddOptionsWithValidateOnStart<AwsMessagingSettings>()
+    .Bind(builder.Configuration.GetRequiredSection(AwsMessagingSettings.SectionName));
 
-builder.Services.AddMassTransit(x =>
+builder.Services.AddMassTransit(busConfigurator =>
 {
-    x.UsingInMemory();
-    x.AddRider(configurator =>
+    busConfigurator.SetKebabCaseEndpointNameFormatter();
+
+    busConfigurator.AddConsumer<OrderStockValidationConsumer>();
+    busConfigurator.AddInMemoryInboxOutbox();
+    
+    busConfigurator.UsingAmazonSqs((context, configurator) =>
     {
-        configurator.SetKebabCaseEndpointNameFormatter();
-        configurator.AddConsumer<OrderStockValidationConsumer>();
-
-        configurator.AddProducer<OrderStockConfirmed>("order-stock-confirmed");
-        configurator.AddProducer<Fault<ValidateOrderStock>>("order-stock-confirmation-failed");
-
-        configurator.AddInMemoryInboxOutbox();
-        configurator.UsingKafka((context, factoryConfigurator) =>
+        var awsSettings = context.GetRequiredService<IOptions<AwsMessagingSettings>>().Value;
+        configurator.Host(awsSettings.Region, hostConfigurator =>
         {
-            var kafkaSettings = context.GetRequiredService<IOptions<KafkaSettings>>().Value;
-            factoryConfigurator.Acks = Acks.All;
-            
-            factoryConfigurator.Host(kafkaSettings.Hosts);
-            factoryConfigurator.AddTopicEndpoint<ValidateOrderStock, OrderStockValidationConsumer>(context, "validate-order-stock", "products");
+            hostConfigurator.AccessKey(awsSettings.AccessKey);
+            hostConfigurator.SecretKey(awsSettings.SecretKey);
         });
+        configurator.ConfigureEndpoints(context);
+
+        configurator.UseNewtonsoftJsonSerializer();
+        configurator.UseNewtonsoftJsonDeserializer();
     });
 });
 

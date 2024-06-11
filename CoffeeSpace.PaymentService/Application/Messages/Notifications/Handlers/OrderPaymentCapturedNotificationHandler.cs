@@ -10,22 +10,24 @@ namespace CoffeeSpace.PaymentService.Application.Messages.Notifications.Handlers
 internal sealed class OrderPaymentCapturedNotificationHandler 
     : INotificationHandler<OrderPaymentCapturedNotification>
 {
-    private readonly ITopicProducer<OrderPaid> _topicProducer;
+    private readonly ISendEndpointProvider _sendEndpointProvider;
     private readonly ICacheService _cacheService;
 
-    public OrderPaymentCapturedNotificationHandler(ITopicProducer<OrderPaid> topicProducer, ICacheService  cacheService)
+    public OrderPaymentCapturedNotificationHandler(ISendEndpointProvider sendEndpointProvider, ICacheService  cacheService)
     {
-        _topicProducer = topicProducer;
+        _sendEndpointProvider = sendEndpointProvider;
         _cacheService = cacheService;
     }
 
     public async ValueTask Handle(OrderPaymentCapturedNotification notification, CancellationToken cancellationToken)
     {
         var applicationOrder = await _cacheService.GetAsync<Order>(CacheKeys.Payments.GetById(notification.CapturedPaypalOrderId), cancellationToken);
-        await _topicProducer.Produce(new
+        var sendEndpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri("queue:order-state-instance"));
+        
+        await sendEndpoint.Send<OrderPaid>(new
         {
             PaypalOrderInformationId = notification.CapturedPaypalOrderId,
             Order = applicationOrder
-        }, cancellationToken);
+        }, context => context.RequestId = applicationOrder!.Id, cancellationToken).ConfigureAwait(false);
     }
 }

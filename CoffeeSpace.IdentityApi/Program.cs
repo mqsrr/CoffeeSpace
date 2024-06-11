@@ -10,12 +10,10 @@ using CoffeeSpace.IdentityApi.Settings;
 using CoffeeSpace.Messages.Buyers;
 using CoffeeSpace.Shared.Extensions;
 using CoffeeSpace.Shared.Settings;
-using Confluent.Kafka;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MassTransit;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,7 +29,7 @@ builder.Configuration.AddJwtBearer(builder);
 builder.Services.AddControllers();
 
 builder.Services.AddApiVersioning(new HeaderApiVersionReader());
-builder.Services.AddApplicationDb<ApplicationUsersDbContext>(builder.Configuration["IdentityDb:ConnectionString"]!);
+builder.Services.AddApplicationDb<ApplicationUsersDbContext>("Server=localhost;Port=5433;Database=testDb;User Id=test;Password=Test1234!;");
 
 builder.Services.AddApplicationService<IAuthService<ApplicationUser>>(ServiceLifetime.Transient);
 builder.Services.AddApplicationService<ITokenWriter<ApplicationUser>>(ServiceLifetime.Transient);
@@ -44,38 +42,35 @@ builder.Services.AddOptionsWithValidateOnStart<JwtSettings>()
 builder.Services.AddOptionsWithValidateOnStart<ApiKeySettings>()
     .Bind(builder.Configuration.GetRequiredSection(ApiKeySettings.SectionName));
 
-builder.Services.AddOptionsWithValidateOnStart<KafkaSettings>()
-    .Bind(builder.Configuration.GetRequiredSection(KafkaSettings.SectionName))
-    .Configure(settings => 
-        settings.Hosts = JsonConvert.DeserializeObject<IReadOnlyList<string>>(builder.Configuration["Kafka:Hosts"]!)!);
-
+builder.Services.AddOptionsWithValidateOnStart<AwsMessagingSettings>()
+    .Bind(builder.Configuration.GetRequiredSection(AwsMessagingSettings.SectionName));
 
 builder.Services.AddFluentValidationAutoValidation()
     .AddValidatorsFromAssemblyContaining<LoginRequestValidator>(ServiceLifetime.Transient, includeInternalTypes: true);
 
 builder.Services.AddMassTransit(x =>
 {
-    x.UsingInMemory();
-    x.AddRider(configurator =>
+    x.SetKebabCaseEndpointNameFormatter();
+    
+    x.AddConsumer<DeleteBuyerConsumer>();
+    x.AddConsumer<UpdateBuyerConsumer>();
+    
+    x.UsingAmazonSqs((context, config) =>
     {
-        configurator.AddProducer<RegisterNewBuyer>("register-customer");
-
-        configurator.AddConsumer<DeleteBuyerConsumer>();
-        configurator.AddConsumer<UpdateBuyerConsumer>();
-
-        configurator.UsingKafka((context, kafkaConfigurator) =>
+        var awsSettings = context.GetRequiredService<IOptions<AwsMessagingSettings>>().Value;
+        config.Host(awsSettings.Region, hostConfig =>
         {
-            var kafkaSettings = context.GetRequiredService<IOptions<KafkaSettings>>().Value;
-            kafkaConfigurator.Acks = Acks.All;
-            kafkaConfigurator.Host(kafkaSettings.Hosts);
-            
-            kafkaConfigurator
-                .AddTopicEndpoint<DeleteBuyer, DeleteBuyerConsumer>(context, "delete-customer", "identity")
-                .AddTopicEndpoint<UpdateBuyer, UpdateBuyerConsumer>(context,"update-customer", "identity");
+            hostConfig.AccessKey(awsSettings.AccessKey);
+            hostConfig.SecretKey(awsSettings.SecretKey);
         });
+        config.ConfigureEndpoints(context);
+        
+        config.UseNewtonsoftJsonSerializer();
+        config.UseNewtonsoftJsonDeserializer();
+        
+        EndpointConvention.Map<RegisterNewBuyer>(new Uri("queue:register-new-buyer"));
     });
 });
-
 builder.Services.AddIdentityConfiguration();
 builder.Services.AddServiceHealthChecks(builder);
 

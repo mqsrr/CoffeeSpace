@@ -1,12 +1,8 @@
-using CoffeeSpace.Messages.Shipment.Commands;
-using CoffeeSpace.Messages.Shipment.Responses;
 using CoffeeSpace.Shared.Extensions;
 using CoffeeSpace.Shared.Settings;
 using CoffeeSpace.ShipmentService.Consumers;
-using Confluent.Kafka;
 using MassTransit;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,28 +14,26 @@ builder.Host.UseSerilog((context, configuration) =>
 
 builder.Configuration.AddAzureKeyVault();
 
-builder.Services.AddOptionsWithValidateOnStart<KafkaSettings>()
-    .Bind(builder.Configuration.GetRequiredSection(KafkaSettings.SectionName))
-    .Configure(settings => 
-        settings.Hosts = JsonConvert.DeserializeObject<IReadOnlyList<string>>(builder.Configuration["Kafka:Hosts"]!)!);
+builder.Services.AddOptionsWithValidateOnStart<AwsMessagingSettings>()
+    .Bind(builder.Configuration.GetRequiredSection(AwsMessagingSettings.SectionName));
 
-builder.Services.AddMassTransit(x =>
+builder.Services.AddMassTransit(busConfigurator =>
 {
-    x.UsingInMemory();
-    x.AddRider(configurator =>
+    busConfigurator.SetKebabCaseEndpointNameFormatter();
+    busConfigurator.AddConsumer<RequestOrderShipmentConsumer>();
+    
+    busConfigurator.UsingAmazonSqs((context, configurator) =>
     {
-        configurator.SetKebabCaseEndpointNameFormatter();
-        configurator.AddProducer<OrderShipped>("order-shipped");
-        
-        configurator.AddConsumer<RequestOrderShipmentConsumer>();
-        configurator.UsingKafka((context, kafkaConfigurator) =>
+        var awsSettings = context.GetRequiredService<IOptions<AwsMessagingSettings>>().Value;
+        configurator.Host(awsSettings.Region, hostConfigurator =>
         {
-            var kafkaSettings = context.GetRequiredService<IOptions<KafkaSettings>>().Value;
-            kafkaConfigurator.Acks = Acks.All;
-            
-            kafkaConfigurator.Host(kafkaSettings.Hosts);
-            kafkaConfigurator.AddTopicEndpoint<RequestOrderShipment, RequestOrderShipmentConsumer>(context, "request-order-shipment", "shipment");
+            hostConfigurator.AccessKey(awsSettings.AccessKey);
+            hostConfigurator.SecretKey(awsSettings.SecretKey);
         });
+        configurator.ConfigureEndpoints(context);
+
+        configurator.UseNewtonsoftJsonSerializer();
+        configurator.UseNewtonsoftJsonDeserializer();
     });
 });
 

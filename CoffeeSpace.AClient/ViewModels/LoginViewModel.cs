@@ -12,6 +12,7 @@ using CoffeeSpace.AClient.Services;
 using CoffeeSpace.AClient.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using SukiUI.Controls;
 
 namespace CoffeeSpace.AClient.ViewModels;
 
@@ -20,7 +21,7 @@ public sealed partial class LoginViewModel : ViewModelBase
     private readonly IIdentityWebApi _identityWebApi;
     private readonly IBuyersWebApi _buyersWebApi;
 
-    [ObservableProperty]
+    [ObservableProperty] 
     private LoginRequest _loginRequest = new LoginRequest();
 
     public LoginViewModel(IIdentityWebApi identityWebApi, IBuyersWebApi buyersWebApi)
@@ -38,28 +39,28 @@ public sealed partial class LoginViewModel : ViewModelBase
     [RelayCommand]
     private async Task LoginAsync(CancellationToken cancellationToken)
     {
-        try
+        var authResponse = await _identityWebApi.LoginAsync(LoginRequest, cancellationToken);
+        if (!authResponse.IsSuccessStatusCode)
         {
-            string? token = await _identityWebApi.LoginAsync(LoginRequest, cancellationToken);
-            if (string.IsNullOrEmpty(token))
-            {
-                return;
-            }
-            
-            var tokenHandler = new JwtSecurityTokenHandler().ReadJwtToken(token);
-            string email = tokenHandler.Claims.First(claim => claim.Type is ClaimTypes.Email).Value;
-            StaticStorage.JwtToken = token;
-            
-            var buyer = await _buyersWebApi.GetBuyerByEmailAsync(email, cancellationToken);
-            StaticStorage.Buyer = buyer;
-            
-            MoveToMainDashBoard();
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
+            await SukiHost.ShowToast("Login Failure", "Please check your credentials and try again!");
+            return;
         }
 
+        string token = authResponse.Content!;
+        var tokenHandler = new JwtSecurityTokenHandler().ReadJwtToken(token);
+
+        string email = tokenHandler.Claims.First(claim => claim.Type is ClaimTypes.Email).Value;
+        StaticStorage.JwtToken = token;
+
+        var buyerResponse = await _buyersWebApi.GetBuyerByEmailAsync(email, cancellationToken);
+        if (!buyerResponse.IsSuccessStatusCode)
+        {
+            await SukiHost.ShowToast("Login Failure", "Could not find buyer with given email!");
+            return;
+        }
+
+        StaticStorage.Buyer = buyerResponse.Content;
+        MoveToMainDashBoard();
     }
 
     internal static void MoveToMainDashBoard()

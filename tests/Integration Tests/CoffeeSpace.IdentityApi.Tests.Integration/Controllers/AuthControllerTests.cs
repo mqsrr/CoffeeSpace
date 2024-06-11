@@ -48,7 +48,7 @@ public sealed class AuthControllerTests : IClassFixture<IdentityApiFactory>
         // Arrange
         Recording.Start("Login");
 
-        var registerUserRequest = AutoFaker.Generate<RegisterRequest, RegisterRequestFaker>(2).Last();
+        var registerUserRequest = AutoFaker.Generate<RegisterRequest, RegisterRequestFaker>();
         await _httpClient.PostAsJsonAsync(ApiEndpoints.Authentication.Register, registerUserRequest);
         
         const string request = ApiEndpoints.Authentication.Login;

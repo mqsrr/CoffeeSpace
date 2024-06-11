@@ -8,13 +8,13 @@ namespace CoffeeSpace.OrderingApi.Application.Services;
 
 internal sealed class BuyerService : IBuyerService
 {
-    private readonly ITopicProducer<UpdateBuyer> _topicProducer;
+    private readonly ISendEndpointProvider _sendEndpointProvider;
     private readonly IBuyerRepository _buyerRepository;
 
-    public BuyerService(IBuyerRepository buyerRepository, ITopicProducer<UpdateBuyer> topicProducer)
+    public BuyerService(IBuyerRepository buyerRepository, ISendEndpointProvider sendEndpointProvider)
     {
         _buyerRepository = buyerRepository;
-        _topicProducer = topicProducer;
+        _sendEndpointProvider = sendEndpointProvider;
     }
 
     public Task<Buyer?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
@@ -29,9 +29,9 @@ internal sealed class BuyerService : IBuyerService
         return buyer;
     }
 
-    public async Task<bool> CreateAsync(Buyer buyer, CancellationToken cancellationToken)
+    public Task<bool> CreateAsync(Buyer buyer, CancellationToken cancellationToken)
     {
-        bool isCreated = await _buyerRepository.CreateAsync(buyer, cancellationToken);
+        var isCreated = _buyerRepository.CreateAsync(buyer, cancellationToken);
         return isCreated;
     }
 
@@ -43,11 +43,10 @@ internal sealed class BuyerService : IBuyerService
             return null;
         }
 
-        await _topicProducer.Produce(new
+        await _sendEndpointProvider.Send<UpdateBuyer>(new
         {
             Buyer = updatedBuyer
         }, cancellationToken).ConfigureAwait(false);
-
         return updatedBuyer;
     }
 
@@ -65,12 +64,11 @@ internal sealed class BuyerService : IBuyerService
             return false;
         }
 
-        await _topicProducer.Produce(new
+        await _sendEndpointProvider.Send<DeleteBuyer>(new
         {
             buyerToDelete.Name,
             buyerToDelete.Email
         }, cancellationToken).ConfigureAwait(false);
-
         return isDeleted;
     }
 }

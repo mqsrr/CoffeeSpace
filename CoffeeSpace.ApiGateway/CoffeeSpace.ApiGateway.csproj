@@ -12,7 +12,6 @@
         <PackageReference Include="Azure.Identity" Version="1.11.3" />
         <PackageReference Include="Azure.Security.KeyVault.Secrets" Version="4.6.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.6" />
-        <PackageReference Include="Ocelot.Provider.Docker" Version="6.1.1" />
         <PackageReference Include="Ocelot.Provider.Kubernetes" Version="23.2.2" />
         <PackageReference Include="Ocelot.Provider.Polly" Version="23.2.2" />
         <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />

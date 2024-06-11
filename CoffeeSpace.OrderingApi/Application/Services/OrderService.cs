@@ -13,13 +13,13 @@ namespace CoffeeSpace.OrderingApi.Application.Services;
 internal sealed class OrderService : IOrderService
 {
     private readonly IOrderRepository _orderRepository;
-    private readonly ITopicProducer<SubmitOrder> _topicProducer;
+    private readonly ISendEndpointProvider _sendEndpointProvider;
     private readonly IHubContext<OrderingHub, IOrderingHub> _hubContext;
 
-    public OrderService(IOrderRepository orderRepository, ITopicProducer<SubmitOrder> topicProducer, IHubContext<OrderingHub, IOrderingHub> hubContext)
+    public OrderService(IOrderRepository orderRepository, ISendEndpointProvider sendEndpointProvider, IHubContext<OrderingHub, IOrderingHub> hubContext)
     {
         _orderRepository = orderRepository;
-        _topicProducer = topicProducer;
+        _sendEndpointProvider = sendEndpointProvider;
         _hubContext = hubContext;
     }
 
@@ -44,7 +44,7 @@ internal sealed class OrderService : IOrderService
         }
 
         await _hubContext.Clients.Groups(order.BuyerId.ToString(), "Web Dashboard").OrderCreated(order.ToResponse());
-        await _topicProducer.Produce(new
+        await _sendEndpointProvider.Send<SubmitOrder>(new
         {
             Order = order
         }, cancellationToken).ConfigureAwait(false);
