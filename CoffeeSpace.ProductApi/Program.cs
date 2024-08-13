@@ -28,16 +28,16 @@ builder.Configuration.AddJwtBearer(builder);
 builder.Services.AddControllers();
 builder.Services.AddApiVersioning(new HeaderApiVersionReader());
 
-builder.Services.AddApplicationDb<IProductDbContext, ProductDbContext>("Server=localhost;Port=5432;Database=testDb;User Id=test;Password=Test1234!;"!);
+builder.Services.AddApplicationDb<IProductDbContext, ProductDbContext>(builder.Configuration["ProductsDb:ConnectionString"]!);
 builder.Services.AddApplicationService<IProductRepository>();
 
-builder.Services.AddStackExchangeRedisCache(options => options.Configuration = "localhost:6379");
+builder.Services.AddStackExchangeRedisCache(options => options.Configuration = builder.Configuration["Redis:ConnectionString"]!);
 builder.Services.AddApplicationService<ICacheService>();
 
 builder.Services.Decorate<IProductRepository, CachedProductRepository>();
 
 builder.Services.AddFluentValidationAutoValidation()
-    .AddValidatorsFromAssemblyContaining<CreateProductRequestValidator>(ServiceLifetime.Singleton, includeInternalTypes: true);
+    .AddValidatorsFromAssemblyContaining<CreateProductRequestValidator>(includeInternalTypes: true);
 
 builder.Services.AddOptionsWithValidateOnStart<JwtSettings>()
     .Bind(builder.Configuration.GetRequiredSection(JwtSettings.SectionName));
@@ -48,9 +48,7 @@ builder.Services.AddOptionsWithValidateOnStart<AwsMessagingSettings>()
 builder.Services.AddMassTransit(busConfigurator =>
 {
     busConfigurator.SetKebabCaseEndpointNameFormatter();
-
     busConfigurator.AddConsumer<OrderStockValidationConsumer>();
-    busConfigurator.AddInMemoryInboxOutbox();
     
     busConfigurator.UsingAmazonSqs((context, configurator) =>
     {

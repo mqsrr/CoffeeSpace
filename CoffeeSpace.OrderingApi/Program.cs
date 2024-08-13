@@ -1,4 +1,5 @@
 using Asp.Versioning;
+using CoffeeSpace.Messages;
 using CoffeeSpace.Messages.Buyers;
 using CoffeeSpace.Messages.Ordering.Commands;
 using CoffeeSpace.OrderingApi.Application.Extensions;
@@ -37,11 +38,9 @@ builder.Services.AddControllers();
 builder.Services.AddMediator();
 
 builder.Services.AddApiVersioning(new HeaderApiVersionReader());
+builder.Services.AddApplicationDb<IOrderingDbContext, OrderingDbContext>(builder.Configuration["OrderingDb:ConnectionString"]!);
 
-builder.Services.AddApplicationDb<IOrderingDbContext, OrderingDbContext>("Server=localhost;Port=5434;Database=testDb;User Id=test;Password=Test1234!;");
-builder.Services.AddApplicationDb<OrderStateSagaDbContext>("Server=localhost;Port=5435;Database=testDb;User Id=test;Password=Test1234!;");
-
-builder.Services.AddStackExchangeRedisCache(options => options.Configuration = "localhost:6379");
+builder.Services.AddStackExchangeRedisCache(options => options.Configuration = builder.Configuration["Redis:ConnectionString"]!);
 builder.Services.AddApplicationService<ICacheService>();
 
 builder.Services.AddApplicationService<IOrderService>();
@@ -51,7 +50,7 @@ builder.Services.AddApplicationService<IOrderRepository>();
 builder.Services.AddApplicationService<IBuyerRepository>();
 
 builder.Services.AddFluentValidationAutoValidation()
-    .AddValidatorsFromAssemblyContaining<IValidatorMarker>(ServiceLifetime.Singleton, includeInternalTypes: true);
+    .AddValidatorsFromAssemblyContaining<IValidatorMarker>(includeInternalTypes: true);
 
 builder.Services.AddOptionsWithValidateOnStart<JwtSettings>()
     .Bind(builder.Configuration.GetRequiredSection(JwtSettings.SectionName));
@@ -68,26 +67,20 @@ builder.Services.AddCors(options => options.AddDefaultPolicy(policyBuilder =>
 builder.Services.AddQuartz(x =>
 {
     x.UseInMemoryStore();
-
     x.InterruptJobsOnShutdownWithWait = true;
-    x.UseTimeZoneConverter();
 });
 
 builder.Services.AddMassTransit(busConfigurator =>
 {
     busConfigurator.SetKebabCaseEndpointNameFormatter();
     busConfigurator.AddConsumersFromNamespaceContaining<RegisterNewBuyerConsumer>();
-    
+
     busConfigurator.AddQuartzConsumers();
     busConfigurator.AddPublishMessageScheduler();
-    
+
     busConfigurator.AddSagaStateMachine<OrderStateMachine, OrderStateInstance>()
-        .EntityFrameworkRepository(repositoryConfigurator =>
-        {
-            repositoryConfigurator.ConcurrencyMode = ConcurrencyMode.Optimistic;
-            repositoryConfigurator.UsePostgres();
-            repositoryConfigurator.ExistingDbContext<OrderStateSagaDbContext>();
-        });
+        .InMemoryRepository();
+    
     busConfigurator.UsingAmazonSqs((context, configurator) =>
     {
         var awsSettings = context.GetRequiredService<IOptions<AwsMessagingSettings>>().Value;
@@ -101,10 +94,10 @@ builder.Services.AddMassTransit(busConfigurator =>
 
         configurator.UseNewtonsoftJsonSerializer();
         configurator.UseNewtonsoftJsonDeserializer();
-        
-        EndpointConvention.Map<SubmitOrder>(new Uri("queue:order-state-instance"));
-        EndpointConvention.Map<DeleteBuyer>(new Uri("queue:delete-buyer"));
-        EndpointConvention.Map<UpdateBuyer>(new Uri("queue:update-buyer"));
+
+        EndpointConvention.Map<SubmitOrder>(new Uri(EndpointAddresses.Ordering.SubmitOrder));
+        EndpointConvention.Map<DeleteBuyerByEmail>(new Uri(EndpointAddresses.Identity.DeleteBuyer));
+        EndpointConvention.Map<UpdateBuyer>(new Uri(EndpointAddresses.Identity.UpdateBuyer));
     });
 });
 
@@ -124,4 +117,4 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapHub<OrderingHub>("ordering-hub");
 
-app.Run();
+await app.RunAsync();

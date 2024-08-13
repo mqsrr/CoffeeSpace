@@ -5,9 +5,5 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="CoffeeSpace.AClient.Views.PaymentView">
     
-    <Window.Background>
-        <ImageBrush Source="../Assets/default-bg.png" Stretch="UniformToFill">
-        </ImageBrush>
-    </Window.Background>
     <WebView x:Name="WebView"/>
 </Window>

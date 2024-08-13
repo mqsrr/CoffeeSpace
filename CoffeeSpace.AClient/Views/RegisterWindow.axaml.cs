@@ -2,10 +2,11 @@
 using Avalonia.Input;
 using CoffeeSpace.AClient.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
+using SukiUI.Controls;
 
 namespace CoffeeSpace.AClient.Views;
 
-public sealed partial class RegisterWindow : Window
+public sealed partial class RegisterWindow : SukiWindow
 {
     public RegisterWindow()
     {

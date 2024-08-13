@@ -7,15 +7,12 @@
              xmlns:converters="clr-namespace:CoffeeSpace.AClient.Converters"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="viewModels:OrderDetailsViewModel"
-             x:Class="CoffeeSpace.AClient.Views.OrderDetailsView">
+             x:Class="CoffeeSpace.AClient.Views.OrderDetailsView"
+             FontFamily="{StaticResource Montserrat-Regular}">
     
     <Design.DataContext>
         <viewModels:OrderDetailsViewModel />
     </Design.DataContext>
-    
-    <UserControl.Background>
-        <ImageBrush Source="../Assets/default-bg.png" Stretch="UniformToFill" />
-    </UserControl.Background>
     
     <UserControl.Resources>
         <ResourceDictionary>

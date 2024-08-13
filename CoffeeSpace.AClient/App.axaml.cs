@@ -1,3 +1,4 @@
+using System;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -8,6 +9,7 @@ using CoffeeSpace.AClient.HttpHandlers;
 using CoffeeSpace.AClient.RefitClients;
 using CoffeeSpace.AClient.Services;
 using CoffeeSpace.AClient.Services.Abstractions;
+using CoffeeSpace.AClient.Settings;
 using CoffeeSpace.AClient.Views;
 using HotAvalonia;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,6 +36,13 @@ public class App : Application
         services.RegisterViews();
         services.RegisterViewModels();
 
+        services.AddOptionsWithValidateOnStart<ApiKeySettings>()
+            .Configure(settings =>
+            {
+                settings.ApiKey = Environment.GetEnvironmentVariable("API_KEY")!;
+                settings.HeaderName = Environment.GetEnvironmentVariable("HEADER_NAME")!;
+            });
+        
         services.AddTransient<BearerAuthorizationMessageHandler>();
         services.AddTransient<ApiKeyAuthorizationMessageHandler>();
         

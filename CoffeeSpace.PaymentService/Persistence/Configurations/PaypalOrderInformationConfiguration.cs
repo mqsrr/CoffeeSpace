@@ -1,4 +1,5 @@
-﻿using CoffeeSpace.PaymentService.Application.Models;
+﻿using CoffeeSpace.Domain.Ordering.Orders;
+using CoffeeSpace.PaymentService.Application.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -17,13 +18,13 @@ internal sealed class PaypalOrderInformationConfiguration : IEntityTypeConfigura
 
         builder.HasOne(o => o.PaypalOrder)
             .WithOne()
-            .HasForeignKey<PaypalOrderInformation>(o => o.PaypalOrderId)
+            .HasForeignKey<PaypalOrderInformation>("PaypalOrderId")
             .IsRequired();
 
         builder.HasIndex(o => o.Id)
             .IsUnique();
 
-        builder.HasIndex(o => o.PaypalOrderId)
+        builder.HasIndex("PaypalOrderId")
             .IsUnique();
     }
 }

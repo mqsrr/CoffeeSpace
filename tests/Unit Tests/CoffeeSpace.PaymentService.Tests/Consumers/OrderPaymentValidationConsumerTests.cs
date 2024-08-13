@@ -7,7 +7,6 @@ using CoffeeSpace.PaymentService.Application.Services.Abstractions;
 using FluentAssertions;
 using MassTransit;
 using MassTransit.Testing;
-using Mediator;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using Xunit;
@@ -27,7 +26,7 @@ public sealed class OrderPaymentValidationConsumerTests : IAsyncLifetime
         _fixture.Customize(new AutoNSubstituteCustomization());
 
         _paymentService = _fixture.Create<IPaymentService>();
-        
+
         var serviceProvider = new ServiceCollection()
             .AddScoped<IPaymentService>(_ => _paymentService)
             .AddMassTransitTestHarness(config => config.AddConsumer<OrderPaymentValidationConsumer>())
@@ -43,7 +42,7 @@ public sealed class OrderPaymentValidationConsumerTests : IAsyncLifetime
         // Arrange
         var consumerEndpoint = await _testHarness.GetConsumerEndpoint<OrderPaymentValidationConsumer>();
         var request = _fixture.Create<RequestOrderPayment>();
-        
+
         // Act
         await consumerEndpoint.Send(request);
 
@@ -51,7 +50,7 @@ public sealed class OrderPaymentValidationConsumerTests : IAsyncLifetime
         bool consumedAny = await _consumerTestHarness.Consumed.Any<RequestOrderPayment>();
         consumedAny.Should().BeTrue();
 
-        await _paymentService.Received().CreateOrderAsync(Arg.Any<Order>(), Arg.Any<CancellationToken>());
+        await _paymentService.Received().CreateOrderAsync(request.Order, Arg.Any<CancellationToken>());
     }
 
     public async Task InitializeAsync()

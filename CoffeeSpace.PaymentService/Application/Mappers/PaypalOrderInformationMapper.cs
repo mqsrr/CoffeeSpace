@@ -5,15 +5,14 @@ namespace CoffeeSpace.PaymentService.Application.Mappers;
 
 public static class PaypalOrderInformationMapper
 {
-    public static PaypalOrderInformation ToPaypalOrderInformation(this PayPalCheckoutSdk.Orders.Order paypalOrder, Order applicationOrder)
+    public static PaypalOrderInformation ToPaypalOrderInformation(this PayPalCheckoutSdk.Orders.Order paypalOrder, Guid applicationOrderId, Guid buyerId)
     {
         return new PaypalOrderInformation
         {
             Id = Guid.NewGuid(),
-            ApplicationOrderId = applicationOrder.Id,
-            BuyerId = applicationOrder.BuyerId,
+            ApplicationOrderId = applicationOrderId,
+            BuyerId = buyerId,
             PaypalOrder = paypalOrder,
-            PaypalOrderId = paypalOrder.Id
         };
     }
 }

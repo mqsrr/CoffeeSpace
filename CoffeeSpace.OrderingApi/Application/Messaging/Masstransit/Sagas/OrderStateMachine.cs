@@ -1,5 +1,5 @@
 using CoffeeSpace.Messages.Ordering.Commands;
-using CoffeeSpace.Messages.Ordering.Responses;
+using CoffeeSpace.Messages.Payment.Responses;
 using CoffeeSpace.Messages.Products.Commands;
 using CoffeeSpace.Messages.Products.Responses;
 using CoffeeSpace.Messages.Shipment.Commands;
@@ -12,19 +12,25 @@ namespace CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Sagas;
 internal sealed class OrderStateMachine : MassTransitStateMachine<OrderStateInstance>
 {
     public required State Submitted { get; init; }
-
     public required State StockConfirmed { get; init; }
-
     public required State Paid { get; init; }
-
     public required State Shipped { get; init; }
-
     public required State Canceled { get; init; }
 
     public OrderStateMachine(ILogger<OrderStateMachine> logger)
     {
-        Event(() => SubmitOrder, x => 
-            x.CorrelateById(context => context.Message.Order.Id));
+        Event(() => SubmitOrder, x =>
+        {
+            x.CorrelateById(context => context.Message.Order.Id);
+
+            x.SetSagaFactory(context => new OrderStateInstance
+            {
+                CorrelationId = context.Message.Order.Id,
+                Order = context.Message.Order,
+                StockValidationSuccess = false,
+                PaymentSuccess = false
+            });
+        });
 
         Event(() => CancelOrder, x =>
             x.CorrelateById(context => context.Message.Order.Id));
@@ -47,18 +53,10 @@ internal sealed class OrderStateMachine : MassTransitStateMachine<OrderStateInst
 
         Initially(
             When(SubmitOrder)
-                .Then(context =>
-                {
-                    context.Saga.OrderId = context.Message.Order.Id;
-                    context.Saga.BuyerId = context.Message.Order.BuyerId;
-                    context.Saga.UpdateOrderStatusCorrelationId = context.Message.Order.Id;
-                    context.Saga.StockValidationSuccess = false;
-                    context.Saga.PaymentSuccess = false;
-                })
                 .Request(RequestOrderStockValidation, context => context.Init<ValidateOrderStock>(new
                 {
-                    context.Message.Order,
-                    ProductTitles = context.Message.Order.OrderItems.Select(item => item.Title)
+                    context.Message.Order.Id,
+                     context.Message.Order.OrderItems
                 }))
                 .TransitionTo(Submitted));
 
@@ -78,13 +76,12 @@ internal sealed class OrderStateMachine : MassTransitStateMachine<OrderStateInst
         During(Submitted,
             When(RequestOrderStockValidation.TimeoutExpired)
                 .Then(context =>
-                    logger.LogWarning("The order with ID {OrderId} has reached the timeout value for product validation",
-                        context.Saga.OrderId))
+                    logger.LogWarning("The order with ID {OrderId} has reached the timeout value for product validation", context.Saga.Order.Id))
                 .TransitionTo(Canceled),
             When(RequestOrderStockValidation.Completed)
                 .Request(RequestOrderPayment, context => context.Init<RequestOrderPayment>(new
                 {
-                    context.Message.Order
+                    context.Saga.Order
                 }))
                 .Then(context => context.Saga.StockValidationSuccess = true)
                 .TransitionTo(StockConfirmed));
@@ -92,13 +89,13 @@ internal sealed class OrderStateMachine : MassTransitStateMachine<OrderStateInst
         During(StockConfirmed,
             When(RequestOrderPayment.TimeoutExpired)
                 .Then(context =>
-                    logger.LogWarning("The order with ID {OrderId} has reached the timeout value for payment request",
-                        context.Saga.OrderId))
+                    logger.LogWarning("The order with ID {OrderId} has reached the timeout value for payment request", context.Saga.Order.Id))
                 .TransitionTo(Canceled),
             When(RequestOrderPayment.Completed)
                 .Request(RequestOrderShipment, context => context.Init<RequestOrderShipment>(new
                 {
-                    context.Message.Order
+                    context.Saga.Order.Id,
+                    context.Saga.Order.Address
                 }))
                 .Then(context => context.Saga.PaymentSuccess = true)
                 .TransitionTo(Paid),
@@ -107,8 +104,7 @@ internal sealed class OrderStateMachine : MassTransitStateMachine<OrderStateInst
         During(Paid,
             When(RequestOrderShipment.TimeoutExpired)
                 .Then(context =>
-                    logger.LogWarning("The order with ID {OrderId} has reached the timeout value for shipment request",
-                        context.Saga.OrderId))
+                    logger.LogWarning("The order with ID {OrderId} has reached the timeout value for shipment request", context.Saga.Order.Id))
                 .TransitionTo(Canceled),
             When(RequestOrderShipment.Completed)
                 .Activity(selector => selector.OfInstanceType<UpdateOrderStatusActivity>())
@@ -120,12 +116,9 @@ internal sealed class OrderStateMachine : MassTransitStateMachine<OrderStateInst
     }
 
     public required Event<SubmitOrder> SubmitOrder { get; init; }
-
     public required Event<CancelOrder> CancelOrder { get; init; }
 
     public Request<OrderStateInstance, RequestOrderPayment, OrderPaid> RequestOrderPayment { get; init; }
-
     public Request<OrderStateInstance, ValidateOrderStock, OrderStockConfirmed> RequestOrderStockValidation { get; init; }
-
     public Request<OrderStateInstance, RequestOrderShipment, OrderShipped> RequestOrderShipment { get; init; }
 }

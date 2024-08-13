@@ -2,6 +2,7 @@ using CoffeeSpace.Messages.Products.Commands;
 using CoffeeSpace.Messages.Products.Responses;
 using CoffeeSpace.ProductApi.Application.Repositories.Abstractions;
 using MassTransit;
+using MassTransit.Metadata;
 
 namespace CoffeeSpace.ProductApi.Application.Messages.Consumers;
 
@@ -20,20 +21,16 @@ internal sealed class OrderStockValidationConsumer : IConsumer<ValidateOrderStoc
     {
         var existingProducts = await _productRepository.GetAllProductsAsync(context.CancellationToken);
         var existingTitles = existingProducts.Select(product => product.Title);
-        bool isValid = context.Message.ProductTitles.All(title => existingTitles.Contains(title));
+        bool isValid = context.Message.OrderItems.Select(orderItem => orderItem.Title).All(title => existingTitles.Contains(title));
         
         if (!isValid)
         {
-            _logger.LogInformation("The order with ID {OrderId} has invalid products, which are no longer acceptable or out of stock", context.Message.Order.Id);
+            _logger.LogInformation("The order with ID {OrderId} has invalid products, which are no longer acceptable or out of stock", context.Message.Id);
             await context.RespondAsync<Fault<ValidateOrderStock>>(context.Message);
             return;
         }
         
-        _logger.LogInformation("The order with ID {OrderId} has successfully completed product validation", context.Message.Order.Id);
-        await context.RespondAsync<OrderStockConfirmed>(new
-        {
-            context.Message.Order,
-            IsValid = isValid
-        });
+        _logger.LogInformation("The order with ID {OrderId} has successfully completed product validation", context.Message.Id);
+        await context.RespondAsync<OrderStockConfirmed>(new { });
     }
 }

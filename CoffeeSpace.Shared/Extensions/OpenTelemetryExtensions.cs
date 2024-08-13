@@ -28,7 +28,6 @@ public static class OpenTelemetryExtensions
         builder.Services.ConfigureOpenTelemetryTracerProvider(logging => logging.AddOtlpExporter());
         
         builder.Services.AddOpenTelemetry().WithMetrics(providerBuilder => providerBuilder.AddPrometheusExporter());
-        
         builder.Logging.AddOpenTelemetry(options =>
         {
             options.IncludeScopes = true;

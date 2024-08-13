@@ -1,6 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
-using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using System.Text;
 using AutoBogus;
@@ -22,7 +21,6 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
@@ -32,13 +30,12 @@ using NSubstitute;
 using Quartz;
 using Testcontainers.PostgreSql;
 using Testcontainers.Redis;
+using Xunit;
 
 namespace CoffeeSpace.OrderingApi.Tests.Integration.Fixtures;
 
 public sealed class OrderingApiFactory : WebApplicationFactory<BuyersController>, IAsyncLifetime
 {
-    private static IModel _dbModel = default!;
-
     private readonly PostgreSqlContainer _orderingPostgreSqlContainer;
     private readonly PostgreSqlContainer _orderStateSagaPostgreSqlContainer;
     private readonly RedisContainer _redisContainer;
@@ -128,13 +125,11 @@ public sealed class OrderingApiFactory : WebApplicationFactory<BuyersController>
             });
             
             services.AddScoped(_ => new DbContextOptionsBuilder<OrderingDbContext>()
-                .EnableRecording("OrderingDb")
                 .EnableDetailedErrors()
                 .UseNpgsql(_orderingPostgreSqlContainer.GetConnectionString())
                 .Options);       
             
             services.AddScoped(_ => new DbContextOptionsBuilder<OrderStateSagaDbContext>()
-                .EnableRecording("OrderStateSagaDb")
                 .EnableDetailedErrors()
                 .UseNpgsql(_orderStateSagaPostgreSqlContainer.GetConnectionString())
                 .Options);
@@ -149,13 +144,6 @@ public sealed class OrderingApiFactory : WebApplicationFactory<BuyersController>
         string token = WriteToken(jwtSettings);
 
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-    }
-    
-    [ModuleInitializer]
-    public static void InitializeVerify()
-    {
-        VerifyEntityFramework.Initialize(_dbModel);
-        VerifyMassTransit.Initialize();
     }
     
     public async Task InitializeAsync()
@@ -203,7 +191,5 @@ public sealed class OrderingApiFactory : WebApplicationFactory<BuyersController>
         orderingDbContext.Buyers.AddRange(Buyers);
         orderingDbContext.Orders.AddRange(Orders);
         orderingDbContext.SaveChanges();
-        
-        _dbModel = orderingDbContext.Model;
     }
 }

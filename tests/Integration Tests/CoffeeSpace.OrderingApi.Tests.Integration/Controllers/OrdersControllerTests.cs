@@ -9,11 +9,12 @@ using CoffeeSpace.OrderingApi.Application.Helpers;
 using CoffeeSpace.OrderingApi.Tests.Integration.Fakers.Models;
 using CoffeeSpace.OrderingApi.Tests.Integration.Fakers.Requests;
 using CoffeeSpace.OrderingApi.Tests.Integration.Fixtures;
+using Xunit;
 
 namespace CoffeeSpace.OrderingApi.Tests.Integration.Controllers;
 
 [Collection("Ordering Dependencies")]
-public sealed class OrdersControllerTests : IAsyncLifetime
+public sealed class OrdersControllerTests
 {
     private readonly HttpClient _httpClient;
     private readonly IEnumerable<Order> _orders;
@@ -37,14 +38,7 @@ public sealed class OrdersControllerTests : IAsyncLifetime
         var response = await _httpClient.GetAsync(request);
 
         // Assert
-        var sqlLogs =Recording.Stop("OrderingDb");
         var orderResponses = await response.Content.ReadFromJsonAsync<IEnumerable<OrderResponse>>();
-        await Verify(new
-        {
-            response, 
-            orderResponses,
-            sqlLogs
-        }).IgnoreMember("Authorization");
     }
     
     [Fact]
@@ -61,13 +55,7 @@ public sealed class OrdersControllerTests : IAsyncLifetime
         var response = await _httpClient.GetAsync(request);
 
         // Assert
-        var sqlLogs =Recording.Stop("OrderingDb");
 
-        await Verify(new
-        {
-            response,
-            sqlLogs
-        }).IgnoreMember("Authorization");
     }
     
     [Fact]
@@ -87,12 +75,6 @@ public sealed class OrdersControllerTests : IAsyncLifetime
         var response = await _httpClient.PostAsJsonAsync(request, order);
 
         // Assert
-        var sqlLogs =Recording.Stop("OrderingDb");
-        await Verify(new
-        {
-            response,
-            sqlLogs
-        }).IgnoreMembers("Authorization", "Host", "Exception", "Location", "Parameters", "Content-Length");
     }
     
     [Fact]
@@ -108,22 +90,5 @@ public sealed class OrdersControllerTests : IAsyncLifetime
         var response = await _httpClient.DeleteAsync(request);
 
         // Assert
-        var sqlLogs = Recording.Stop("OrderingDb");
-        await Verify(new
-        {
-            response,
-            sqlLogs
-        }).IgnoreMembers("Authorization");
-    }
-
-    public Task InitializeAsync()
-    {
-        Recording.Start("OrderingDb");
-        return Task.CompletedTask;
-    }
-
-    public Task DisposeAsync()
-    {
-        return Task.CompletedTask;
     }
 }

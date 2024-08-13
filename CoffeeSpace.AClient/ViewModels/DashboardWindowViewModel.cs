@@ -1,8 +1,9 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoBogus;
+using CoffeeSpace.AClient.Fakers;
 using CoffeeSpace.AClient.Messages.Commands;
 using CoffeeSpace.AClient.Models;
 using CoffeeSpace.AClient.RefitClients;
@@ -22,6 +23,9 @@ public sealed partial class DashboardWindowViewModel : ViewModelBase
     [ObservableProperty]
     private ObservableCollection<Product> _products;
 
+    [ObservableProperty]
+    private Buyer _buyer;
+
     public DashboardWindowViewModel(ISender sender, IProductsWebApi productsWebApi)
     {
         Products = new ObservableCollection<Product>();
@@ -31,7 +35,7 @@ public sealed partial class DashboardWindowViewModel : ViewModelBase
 
     public DashboardWindowViewModel()
     {
-        Products = new ObservableCollection<Product>(AutoFaker.Generate<Product>(10));
+        Products = new ObservableCollection<Product>(AutoFaker.Generate<Product, CoffeeFaker>(10));
         _sender = null!;
         _productsWebApi = null!;
     }
@@ -47,15 +51,5 @@ public sealed partial class DashboardWindowViewModel : ViewModelBase
         
         Products.AddRange(productsResponse.Content!);
     }
-    
-    [RelayCommand]
-    private async Task AddToCart(Product product, CancellationToken cancellationToken)
-    {
-        await _sender.Send(new AddToCartCommand
-        {
-            Product = product
-        }, cancellationToken);
 
-        await SukiHost.ShowToast("Cart is updated", "Item has been added!");
-    }
 }

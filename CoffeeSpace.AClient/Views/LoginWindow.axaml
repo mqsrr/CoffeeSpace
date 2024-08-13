@@ -1,4 +1,4 @@
-﻿<Window xmlns="https://github.com/avaloniaui"
+﻿<controls:SukiWindow xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -14,11 +14,6 @@
     <Design.DataContext>
         <vm:LoginViewModel />
     </Design.DataContext>
-    
-    <Window.Background>
-        <ImageBrush Source="../Assets/default-bg.png" Stretch="UniformToFill">
-        </ImageBrush>
-    </Window.Background>
 
     <controls:GlassCard Width="300" Height="350" Margin="10">
         <Grid ShowGridLines="False"
@@ -57,4 +52,4 @@
             </controls:BusyArea>
         </Grid>
     </controls:GlassCard>
-</Window>
+</controls:SukiWindow>

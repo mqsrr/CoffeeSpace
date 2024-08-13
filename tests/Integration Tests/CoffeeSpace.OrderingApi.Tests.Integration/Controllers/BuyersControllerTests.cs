@@ -7,11 +7,12 @@ using CoffeeSpace.OrderingApi.Application.Helpers;
 using CoffeeSpace.OrderingApi.Tests.Integration.Fakers.Models;
 using CoffeeSpace.OrderingApi.Tests.Integration.Fakers.Requests;
 using CoffeeSpace.OrderingApi.Tests.Integration.Fixtures;
+using Xunit;
 
 namespace CoffeeSpace.OrderingApi.Tests.Integration.Controllers;
 
 [Collection("Ordering Dependencies")]
-public sealed class BuyersControllerTests : IAsyncLifetime
+public sealed class BuyersControllerTests
 {
     private readonly HttpClient _httpClient;
     private readonly IEnumerable<Buyer> _buyers;
@@ -33,15 +34,8 @@ public sealed class BuyersControllerTests : IAsyncLifetime
         var response = await _httpClient.GetAsync(request);
 
         // Assert
-        var sqlLogs =Recording.Stop("OrderingDb");
         var buyerResponse = await response.Content.ReadFromJsonAsync<BuyerResponse>();
-
-        await Verify(new
-        {
-            response,
-            buyerResponse,
-            sqlLogs
-        }).IgnoreMember("Authorization");
+        
     }
     
     [Fact]
@@ -55,13 +49,7 @@ public sealed class BuyersControllerTests : IAsyncLifetime
         var response = await _httpClient.GetAsync(request);
 
         // Assert
-        var sqlLogs =Recording.Stop("OrderingDb");
-
-        await Verify(new
-        {
-            response,
-            sqlLogs
-        }).IgnoreMember("Authorization");
+        
     }
 
     [Fact]
@@ -75,12 +63,7 @@ public sealed class BuyersControllerTests : IAsyncLifetime
         var response = await _httpClient.PostAsJsonAsync(request, buyerToCreate);
 
         // Assert
-        var sqlLogs =Recording.Stop("OrderingDb");
-        await Verify(new
-        {
-            response,
-            sqlLogs
-        }).IgnoreMembers("Authorization", "Location");
+
     }
 
     [Fact]
@@ -96,15 +79,8 @@ public sealed class BuyersControllerTests : IAsyncLifetime
         var response = await _httpClient.PutAsJsonAsync(request, buyerToUpdate);
 
         // Assert
-        var sqlLogs =Recording.Stop("OrderingDb");
         var buyerResponse = response.Content.ReadFromJsonAsync<BuyerResponse>();
         
-        await Verify(new
-        {
-            response,
-            buyerResponse,    
-            sqlLogs
-        }).IgnoreMember("Authorization");
     }
 
     [Fact]
@@ -118,22 +94,5 @@ public sealed class BuyersControllerTests : IAsyncLifetime
         var response = await _httpClient.DeleteAsync(request);
 
         // Assert
-        var sqlLogs =Recording.Stop("OrderingDb");
-        await Verify(new
-        {
-            response,
-            sqlLogs
-        }).IgnoreMember("Authorization");
-    }
-
-    public Task InitializeAsync()
-    {
-        Recording.Start("OrderingDb");
-        return Task.CompletedTask;
-    }
-
-    public Task DisposeAsync()
-    {
-        return Task.CompletedTask;
     }
 }

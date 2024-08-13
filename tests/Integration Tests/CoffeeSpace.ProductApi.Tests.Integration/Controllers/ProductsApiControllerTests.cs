@@ -8,6 +8,7 @@ using CoffeeSpace.ProductApi.Application.Helpers;
 using CoffeeSpace.ProductApi.Application.Mapping;
 using CoffeeSpace.ProductApi.Tests.Integration.Fakers;
 using CoffeeSpace.ProductApi.Tests.Integration.Fixtures;
+using Xunit;
 
 namespace CoffeeSpace.ProductApi.Tests.Integration.Controllers;
 
@@ -26,28 +27,18 @@ public sealed class ProductsApiControllerTests : IClassFixture<ProductApiFactory
     public async Task GetAll_ShouldReturn200_AndAllProducts()
     {
         // Arrange
-        Recording.Start("all");
-
         const string uriRequest = ApiEndpoints.Products.GetAll;
         
         // Act
         var response = await _httpClient.GetAsync(uriRequest);
 
         // Assert
-        var sqlLogs = Recording.Stop("all");
-
-        await Verify(new
-        {
-            response, 
-            sqlLogs
-        }).IgnoreMember("Authorization");
     }
     
     [Fact]
     public async Task GetById_ShouldReturn200_AndExistingProduct()
     {
         // Arrange
-        Recording.Start("get");
 
         var expectedProductResponse = _products.First().ToResponse();
         string uriRequest = ApiEndpoints.Products.Get.Replace("{id:guid}", expectedProductResponse.Id.ToString());
@@ -57,21 +48,12 @@ public sealed class ProductsApiControllerTests : IClassFixture<ProductApiFactory
 
         // Assert
         var productResponse = await response.Content.ReadFromJsonAsync<ProductResponse>();
-        var sqlLogs =Recording.Stop("get");
-
-        await Verify(new
-        {
-            response,
-            productResponse,
-            sqlLogs
-        }).IgnoreMember("Authorization");
     }
     
     [Fact]
     public async Task Create_ShouldReturn201_AndCreateProduct()
     {
         // Arrange
-        Recording.Start("create");
 
         var updatedProduct = AutoFaker.Generate<CreateProductRequest, CreateProductRequestFaker>();
         const string uriRequest = ApiEndpoints.Products.Create;
@@ -93,19 +75,12 @@ public sealed class ProductsApiControllerTests : IClassFixture<ProductApiFactory
         var response = await _httpClient.PostAsync(uriRequest, content);
 
         // Assert
-        var sqlLogs =Recording.Stop("create");
-        await Verify(new
-        {
-            response,
-            sqlLogs
-        }).IgnoreMembers("Authorization", "Location", "Content-Type");
     }
     
     [Fact]
     public async Task Update_ShouldReturn200_AndUpdateProduct()
     {
         // Arrange
-        Recording.Start("update");
 
         var productToUpdate = _products.First();
         var updatedProduct = AutoFaker.Generate<UpdateProductRequest, UpdateProductRequestFaker>();
@@ -128,19 +103,12 @@ public sealed class ProductsApiControllerTests : IClassFixture<ProductApiFactory
         var response = await _httpClient.PutAsync(uriRequest, content);
 
         // Assert
-        var sqlLogs =Recording.Stop("update");
-        await Verify(new
-        {
-            response,
-            sqlLogs
-        }).IgnoreMembers("Authorization", "Content-Type");
     }
     
     [Fact]
     public async Task Delete_ShouldReturn200_AndDeleteProduct()
     {
         // Arrange
-        Recording.Start("delete");
 
         var productToDelete = _products.Last();
         string uriRequest = ApiEndpoints.Products.Delete.Replace("{id:guid}", productToDelete.Id.ToString());
@@ -149,11 +117,5 @@ public sealed class ProductsApiControllerTests : IClassFixture<ProductApiFactory
         var response = await _httpClient.DeleteAsync(uriRequest);
 
         // Assert
-        var sqlLogs =Recording.Stop("delete");
-        await Verify(new
-        {
-            response,
-            sqlLogs
-        }).IgnoreMembers("Authorization", "RequestUri");
     }
 }

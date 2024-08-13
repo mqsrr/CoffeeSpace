@@ -99,21 +99,32 @@ public sealed class OrderServiceTests
     {
         // Arrange
         var orderToCreate = _fixture.Create<Order>();
+        var provider = Substitute.For<ISendEndpoint>();
         
-        _orderRepository.CreateAsync(orderToCreate, Arg.Any<CancellationToken>())
+        var endpointUri = _fixture.Create<Uri>();
+        var cancellationToken = CancellationToken.None;
+        
+        _orderRepository.CreateAsync(orderToCreate, cancellationToken)
             .Returns(true);
 
-        _sendEndpointProvider.Send(Arg.Any<object>())
+        _sendEndpointProvider.GetSendEndpoint(endpointUri)
+            .Returns(provider);
+
+        provider.Send(Arg.Any<object>(), cancellationToken)
             .Returns(Task.CompletedTask);
+        
+        EndpointConvention.Map<SubmitOrder>(endpointUri);
 
         // Act
-        bool result = await _orderService.CreateAsync(orderToCreate, CancellationToken.None);
+        bool result = await _orderService.CreateAsync(orderToCreate, cancellationToken);
  
         // Assert
         result.Should().BeTrue();
 
-        await _orderRepository.Received().CreateAsync(orderToCreate, Arg.Any<CancellationToken>());
+        await _orderRepository.Received().CreateAsync(orderToCreate, cancellationToken);
         await _hubContext.Clients.Received().Groups(Arg.Any<string[]>()).OrderCreated(orderToCreate.ToResponse());
+
+        await provider.Received().Send(Arg.Any<object>(), Arg.Any<IPipe<SendContext<SubmitOrder>>>(),cancellationToken);
     }
     
     [Fact]

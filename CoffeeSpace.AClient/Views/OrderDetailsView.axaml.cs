@@ -2,6 +2,7 @@ using AutoBogus;
 using Avalonia.Controls;
 using CoffeeSpace.AClient.Models;
 using CoffeeSpace.AClient.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CoffeeSpace.AClient.Views;
 
@@ -16,6 +17,6 @@ public partial class OrderDetailsView : UserControl
     public OrderDetailsView()
     {
         InitializeComponent();
-        DataContext = new OrderDetailsViewModel(AutoFaker.Generate<Order>());
+        DataContext = App.Services.GetRequiredService<OrderDetailsViewModel>();
     }
 }

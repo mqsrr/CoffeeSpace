@@ -16,7 +16,7 @@ public sealed class GetAllProductsQueryHandler : IQueryHandler<GetAllProductsQue
         return ValueTask.FromResult(Enumerable.Repeat(new Product
         {
             Id = "Cool",
-            Image = null,
+            Image = null!,
             Title = "Capuchino",
             Description = "Desciption",
             UnitPrice = 10,

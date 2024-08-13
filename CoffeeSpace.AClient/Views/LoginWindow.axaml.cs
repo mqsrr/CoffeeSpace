@@ -1,13 +1,13 @@
 ﻿using System;
 using Avalonia.Controls;
 using Avalonia.Input;
-using CoffeeSpace.AClient.Services;
 using CoffeeSpace.AClient.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
+using SukiUI.Controls;
 
 namespace CoffeeSpace.AClient.Views;
 
-public sealed partial class LoginWindow : Window
+public sealed partial class LoginWindow : SukiWindow
 {
     private readonly RegisterWindow _registerView;
     

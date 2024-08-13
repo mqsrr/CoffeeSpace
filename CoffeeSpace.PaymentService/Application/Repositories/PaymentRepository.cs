@@ -23,8 +23,8 @@ internal sealed class PaymentRepository : IPaymentRepository
     public async Task<PaypalOrderInformation?> GetByApplicationOrderIdAsync(Guid applicationOrderId,
         CancellationToken cancellationToken)
     {
-        var paypalOrderInformation = await _dbContext.PaypalOrders.FirstOrDefaultAsync(order => 
-            order.ApplicationOrderId == applicationOrderId, cancellationToken);
+        var paypalOrderInformation = await _dbContext.PaypalOrders
+            .FirstOrDefaultAsync(order => order.ApplicationOrderId == applicationOrderId, cancellationToken);
 
         return paypalOrderInformation;
     }
@@ -37,20 +37,11 @@ internal sealed class PaymentRepository : IPaymentRepository
         return result > 0;
     }
 
-    public async Task<bool> UpdatePaymentStatusAsync(string orderId, string newOrderStatus ,CancellationToken cancellationToken)
+    public async Task<bool> UpdatePaymentStatusAsync(string orderId, string orderStatus, CancellationToken cancellationToken)
     {
         int result = await _dbContext.Orders.Where(o => o.Id == orderId)
             .ExecuteUpdateAsync(setter =>
-                setter.SetProperty(o => o.Status, newOrderStatus), cancellationToken);
-
-        return result > 0;
-    }
-
-    public async Task<bool> DeletePaymentByIdAsync(Guid paypalOrderId, CancellationToken cancellationToken)
-    {
-        int result = await _dbContext.PaypalOrders
-            .Where(order => order.Id == paypalOrderId)
-            .ExecuteDeleteAsync(cancellationToken);
+                setter.SetProperty(o => o.Status, orderStatus), cancellationToken);
 
         return result > 0;
     }

@@ -42,7 +42,7 @@ public sealed class DeleteBuyerConsumerTests : IAsyncLifetime
     {
         // Arrange
         var userToDelete = _fixture.Create<ApplicationUser>();
-        var request = _fixture.Create<DeleteBuyer>();
+        var request = _fixture.Create<DeleteBuyerByEmail>();
         var consumerEndpoint = await _testHarness.GetConsumerEndpoint<DeleteBuyerConsumer>();
 
         _userManager.FindByEmailAsync(request.Email)
@@ -52,7 +52,7 @@ public sealed class DeleteBuyerConsumerTests : IAsyncLifetime
         await consumerEndpoint.Send(request);
 
         // Assert
-        bool consumedAny = await _consumerTestHarness.Consumed.Any<DeleteBuyer>();
+        bool consumedAny = await _consumerTestHarness.Consumed.Any<DeleteBuyerByEmail>();
         consumedAny.Should().BeTrue();
 
         await _userManager.Received().DeleteAsync(userToDelete);

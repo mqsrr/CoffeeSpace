@@ -15,6 +15,7 @@ using CoffeeSpace.AClient.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Mediator;
+using Microsoft.Extensions.DependencyInjection;
 using SukiUI.Controls;
 
 namespace CoffeeSpace.AClient.ViewModels;
@@ -58,13 +59,13 @@ public sealed partial class CartWindowViewModel : ViewModelBase
         
         _hubConnectionService.OnOrderCreated(_ => 
             Dispatcher.UIThread.Post(async () => 
-                await SukiHost.ShowToast("Success", "Order has been created")));
+                await SukiHost.ShowToast("Order Has Been Created", "You will receive payment request in a few seconds.")));
         
         _hubConnectionService.OnOrderPaymentPageInitialized((_, paymentUri) =>
         {
             Dispatcher.UIThread.Post(() =>
             {
-                var paymentView = new PaymentView();
+                var paymentView = App.Services.GetRequiredService<PaymentView>();
                 paymentView.WebView.Url = new Uri(paymentUri);
                 paymentView.WebView.WebMessageReceived += (_, args) =>
                 {
@@ -101,6 +102,10 @@ public sealed partial class CartWindowViewModel : ViewModelBase
         }, cancellationToken);
         
         CartProducts.Clear();
+        
+        Address.City = string.Empty;
+        Address.Country = string.Empty;
+        Address.Street = string.Empty;
     }
     
     [RelayCommand]

@@ -139,7 +139,7 @@ namespace CoffeeSpace.PaymentService.Persistence.Migrations
                         .WithMany("PurchaseUnits")
                         .HasForeignKey("OrderId");
 
-                    b.OwnsMany("PayPalCheckoutSdk.Orders.Item", "Items", b1 =>
+                    b.OwnsMany("PayPalCheckoutSdk.Orders.PurchaseUnit.Items#PayPalCheckoutSdk.Orders.Item", "Items", b1 =>
                         {
                             b1.Property<string>("PurchaseUnitId")
                                 .HasColumnType("text");

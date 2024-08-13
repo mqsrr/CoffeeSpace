@@ -4,7 +4,7 @@ namespace CoffeeSpace.Messages.Products.Commands;
 
 public interface ValidateOrderStock
 {
-     Order Order { get; }
-
-     IEnumerable<string> ProductTitles { get; }
+     Guid Id { get; }
+     
+     IEnumerable<OrderItem> OrderItems { get; }
 }

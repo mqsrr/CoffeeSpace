@@ -17,11 +17,8 @@
     <Design.DataContext>
         <vm:MainWindowViewModel />
     </Design.DataContext>
-    <Window.Background>
-        <ImageBrush Source="../Assets/default-bg.png" Stretch="UniformToFill" />
-    </Window.Background>
 
-    <suki:SukiSideMenu HeaderContentOverlapsToggleButton="False" suki:SukiHost.ToastLimit="4" suki:SukiHost.ToastLocation="BottomLeft">
+    <suki:SukiSideMenu suki:SukiHost.ToastLimit="4">
         <suki:SukiSideMenu.Items>
             <suki:SukiSideMenuItem Header="DashBoard">
                 <suki:SukiSideMenuItem.Icon>

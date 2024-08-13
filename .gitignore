@@ -354,3 +354,4 @@ DigiCertGlobalRootCA.crt.pem
 
 /.idea
 .env
+*dev.yaml

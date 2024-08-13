@@ -5,13 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeSpace.ProductApi.Persistence;
 
-internal sealed class ProductDbContext : DbContext, IProductDbContext
+internal sealed class ProductDbContext(DbContextOptions<ProductDbContext> options) : DbContext(options), IProductDbContext
 {
-    public ProductDbContext(DbContextOptions<ProductDbContext> options) : base(options)
-    {
-        Database.EnsureCreated();
-    }
-
     public required DbSet<Product> Products { get; init; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

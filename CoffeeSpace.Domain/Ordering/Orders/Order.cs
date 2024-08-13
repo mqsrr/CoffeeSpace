@@ -4,7 +4,7 @@ public sealed class Order
 {
     public required Guid Id { get; init; }
     
-    public required OrderStatus Status { get; init; }
+    public required OrderStatus Status { get; set; }
 
     public required Guid BuyerId { get; init; }
 

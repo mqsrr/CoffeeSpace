@@ -64,9 +64,8 @@ internal sealed class BuyerService : IBuyerService
             return false;
         }
 
-        await _sendEndpointProvider.Send<DeleteBuyer>(new
+        await _sendEndpointProvider.Send<DeleteBuyerByEmail>(new
         {
-            buyerToDelete.Name,
             buyerToDelete.Email
         }, cancellationToken).ConfigureAwait(false);
         return isDeleted;

@@ -8,15 +8,12 @@
              xmlns:converters="clr-namespace:CoffeeSpace.AClient.Converters"
              mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="650"
              x:DataType="vm:CartWindowViewModel"
-             x:Class="CoffeeSpace.AClient.Views.CartView">
+             x:Class="CoffeeSpace.AClient.Views.CartView"
+             FontFamily="{StaticResource Montserrat-Regular}">
 
     <Design.DataContext>
         <vm:CartWindowViewModel />
     </Design.DataContext>
-    <UserControl.Background>
-        <ImageBrush Source="../Assets/default-bg.png" Stretch="UniformToFill">
-        </ImageBrush>
-    </UserControl.Background>
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -87,9 +84,7 @@
                     <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
                              Margin="5" Watermark="Street"
                              Text="{Binding Address.Street}" />
-                    
-                    <TextBlock Grid.Row="2" Grid.Column="1" Text="$ 1010"
-                               FontWeight="ExtraBold" Margin="10" HorizontalAlignment="Right" />
+
                     <controls:BusyArea x:Name="BusyArea" IsBusy="{Binding CreateOrderCommand.IsRunning}"  
                                        Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">
                         <Button Content="Place Order" Foreground="WhiteSmoke"
@@ -97,13 +92,8 @@
                                 Command="{Binding CreateOrderCommand}" />
                     </controls:BusyArea>
                 </Grid>
-                <Label Content="Check the label" FontFamily="{StaticResource Montserrat-Regular}"
-                       FontSize="12" FontWeight="Bold"/>
             </Panel>
         </controls:GlassCard>
-        <Panel>
-            <Label Content="Order status: "/>
-        </Panel>
     </DockPanel>
 
 </UserControl>

@@ -1,5 +1,7 @@
 using CoffeeSpace.Messages.Ordering.Commands;
 using CoffeeSpace.Messages.Payment;
+using CoffeeSpace.Messages.Payment.Commands;
+using CoffeeSpace.Messages.Payment.Responses;
 using CoffeeSpace.PaymentService.Application.Services.Abstractions;
 using MassTransit;
 
@@ -19,6 +21,7 @@ internal sealed class OrderPaymentValidationConsumer : IConsumer<RequestOrderPay
     public async Task Consume(ConsumeContext<RequestOrderPayment> context)
     {
         var createdOrder = await _paymentService.CreateOrderAsync(context.Message.Order, context.CancellationToken);
+
         if (createdOrder is null)
         {
             await context.RespondAsync<Fault<RequestOrderPayment>>(context.Message);

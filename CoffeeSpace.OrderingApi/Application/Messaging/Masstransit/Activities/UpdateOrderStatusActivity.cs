@@ -1,30 +1,50 @@
 ﻿using CoffeeSpace.Domain.Ordering.Orders;
-using CoffeeSpace.Messages.Ordering.Commands;
 using CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Sagas;
-using CoffeeSpace.OrderingApi.Application.Messaging.Mediator.Commands;
+using CoffeeSpace.OrderingApi.Application.Messaging.Mediator.Notifications.Orders;
+using CoffeeSpace.OrderingApi.Application.Repositories.Abstractions;
+using CoffeeSpace.OrderingApi.Application.SignalRHubs;
+using CoffeeSpace.OrderingApi.Application.SignalRHubs.Abstraction;
 using MassTransit;
 using Mediator;
+using Microsoft.AspNetCore.SignalR;
 
 namespace CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Activities;
 
 internal sealed class UpdateOrderStatusActivity : IStateMachineActivity<OrderStateInstance>
 {
-    private readonly ISender _sender;
+    private readonly IOrderRepository _orderRepository;
+    private readonly IPublisher _publisher;
+    private readonly IHubContext<OrderingHub, IOrderingHub> _hubContext;
 
-    public UpdateOrderStatusActivity(ISender sender)
+    public UpdateOrderStatusActivity(IOrderRepository orderRepository, IPublisher publisher,
+        IHubContext<OrderingHub, IOrderingHub> hubContext)
     {
-        _sender = sender;
+        _orderRepository = orderRepository;
+        _publisher = publisher;
+        _hubContext = hubContext;
     }
 
     public async Task Execute(BehaviorContext<OrderStateInstance> context, IBehavior<OrderStateInstance> next)
     {
-        await _sender.Send(new UpdateOrderStatusCommand
+        var orderToUpdate = context.Saga.Order;
+        bool isStatusUpdated = await _orderRepository.UpdateOrderStatusAsync(
+            orderToUpdate.Id, (OrderStatus)context.Saga.CurrentState - 3, context.CancellationToken);
+
+        if (!isStatusUpdated)
         {
-            OrderId = context.Saga.OrderId,
-            BuyerId = context.Saga.BuyerId,
-            Status = (OrderStatus)(context.Saga.CurrentState - 3)
-        });
-        
+            await next.Execute(context).ConfigureAwait(false);
+        }
+
+        await _publisher.Publish(new UpdateOrderNotification
+        {
+            BuyerId = orderToUpdate.BuyerId,
+            Id = orderToUpdate.Id
+        }, context.CancellationToken);
+
+        await _hubContext.Clients
+            .Groups(orderToUpdate.BuyerId.ToString(), "Web Dashboard")
+            .OrderStatusUpdated(orderToUpdate.Status, orderToUpdate.Id);
+
         await next.Execute(context).ConfigureAwait(false);
     }
 

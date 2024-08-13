@@ -1,6 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
-using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using System.Text;
 using AutoBogus;
@@ -14,20 +13,18 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Testcontainers.PostgreSql;
 using Testcontainers.Redis;
+using Xunit;
 
 namespace CoffeeSpace.ProductApi.Tests.Integration.Fixtures;
 
 public class ProductApiFactory : WebApplicationFactory<ProductsController>, IAsyncLifetime
 {
-    private static IModel _dbModel = default!;
-
     private readonly PostgreSqlContainer _postgreSqlContainer;
     private readonly RedisContainer _redisContainer;
 
@@ -69,7 +66,6 @@ public class ProductApiFactory : WebApplicationFactory<ProductsController>, IAsy
         builder.ConfigureTestServices(services =>
         {
             services.AddScoped(_ => new DbContextOptionsBuilder<ProductDbContext>()
-                .EnableRecording("ProductDb")
                 .UseNpgsql(_postgreSqlContainer.GetConnectionString())
                 .Options);
 
@@ -80,7 +76,6 @@ public class ProductApiFactory : WebApplicationFactory<ProductsController>, IAsy
             dbContext.Products.AddRange(Products);
             
             dbContext.SaveChanges();
-            _dbModel = dbContext.Model;
         });
     }
 
@@ -90,12 +85,6 @@ public class ProductApiFactory : WebApplicationFactory<ProductsController>, IAsy
         string token = WriteToken(jwtSettings);
 
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-    }
-    
-    [ModuleInitializer]
-    public static void InitializeVerify()
-    {
-        VerifyEntityFramework.Initialize(_dbModel);
     }
     
     public async Task InitializeAsync()

@@ -1,4 +1,6 @@
 ﻿
+using CommunityToolkit.Mvvm.ComponentModel;
+
 namespace CoffeeSpace.AClient.Models;
 
 public sealed class Product

@@ -85,8 +85,13 @@ public sealed class AuthServiceTests
     public async Task RegisterAsync_ShouldReturnToken_WhenRegisterSucceeds()
     {
         // Arrange
+        var endpointUri = _fixture.Create<Uri>();
+        var provider = Substitute.For<ISendEndpoint>();
+        var cancellationToken = CancellationToken.None;
+        
         var user = _fixture.Create<ApplicationUser>();
         string expectedToken = _fixture.Create<string>();
+        
         
         _userManager.CreateAsync(user, user.Password)
             .Returns(IdentityResult.Success);
@@ -97,17 +102,28 @@ public sealed class AuthServiceTests
         _signInManager.CreateUserPrincipalAsync(user)
             .Returns(_fixture.Create<ClaimsPrincipal>());
 
-        _tokenWriter.WriteTokenAsync(user, Arg.Any<CancellationToken>())
+        _tokenWriter.WriteTokenAsync(user, cancellationToken)
             .Returns(expectedToken);
 
-        _sendEndpointProvider.Send<RegisterNewBuyer>(Arg.Any<object>())
+        _sendEndpointProvider.GetSendEndpoint(endpointUri)
+            .Returns(provider);
+
+        provider.Send(Arg.Any<object>(), cancellationToken)
             .Returns(Task.CompletedTask);
+        
+        EndpointConvention.Map<RegisterNewBuyer>(endpointUri);
 
         // Act
-        string? jwtToken = await _authService.RegisterAsync(user, CancellationToken.None);
+        string? jwtToken = await _authService.RegisterAsync(user, cancellationToken);
 
         // Assert     
         jwtToken.Should().BeEquivalentTo(expectedToken);
+
+        await _userManager.Received().CreateAsync(user, user.Password);
+        await _tokenWriter.Received().WriteTokenAsync(user, cancellationToken);
+        
+        await _signInManager.Received().PasswordSignInAsync(user.UserName!, user.Password, false, false);
+        await provider.Received().Send(Arg.Any<object>(), Arg.Any<IPipe<SendContext<RegisterNewBuyer>>>(),cancellationToken);
     }
     
     [Fact]

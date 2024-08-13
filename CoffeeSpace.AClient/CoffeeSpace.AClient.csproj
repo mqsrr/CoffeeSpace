@@ -18,22 +18,22 @@
 
     <ItemGroup>
         <PackageReference Include="AutoBogus" Version="2.13.1" />
-        <PackageReference Condition="$(DefineConstants.Contains(ENABLE_XAML_HOT_RELOAD))" Include="Avalonia.Markup.Xaml.Loader" Version="11.0.10" />
+        <PackageReference Condition="$(DefineConstants.Contains(ENABLE_XAML_HOT_RELOAD))" Include="Avalonia.Markup.Xaml.Loader" Version="11.1.1" />
         <PackageReference Condition="$(DefineConstants.Contains(ENABLE_XAML_HOT_RELOAD))" Include="HotAvalonia" Version="1.1.1" />
         <PackageReference Include="HotAvalonia.Extensions" Version="1.1.1" PrivateAssets="All" />
-        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.6" />
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.6.0" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.7" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.0.1" />
         <PackageReference Include="WebView.Avalonia" Version="11.0.0.1" />
         <PackageReference Include="WebView.Avalonia.Desktop" Version="11.0.0.1" />
         <PackageReference Include="WebView.Avalonia.MacCatalyst" Version="11.0.0.1" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="11.0.10" />
-        <PackageReference Include="Avalonia.Desktop" Version="11.0.10" />
-        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.10" />
+        <PackageReference Include="Avalonia" Version="11.1.1" />
+        <PackageReference Include="Avalonia.Desktop" Version="11.1.1" />
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.1.1" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.10" />
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.1.1" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
         <PackageReference Include="HeroIcons.Avalonia" Version="1.0.2" />
         <PackageReference Include="Mediator.Abstractions" Version="2.1.7" />
@@ -43,11 +43,11 @@
         </PackageReference>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
-        <PackageReference Include="Refit.HttpClientFactory" Version="7.0.0" />
-        <PackageReference Include="Riok.Mapperly" Version="3.5.1" />
+        <PackageReference Include="Refit.HttpClientFactory" Version="7.1.2" />
+        <PackageReference Include="Riok.Mapperly" Version="3.6.0" />
         <PackageReference Include="Scrutor" Version="4.2.2" />
-        <PackageReference Include="SixLabors.ImageSharp" Version="3.1.4" />
-        <PackageReference Include="SukiUI" Version="6.0.0-beta" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="3.1.5" />
+        <PackageReference Include="SukiUI" Version="6.0.0-beta3" />
     </ItemGroup>
 
     <ItemGroup>

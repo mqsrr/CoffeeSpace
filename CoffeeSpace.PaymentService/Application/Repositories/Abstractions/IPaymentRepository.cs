@@ -10,8 +10,5 @@ public interface IPaymentRepository
     
     Task<bool> CreatePaymentAsync(PaypalOrderInformation paypalOrderInformation, CancellationToken cancellationToken);
     
-    Task<bool> UpdatePaymentStatusAsync(string orderId, string newOrderStatus, CancellationToken cancellationToken);
-
-    Task<bool> DeletePaymentByIdAsync(Guid paypalOrderId, CancellationToken cancellationToken);
-
+    Task<bool> UpdatePaymentStatusAsync(string orderId, string orderStatus, CancellationToken cancellationToken);
 }

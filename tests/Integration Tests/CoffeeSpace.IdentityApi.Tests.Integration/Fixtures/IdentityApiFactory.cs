@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using CoffeeSpace.IdentityApi.Application.Messages.Consumers;
+﻿using CoffeeSpace.IdentityApi.Application.Messages.Consumers;
 using CoffeeSpace.IdentityApi.Controllers;
 using CoffeeSpace.IdentityApi.Persistence;
 using CoffeeSpace.IdentityApi.Settings;
@@ -9,18 +8,16 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Testcontainers.PostgreSql;
+using Xunit;
 
 namespace CoffeeSpace.IdentityApi.Tests.Integration.Fixtures;
 
 public sealed class IdentityApiFactory : WebApplicationFactory<AuthController>, IAsyncLifetime
 {
-    private static IModel _dbModel = default!;
-
     private readonly PostgreSqlContainer _identityPostgreSqlContainer;
     
     public IdentityApiFactory()
@@ -62,7 +59,6 @@ public sealed class IdentityApiFactory : WebApplicationFactory<AuthController>, 
             });
 
             services.AddScoped(_ => new DbContextOptionsBuilder<ApplicationUsersDbContext>()
-                .EnableRecording("IdentityDb")
                 .EnableDetailedErrors()
                 .UseNpgsql(_identityPostgreSqlContainer.GetConnectionString())
                 .Options);
@@ -71,7 +67,6 @@ public sealed class IdentityApiFactory : WebApplicationFactory<AuthController>, 
             var dbContext = serviceProvider.ServiceProvider.GetRequiredService<ApplicationUsersDbContext>();
 
             dbContext.Database.EnsureCreated();
-            _dbModel = dbContext.Model;
         });
     }
 
@@ -80,14 +75,7 @@ public sealed class IdentityApiFactory : WebApplicationFactory<AuthController>, 
         var apiKeySettings = Services.GetRequiredService<IOptions<ApiKeySettings>>().Value;
         client.DefaultRequestHeaders.Add(apiKeySettings.HeaderName, apiKeySettings.ApiKey);
     }
-
-    [ModuleInitializer]
-    public static void InitializeVerify()
-    {
-        VerifyEntityFramework.Initialize(_dbModel);
-        VerifyMassTransit.Initialize();
-    }
-
+    
     public async Task InitializeAsync()
     {
         await _identityPostgreSqlContainer.StartAsync();

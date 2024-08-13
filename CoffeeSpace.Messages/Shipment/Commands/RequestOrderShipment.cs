@@ -4,5 +4,7 @@ namespace CoffeeSpace.Messages.Shipment.Commands;
 
 public interface RequestOrderShipment
 {
-    Order Order { get; }
+    Guid Id { get; }
+    
+    Address Address { get; }
 }

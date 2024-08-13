@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using Azure.Identity;
 using CoffeeSpace.Shared.Managers;
 using Microsoft.Extensions.Configuration;
@@ -16,7 +17,7 @@ public static class AzureKeyVaultExtensions
         }
         
         return configuration.AddEnvironmentVariables()
-            .AddAzureKeyVault(new Uri($"https://{Environment.GetEnvironmentVariable("AZURE_VAULT_NAME")}.vault.azure.net/"),
+            .AddAzureKeyVault(new Uri($"https://{Environment.GetEnvironmentVariable("AZURE_VAULT_NAME")}.vault.azure.net"),
                 new DefaultAzureCredential(),
                 new PrefixKeyVaultSecretManager("CoffeeSpace"));
     }

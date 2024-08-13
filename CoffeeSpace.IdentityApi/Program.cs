@@ -7,6 +7,7 @@ using CoffeeSpace.IdentityApi.Application.Validators;
 using CoffeeSpace.IdentityApi.Filters;
 using CoffeeSpace.IdentityApi.Persistence;
 using CoffeeSpace.IdentityApi.Settings;
+using CoffeeSpace.Messages;
 using CoffeeSpace.Messages.Buyers;
 using CoffeeSpace.Shared.Extensions;
 using CoffeeSpace.Shared.Settings;
@@ -19,7 +20,6 @@ using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddOpenTelemetryWithInstrumentation();
-
 builder.Host.UseSerilog((context, configuration) => 
     configuration.ReadFrom.Configuration(context.Configuration));
 
@@ -29,10 +29,10 @@ builder.Configuration.AddJwtBearer(builder);
 builder.Services.AddControllers();
 
 builder.Services.AddApiVersioning(new HeaderApiVersionReader());
-builder.Services.AddApplicationDb<ApplicationUsersDbContext>("Server=localhost;Port=5433;Database=testDb;User Id=test;Password=Test1234!;");
+builder.Services.AddApplicationDb<ApplicationUsersDbContext>(builder.Configuration["IdentityDb:ConnectionString"]!);
 
-builder.Services.AddApplicationService<IAuthService<ApplicationUser>>(ServiceLifetime.Transient);
-builder.Services.AddApplicationService<ITokenWriter<ApplicationUser>>(ServiceLifetime.Transient);
+builder.Services.AddApplicationService<IAuthService<ApplicationUser>>();
+builder.Services.AddApplicationService<ITokenWriter<ApplicationUser>>();
 
 builder.Services.AddApplicationServiceAsSelf<ApiKeyAuthorizationFilter>();
 
@@ -46,16 +46,16 @@ builder.Services.AddOptionsWithValidateOnStart<AwsMessagingSettings>()
     .Bind(builder.Configuration.GetRequiredSection(AwsMessagingSettings.SectionName));
 
 builder.Services.AddFluentValidationAutoValidation()
-    .AddValidatorsFromAssemblyContaining<LoginRequestValidator>(ServiceLifetime.Transient, includeInternalTypes: true);
+    .AddValidatorsFromAssemblyContaining<LoginRequestValidator>(includeInternalTypes: true);
 
-builder.Services.AddMassTransit(x =>
+builder.Services.AddMassTransit(busConfigurator =>
 {
-    x.SetKebabCaseEndpointNameFormatter();
+    busConfigurator.SetKebabCaseEndpointNameFormatter();
     
-    x.AddConsumer<DeleteBuyerConsumer>();
-    x.AddConsumer<UpdateBuyerConsumer>();
+    busConfigurator.AddConsumer<DeleteBuyerConsumer>();
+    busConfigurator.AddConsumer<UpdateBuyerConsumer>();
     
-    x.UsingAmazonSqs((context, config) =>
+    busConfigurator.UsingAmazonSqs((context, config) =>
     {
         var awsSettings = context.GetRequiredService<IOptions<AwsMessagingSettings>>().Value;
         config.Host(awsSettings.Region, hostConfig =>
@@ -68,7 +68,7 @@ builder.Services.AddMassTransit(x =>
         config.UseNewtonsoftJsonSerializer();
         config.UseNewtonsoftJsonDeserializer();
         
-        EndpointConvention.Map<RegisterNewBuyer>(new Uri("queue:register-new-buyer"));
+        EndpointConvention.Map<RegisterNewBuyer>(new Uri(EndpointAddresses.Identity.RegisterNewBuyer));
     });
 });
 builder.Services.AddIdentityConfiguration();

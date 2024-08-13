@@ -36,7 +36,8 @@ internal sealed class CreateProductRequestValidator : AbstractValidator<CreatePr
 
         RuleFor(x => x.Description)
             .NotEmpty()
-            .NotNull();
+            .NotNull()
+            .MaximumLength(200);
 
         RuleFor(x => x.UnitPrice)
             .NotNull()

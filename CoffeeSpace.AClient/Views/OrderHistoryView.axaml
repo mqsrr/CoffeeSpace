@@ -7,15 +7,12 @@
              xmlns:converters="clr-namespace:CoffeeSpace.AClient.Converters"
              mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="650"
              x:DataType="vm:OrderHistoryWindowViewModel"
-             x:Class="CoffeeSpace.AClient.Views.OrderHistoryView">
+             x:Class="CoffeeSpace.AClient.Views.OrderHistoryView"
+             FontFamily="{StaticResource Montserrat-Regular}">
 
     <Design.DataContext>
         <vm:OrderHistoryWindowViewModel />
     </Design.DataContext>
-    <UserControl.Background>
-        <ImageBrush Source="../Assets/default-bg.png" Stretch="UniformToFill">
-        </ImageBrush>
-    </UserControl.Background>
     
     <UserControl.Resources>
         <ResourceDictionary>
@@ -39,8 +36,7 @@
                               ColumnDefinitions="Auto,Auto,*"
                               RowDefinitions="Auto,*">
                             <TextBlock Grid.Column="0" Grid.Row="0" Text="{Binding Id, Converter={StaticResource ProductIdConverter}}" Foreground="Gray" 
-                                       FontSize="12" FontWeight="Medium" 
-                                       FontFamily="{StaticResource Montserrat-Regular}" />
+                                       FontSize="12" FontWeight="Medium"/>
                             <Border Grid.Row="1" Grid.Column="0" CornerRadius="7" ClipToBounds="True" MaxWidth="130" 
                                     VerticalAlignment="Bottom" HorizontalAlignment="Left">
                                 <TextBlock Text="{Binding Status}" Padding="4" 

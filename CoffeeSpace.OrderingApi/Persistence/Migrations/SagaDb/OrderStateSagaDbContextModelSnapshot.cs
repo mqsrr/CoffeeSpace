@@ -17,7 +17,7 @@ namespace CoffeeSpace.OrderingApi.Persistence.Migrations.SagaDb
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.3")
+                .HasAnnotation("ProductVersion", "8.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -42,9 +42,6 @@ namespace CoffeeSpace.OrderingApi.Persistence.Migrations.SagaDb
 
                     b.Property<bool>("StockValidationSuccess")
                         .HasColumnType("boolean");
-
-                    b.Property<Guid>("UpdateOrderStatusCorrelationId")
-                        .HasColumnType("uuid");
 
                     b.HasKey("CorrelationId");
 
