@@ -2,41 +2,41 @@
 
 ![Coffee_Space excalidraw](https://github.com/Marsik424/CoffeeSpace/assets/82763271/d1da62d1-e7d8-4877-87e2-30a2a2204160)
 
-# MAUI Client
+# Client
 
-Welcome to the MAUI Client! This client application is designed to provide a seamless and user-friendly experience for interacting with the MAUI (Mobile App for Unified Interaction) system. Below, you'll find information on key functionalities, including authentication, order creation, order payment, and order status tracking.
+Current version of CoffeeSpace uses [Avalonia](https://github.com/AvaloniaUI/Avalonia) UI framework and was tested on `MacOS` and `Windows`. However, older versions have been using [MAUI](https://github.com/dotnet/maui) as the main framework. 
 
-## Authentication
+## Order Management & Authentication
+In order to start use client you must start the API. After that start the client and register or login into an account. 
 
-The MAUI Client offers a secure authentication system to ensure the privacy and security of your account. To get started, click on the **Login** button to access the MAUI features. If you are a new user, you can register by clicking on the **Register** button and providing the necessary information, including your username, email, and password.
+![authentication](https://github.com/user-attachments/assets/5fa81252-003f-4302-b76a-557d9d89e347)
 
-## Order Management
-Firstly, add order items from home page clicking `Add To Cart` button. Proceed to `Cart` page, confirm your order items, set delivery address and press `Place An Order`.
+Now, you should be able to create you first orders.
 
-![order-creation](https://github.com/Marsik424/CoffeeSpace/assets/82763271/8e30c040-fa27-476f-bc1e-4715c13d915e)
+![order-creation](https://github.com/user-attachments/assets/aa790459-39de-4bc6-8f78-6f9737ab8b42)
+
+> Be sure to provide correct address, otherwise you will get an error.
+
+![payment](https://github.com/user-attachments/assets/fba824b6-33c9-46f6-b0f1-c35c619f8ee3)
+![order-history](https://github.com/user-attachments/assets/308adc3a-a8c1-443a-a106-0b6d51d7cab1)
 
 
-Keep track of your orders and proceed to payment in the **Order** section.
-| State | Description |
-| :---: | :---:|
-| `Submitted`| Initial State Of Order|
-| `StockConfirmed`| `Product API` Confirmed Order's Stock|
-| `Paid`| `Payment Service` Captured Payment Response|
-| `Shipped`|`Shipment Service` Registered Order |
-
-It must be noted, that order will not proceed to `Paid` state, if user will not pay. After order's state will be changed to `StockConfirmed`, order should receive payment confirmation link from `Payment Service`. Then user can proceed to payment from `Order` page.
-
-![payment-creation](https://github.com/Marsik424/CoffeeSpace/assets/82763271/f6159d39-6228-4cff-83c7-c2d4fe398fc5)
-
-## API Overview 
+# API 
 
 
 |      API       |    Libraries     |   Services     |
 | :------------: |  :-----------:   |  :-----------: |    
-|  OrderingAPI   |       Core       | PaymentService |
+|  OrderingAPI   |       Shared       | PaymentService |
 |  ProductsAPI   |     Messages     | ShipmentService|
 |  IdentityAPI   |      Domain      |
 
+
+| Order State | Description |
+| :---: | :---:|
+| `Submitted`| Initial State Of Order|
+| `StockConfirmed`| `Product API` Confirmed Order's Stock|
+| `Paid`| `Payment Service` Captured Payment Response|
+| `Shipped`|`Shipment Service` Completed |
 
 **To create messaging through MassTransit, all message models were moved to the Coffeespace.Messages project.**
 
@@ -69,11 +69,9 @@ builder.Services.AddApplicationService(typeof(ICacheService<>));
 builder.Services.AddApplicationService<IOrderService>();
 ``` 
 
-**`ICacheService` is coming from the Coffeespace.Core class library. There are generic services and settings, which can be used across microservices.**
+**`ICacheService` is coming from the `Shared` library. There are generic services and settings, which can be used across microservices.**
 
-Caching is implemented in `Ordering API` and `Product API` using `Proxy` pattern. `Ordering API` uses [Mediator's](https://github.com/martinothamar/Mediator) notifications to move cache invalidation logic into `Notification Handler`.
-
-After each of the process mutation process, I implicitly publish message to invalidate cache.
+Currently, there is two approaches on cache invalidation. `Ordering API` uses[Mediator's](https://github.com/martinothamar/Mediator) notifications to move cache invalidation logic into `Notification Handler`.
 
 ```cs
 public Task<IEnumerable<Order>> GetAllByBuyerIdAsync(Guid buyerId, CancellationToken cancellationToken)
@@ -130,13 +128,9 @@ While `Product API` using different approach. Instead of moving cache invalidati
 > Example is from [Cached Product Repository](https://github.com/Marsik424/CoffeeSpace/blob/wip/CoffeeSpace.ProductApi/Application/Repositories/CachedProductRepository.cs).
 
 
-**[Decorator](https://github.com/Marsik424/CoffeeSpace/blob/wip/CoffeeSpace.Core/Attributes/Decorator.cs)** attribute, tells [Scrutor](https://github.com/khellang/Scrutor) to not register classes who applied this attribute. In this application I've been using this attribute to implement `Proxy` pattern.  
+## Ordering API
 
-
-## API's
-### Ordering API
-
-This API works as a command center for all messages related to creating, updating, scheduling and deleting orders. It publishes events to a message provider, that can then be consumed by other microservices. 
+API that works as an orchestrator for all messages. Also, exposes API endpoints for order and buyer management.  
 
 Here is the workflow of the `Ordering API` after an order is submitted.
 ```mermaid
@@ -170,72 +164,22 @@ sequenceDiagram
 
 ```
 
-As you can see, the `Ordering API` **can both publish and consume messages from other microservices. It uses the Masstransit StateMachine, which provides great opportunities to manage order state. There are five states: `Submitted`, `StockConfirmed`, `Paid`, `Shipped`, and `Canceled`.** When an order receives a new state, the [Order State Machine](https://github.com/Marsik424/CoffeeSpace/blob/wip/CoffeeSpace.OrderingApi/Application/Messaging/Masstransit/Sagas/OrderStateMachine.cs) changes its state in the database. The `Ordering API` has two databases: [Ordering DB](https://github.com/Marsik424/CoffeeSpace/blob/wip/CoffeeSpace.OrderingApi/Persistence/OrderingDbContext.cs) and [Order State DB](https://github.com/Marsik424/CoffeeSpace/blob/wip/CoffeeSpace.OrderingApi/Persistence/OrderStateSagaDbContext.cs). When an order is submitted, it is saved in the [Ordering DB](https://github.com/Marsik424/CoffeeSpace/blob/wip/CoffeeSpace.OrderingApi/Persistence/OrderingDbContext.cs), and then the [Order State Machine](https://github.com/Marsik424/CoffeeSpace/blob/wip/CoffeeSpace.OrderingApi/Application/Messaging/Masstransit/Sagas/OrderStateMachine.cs) sends all the necessary messages. The  [Order State Machine](https://github.com/Marsik424/CoffeeSpace/blob/wip/CoffeeSpace.OrderingApi/Application/Messaging/Masstransit/Sagas/OrderStateMachine.cs) uses the [Order State DB](https://github.com/Marsik424/CoffeeSpace/blob/wip/CoffeeSpace.OrderingApi/Persistence/OrderStateSagaDbContext.cs) as a storage for orders. **When an order reaches the Shipped or Canceled state, it is immediately removed from the database.** With this feature, the [Order State Machine](https://github.com/Marsik424/CoffeeSpace/blob/wip/CoffeeSpace.OrderingApi/Application/Messaging/Masstransit/Sagas/OrderStateMachine.cs) can easily continue to work with messages after it was stopped.
+The `Ordering API` **can both publish and consume messages from other microservices. It uses the Masstransit StateMachine, which provides great opportunities to manage order state. There are five states: `Submitted`, `StockConfirmed`, `Paid`, `Shipped`, and `Canceled`.** When an order receives a new state, the [Order State Machine](https://github.com/Marsik424/CoffeeSpace/blob/wip/CoffeeSpace.OrderingApi/Application/Messaging/Masstransit/Sagas/OrderStateMachine.cs) changes its state in the database. When an order is submitted, it is saved in the [Ordering DB](https://github.com/Marsik424/CoffeeSpace/blob/wip/CoffeeSpace.OrderingApi/Persistence/OrderingDbContext.cs), and then the [Order State Machine](https://github.com/Marsik424/CoffeeSpace/blob/wip/CoffeeSpace.OrderingApi/Application/Messaging/Masstransit/Sagas/OrderStateMachine.cs) sends all the necessary messages.
 
-Furthermore, the `Ordering API` has one message for the `Identity API`. Basically,**when someone deletes a buyer, it sends a message to the `Identity API` to remove the buyer from its database. It also has a consumer that creates a new buyer if someone completes registration.**
+Furthermore, the `Ordering API` has one message for the `Identity API` **when someone deletes a buyer, it sends a message to the `Identity API` to remove the buyer from its database. It also has a consumer that creates a new buyer if someone completes registration.**
 
-In addition to its message publishing and consuming capabilities, the `Ordering API` also implements the transactional outbox pattern to ensure reliable message delivery. This pattern involves storing messages in a separate Outbox table within the [Ordering DB](https://github.com/Marsik424/CoffeeSpace/blob/wip/CoffeeSpace.OrderingApi/Persistence/OrderingDbContext.cs) database. When an order is submitted or its state changes, the [Order State Machine](https://github.com/Marsik424/CoffeeSpace/blob/wip/CoffeeSpace.OrderingApi/Application/Messaging/Masstransit/Sagas/OrderStateMachine.cs) writes the corresponding messages to the Outbox table within the same database transaction. This approach guarantees that the messages are persisted atomically with the database changes, ensuring transactional consistency.
-
-```mermaid
-sequenceDiagram
-    participant OrderingApi
-    participant OrderStateMachine
-    participant OrderingDb
-    participant OutboxTable
-    participant MessageBroker
-
-    OrderingApi->>OrderStateMachine: Submit Order
-    activate OrderStateMachine
-    OrderStateMachine->>OutboxTable: Write Messages
-    activate OutboxTable
-    OutboxTable->>OrderingDb: Store Messages
-    activate OrderingDb
-    OrderingDb-->>OutboxTable: Messages Stored
-    deactivate OrderingDb
-    OutboxTable-->>OrderStateMachine: Messages Written
-    deactivate OutboxTable
-    OrderStateMachine->>OrderingDb: Commit Transaction
-    activate OrderingDb
-    OrderingDb-->>OrderStateMachine: Transaction Committed
-    deactivate OrderingDb
-    OrderStateMachine->>MessageBroker: Publish Messages
-    activate MessageBroker
-    MessageBroker-->>OrderStateMachine: Messages Published
-    deactivate MessageBroker
-    deactivate OrderStateMachine
-    OrderingApi->>OrderStateMachine: Change Order State
-    activate OrderStateMachine
-    OrderStateMachine->>OutboxTable: Write Messages
-    activate OutboxTable
-    OutboxTable->>OrderingDb: Store Messages
-    activate OrderingDb
-    OrderingDb-->>OutboxTable: Messages Stored
-    deactivate OrderingDb
-    OutboxTable-->>OrderStateMachine: Messages Written
-    deactivate OutboxTable
-    OrderStateMachine->>OrderingDb: Commit Transaction
-    activate OrderingDb
-    OrderingDb-->>OrderStateMachine: Transaction Committed
-    deactivate OrderingDb
-    OrderStateMachine->>MessageBroker: Publish Messages
-    activate MessageBroker
-    MessageBroker-->>OrderStateMachine: Messages Published
-    deactivate MessageBroker
-    deactivate OrderStateMachine
-
-```
 
 > All requests have a timeout value. If a request exceeds this timeout value, it will automatically be moved into a canceled state.
 
-### Product API
+## Product API
 
 The `Product API` provides CRUD operations for managing products, and it is responsible for verifying the stock of orders.**If the order item's title is not found in the ProductApi database, the product cannot be fulfilled, and the order is moved to the cancel state.**
 
-![Product_API excalidraw (1)](https://github.com/Marsik424/CoffeeSpace/assets/82763271/2306cce6-ea3f-46e3-b0e0-5f68cdb1f1da)
+![image](https://github.com/user-attachments/assets/2ff4e1b2-cb5a-4f10-84d7-b707a33de055)
 
-### Identity API
+## Identity API
 
-The `Identity API` allows users to log in or register as new users, using IdentityDbContext for authentication and identity storage purposes. 
+The `Identity API` allows users to log in or register as new users, using `IdentityDbContext` for authentication and identity storage purposes. 
 
 ```mermaid
 sequenceDiagram
@@ -296,23 +240,17 @@ With [PayPalOrderRequestBuilder](https://github.com/Marsik424/CoffeeSpace/blob/w
 
 The `Shipment Service` is a simple service that returns a successful result. However, in a real-world scenario, it would redirect to an external shipment service to handle the actual shipment.
 
-## Log & Trace
-
-Logging and tracing is an essential of all Web API's, Therefore, I added [Datadog](https://www.datadoghq.com/) support for all microservices. Providing `DD_API_KEY` to microservice, it will automaticlly send logs to datadog instance.
-> Log is sent by [Serilog](https://serilog.net/).
-
-In order to add tracing, I've added additional env variables for DD instance. `DD_LOGS_INJECTION`, `DD_APPSEC_ENABLED`, `DD_RUNTIME_METRICS_ENABLED`, all of the provided env 
-variables is *optional* and not required for proper work of `Coffee Space`, except of `DD_API_KEY`.
+#### Log & Instrumentations
+By default, all logs with open telemetry are being sent to the `Seq`. There is also `Prometheus` endpoint. 
 
 
-## Environment Variables
+#### Environment Variables
 In order to run this project, you need to configure the following environment variables in your secrets:
 
-* **`AZURE_CLIENT_ID`**: The client ID of your Azure application.
-* **`AZURE_CLIENT_SECRET`**: The client secret of your Azure application.
-* **`AZURE_TENANT_ID`**: The ID of your Azure tenant.
-* **`AZURE_VAULT_NAME`**: The name of your Azure Key Vault.
-* **`DD_API_KEY`**: Datadog API key.
+* **`AZURE_CLIENT_ID`**: The client ID of Azure application.
+* **`AZURE_CLIENT_SECRET`**: The client secret of Azure application.
+* **`AZURE_TENANT_ID`**: The ID of Azure tenant.
+* **`AZURE_VAULT_NAME`**: The name of Azure Key Vault.
 
 These environment variables are necessary for authentication and accessing the Azure Key Vault in the project. Make sure to set the values of these variables appropriately in your secret management system or environment configuration.
 
@@ -329,18 +267,24 @@ git clone https://github.com/Marsik424/CoffeeSpace.git
 
 To run the microservices in K8s, follow these steps:
 
-1. Proceed to section above to download and configure project env.
+1. Go to the root of the project and open terminal.
 
-2. Start the deployment of the microservices to Kubernetes by running the following command:
+2. Create the deployment using `kubeclt` or `helm`
 
 ```sh
-kubectl apply -R -f ./deploy
+kubectl apply -R -f ./deploy/kubeclt
+```
+```
+helm install CoffeeSpace ./deploy/helm/CoffeeSpace
 ```
 
-5. To delete all pods, execute the following command in your terminal:
+3. To delete all pods, execute the following command in your terminal:
 
 ```sh
-kubectl delete -R -f ./deploy
+kubectl delete -R -f ./deploy/kubectl
+```
+```
+helm uninstall CoffeeSpace
 ```
 
 **All requests should be made to the API Gateway, which will eventually redirect them to the appropriate controller.**
@@ -362,19 +306,7 @@ After importing the collection, you can explore the endpoints, customize the req
 
 Contributions to CoffeeSpace project are always welcome! If you have any ideas, suggestions or improvements in mind, I would be more than happy to have them! You can start contributing by forking the repository, making your changes and submitting a pull request.
 
-Some areas where you can contribute to are:
-
-* Improving the existing microservices
-* Adding new microservices
-* Implementing new features
-* Refactoring the code
-* Improving the documentation
-* Adding client support
-* Datadog configuration
-
-**Please make sure to follow the code style and the existing patterns in the project.** If you're not sure about something, feel free to create an issue and ask for help.
-
-Also, I recommend discussing your ideas and changes by creating an issue, so I can make sure that your work is in line with the project's goals and direction.
+**Please make sure to follow the code style.**
 
 ## Related
 
