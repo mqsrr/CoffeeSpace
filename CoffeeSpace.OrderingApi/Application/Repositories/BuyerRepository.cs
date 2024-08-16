@@ -48,13 +48,16 @@ internal sealed class BuyerRepository : IBuyerRepository
         return result > 0;
     }
 
-    public async Task<Buyer?> UpdateAsync(Buyer buyer, CancellationToken cancellationToken)
+    public async Task<Buyer?> UpdateAsync(Buyer updatedBuyer, CancellationToken cancellationToken)
     {
-        _orderingDbContext.Buyers.Update(buyer);
-        int result = await _orderingDbContext.SaveChangesAsync(cancellationToken);
+        int result = await _orderingDbContext.Buyers
+            .Where(buyer => buyer.Id == updatedBuyer.Id)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(buyer => buyer.Email, updatedBuyer.Email)
+                .SetProperty(buyer => buyer.Name, updatedBuyer.Name), cancellationToken);
 
-        return result > 0 
-            ? buyer 
+        return result > 0
+            ? updatedBuyer
             : null;
     }
 

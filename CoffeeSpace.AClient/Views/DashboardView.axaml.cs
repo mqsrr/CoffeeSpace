@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using Avalonia.Input;
 using CoffeeSpace.AClient.Models;
 using CoffeeSpace.AClient.ViewModels;
-using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
 using SukiUI.Controls;
 
@@ -28,12 +25,6 @@ public sealed partial class DashboardView : UserControl
     protected override async void OnInitialized()
     {
         await _viewModel.InitializeAsync();
-    }
-
-    private void OnSearchTextChanged(object? sender, TextChangedEventArgs e)
-    {
-        var textBox = sender as TextBox;
-        Console.WriteLine(textBox.Text);
     }
 
     private void OpenProductDetailsView(object? sender, TappedEventArgs e)

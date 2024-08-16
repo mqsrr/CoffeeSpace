@@ -5,7 +5,7 @@ namespace CoffeeSpace.OrderingApi.Application.Contracts.Responses.Orders;
 
 public sealed class OrderResponse
 {
-    public required string Id { get; init; }
+    public required Guid Id { get; init; }
     
     public required OrderStatus Status { get; init; }
 

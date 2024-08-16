@@ -5,6 +5,7 @@ using CoffeeSpace.OrderingApi.Application.Mapping;
 using CoffeeSpace.OrderingApi.Application.Services.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 namespace CoffeeSpace.OrderingApi.Controllers;
 
 [Authorize]
@@ -49,7 +50,7 @@ public sealed class BuyersController : ControllerBase
     }
 
     [HttpPut(ApiEndpoints.Buyer.Update)]
-    public async Task<IActionResult> UpdateBuyer([FromRoute] Guid id, [FromBody] UpdateBuyerRequest request ,CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateBuyer([FromRoute] Guid id, [FromBody] UpdateBuyerRequest request, CancellationToken cancellationToken)
     {
         var updatedBuyer = await _buyerService.UpdateAsync(request.ToBuyer(id), cancellationToken);
         return updatedBuyer is not null

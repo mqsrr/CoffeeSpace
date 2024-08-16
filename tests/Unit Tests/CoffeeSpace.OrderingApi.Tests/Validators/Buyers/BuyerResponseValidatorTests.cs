@@ -18,10 +18,8 @@ public sealed class BuyerResponseValidatorTests
     }
 
     [Theory]
-    [InlineData(null)]
-    [InlineData("")]
-    [InlineData(" ")]
-    public async Task InvalidId_ShouldThrowValidationError(string Id)
+    [InlineData(null!)]
+    public async Task InvalidId_ShouldThrowValidationError(Guid Id)
     {
         // Arrange
         var response = _fixture.Build<BuyerResponse>()

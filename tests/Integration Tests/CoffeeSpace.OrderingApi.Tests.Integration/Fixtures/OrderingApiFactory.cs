@@ -5,6 +5,9 @@ using System.Text;
 using AutoBogus;
 using CoffeeSpace.Domain.Ordering.BuyerInfo;
 using CoffeeSpace.Domain.Ordering.Orders;
+using CoffeeSpace.Messages;
+using CoffeeSpace.Messages.Buyers;
+using CoffeeSpace.Messages.Ordering.Commands;
 using CoffeeSpace.OrderingApi.Application.Contracts.Responses.Orders;
 using CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Consumers;
 using CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Sagas;
@@ -37,12 +40,9 @@ namespace CoffeeSpace.OrderingApi.Tests.Integration.Fixtures;
 public sealed class OrderingApiFactory : WebApplicationFactory<BuyersController>, IAsyncLifetime
 {
     private readonly PostgreSqlContainer _orderingPostgreSqlContainer;
-    private readonly PostgreSqlContainer _orderStateSagaPostgreSqlContainer;
     private readonly RedisContainer _redisContainer;
 
-    public IEnumerable<Address> Addresses { get; init; }
     public IEnumerable<Buyer> Buyers { get; init; }
-    public IEnumerable<OrderItem> OrderItems { get; init; }
     public IEnumerable<Order> Orders { get; init; }
     
     public OrderingApiFactory()
@@ -54,34 +54,20 @@ public sealed class OrderingApiFactory : WebApplicationFactory<BuyersController>
             .WithPortBinding(5433, 5432)
             .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5432))
             .Build();
-        
-        _orderStateSagaPostgreSqlContainer = new PostgreSqlBuilder()
-            .WithDatabase("OrderStateSagaDb")
-            .WithUsername("test")
-            .WithPassword("test")
-            .WithPortBinding(5434, 5432)
-            .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5432))
-            .Build();
 
         _redisContainer = new RedisBuilder()
             .WithPortBinding(6378, 6379)
             .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(6379))
             .Build();
-
-        OrderItems = AutoFaker.Generate<OrderItem, OrderItemFaker>(10);
-        Addresses = AutoFaker.Generate<Address, AddressFaker>(2);
-        Buyers = AutoFaker.Generate<Buyer, BuyerFaker>(3);
         
-        Orders = AutoFaker.Generate<Order, OrderFaker>( 1, builder => 
-            builder.WithArgs(Buyers.First().Id, Addresses.First(), OrderItems.Take(3)));
-        Orders = Orders.Append(AutoFaker.Generate<Order, OrderFaker>(1, builder =>
-            builder.WithArgs(Buyers.Last().Id, Addresses.Last(), OrderItems.TakeLast(3))).First());
+        Buyers = AutoFaker.Generate<Buyer, BuyerFaker>(3);
+        Orders = AutoFaker.Generate<Order, OrderFaker>(5, builder => builder.WithArgs(Buyers.First().Id));
+        
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseSetting("OrderingDb:ConnectionString", _orderingPostgreSqlContainer.GetConnectionString());
-        builder.UseSetting("OrderStateSagaDb:ConnectionString", _orderStateSagaPostgreSqlContainer.GetConnectionString());
         builder.UseSetting("Redis:ConnectionString", _redisContainer.GetConnectionString());
 
         builder.UseSetting("AWS:Region", "eu");
@@ -101,11 +87,12 @@ public sealed class OrderingApiFactory : WebApplicationFactory<BuyersController>
             services.AddSignalR();
             services.RemoveAll(typeof(IHubContext<OrderingHub, IOrderingHub>));
             
-            var faker = Substitute.For<IHubContext<OrderingHub, IOrderingHub>>();
-            faker.Clients.Groups(Arg.Any<string[]>()).OrderCreated(Arg.Any<OrderResponse>())
+            var hubContext = Substitute.For<IHubContext<OrderingHub, IOrderingHub>>();
+            hubContext.Clients.Groups(Arg.Any<string[]>())
+                .OrderCreated(Arg.Any<OrderResponse>())
                 .Returns(Task.CompletedTask);
             
-            services.AddScoped<IHubContext<OrderingHub, IOrderingHub>>(_ => faker);
+            services.AddScoped<IHubContext<OrderingHub, IOrderingHub>>(_ => hubContext);
             
             services.AddQuartz();
             services.AddMassTransitTestHarness(config =>
@@ -115,24 +102,19 @@ public sealed class OrderingApiFactory : WebApplicationFactory<BuyersController>
                 
                 config.AddQuartzConsumers();
                 config.AddPublishMessageScheduler();
-                
+
                 config.AddSagaStateMachine<OrderStateMachine, OrderStateInstance>()
-                    .EntityFrameworkRepository(configurator =>
-                    {
-                        configurator.UsePostgres();
-                        configurator.ExistingDbContext<OrderStateSagaDbContext>();
-                    });
+                    .InMemoryRepository();
+                
+                EndpointConvention.Map<SubmitOrder>(new Uri(EndpointAddresses.Ordering.SubmitOrder));
+                EndpointConvention.Map<DeleteBuyerByEmail>(new Uri(EndpointAddresses.Identity.DeleteBuyer));
+                EndpointConvention.Map<UpdateBuyer>(new Uri(EndpointAddresses.Identity.UpdateBuyer));
             });
             
             services.AddScoped(_ => new DbContextOptionsBuilder<OrderingDbContext>()
                 .EnableDetailedErrors()
                 .UseNpgsql(_orderingPostgreSqlContainer.GetConnectionString())
                 .Options);       
-            
-            services.AddScoped(_ => new DbContextOptionsBuilder<OrderStateSagaDbContext>()
-                .EnableDetailedErrors()
-                .UseNpgsql(_orderStateSagaPostgreSqlContainer.GetConnectionString())
-                .Options);
             
             InitializeOrderingDbContext(services);
         });
@@ -149,14 +131,12 @@ public sealed class OrderingApiFactory : WebApplicationFactory<BuyersController>
     public async Task InitializeAsync()
     {
         await _orderingPostgreSqlContainer.StartAsync();
-        await _orderStateSagaPostgreSqlContainer.StartAsync();
         await _redisContainer.StartAsync();
     }
 
     public new async Task DisposeAsync()
     {
         await _orderingPostgreSqlContainer.StopAsync();
-        await _orderStateSagaPostgreSqlContainer.StopAsync();
         await _redisContainer.StopAsync();
     }
 
@@ -167,7 +147,7 @@ public sealed class OrderingApiFactory : WebApplicationFactory<BuyersController>
         var jwtSecurityToken = new JwtSecurityToken(
             jwtSettings.Issuer,
             jwtSettings.Audience,
-            new[] {new Claim(ClaimTypes.System, "testing")},
+            [new Claim(ClaimTypes.System, "testing")],
             DateTime.UtcNow,
             DateTime.UtcNow.AddMinutes(jwtSettings.Expire),
             signingCred);
@@ -179,14 +159,8 @@ public sealed class OrderingApiFactory : WebApplicationFactory<BuyersController>
     {
         using var serviceProvider = services.BuildServiceProvider(true).CreateScope();
         var orderingDbContext = serviceProvider.ServiceProvider.GetRequiredService<OrderingDbContext>();
-        var orderStateSagaDbContext = serviceProvider.ServiceProvider.GetRequiredService<OrderStateSagaDbContext>();
 
         orderingDbContext.Database.EnsureCreated();
-        orderStateSagaDbContext.Database.EnsureCreated();
-            
-        orderingDbContext.OrderItems.AddRange(OrderItems);
-        orderingDbContext.Addresses.AddRange(Addresses);
-        orderingDbContext.SaveChanges();
 
         orderingDbContext.Buyers.AddRange(Buyers);
         orderingDbContext.Orders.AddRange(Orders);

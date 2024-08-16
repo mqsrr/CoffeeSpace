@@ -29,8 +29,7 @@
 
         <TextBox Grid.Row="1" Grid.Column="0"
                  Margin="20 10 0 0" UseFloatingWatermark="True" Watermark="Search Coffee"
-                 theme:TextBoxExtensions.AddDeleteButton="True" Width="300" HorizontalAlignment="Left"
-                 TextChanged="OnSearchTextChanged" />
+                 theme:TextBoxExtensions.AddDeleteButton="True" Width="300" HorizontalAlignment="Left"/>
 
         <ScrollViewer Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="10 20 0 0">
             <ItemsControl ItemsSource="{Binding Products}">

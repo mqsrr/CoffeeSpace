@@ -19,6 +19,14 @@
     </Design.DataContext>
 
     <suki:SukiSideMenu suki:SukiHost.ToastLimit="4">
+        <suki:SukiSideMenu.HeaderContent>
+            <StackPanel Orientation="Horizontal" Margin="20" HorizontalAlignment="Left" VerticalAlignment="Center">
+                <heroIcons:HeroIcon Type="LightBulb" Margin="10 0" 
+                                    PointerPressed="OnThemeChangeClick" Min="True"/>
+                <heroIcons:HeroIcon Type="Sparkles" Margin="10 0"
+                                    PointerPressed="OnPrimaryColorChangeClick" Min="True"/>
+            </StackPanel>
+        </suki:SukiSideMenu.HeaderContent>
         <suki:SukiSideMenu.Items>
             <suki:SukiSideMenuItem Header="DashBoard">
                 <suki:SukiSideMenuItem.Icon>

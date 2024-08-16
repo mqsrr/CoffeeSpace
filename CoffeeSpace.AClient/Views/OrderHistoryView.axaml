@@ -31,7 +31,7 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <controls:GlassCard Height="150" Width="300" Margin="5" DoubleTapped="InputElement_OnDoubleTapped">
+                    <controls:GlassCard Height="150" Width="300" Margin="5">
                         <Grid ShowGridLines="False"
                               ColumnDefinitions="Auto,Auto,*"
                               RowDefinitions="Auto,*">
