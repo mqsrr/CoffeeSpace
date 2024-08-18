@@ -2,6 +2,8 @@
 using CoffeeSpace.IdentityApi.Controllers;
 using CoffeeSpace.IdentityApi.Persistence;
 using CoffeeSpace.IdentityApi.Settings;
+using CoffeeSpace.Messages;
+using CoffeeSpace.Messages.Buyers;
 using DotNet.Testcontainers.Builders;
 using MassTransit;
 using Microsoft.AspNetCore.Hosting;
@@ -45,7 +47,7 @@ public sealed class IdentityApiFactory : WebApplicationFactory<AuthController>, 
         builder.UseSetting("Jwt:Expire", "1");
         
         builder.UseSetting("Authorization:ApiKey", "1sdfsdfsdfsdfsdfdsfs");
-        builder.UseSetting("Authorization:HeaderName", "apiiii");
+        builder.UseSetting("Authorization:HeaderName", "X-Api-Key");
 
         Environment.SetEnvironmentVariable(Environments.Staging, "Testing");
         builder.ConfigureTestServices(services =>
@@ -56,6 +58,8 @@ public sealed class IdentityApiFactory : WebApplicationFactory<AuthController>, 
     
                 config.AddConsumer<DeleteBuyerConsumer>();
                 config.AddConsumer<UpdateBuyerConsumer>();
+                
+                EndpointConvention.Map<RegisterNewBuyer>(new Uri(EndpointAddresses.Identity.RegisterNewBuyer));
             });
 
             services.AddScoped(_ => new DbContextOptionsBuilder<ApplicationUsersDbContext>()

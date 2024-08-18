@@ -88,7 +88,7 @@ public sealed class BuyersControllerTests
     }
 
     [Fact]
-    public async Task Create_ShouldReturn201_WhenBuyerIsCreated()
+    public async Task Create_ShouldReturn201_WhenBuyerWasCreated()
     {
         // Arrange
         const string request = ApiEndpoints.Buyer.Create;
@@ -119,7 +119,7 @@ public sealed class BuyersControllerTests
     }
 
     [Fact]
-    public async Task Update_ShouldReturn200_WhenBuyerIsUpdated()
+    public async Task Update_ShouldReturn200_WhenBuyerWasUpdated()
     {
         // Arrange
         var buyer = _buyers[1];
@@ -152,7 +152,7 @@ public sealed class BuyersControllerTests
     }
 
     [Fact]
-    public async Task Delete_ShouldReturn204_WhenBuyerIsDeleted()
+    public async Task Delete_ShouldReturn204_WhenBuyerWasDeleted()
     {
         // Arrange
         var buyerToDelete = _buyers.Last();
@@ -166,7 +166,7 @@ public sealed class BuyersControllerTests
     }
     
     [Fact]
-    public async Task Delete_ShouldReturn204_WhenBuyerIsNotDeleted()
+    public async Task Delete_ShouldReturn204_WhenBuyerWasNotDeleted()
     {
         // Arrange
         var randomId = Guid.NewGuid();

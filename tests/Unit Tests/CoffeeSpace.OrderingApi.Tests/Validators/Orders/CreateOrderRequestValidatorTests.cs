@@ -48,7 +48,6 @@ public sealed class CreateOrderRequestValidatorTests
             {
                 new OrderItem
                 {
-                    Id = Guid.NewGuid(),
                     Title = "Title",
                     Description = "Description",
                     UnitPrice = 1.4f,

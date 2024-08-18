@@ -21,9 +21,5 @@ internal sealed class OrderResponseValidator : AbstractValidator<OrderResponse>
         RuleFor(x => x.OrderItems)
             .NotEmpty()
             .NotNull();
-
-        RuleForEach(x => x.OrderItems)
-            .NotNull()
-            .SetValidator(new OrderItemValidator());
     }
 }

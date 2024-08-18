@@ -4,4 +4,4 @@
 ignore:
   - "CoffeeSpace.Client"
   - "CoffeeSpace.AClient"
-  - "**/Migrations"
+  - "**/Migrations/**/*"

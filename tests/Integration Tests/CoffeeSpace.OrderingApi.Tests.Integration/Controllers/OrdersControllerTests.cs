@@ -99,7 +99,7 @@ public sealed class OrdersControllerTests
     }
 
     [Fact]
-    public async Task CreateOrder_ShouldReturn201_WhenOrderIsCreated()
+    public async Task CreateOrder_ShouldReturn201_WhenOrderWasCreated()
     {
         // Arrange
         var order = AutoFaker.Generate<CreateOrderRequest, CreateOrderRequestFaker>();
@@ -120,7 +120,7 @@ public sealed class OrdersControllerTests
     }
 
     [Fact]
-    public async Task CreateOrder_ShouldReturn400_WhenOrderIsNotCreated()
+    public async Task CreateOrder_ShouldReturn400_WhenOrderWasNotCreated()
     {
         // Arrange
         var buyer = _buyers[1];
@@ -134,7 +134,7 @@ public sealed class OrdersControllerTests
     }
 
     [Fact]
-    public async Task DeleteOrderById_ShouldReturn204_WhenOrderIsDeleted()
+    public async Task DeleteOrderById_ShouldReturn204_WhenOrderWasDeleted()
     {
         // Arrange
         var buyer = _buyers.First();
@@ -156,7 +156,7 @@ public sealed class OrdersControllerTests
     }
 
     [Fact]
-    public async Task DeleteOrderById_ShouldReturn404_WhenOrderIsNotDeleted()
+    public async Task DeleteOrderById_ShouldReturn404_WhenOrderWasNotDeleted()
     {
         // Arrange
         var order = AutoFaker.Generate<Order, OrderFaker>(builder => builder.WithArgs(Guid.NewGuid()));

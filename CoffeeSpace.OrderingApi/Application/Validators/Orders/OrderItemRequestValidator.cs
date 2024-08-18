@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace CoffeeSpace.OrderingApi.Application.Validators.Orders;
 
-internal sealed class OrderItemValidator : AbstractValidator<OrderItem>
+internal sealed class OrderItemRequestValidator : AbstractValidator<OrderItem>
 {
-    public OrderItemValidator()
+    public OrderItemRequestValidator()
     {
         RuleFor(x => x.Title)
             .NotEmpty()
@@ -13,7 +13,8 @@ internal sealed class OrderItemValidator : AbstractValidator<OrderItem>
             
         RuleFor(x => x.Description)
             .NotEmpty()
-            .NotNull();
+            .NotNull()
+            .MaximumLength(200);
         
         RuleFor(x => x.Discount)
             .GreaterThanOrEqualTo(0)

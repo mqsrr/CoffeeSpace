@@ -55,6 +55,20 @@ public sealed class OrderRepositoryTests
     }
     
     [Fact]
+    public async Task GetAllByBuyerIdAsync_ShouldReturnEmptyCollection()
+    {
+        // Arrange
+        var buyerId = Guid.NewGuid();
+
+        // Act
+        var result = await _orderRepository.GetAllByBuyerIdAsync(buyerId, CancellationToken.None);
+
+        // Assert
+        result.Should().BeEmpty();
+        _orders.Received();
+    }
+    
+    [Fact]
     public async Task GetByIdAsync_ShouldReturnOrder_WhenOrderExists()
     {
         // Arrange
