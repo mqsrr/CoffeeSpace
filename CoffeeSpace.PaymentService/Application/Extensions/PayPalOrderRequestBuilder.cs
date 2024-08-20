@@ -9,14 +9,18 @@ namespace CoffeeSpace.PaymentService.Application.Extensions;
 public class PayPalOrderRequestBuilder
 {
     private readonly OrderRequest _orderRequest;
-
+    
+    private Guid _orderId;
+    
     public PayPalOrderRequestBuilder()
     {
         _orderRequest = new OrderRequest();
     }
     
-    public PayPalOrderRequestBuilder WithDefaultContext()
+    public PayPalOrderRequestBuilder WithDefaultContext(Guid orderId)
     {
+        _orderId = orderId;
+        
         _orderRequest.CheckoutPaymentIntent = PaymentConstants.CheckoutPaymentIntent;
         _orderRequest.ApplicationContext = new ApplicationContext
         {
@@ -27,6 +31,7 @@ public class PayPalOrderRequestBuilder
             UserAction = PaymentConstants.UserAction,
             ShippingPreference = PaymentConstants.ShippingPreference
         };
+        
         return this;
     }
 
@@ -35,7 +40,7 @@ public class PayPalOrderRequestBuilder
         string orderItemsSum = orderItems.Sum(orderItem => orderItem.Total).ToString("F1", new CultureInfo("en"));
         var purchaseUnitRequest = new PurchaseUnitRequest
         {
-            ReferenceId = PaymentConstants.ReferenceId,
+            ReferenceId = _orderId.ToString(),
             Description = PaymentConstants.Description,
             CustomId = PaymentConstants.CustomId,
             SoftDescriptor = PaymentConstants.SoftDescriptor,

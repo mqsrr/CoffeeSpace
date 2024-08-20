@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Avalonia.Threading;
 using CoffeeSpace.AClient.Models;
 using CoffeeSpace.AClient.Services;
 using CoffeeSpace.AClient.Services.Abstractions;
@@ -36,26 +37,19 @@ public sealed partial class OrderHistoryWindowViewModel : ViewModelBase
             await _hubConnectionService.StartConnectionAsync(StaticStorage.Buyer!.Id, cancellationToken);
         }
         
-        _hubConnectionService.OnOrderCreated(order =>
-        {
-            bool isContains = Orders.Contains(order);
-            if (!isContains)
-            {
-                Orders.Add(order);
-            }
-        });
-        
+        _hubConnectionService.OnOrderCreated(order => Orders.Add(order));
         _hubConnectionService.OnOrderStatusUpdated((status, orderId) =>
         {
-            var orderToUpdate = Orders.FirstOrDefault(order => order.Id == orderId);
-            if (orderToUpdate is null)
+            Dispatcher.UIThread.Post(() =>
             {
-                return;
-            }
-        
-            orderToUpdate.Status = status;
-            Orders.Remove(orderToUpdate);
-            Orders.Add(orderToUpdate);
+                var orderToUpdate = Orders.FirstOrDefault(order => order.Id == orderId);
+                if (orderToUpdate is null)
+                {
+                    return;
+                }
+
+                orderToUpdate.Status = status;
+            });
         }); 
     }
 }

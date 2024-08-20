@@ -75,15 +75,18 @@
                       ColumnDefinitions="170,170, *"
                       RowDefinitions="Auto,Auto,Auto,Auto">
                     <TextBox Margin="5" Watermark="Country"
-                             Text="{Binding Address.Country}" />
+                             Text="{Binding Address.Country}"
+                             x:Name="CountryTextBox"/>
                     
                     <TextBox Grid.Row="0" Grid.Column="1"
                              Margin="5" Watermark="City"
-                             Text="{Binding Address.City}" />
+                             Text="{Binding Address.City}"
+                             x:Name="CityTextBox"/>
                     
                     <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
-                             Margin="5" Watermark="Street"
-                             Text="{Binding Address.Street}" />
+                             Margin="5" Watermark="Street" 
+                             Text="{Binding Address.Street}" 
+                             x:Name="StreetTextBox"/>
 
                     <controls:BusyArea x:Name="BusyArea" IsBusy="{Binding CreateOrderCommand.IsRunning}"  
                                        Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">

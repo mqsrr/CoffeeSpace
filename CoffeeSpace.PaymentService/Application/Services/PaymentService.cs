@@ -1,13 +1,10 @@
 ﻿using System.Net;
-using CoffeeSpace.Domain.Ordering.Orders;
 using CoffeeSpace.Messages;
 using CoffeeSpace.Messages.Payment.Responses;
 using CoffeeSpace.PaymentService.Application.Extensions;
-using CoffeeSpace.PaymentService.Application.Mappers;
-using CoffeeSpace.PaymentService.Application.Models;
-using CoffeeSpace.PaymentService.Application.Repositories.Abstractions;
 using CoffeeSpace.PaymentService.Application.Services.Abstractions;
 using CoffeeSpace.PaymentService.Application.Settings;
+using CoffeeSpace.PaymentService.Models;
 using MassTransit;
 using Microsoft.Extensions.Options;
 using PayPalCheckoutSdk.Core;
@@ -18,16 +15,14 @@ namespace CoffeeSpace.PaymentService.Application.Services;
 
 internal sealed class PaymentService : IPaymentService
 {
-    private readonly IPaymentRepository _paymentRepository;
     private readonly PayPalHttpClient _payPalHttpClient;
     private readonly ISendEndpointProvider _sendEndpointProvider;
 
-    public PaymentService(IOptions<PaypalAuthenticationSettings> authSettings, IPaymentRepository paymentRepository, ISendEndpointProvider sendEndpointProvider)
+    public PaymentService(IOptions<PaypalAuthenticationSettings> authSettings, ISendEndpointProvider sendEndpointProvider)
     {
         var paypalAuthSettings = authSettings.Value;
         var sendBoxEnvironment = new SandboxEnvironment(paypalAuthSettings.ClientId, paypalAuthSettings.ClientSecret);
 
-        _paymentRepository = paymentRepository;
         _sendEndpointProvider = sendEndpointProvider;
         _payPalHttpClient = new PayPalHttpClient(sendBoxEnvironment);
     }
@@ -36,7 +31,7 @@ internal sealed class PaymentService : IPaymentService
     {
         var request = new OrdersCreateRequest();
         var requestBody = new PayPalOrderRequestBuilder()
-            .WithDefaultContext()
+            .WithDefaultContext(order.Id)
             .WithPurchaseUnits(order.OrderItems.ToList())
             .WithAddress(order.Address)
             .Build();
@@ -51,15 +46,13 @@ internal sealed class PaymentService : IPaymentService
         }
 
         var createdOrder = response.Result<PayPalCheckoutSdk.Orders.Order>();
-        var paypalOrderInformation = createdOrder.ToPaypalOrderInformation(order.Id, order.BuyerId);
-
-        await _paymentRepository.CreatePaymentAsync(paypalOrderInformation, cancellationToken);
         return createdOrder;
     }
 
-    public async Task<PayPalCheckoutSdk.Orders.Order?> CapturePaypalPaymentAsync(string paypalPaymentId, CancellationToken cancellationToken)
+    public async Task CapturePaypalPaymentAsync(OrderApprovedWebhookEvent webhookEvent,
+        CancellationToken cancellationToken)
     {
-        var request = new OrdersCaptureRequest(paypalPaymentId);
+        var request = new OrdersCaptureRequest(webhookEvent.Resource.Id);
         var requestBody = new OrderActionRequest();
 
         request.Prefer("return=representation");
@@ -68,24 +61,13 @@ internal sealed class PaymentService : IPaymentService
         var response = await _payPalHttpClient.Execute(request);
         if (response.StatusCode is not HttpStatusCode.Created)
         {
-            return null;
+            return;
         }
 
         var confirmedOrder = response.Result<PayPalCheckoutSdk.Orders.Order>();
-        var paypalOrderInformation = await _paymentRepository.GetPaypalOrderByIdAsync(Guid.Parse(confirmedOrder.Id), cancellationToken);
-        
-        await _paymentRepository.UpdatePaymentStatusAsync(confirmedOrder.Id, confirmedOrder.Status, cancellationToken);
-        await _sendEndpointProvider.Send<OrderPaid>(new Uri(EndpointAddresses.Payment.OrderPaid), new { },
-            context => context.RequestId = paypalOrderInformation!.ApplicationOrderId, cancellationToken).ConfigureAwait(false);
-
-        return confirmedOrder;
+        await _sendEndpointProvider.Send<OrderPaid>(
+            new Uri(EndpointAddresses.Payment.OrderPaid),
+            new { },
+            context => context.RequestId = Guid.Parse(confirmedOrder.PurchaseUnits[0].ReferenceId), cancellationToken);
     }
-
-    public Task<PaypalOrderInformation?> GetOrderPaymentByOrderIdAsync(Guid applicationOrderId,
-        CancellationToken cancellationToken)
-    {
-        var paypalOrderInformation = _paymentRepository.GetByApplicationOrderIdAsync(applicationOrderId, cancellationToken);
-        return paypalOrderInformation;
-    }
-
 }

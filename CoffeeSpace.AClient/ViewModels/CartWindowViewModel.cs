@@ -3,10 +3,10 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Avalonia.Controls;
 using Avalonia.Threading;
 using CoffeeSpace.AClient.Contracts.Requests.Orders;
 using CoffeeSpace.AClient.Mappers;
-using CoffeeSpace.AClient.Messages.Commands;
 using CoffeeSpace.AClient.Models;
 using CoffeeSpace.AClient.RefitClients;
 using CoffeeSpace.AClient.Services;
@@ -14,7 +14,6 @@ using CoffeeSpace.AClient.Services.Abstractions;
 using CoffeeSpace.AClient.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Mediator;
 using Microsoft.Extensions.DependencyInjection;
 using SukiUI.Controls;
 
@@ -23,8 +22,8 @@ namespace CoffeeSpace.AClient.ViewModels;
 public sealed partial class CartWindowViewModel : ViewModelBase
 {
     private readonly IOrderingWebApi _orderingWebApi;
-    private readonly ISender _sender;
     private readonly IHubConnectionService _hubConnectionService;
+    private readonly OrderHistoryWindowViewModel _historyWindowViewModel;
     
     [ObservableProperty] 
     private ObservableCollection<Product> _cartProducts;
@@ -32,18 +31,18 @@ public sealed partial class CartWindowViewModel : ViewModelBase
     [ObservableProperty]
     private CreateAddressRequest _address = new CreateAddressRequest();
 
-    public CartWindowViewModel(IOrderingWebApi orderingWebApi, ISender sender, IHubConnectionService hubConnectionService)
+    public CartWindowViewModel(IOrderingWebApi orderingWebApi, IHubConnectionService hubConnectionService, OrderHistoryWindowViewModel historyWindowViewModel)
     {
         _orderingWebApi = orderingWebApi;
-        _sender = sender;
         _hubConnectionService = hubConnectionService;
-        
+        _historyWindowViewModel = historyWindowViewModel;
+
         CartProducts = new ObservableCollection<Product>();
     }
 
-    public CartWindowViewModel()
+    public CartWindowViewModel(OrderHistoryWindowViewModel historyWindowViewModel)
     {
-        _sender = null!;
+        _historyWindowViewModel = historyWindowViewModel;
         _orderingWebApi = null!;
         _hubConnectionService = null!;
         
@@ -57,9 +56,14 @@ public sealed partial class CartWindowViewModel : ViewModelBase
             await _hubConnectionService.StartConnectionAsync(StaticStorage.Buyer!.Id, cancellationToken);
         }
         
-        _hubConnectionService.OnOrderCreated(_ => 
-            Dispatcher.UIThread.Post(async () => 
-                await SukiHost.ShowToast("Order Has Been Created", "You will receive payment request in a few seconds.")));
+        _hubConnectionService.OnOrderCreated(order => 
+            Dispatcher.UIThread.Post(async () =>
+            {   
+                _historyWindowViewModel.Orders.Add(order);
+                ClearCartValues();
+
+                await SukiHost.ShowToast("Order Has Been Created", "You will receive payment request in a few seconds.");
+            }));
         
         _hubConnectionService.OnOrderPaymentPageInitialized((_, paymentUri) =>
         {
@@ -67,13 +71,15 @@ public sealed partial class CartWindowViewModel : ViewModelBase
             {
                 var paymentView = App.Services.GetRequiredService<PaymentView>();
                 paymentView.WebView.Url = new Uri(paymentUri);
-                paymentView.WebView.WebMessageReceived += (_, args) =>
+                paymentView.WebView.NavigationStarting += async (_, arg) =>
                 {
-                    if (args.Source.Port == 8085)
+                    if (arg.Url!.Port == 8085)
                     {
+                        await SukiHost.ShowToast("Success", "Order has been paid!");
                         paymentView.Close();
                     }
                 };
+                
                 paymentView.Show();
             });
         });
@@ -96,16 +102,6 @@ public sealed partial class CartWindowViewModel : ViewModelBase
             return;
         }
         
-        await _sender.Send(new CreateOrderHistoryCommand
-        {
-            Order = createdOrderResponse.Content!
-        }, cancellationToken);
-        
-        CartProducts.Clear();
-        
-        Address.City = string.Empty;
-        Address.Country = string.Empty;
-        Address.Street = string.Empty;
     }
     
     [RelayCommand]
@@ -115,5 +111,19 @@ public sealed partial class CartWindowViewModel : ViewModelBase
         product.Quantity = 1;
         
         return Task.CompletedTask;
+    }
+
+    private void ClearCartValues()
+    {
+        CartProducts.Clear();
+
+        Address.Country = string.Empty;
+        Address.City = string.Empty;
+        Address.Street = string.Empty;
+        
+        var cartView = App.Services.GetRequiredService<CartView>();
+        cartView.GetControl<TextBox>("CountryTextBox").Clear();
+        cartView.GetControl<TextBox>("CityTextBox").Clear();
+        cartView.GetControl<TextBox>("StreetTextBox").Clear();
     }
 }

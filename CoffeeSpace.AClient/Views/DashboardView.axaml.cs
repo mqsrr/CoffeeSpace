@@ -11,7 +11,7 @@ public sealed partial class DashboardView : UserControl
 {
     private readonly DashboardWindowViewModel _viewModel;
     private readonly ProductDetailsView _productDetailsView;
-    
+
     public DashboardView()
     {
         InitializeComponent();
@@ -31,7 +31,7 @@ public sealed partial class DashboardView : UserControl
     {
         var glassCard = sender as GlassCard;
         var selectedProduct = glassCard!.DataContext as Product;
-        
+
         _productDetailsView.SetNewProduct(selectedProduct!);
         SukiHost.ShowDialog(_productDetailsView, allowBackgroundClose: true);
     }
