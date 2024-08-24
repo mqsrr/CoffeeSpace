@@ -219,18 +219,15 @@ sequenceDiagram
     participant OrderingAPI as Ordering API
     participant PaymentService as Payment Service
     participant PayPalAPI as PayPal API
-    participant Database as Database
     participant Client as Client
 
     OrderingAPI ->> PaymentService: Create Payment
     PaymentService ->> PayPalAPI: Create Order Request
     PayPalAPI -->> PaymentService: PayPal Response
-    PaymentService ->> Database: Store PayPal Response
     PaymentService ->> Client: Send Payment Approval Link (SignalR)
     Client ->> PaymentService: Proceed with Payment
     PaymentService ->> PayPalAPI: Capture Payment
     PayPalAPI -->> PaymentService: Payment Captured
-    PaymentService ->> Database: Update Payment Status
     PaymentService ->> OrderingAPI: Send Payment Captured Response
 ```
 In order to create request more readable, I've implemented `Builder` pattern for `OrderRequest`. 
@@ -301,12 +298,6 @@ To import the Postman collection:
 4. Postman will import the collection, and you will be able to see the available requests and their associated details.
 
 After importing the collection, you can explore the endpoints, customize the request parameters, and execute the requests against the project's APIs directly from Postman. This allows you to easily test and interact with the functionality provided by the project.
-
-## Contributing
-
-Contributions to CoffeeSpace project are always welcome! If you have any ideas, suggestions or improvements in mind, I would be more than happy to have them! You can start contributing by forking the repository, making your changes and submitting a pull request.
-
-**Please make sure to follow the code style.**
 
 ## Related
 
