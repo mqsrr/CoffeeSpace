@@ -1,0 +1,56 @@
+global:
+  namespaceOverride: ""
+  env:
+    ASPNETCORE_ENVIRONMENT: ""
+    AZURE_CLIENT_ID: ""
+    AZURE_CLIENT_SECRET: ""
+    AZURE_TENANT_ID: ""
+    AZURE_VAULT_NAME: ""
+
+replicaCount: 1
+
+fullnameOverride: ""
+nameOverride: ""
+
+podAnnotations: {}
+podLabels: {}
+
+image:
+  repository: mqsr/coffeespace-products-api
+  tag: 2.1.0
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 8082
+  targetPort: 8080
+
+secrets:
+  azure:
+    name: azure-key-vault
+    clientId: azure-client-id
+    clientSecret: azure-client-secret
+    tenantId: azure-tenant-id
+    vaultName: azure-vault-name
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 5
+  cpuUtilization: 80
+
+livenessProbe:
+  httpGet:
+    path: /_health
+    port: http
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  failureThreshold: 3

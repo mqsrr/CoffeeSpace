@@ -7,32 +7,27 @@ internal sealed class ProductResponseValidator : AbstractValidator<ProductRespon
 {
     public ProductResponseValidator()
     {
-        RuleFor(x => x.Id)
+        RuleFor(response => response.Id)
             .NotEmpty()
             .NotNull();
             
-        RuleFor(x => x.Title)
+        RuleFor(response => response.Title)
             .NotEmpty()
             .NotNull();
-            
-        RuleFor(x => x.Description)
-            .NotEmpty()
+
+        RuleFor(response => response.Image)
             .NotNull();
             
-        RuleFor(x => x.Discount)
+        RuleFor(response => response.Description)
             .NotEmpty()
-            .NotNull()
-            .GreaterThanOrEqualTo(0)
-            .LessThanOrEqualTo(1);
+            .NotNull();
         
-        RuleFor(x => x.UnitPrice)
-            .NotEmpty()
+        RuleFor(response => response.UnitPrice)
             .NotNull()
             .GreaterThan(0)
             .LessThan(99);
         
-        RuleFor(x => x.Quantity)
-            .NotEmpty()
+        RuleFor(response => response.Quantity)
             .NotNull()
             .GreaterThan(0);
     }

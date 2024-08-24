@@ -72,24 +72,6 @@ public sealed class ProductResponseValidatorTests
     }
     
     [Theory]
-    [InlineData(0f)]
-    [InlineData(100f)]
-    [InlineData(-1f)]
-    public async Task InvalidDiscount_ShouldThrowValidationError(float discount)
-    {
-        // Arrange
-        var request = _fixture.Build<ProductResponse>()
-            .With(productRequest => productRequest.Discount, discount)
-            .Create();
-        
-        // Act
-        var result = await _productResponseValidator.TestValidateAsync(request);
-        
-        // Assert
-        result.ShouldHaveValidationErrorFor(productRequest => productRequest.Discount);
-    }
-    
-    [Theory]
     [InlineData(0)]
     [InlineData(-1)]
     public async Task InvalidQuantity_ShouldThrowValidationError(int quantity)
@@ -112,7 +94,6 @@ public sealed class ProductResponseValidatorTests
         // Arrange
         var request = _fixture.Build<ProductResponse>()
             .With(productRequest => productRequest.UnitPrice, Random.Shared.Next(1, 99))
-            .With(productRequest => productRequest.Discount, Random.Shared.NextDouble())
             .With(productRequest => productRequest.Quantity, Random.Shared.Next(1, 10))
             .Create();
         

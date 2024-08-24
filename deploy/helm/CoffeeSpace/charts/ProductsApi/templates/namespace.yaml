@@ -1,0 +1,7 @@
+﻿{{- $namespace := include "ProductsApi.namespace" . }}
+{{- if ne $namespace "default" }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ $namespace }}
+{{- end }}

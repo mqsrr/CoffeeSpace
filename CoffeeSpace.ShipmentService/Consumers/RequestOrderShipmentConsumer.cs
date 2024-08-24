@@ -15,13 +15,18 @@ internal sealed class RequestOrderShipmentConsumer : IConsumer<RequestOrderShipm
 
     public async Task Consume(ConsumeContext<RequestOrderShipment> context)
     {
-        //Transfer to local shipment service
         await Task.Delay(TimeSpan.FromSeconds(3));
+        _logger.LogInformation("""
+                               Order with ID {OrderId} was successfully transferred to the shipment service.
+                               Country: {Country}
+                               Street: {Street}
+                               City: {City}
+                               """,
+            context.Message.Id,
+            context.Message.Address.Country,
+            context.Message.Address.Street,
+            context.Message.Address.City);
         
-        _logger.LogInformation("Order with ID {OrderId} was successfully transferred to the shipment service", context.Message.Order.Id);
-        await context.RespondAsync<OrderShipped>(new
-        {
-            ShipmentAvailable = true
-        });
+        await context.RespondAsync<OrderShipped>(new {});
     }
 }

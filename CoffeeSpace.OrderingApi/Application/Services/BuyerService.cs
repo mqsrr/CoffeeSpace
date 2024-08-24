@@ -19,7 +19,7 @@ internal sealed class BuyerService : IBuyerService
 
     public Task<Buyer?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        var buyer = _buyerRepository.GetByIdAsync(id.ToString(), cancellationToken);
+        var buyer = _buyerRepository.GetByIdAsync(id, cancellationToken);
         return buyer;
     }
 
@@ -29,44 +29,45 @@ internal sealed class BuyerService : IBuyerService
         return buyer;
     }
 
-    public async Task<bool> CreateAsync(Buyer buyer, CancellationToken cancellationToken)
+    public Task<bool> CreateAsync(Buyer buyer, CancellationToken cancellationToken)
     {
-        bool isCreated = await _buyerRepository.CreateAsync(buyer, cancellationToken);
+        var isCreated = _buyerRepository.CreateAsync(buyer, cancellationToken);
         return isCreated;
     }
 
     public async Task<Buyer?> UpdateAsync(Buyer buyer, CancellationToken cancellationToken)
     {
         var updatedBuyer = await _buyerRepository.UpdateAsync(buyer, cancellationToken);
-        if (updatedBuyer is not null)
+        if (updatedBuyer is null)
         {
-            await _sendEndpointProvider.Send<UpdateBuyer>(new
-            {
-                Buyer = updatedBuyer
-            }, cancellationToken).ConfigureAwait(false);
+            return null;
         }
 
+        await _sendEndpointProvider.Send<UpdateBuyer>(new
+        {
+            Buyer = updatedBuyer
+        }, cancellationToken).ConfigureAwait(false);
         return updatedBuyer;
     }
 
     public async Task<bool> DeleteByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        var buyerToDelete = await _buyerRepository.GetByIdAsync(id.ToString(), cancellationToken);
+        var buyerToDelete = await _buyerRepository.GetByIdAsync(id, cancellationToken);
         if (buyerToDelete is null)
         {
             return false;
         }
 
-        bool isDeleted = await _buyerRepository.DeleteByIdAsync(id.ToString(), cancellationToken);
-        if (isDeleted)
+        bool isDeleted = await _buyerRepository.DeleteByIdAsync(id, cancellationToken);
+        if (!isDeleted)
         {
-            await _sendEndpointProvider.Send<DeleteBuyer>(new
-            {
-                buyerToDelete.Name,
-                buyerToDelete.Email
-            }, cancellationToken).ConfigureAwait(false);
+            return false;
         }
-        
+
+        await _sendEndpointProvider.Send<DeleteBuyerByEmail>(new
+        {
+            buyerToDelete.Email
+        }, cancellationToken).ConfigureAwait(false);
         return isDeleted;
     }
 }

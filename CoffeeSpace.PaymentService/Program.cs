@@ -1,76 +1,66 @@
-using CoffeeSpace.Core.Extensions;
-using CoffeeSpace.Core.Services.Abstractions;
-using CoffeeSpace.Core.Settings;
-using CoffeeSpace.PaymentService.Consumers;
-using CoffeeSpace.PaymentService.Extensions;
-using CoffeeSpace.PaymentService.Messages.PipelineBehaviours;
-using CoffeeSpace.PaymentService.Persistence;
-using CoffeeSpace.PaymentService.Repositories.Abstractions;
-using CoffeeSpace.PaymentService.Services.Abstractions;
-using CoffeeSpace.PaymentService.Settings;
-using FastEndpoints;
+using CoffeeSpace.Messages;
+using CoffeeSpace.Messages.Payment.Commands;
+using CoffeeSpace.PaymentService.Application.Extensions;
+using CoffeeSpace.PaymentService.Application.Messages.Consumers;
+using CoffeeSpace.PaymentService.Application.Services.Abstractions;
+using CoffeeSpace.PaymentService.Application.Settings;
+using CoffeeSpace.PaymentService.Models;
+using CoffeeSpace.Shared.Extensions;
+using CoffeeSpace.Shared.Settings;
 using MassTransit;
-using Mediator;
 using Microsoft.Extensions.Options;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.AddAzureKeyVault();
-builder.Configuration.AddJwtBearer(builder);
+builder.AddOpenTelemetryWithInstrumentation();
 
 builder.Host.UseSerilog((context, configuration) =>
-    configuration.ReadFrom.Configuration(context.Configuration)
-        .AddDatadogLogging("Payment Service"));
+    configuration.ReadFrom.Configuration(context.Configuration));
 
-builder.Services.AddStackExchangeRedisCache(options => options.Configuration = builder.Configuration["Redis:ConnectionString"]);
-builder.Services.AddApplicationDb<PaymentDbContext>(builder.Configuration["PaymentDb:ConnectionString"]!);
-
-builder.Services.AddApplicationService<IPaymentRepository>();
+builder.Configuration.AddAzureKeyVault();
 builder.Services.AddApplicationService<IPaymentService>();
 
-builder.Services.AddMediator();
-builder.Services.AddFastEndpoints();
+builder.Services.AddOptionsWithValidateOnStart<PaypalAuthenticationSettings>()
+    .Bind(builder.Configuration.GetRequiredSection(PaypalAuthenticationSettings.SectionName));
 
-builder.Services.AddApplicationService(typeof(ICacheService<>));
-builder.Services.AddApplicationService(typeof(IPipelineBehavior<,>), typeof(IPipelineAssemblyMarker));
+builder.Services.AddOptionsWithValidateOnStart<AwsMessagingSettings>()
+    .Bind(builder.Configuration.GetRequiredSection(AwsMessagingSettings.SectionName));
 
-builder.Services.AddOptions<AwsMessagingSettings>()
-    .Bind(builder.Configuration.GetRequiredSection(AwsMessagingSettings.SectionName))
-    .ValidateOnStart();
-
-builder.Services.AddOptions<PaypalAuthenticationSettings>()
-    .Bind(builder.Configuration.GetRequiredSection(PaypalAuthenticationSettings.SectionName))
-    .ValidateOnStart();
-
-builder.Services.AddMassTransit(x =>
+builder.Services.AddMassTransit(busConfigurator =>
 {
-    x.SetKebabCaseEndpointNameFormatter();
-    x.AddConsumer<OrderPaymentValidationConsumer>();
+    busConfigurator.SetKebabCaseEndpointNameFormatter();
+    busConfigurator.AddConsumer<OrderPaymentValidationConsumer>();
     
-    x.UsingAmazonSqs((context, config) =>
+    busConfigurator.UsingAmazonSqs((context, configurator) =>
     {
         var awsSettings = context.GetRequiredService<IOptions<AwsMessagingSettings>>().Value;
-        config.Host(awsSettings.Region, hostConfig =>
+        configurator.Host(awsSettings.Region, hostConfigurator =>
         {
-            hostConfig.AccessKey(awsSettings.AccessKey);
-            hostConfig.SecretKey(awsSettings.SecretKey);
+            hostConfigurator.AccessKey(awsSettings.AccessKey);
+            hostConfigurator.SecretKey(awsSettings.SecretKey);
         });
-        config.UseNewtonsoftJsonSerializer();
-        config.UseNewtonsoftJsonDeserializer();
+        configurator.ConfigureEndpoints(context);
 
-        config.ConfigureEndpoints(context);
+        configurator.UseNewtonsoftJsonSerializer();
+        configurator.UseNewtonsoftJsonDeserializer();
+        
+        EndpointConvention.Map<PaymentPageInitialized>(new Uri(EndpointAddresses.Payment.PaymentPageInitialized));
     });
 });
-
 builder.Services.AddServiceHealthChecks(builder);
 
 var app = builder.Build();
 
+app.MapPost("/", async (OrderApprovedWebhookEvent order, IPaymentService paymentService, CancellationToken cancellationToken) =>
+{
+    await paymentService.CapturePaypalPaymentAsync(order, cancellationToken);
+    return TypedResults.Ok();
+});
+
+app.UseSerilogRequestLogging();
+app.MapPrometheusScrapingEndpoint();
+
 app.UseHealthChecks("/_health");
 
-app.UseAuthentication();
-app.UseAuthorization();
-
-app.UseFastEndpoints();
 app.Run();

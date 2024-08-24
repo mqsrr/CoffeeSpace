@@ -1,20 +1,20 @@
 ﻿using CoffeeSpace.Domain.Ordering.Orders;
 using CoffeeSpace.OrderingApi.Application.Repositories.Abstractions;
-using CoffeeSpace.OrderingApi.Persistence;
+using CoffeeSpace.OrderingApi.Persistence.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeSpace.OrderingApi.Application.Repositories;
 
 internal sealed class OrderRepository : IOrderRepository
 {
-    private readonly OrderingDbContext _orderingDbContext;
+    private readonly IOrderingDbContext _orderingDbContext;
 
-    public OrderRepository(OrderingDbContext orderingDbContext)
+    public OrderRepository(IOrderingDbContext orderingDbContext)
     {
         _orderingDbContext = orderingDbContext;
     }
     
-    public async Task<IEnumerable<Order>> GetAllByBuyerIdAsync(string buyerId, CancellationToken cancellationToken)
+    public async Task<IEnumerable<Order>> GetAllByBuyerIdAsync(Guid buyerId, CancellationToken cancellationToken)
     {
         bool isNotEmpty = await _orderingDbContext.Orders.AnyAsync(cancellationToken);
         if (!isNotEmpty)
@@ -31,9 +31,9 @@ internal sealed class OrderRepository : IOrderRepository
         return orders;
     }
     
-    public Task<Order?> GetByIdAsync(string id, CancellationToken cancellationToken)
+    public async Task<Order?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        var order = _orderingDbContext.Orders
+        var order = await _orderingDbContext.Orders
             .Include(order => order.OrderItems)
             .Include(order => order.Address)
             .FirstOrDefaultAsync(order => order.Id == id, cancellationToken);
@@ -49,7 +49,7 @@ internal sealed class OrderRepository : IOrderRepository
         return result > 0;
     }
     
-    public async Task<bool> UpdateOrderStatusAsync(string id, OrderStatus orderStatus, CancellationToken cancellationToken)
+    public async Task<bool> UpdateOrderStatusAsync(Guid id, OrderStatus orderStatus, CancellationToken cancellationToken)
     {
         int result = await _orderingDbContext.Orders
             .Where(order => order.Id == id)
@@ -58,8 +58,8 @@ internal sealed class OrderRepository : IOrderRepository
         
         return result > 0;
     }
-
-    public async Task<bool> DeleteByIdAsync(string id, CancellationToken cancellationToken)
+    
+    public async Task<bool> DeleteByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         int result = await _orderingDbContext.Orders
             .Where(order => order.Id == id)

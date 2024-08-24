@@ -1,15 +1,15 @@
 using CoffeeSpace.Domain.Products;
 using CoffeeSpace.ProductApi.Application.Repositories.Abstractions;
-using CoffeeSpace.ProductApi.Persistence;
+using CoffeeSpace.ProductApi.Persistence.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoffeeSpace.ProductApi.Application.Repositories;
 
-internal sealed class ProductRepository : IProductRepository
+public sealed class ProductRepository : IProductRepository
 {
-    private readonly ProductDbContext _productDbContext;
+    private readonly IProductDbContext _productDbContext;
 
-    public ProductRepository(ProductDbContext productDbContext)
+    public ProductRepository(IProductDbContext productDbContext)
     {
         _productDbContext = productDbContext;
     }
@@ -26,9 +26,9 @@ internal sealed class ProductRepository : IProductRepository
         return products;
     }
 
-    public async Task<Product?> GetProductByIdAsync(string id, CancellationToken cancellationToken)
+    public async Task<Product?> GetProductByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        var product = await _productDbContext.Products.FindAsync(new object?[]{ id }, cancellationToken: cancellationToken);
+        var product = await _productDbContext.Products.FindAsync([id], cancellationToken);
         return product;
     }
 
@@ -36,7 +36,7 @@ internal sealed class ProductRepository : IProductRepository
     {
         await _productDbContext.Products.AddAsync(product, cancellationToken);
         int result = await _productDbContext.SaveChangesAsync(cancellationToken);
-        
+
         return result > 0;
     }
 
@@ -50,7 +50,7 @@ internal sealed class ProductRepository : IProductRepository
             : null;
     }
 
-    public async Task<bool> DeleteProductByIdAsync(string id, CancellationToken cancellationToken)
+    public async Task<bool> DeleteProductByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         int result = await _productDbContext.Products
             .Where(product => product.Id == id)

@@ -5,10 +5,8 @@ using CoffeeSpace.ProductApi.Application.Repositories;
 using CoffeeSpace.ProductApi.Persistence.Abstractions;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using MockQueryable.NSubstitute;
 using NSubstitute;
-using NSubstitute.ReturnsExtensions;
 using Xunit;
 
 namespace CoffeeSpace.ProductApi.Tests.Repositories;
@@ -17,21 +15,23 @@ public sealed class ProductRepositoryTests
 {
     private readonly IProductDbContext _dbContext;
     private readonly DbSet<Product> _productDbSet;
-    private readonly Fixture _fixture;
+    
     private readonly IEnumerable<Product> _products;
+    private readonly Fixture _fixture;
 
     private readonly ProductRepository _productRepository;
     
     public ProductRepositoryTests()
     {
         _fixture = new Fixture();
-        _products = _fixture.CreateMany<Product>();
         _fixture.Customize(new AutoNSubstituteCustomization());
+        
+        _productDbSet = _fixture.CreateMany<Product>().AsQueryable().BuildMockDbSet();
+        _products = _productDbSet.AsEnumerable();
 
-        _productDbSet = _products.AsQueryable().BuildMockDbSet();
         _dbContext = _fixture.Create<IProductDbContext>();
         _dbContext.Products.Returns(_productDbSet);
-        
+
         _productRepository = new ProductRepository(_dbContext);
     }
 
@@ -46,6 +46,8 @@ public sealed class ProductRepositoryTests
 
         // Assert   
         result.Should().Be(expectedCount);
+        
+        _productDbSet.Received();
     }
     
     [Fact]
@@ -58,6 +60,8 @@ public sealed class ProductRepositoryTests
 
         // Assert   
         result.Should().BeEquivalentTo(_products);
+
+        _productDbSet.Received();
     }
     
     [Fact]
@@ -74,19 +78,23 @@ public sealed class ProductRepositoryTests
 
         // Assert   
         result.Should().BeEquivalentTo(productToFind);
+        
+        await _productDbSet.Received().FindAsync(Arg.Any<object[]>(), Arg.Any<CancellationToken>());
     }
     
     [Fact]
     public async Task GetByIdAsync_ShouldReturnNull_WhenProductDoesNotExist()
     {
         // Arrange
-        string productId = string.Empty;
+        var productId = Guid.Empty;
         
         // Act
         var result = await _productRepository.GetProductByIdAsync(productId, CancellationToken.None);
 
         // Assert   
         result.Should().BeNull();
+
+        await _productDbSet.Received().FindAsync(Arg.Any<object[]>(), Arg.Any<CancellationToken>());
     }
     
     [Fact]
@@ -95,8 +103,8 @@ public sealed class ProductRepositoryTests
         // Arrange
         var productToCreate = _fixture.Create<Product>();
         
-        _dbContext.SaveChangesAsync()
-            .ReturnsForAnyArgs(1);
+        _dbContext.SaveChangesAsync(Arg.Any<CancellationToken>())
+            .Returns(1);
         
         // Act
         bool result = await _productRepository.CreateProductAsync(productToCreate, CancellationToken.None);
@@ -112,9 +120,11 @@ public sealed class ProductRepositoryTests
     {
         // Arrange
         var productToCreate = _fixture.Create<Product>();
-
-        _dbContext.SaveChangesAsync()
-            .ReturnsForAnyArgs(0);
+        _dbContext.ClearReceivedCalls();
+        _productDbSet.ClearReceivedCalls();
+        
+        _dbContext.SaveChangesAsync(Arg.Any<CancellationToken>())
+            .Returns(0);
         
         // Act
         bool result = await _productRepository.CreateProductAsync(productToCreate, CancellationToken.None);
@@ -133,20 +143,17 @@ public sealed class ProductRepositoryTests
         var updatedProduct = _fixture.Build<Product>()
             .With(product => product.Id, productToUpdate.Id)
             .Create();
-
-        _productDbSet.FindAsync(Arg.Any<object[]>(), Arg.Any<CancellationToken>())
-            .Returns(productToUpdate);
         
-        _dbContext.SaveChangesAsync()
-            .ReturnsForAnyArgs(1);
+        _dbContext.SaveChangesAsync(Arg.Any<CancellationToken>())
+            .Returns(1);
         
         // Act
         var result = await _productRepository.UpdateProductAsync(updatedProduct, CancellationToken.None);
 
         // Assert   
         result.Should().BeEquivalentTo(updatedProduct);
+        
         _productDbSet.Should().NotContainEquivalentOf(productToUpdate);
-
         _productDbSet.Received().Update(updatedProduct);
     }
     
@@ -155,17 +162,19 @@ public sealed class ProductRepositoryTests
     {
         // Arrange
         var updatedProduct = _fixture.Create<Product>();
-
-        _productDbSet.FindAsync(Arg.Any<object[]>(), Arg.Any<CancellationToken>())
-            .ReturnsNull();
+        _dbContext.ClearReceivedCalls();
+        _productDbSet.ClearReceivedCalls();
         
-        _dbContext.SaveChangesAsync()
-            .ReturnsForAnyArgs(0);
+        _dbContext.SaveChangesAsync(Arg.Any<CancellationToken>())
+            .Returns(0);
         
         // Act
         var result = await _productRepository.UpdateProductAsync(updatedProduct, CancellationToken.None);
 
         // Assert   
         result.Should().BeNull();
+
+        await _dbContext.Received().SaveChangesAsync(Arg.Any<CancellationToken>());
+        _productDbSet.Received().Update(updatedProduct);
     }
 }

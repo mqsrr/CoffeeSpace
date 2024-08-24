@@ -1,6 +1,4 @@
 using Asp.Versioning;
-using CoffeeSpace.Core.Extensions;
-using CoffeeSpace.Core.Settings;
 using CoffeeSpace.IdentityApi.Application.Extensions;
 using CoffeeSpace.IdentityApi.Application.Messages.Consumers;
 using CoffeeSpace.IdentityApi.Application.Models;
@@ -9,6 +7,10 @@ using CoffeeSpace.IdentityApi.Application.Validators;
 using CoffeeSpace.IdentityApi.Filters;
 using CoffeeSpace.IdentityApi.Persistence;
 using CoffeeSpace.IdentityApi.Settings;
+using CoffeeSpace.Messages;
+using CoffeeSpace.Messages.Buyers;
+using CoffeeSpace.Shared.Extensions;
+using CoffeeSpace.Shared.Settings;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MassTransit;
@@ -17,14 +19,16 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddOpenTelemetryWithInstrumentation();
 builder.Host.UseSerilog((context, configuration) => 
-    configuration.ReadFrom.Configuration(context.Configuration)
-        .AddDatadogLogging("Identity API"));
+    configuration.ReadFrom.Configuration(context.Configuration));
 
 builder.Configuration.AddAzureKeyVault();
+builder.Configuration.AddJwtBearer(builder);
+
 builder.Services.AddControllers();
 
-builder.Services.AddApiVersioning(new MediaTypeApiVersionReader("api-version"));
+builder.Services.AddApiVersioning(new HeaderApiVersionReader());
 builder.Services.AddApplicationDb<ApplicationUsersDbContext>(builder.Configuration["IdentityDb:ConnectionString"]!);
 
 builder.Services.AddApplicationService<IAuthService<ApplicationUser>>();
@@ -32,29 +36,26 @@ builder.Services.AddApplicationService<ITokenWriter<ApplicationUser>>();
 
 builder.Services.AddApplicationServiceAsSelf<ApiKeyAuthorizationFilter>();
 
-builder.Services.AddOptions<AwsMessagingSettings>()
-    .Bind(builder.Configuration.GetRequiredSection(AwsMessagingSettings.SectionName))
-    .ValidateOnStart();
+builder.Services.AddOptionsWithValidateOnStart<JwtSettings>()
+    .Bind(builder.Configuration.GetRequiredSection(JwtSettings.SectionName));
 
-builder.Services.AddOptions<JwtSettings>()
-    .Bind(builder.Configuration.GetRequiredSection(JwtSettings.SectionName))
-    .ValidateOnStart();
+builder.Services.AddOptionsWithValidateOnStart<ApiKeySettings>()
+    .Bind(builder.Configuration.GetRequiredSection(ApiKeySettings.SectionName));
 
-builder.Services.AddOptions<ApiKeySettings>()
-    .Bind(builder.Configuration.GetRequiredSection(ApiKeySettings.SectionName))
-    .ValidateOnStart();
+builder.Services.AddOptionsWithValidateOnStart<AwsMessagingSettings>()
+    .Bind(builder.Configuration.GetRequiredSection(AwsMessagingSettings.SectionName));
 
 builder.Services.AddFluentValidationAutoValidation()
-    .AddValidatorsFromAssemblyContaining<LoginRequestValidator>(ServiceLifetime.Singleton, includeInternalTypes: true);
+    .AddValidatorsFromAssemblyContaining<LoginRequestValidator>(includeInternalTypes: true);
 
-builder.Services.AddMassTransit(x =>
+builder.Services.AddMassTransit(busConfigurator =>
 {
-    x.SetKebabCaseEndpointNameFormatter();
+    busConfigurator.SetKebabCaseEndpointNameFormatter();
     
-    x.AddConsumer<DeleteBuyerConsumer>();
-    x.AddConsumer<UpdateBuyerConsumer>();
+    busConfigurator.AddConsumer<DeleteBuyerConsumer>();
+    busConfigurator.AddConsumer<UpdateBuyerConsumer>();
     
-    x.UsingAmazonSqs((context, config) =>
+    busConfigurator.UsingAmazonSqs((context, config) =>
     {
         var awsSettings = context.GetRequiredService<IOptions<AwsMessagingSettings>>().Value;
         config.Host(awsSettings.Region, hostConfig =>
@@ -62,22 +63,23 @@ builder.Services.AddMassTransit(x =>
             hostConfig.AccessKey(awsSettings.AccessKey);
             hostConfig.SecretKey(awsSettings.SecretKey);
         });
-
         config.ConfigureEndpoints(context);
         
         config.UseNewtonsoftJsonSerializer();
         config.UseNewtonsoftJsonDeserializer();
+        
+        EndpointConvention.Map<RegisterNewBuyer>(new Uri(EndpointAddresses.Identity.RegisterNewBuyer));
     });
 });
-
 builder.Services.AddIdentityConfiguration();
 builder.Services.AddServiceHealthChecks(builder);
 
 var app = builder.Build();
 
 app.UseSerilogRequestLogging();
+app.MapPrometheusScrapingEndpoint();
+
 app.UseHealthChecks("/_health");
 
 app.MapControllers();
-
 app.Run();

@@ -32,14 +32,14 @@ public sealed class ProductsController : ControllerBase
     [HttpGet(ApiEndpoints.Products.Get)]
     public async Task<IActionResult> GetById([FromRoute] GetProductByIdRequest request, CancellationToken cancellationToken)
     {
-        var product = await _productRepository.GetProductByIdAsync(request.Id.ToString(), cancellationToken);
+        var product = await _productRepository.GetProductByIdAsync(request.Id, cancellationToken);
         return product is not null
             ? Ok(product.ToResponse())
             : NotFound();
     }
     
     [HttpPost(ApiEndpoints.Products.Create)]
-    public async Task<IActionResult> Create([FromBody] CreateProductRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> Create([FromForm] CreateProductRequest request, CancellationToken cancellationToken)
     {
         var product = request.ToProduct();
         bool created = await _productRepository.CreateProductAsync(product, cancellationToken);
@@ -50,7 +50,7 @@ public sealed class ProductsController : ControllerBase
     }
     
     [HttpPut(ApiEndpoints.Products.Update)]
-    public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateProductRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> Update([FromRoute] Guid id, [FromForm] UpdateProductRequest request, CancellationToken cancellationToken)
     {
         var updatedProduct = await _productRepository.UpdateProductAsync(request.ToProduct(id), cancellationToken);
 
@@ -62,7 +62,7 @@ public sealed class ProductsController : ControllerBase
     [HttpDelete(ApiEndpoints.Products.Delete)]
     public async Task<IActionResult> Delete([FromRoute] DeleteProductByIdRequest request, CancellationToken cancellationToken)
     {
-        bool deleted = await _productRepository.DeleteProductByIdAsync(request.Id.ToString(), cancellationToken);
+        bool deleted = await _productRepository.DeleteProductByIdAsync(request.Id, cancellationToken);
         return deleted
             ? NoContent()
             : NotFound();

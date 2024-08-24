@@ -1,2 +1,1 @@
-*.* linguist-detectable=false
-*.cs linguist-detectable=true
+*.htlm linguist-detectable=false

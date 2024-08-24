@@ -4,6 +4,7 @@ using AutoFixture.AutoNSubstitute;
 using CoffeeSpace.IdentityApi.Application.Models;
 using CoffeeSpace.IdentityApi.Application.Services;
 using CoffeeSpace.IdentityApi.Application.Services.Abstractions;
+using CoffeeSpace.Messages.Buyers;
 using FluentAssertions;
 using MassTransit;
 using Microsoft.AspNetCore.Http;
@@ -18,7 +19,7 @@ public sealed class AuthServiceTests
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ITokenWriter<ApplicationUser> _tokenWriter;
-    private readonly ISendEndpointProvider _endpointProvider;
+    private readonly ISendEndpointProvider _sendEndpointProvider;
     private readonly Fixture _fixture;
 
     private readonly AuthService _authService;
@@ -32,9 +33,9 @@ public sealed class AuthServiceTests
         _signInManager = GetSignInManagerMock(_userManager);
 
         _tokenWriter = _fixture.Create<ITokenWriter<ApplicationUser>>();
-        _endpointProvider = _fixture.Create<ISendEndpointProvider>();
+        _sendEndpointProvider = _fixture.Create<ISendEndpointProvider>();
 
-        _authService = new AuthService(_tokenWriter);
+        _authService = new AuthService(_signInManager, _tokenWriter, _sendEndpointProvider);
     }
     
     private static SignInManager<ApplicationUser> GetSignInManagerMock(UserManager<ApplicationUser> userManager)
@@ -84,8 +85,13 @@ public sealed class AuthServiceTests
     public async Task RegisterAsync_ShouldReturnToken_WhenRegisterSucceeds()
     {
         // Arrange
+        var endpointUri = _fixture.Create<Uri>();
+        var provider = Substitute.For<ISendEndpoint>();
+        var cancellationToken = CancellationToken.None;
+        
         var user = _fixture.Create<ApplicationUser>();
         string expectedToken = _fixture.Create<string>();
+        
         
         _userManager.CreateAsync(user, user.Password)
             .Returns(IdentityResult.Success);
@@ -96,14 +102,28 @@ public sealed class AuthServiceTests
         _signInManager.CreateUserPrincipalAsync(user)
             .Returns(_fixture.Create<ClaimsPrincipal>());
 
-        _tokenWriter.WriteTokenAsync(user, Arg.Any<CancellationToken>())
+        _tokenWriter.WriteTokenAsync(user, cancellationToken)
             .Returns(expectedToken);
 
+        _sendEndpointProvider.GetSendEndpoint(endpointUri)
+            .Returns(provider);
+
+        provider.Send(Arg.Any<object>(), cancellationToken)
+            .Returns(Task.CompletedTask);
+        
+        EndpointConvention.Map<RegisterNewBuyer>(endpointUri);
+
         // Act
-        string? jwtToken = await _authService.RegisterAsync(user, CancellationToken.None);
+        string? jwtToken = await _authService.RegisterAsync(user, cancellationToken);
 
         // Assert     
         jwtToken.Should().BeEquivalentTo(expectedToken);
+
+        await _userManager.Received().CreateAsync(user, user.Password);
+        await _tokenWriter.Received().WriteTokenAsync(user, cancellationToken);
+        
+        await _signInManager.Received().PasswordSignInAsync(user.UserName!, user.Password, false, false);
+        await provider.Received().Send(Arg.Any<object>(), Arg.Any<IPipe<SendContext<RegisterNewBuyer>>>(),cancellationToken);
     }
     
     [Fact]
@@ -123,7 +143,6 @@ public sealed class AuthServiceTests
 
         // Assert     
         jwtToken.Should().BeNull();
-        await _endpointProvider.DidNotReceive().GetSendEndpoint(Arg.Any<Uri>());
     }
     
     [Fact]
@@ -140,7 +159,6 @@ public sealed class AuthServiceTests
 
         // Assert     
         jwtToken.Should().BeNull();
-        await _endpointProvider.DidNotReceive().GetSendEndpoint(Arg.Any<Uri>());
     }
 
     [Fact]

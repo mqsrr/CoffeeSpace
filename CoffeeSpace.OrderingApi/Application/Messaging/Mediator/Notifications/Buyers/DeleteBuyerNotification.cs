@@ -4,5 +4,5 @@ namespace CoffeeSpace.OrderingApi.Application.Messaging.Mediator.Notifications.B
 
 public sealed class DeleteBuyerNotification : INotification
 {
-    public required string Id { get; init; }
+    public required Guid Id { get; init; }
 }

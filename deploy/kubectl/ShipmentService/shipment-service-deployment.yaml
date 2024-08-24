@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shipment-service
+  labels:
+    app: shipment-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shipment-service
+  template:
+    metadata:
+      name: shipment-service
+      labels:
+        app: shipment-service
+    spec:
+      containers:
+        - name: shipment-service
+          image: mqsr/coffeespace-shipment-service:2.1.0
+          imagePullPolicy: Always
+          env:
+          - name: "ASPNETCORE_ENVIRONMENT"
+            value: "Production"
+          - name: "AZURE_CLIENT_ID"
+            valueFrom:
+              secretKeyRef:
+                key: "azure-client-id"
+                name: "azure-key-vault"
+          - name: "AZURE_CLIENT_SECRET"
+            valueFrom:
+              secretKeyRef:
+                key: "azure-client-secret"
+                name: "azure-key-vault"
+          - name: "AZURE_TENANT_ID"
+            valueFrom:
+              secretKeyRef:
+                key: "azure-tenant-id"
+                name: "azure-key-vault"
+          - name: "AZURE_VAULT_NAME"
+            valueFrom:
+              secretKeyRef:
+                key: "azure-vault-name"
+                name: "azure-key-vault"
+      restartPolicy: Always
+      

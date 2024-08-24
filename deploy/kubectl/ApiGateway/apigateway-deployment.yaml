@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apigateway
+  labels:
+    app: apigateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apigateway
+  template:
+    metadata:
+      name: apigateway
+      labels:
+        app: apigateway
+    spec:
+      containers:
+        - name: apigateway
+          image: mqsr/coffeespace-apigateway:1.2.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: "ASPNETCORE_ENVIRONMENT"
+              value: "Production"
+            - name: "AZURE_CLIENT_ID"
+              valueFrom:
+                secretKeyRef:
+                  key: "azure-client-id"
+                  name: "azure-key-vault"
+            - name: "AZURE_CLIENT_SECRET"
+              valueFrom:
+                secretKeyRef:
+                  key: "azure-client-secret"
+                  name: "azure-key-vault"
+            - name: "AZURE_TENANT_ID"
+              valueFrom:
+                secretKeyRef:
+                  key: "azure-tenant-id"
+                  name: "azure-key-vault"
+            - name: "AZURE_VAULT_NAME"
+              valueFrom:
+                secretKeyRef:
+                  key: "azure-vault-name"
+                  name: "azure-key-vault"           
+      restartPolicy: Always
+
+      

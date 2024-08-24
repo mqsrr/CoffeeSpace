@@ -7,9 +7,7 @@ public sealed class OrderItemFaker : AutoFaker<OrderItem>
 {
     public OrderItemFaker()
     {
-        RuleFor(order => order.Id, faker => faker.Random.Guid().ToString());
-        UseSeed(69);
-
+        RuleFor(order => order.Id, faker => faker.Random.Guid());
         RuleFor(order => order.Title, faker => faker.Commerce.ProductName());
         RuleFor(order => order.Description, faker => faker.Commerce.ProductAdjective());
         RuleFor(order => order.UnitPrice, faker => faker.Random.Float(1, 5));

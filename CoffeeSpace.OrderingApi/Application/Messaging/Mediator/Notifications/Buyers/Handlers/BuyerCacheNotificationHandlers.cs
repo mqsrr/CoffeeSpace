@@ -1,6 +1,6 @@
-using CoffeeSpace.Core.Services.Abstractions;
 using CoffeeSpace.Domain.Ordering.BuyerInfo;
 using CoffeeSpace.OrderingApi.Application.Helpers;
+using CoffeeSpace.Shared.Services.Abstractions;
 using Mediator;
 
 namespace CoffeeSpace.OrderingApi.Application.Messaging.Mediator.Notifications.Buyers.Handlers;
@@ -10,9 +10,9 @@ internal sealed class BuyerCacheNotificationHandlers :
     INotificationHandler<UpdateBuyerNotification>,
     INotificationHandler<DeleteBuyerNotification>
 {
-    private readonly ICacheService<Buyer> _cacheService;
+    private readonly ICacheService _cacheService;
 
-    public BuyerCacheNotificationHandlers(ICacheService<Buyer> cacheService)
+    public BuyerCacheNotificationHandlers(ICacheService cacheService)
     {
         _cacheService = cacheService;
     }

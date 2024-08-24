@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace CoffeeSpace.IdentityApi.Application.Messages.Consumers;
 
-internal sealed class DeleteBuyerConsumer : IConsumer<DeleteBuyer>
+public sealed class DeleteBuyerConsumer : IConsumer<DeleteBuyerByEmail>
 {
     private readonly UserManager<ApplicationUser> _userManager;
 
@@ -14,7 +14,7 @@ internal sealed class DeleteBuyerConsumer : IConsumer<DeleteBuyer>
         _userManager = userManager;
     }
 
-    public async Task Consume(ConsumeContext<DeleteBuyer> context)
+    public async Task Consume(ConsumeContext<DeleteBuyerByEmail> context)
     {
         var user = await _userManager.FindByEmailAsync(context.Message.Email);
         if (user is not null)

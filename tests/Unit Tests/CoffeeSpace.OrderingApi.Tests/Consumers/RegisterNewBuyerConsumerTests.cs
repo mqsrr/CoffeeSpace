@@ -2,7 +2,6 @@
 using AutoFixture.AutoNSubstitute;
 using CoffeeSpace.Domain.Ordering.BuyerInfo;
 using CoffeeSpace.Messages.Buyers;
-using CoffeeSpace.OrderingApi.Application.Helpers;
 using CoffeeSpace.OrderingApi.Application.Messaging.Masstransit.Consumers;
 using CoffeeSpace.OrderingApi.Application.Services.Abstractions;
 using FluentAssertions;
@@ -41,10 +40,15 @@ public sealed class RegisterNewBuyerConsumerTests : IAsyncLifetime
     {
         // Arrange
         var consumerEndpoint = await _testHarness.GetConsumerEndpoint<RegisterNewBuyerConsumer>();
-        var request = _fixture.Create<RegisterNewBuyer>();
+        string name = _fixture.Create<string>();
+        string email = _fixture.Create<string>();
 
         // Act
-        await consumerEndpoint.Send(request);
+        await consumerEndpoint.Send<RegisterNewBuyer>(new
+        {
+            Name = name,
+            Email = email
+        });
 
         // Assert
         bool consumedAny = await _consumerTestHarness.Consumed.Any<RegisterNewBuyer>();

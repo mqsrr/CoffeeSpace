@@ -13,25 +13,25 @@ namespace CoffeeSpace.OrderingApi.Application.Services;
 internal sealed class OrderService : IOrderService
 {
     private readonly IOrderRepository _orderRepository;
-    private readonly IPublishEndpoint _publishEndpoint;
+    private readonly ISendEndpointProvider _sendEndpointProvider;
     private readonly IHubContext<OrderingHub, IOrderingHub> _hubContext;
 
-    public OrderService(IOrderRepository orderRepository, IPublishEndpoint publishEndpoint, IHubContext<OrderingHub, IOrderingHub> hubContext)
+    public OrderService(IOrderRepository orderRepository, ISendEndpointProvider sendEndpointProvider, IHubContext<OrderingHub, IOrderingHub> hubContext)
     {
         _orderRepository = orderRepository;
-        _publishEndpoint = publishEndpoint;
+        _sendEndpointProvider = sendEndpointProvider;
         _hubContext = hubContext;
     }
 
     public Task<IEnumerable<Order>> GetAllByBuyerIdAsync(Guid buyerId, CancellationToken cancellationToken)
     {
-        var orders = _orderRepository.GetAllByBuyerIdAsync(buyerId.ToString(), cancellationToken);
+        var orders = _orderRepository.GetAllByBuyerIdAsync(buyerId, cancellationToken);
         return orders;
     }
 
     public Task<Order?> GetByIdAsync(Guid id, Guid buyerId, CancellationToken cancellationToken)
     {
-        var order = _orderRepository.GetByIdAsync(id.ToString(), cancellationToken);
+        var order = _orderRepository.GetByIdAsync(id, cancellationToken);
         return order;
     }
 
@@ -43,18 +43,18 @@ internal sealed class OrderService : IOrderService
             return isCreated;
         }
 
-        await _hubContext.Clients.Groups(order.BuyerId, "Web Dashboard").OrderCreated(order.ToResponse());
-        await _publishEndpoint.Publish<SubmitOrder>(new
+        await _hubContext.Clients.Groups(order.BuyerId.ToString(), "Web Dashboard").OrderCreated(order.ToResponse());
+        await _sendEndpointProvider.Send<SubmitOrder>(new
         {
             Order = order
         }, cancellationToken).ConfigureAwait(false);
         
         return isCreated;
     }
-    
+
     public Task<bool> DeleteByIdAsync(Guid id, Guid buyerId, CancellationToken cancellationToken)
     {
-        var isDeleted = _orderRepository.DeleteByIdAsync(id.ToString(), cancellationToken);
+        var isDeleted = _orderRepository.DeleteByIdAsync(id, cancellationToken);
         return isDeleted;
     }
 }

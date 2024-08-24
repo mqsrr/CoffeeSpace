@@ -9,36 +9,34 @@ public sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
     public void Configure(EntityTypeBuilder<Product> builder)
     {
         builder.ToTable("Products")
-            .HasKey(x => x.Id);
-
-        builder.Property(x => x.Title)
+            .HasKey(product => product.Id);
+        
+        builder.Property(product => product.Title)
             .HasMaxLength(64)
             .IsUnicode(false)
             .IsRequired();
+
+        builder.Property(product => product.Image)
+            .IsRequired()
+            .IsUnicode(false);
         
-        builder.Property(x => x.Description)
+        builder.Property(product => product.Description)
             .HasMaxLength(200)
             .IsUnicode(false)
             .IsRequired();
         
-        builder.Property(x => x.UnitPrice)
-            .IsUnicode(false)
-            .HasPrecision(2)
-            .IsRequired();
-        
-        builder.Property(x => x.Discount)
+        builder.Property(product => product.UnitPrice)
             .IsUnicode(false)
             .HasPrecision(2)
             .IsRequired();
 
-        builder.Property(x => x.Quantity)
+        builder.Property(product => product.Quantity)
             .IsUnicode(false)
             .IsRequired();
         
-        builder.Ignore(x => x.Total);
+        builder.Ignore(product => product.Total);
 
-        builder.HasIndex(x => x.Id)
-            .IsUnique()
-            .IsDescending(false);
+        builder.HasIndex(product => product.Id)
+            .IsUnique();
     }
 }

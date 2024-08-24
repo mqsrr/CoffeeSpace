@@ -3,37 +3,39 @@ using AutoFixture.AutoNSubstitute;
 using CoffeeSpace.Domain.Ordering.BuyerInfo;
 using CoffeeSpace.Domain.Ordering.Orders;
 using CoffeeSpace.OrderingApi.Application.Repositories;
-using CoffeeSpace.OrderingApi.Persistence;
-using CoffeeSpace.OrderingApi.Tests.Fixtures;
+using CoffeeSpace.OrderingApi.Persistence.Abstractions;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using MockQueryable.NSubstitute;
 using NSubstitute;
-using NSubstitute.ReturnsExtensions;
 using Xunit;
 
 namespace CoffeeSpace.OrderingApi.Tests.Repositories;
 
-public sealed class OrderRepositoryTests : IClassFixture<OrderingDbContextFixture>
+public sealed class OrderRepositoryTests
 {
-    private readonly OrderingDbContext _dbContext;
+    private readonly IOrderingDbContext _dbContext;
     private readonly DbSet<Order> _ordersDbSet;
-    private readonly DbSet<Buyer> _buyersDbSet;
-    
+
     private readonly Fixture _fixture;
     private readonly IEnumerable<Order> _orders;
 
     private readonly OrderRepository _orderRepository;
 
-    public OrderRepositoryTests(OrderingDbContextFixture dbContextFixture)
+    public OrderRepositoryTests()
     {
         _fixture = new Fixture();
         _fixture.Customize(new AutoNSubstituteCustomization());
 
-        _ordersDbSet = dbContextFixture.Orders;
+        _ordersDbSet = _fixture.CreateMany<Order>().AsQueryable().BuildMockDbSet();
+        var buyersDbSet = _fixture.CreateMany<Buyer>().AsQueryable().BuildMockDbSet();
+        
         _orders = _ordersDbSet.AsEnumerable();
-        _buyersDbSet = dbContextFixture.Buyers;
-
-        _dbContext = dbContextFixture.DbContext;
+        _dbContext = _fixture.Create<IOrderingDbContext>();
+        
+        _dbContext.Orders.Returns(_ordersDbSet);
+        _dbContext.Buyers.Returns(buyersDbSet);
+        
         _orderRepository = new OrderRepository(_dbContext);
     }
 
@@ -42,29 +44,75 @@ public sealed class OrderRepositoryTests : IClassFixture<OrderingDbContextFixtur
     {
         // Arrange
         var expectedOrder = _orders.First();
-        string buyerId = expectedOrder.BuyerId;
+        var buyerId = expectedOrder.BuyerId;
 
         // Act
         var result = await _orderRepository.GetAllByBuyerIdAsync(buyerId, CancellationToken.None);
 
         // Assert
         result.Should().ContainEquivalentOf(expectedOrder);
+        _orders.Received();
+    }
+    
+    [Fact]
+    public async Task GetAllByBuyerIdAsync_ShouldReturnEmptyCollection()
+    {
+        // Arrange
+        var buyerId = Guid.NewGuid();
+
+        // Act
+        var result = await _orderRepository.GetAllByBuyerIdAsync(buyerId, CancellationToken.None);
+
+        // Assert
+        result.Should().BeEmpty();
+        _orders.Received();
+    }
+    
+    [Fact]
+    public async Task GetByIdAsync_ShouldReturnOrder_WhenOrderExists()
+    {
+        // Arrange
+        var expectedOrder = _orders.First();
+        
+        // Act
+        var result = await _orderRepository.GetByIdAsync(expectedOrder.Id, CancellationToken.None);
+
+        // Assert
+        result.Should().BeEquivalentTo(expectedOrder);
+        _ordersDbSet.Received();
     }
     
     [Fact]
     public async Task GetByIdAsync_ShouldReturnNull_WhenOrderDoesNotExist()
     {
         // Arrange
-        var expectedOrder = _orders.First();
-
-        _ordersDbSet.FindAsync(Arg.Any<object[]>(), Arg.Any<CancellationToken>())
-            .ReturnsNull();
+        var orderId = Guid.Empty;
         
         // Act
-        var result = await _orderRepository.GetByIdAsync(expectedOrder.Id, CancellationToken.None);
+        var result = await _orderRepository.GetByIdAsync(orderId, CancellationToken.None);
 
         // Assert
         result.Should().BeNull();
+        _ordersDbSet.Received();
+    }
+    
+    [Fact]
+    public async Task CreateAsync_ShouldReturnTrue_WhenOrderWasCreated()
+    {
+        // Arrange
+        var orderToCreate = _fixture.Create<Order>();
+
+        _dbContext.SaveChangesAsync(Arg.Any<CancellationToken>())
+            .Returns(1);
+        
+        // Act
+        bool result = await _orderRepository.CreateAsync(orderToCreate, CancellationToken.None);
+
+        // Assert
+        result.Should().BeTrue();
+
+        await _ordersDbSet.Received().AddAsync(orderToCreate, Arg.Any<CancellationToken>());
+        await _dbContext.Received().SaveChangesAsync(Arg.Any<CancellationToken>());
     }
     
     [Fact]
@@ -73,13 +121,16 @@ public sealed class OrderRepositoryTests : IClassFixture<OrderingDbContextFixtur
         // Arrange
         var orderToCreate = _fixture.Create<Order>();
         
-        _buyersDbSet.FindAsync(Arg.Any<object[]>(), Arg.Any<CancellationToken>())
-            .ReturnsNull();
+        _dbContext.SaveChangesAsync(Arg.Any<CancellationToken>())
+            .Returns(0);
         
         // Act
         bool result = await _orderRepository.CreateAsync(orderToCreate, CancellationToken.None);
 
         // Assert
         result.Should().BeFalse();
+        
+        await _ordersDbSet.Received().AddAsync(orderToCreate, Arg.Any<CancellationToken>());
+        await _dbContext.Received().SaveChangesAsync(Arg.Any<CancellationToken>());
     }
 }

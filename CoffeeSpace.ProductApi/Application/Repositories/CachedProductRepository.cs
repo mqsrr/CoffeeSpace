@@ -1,8 +1,8 @@
-using CoffeeSpace.Core.Attributes;
-using CoffeeSpace.Core.Services.Abstractions;
 using CoffeeSpace.Domain.Products;
 using CoffeeSpace.ProductApi.Application.Helpers;
 using CoffeeSpace.ProductApi.Application.Repositories.Abstractions;
+using CoffeeSpace.Shared.Attributes;
+using CoffeeSpace.Shared.Services.Abstractions;
 
 namespace CoffeeSpace.ProductApi.Application.Repositories;
 
@@ -10,9 +10,9 @@ namespace CoffeeSpace.ProductApi.Application.Repositories;
 internal sealed class CachedProductRepository : IProductRepository
 {
     private readonly IProductRepository _productRepository;
-    private readonly ICacheService<Product> _cacheService;
+    private readonly ICacheService _cacheService;
 
-    public CachedProductRepository(IProductRepository productRepository, ICacheService<Product> cacheService)
+    public CachedProductRepository(IProductRepository productRepository, ICacheService cacheService)
     {
         _productRepository = productRepository;
         _cacheService = cacheService;
@@ -32,7 +32,7 @@ internal sealed class CachedProductRepository : IProductRepository
         }, cancellationToken);
     }
     
-    public Task<Product?> GetProductByIdAsync(string id, CancellationToken cancellationToken)
+    public Task<Product?> GetProductByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         return _cacheService.GetOrCreateAsync(CacheKeys.Products.GetById(id), () =>
         {
@@ -64,7 +64,7 @@ internal sealed class CachedProductRepository : IProductRepository
         return updatedProduct;
     }
 
-    public async Task<bool> DeleteProductByIdAsync(string id, CancellationToken cancellationToken)
+    public async Task<bool> DeleteProductByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         bool deleted = await _productRepository.DeleteProductByIdAsync(id, cancellationToken);
         if (deleted)

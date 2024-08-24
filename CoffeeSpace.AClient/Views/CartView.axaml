@@ -1,0 +1,102 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:CoffeeSpace.AClient.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:icons="clr-namespace:HeroIconsAvalonia.Controls;assembly=HeroIconsAvalonia"
+             xmlns:controls="clr-namespace:SukiUI.Controls;assembly=SukiUI"
+             xmlns:converters="clr-namespace:CoffeeSpace.AClient.Converters"
+             mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="650"
+             x:DataType="vm:CartWindowViewModel"
+             x:Class="CoffeeSpace.AClient.Views.CartView"
+             FontFamily="{StaticResource Montserrat-Regular}">
+
+    <Design.DataContext>
+        <vm:CartWindowViewModel />
+    </Design.DataContext>
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converters:ImageInformationToBitMap x:Key="ImageInformationToBitMap" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
+    <DockPanel Margin="10" Name="Panel">
+        <controls:GlassCard Width="600" Height="600">
+            <ScrollViewer AllowAutoHide="True">
+                <ItemsControl ItemsSource="{Binding CartProducts}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid ShowGridLines="False"
+                                  ColumnDefinitions="Auto,100*,240"
+                                  RowDefinitions="Auto,Auto,Auto">
+                                <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
+                                        ClipToBounds="True" CornerRadius="30">
+                                    <Viewbox Stretch="Uniform" Width="140" Height="140">
+                                        <Image Source="{Binding Image, Converter={StaticResource ImageInformationToBitMap}}" />
+                                    </Viewbox>
+                                </Border>
+                                <TextBlock Grid.Row="0" Grid.Column="1" FontWeight="Bold" FontSize="17"
+                                           Text="{Binding Title}" VerticalAlignment="Bottom" Margin="10" />
+                                <TextBlock Grid.Row="1" Grid.Column="1" LineSpacing="1" Foreground="Gray" FontSize="15"
+                                           Text="{Binding UnitPrice, StringFormat='$ {0}'}"
+                                           VerticalAlignment="Top" Margin="10" />
+                                <Button Grid.Row="0" Grid.Column="2"
+                                        VerticalAlignment="Top" HorizontalAlignment="Right"
+                                        Width="50" Classes="Basic"
+                                        Command="{Binding #Panel.((vm:CartWindowViewModel)DataContext).RemoveFromCartCommand}"
+                                        CommandParameter="{Binding}">
+                                    <icons:HeroIcon Type="XMark" Foreground="WhiteSmoke" Width="13" />
+                                </Button>
+
+                                <NumericUpDown Grid.Row="1" Grid.Column="2" Grid.IsSharedSizeScope="True"
+                                               BorderThickness="0" Margin="10"
+                                               VerticalAlignment="Center" Minimum="1" Maximum="9"
+                                               ParsingNumberStyle="Number" Increment="1" Watermark="0" Width="120"
+                                               HorizontalAlignment="Right"
+                                               Value="{Binding Quantity}" HorizontalContentAlignment="Center" />
+
+                                <Separator Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
+                                           Margin="10" Background="Gray" Opacity="0.2" />
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </controls:GlassCard>
+        <controls:GlassCard Width="400" MinHeight="100" VerticalAlignment="Center" Margin="10 0 0 0">
+            <Panel>
+                <Grid ShowGridLines="False"
+                      ColumnDefinitions="170,170, *"
+                      RowDefinitions="Auto,Auto,Auto,Auto">
+                    <TextBox Margin="5" Watermark="Country"
+                             Text="{Binding Address.Country}"
+                             x:Name="CountryTextBox"/>
+                    
+                    <TextBox Grid.Row="0" Grid.Column="1"
+                             Margin="5" Watermark="City"
+                             Text="{Binding Address.City}"
+                             x:Name="CityTextBox"/>
+                    
+                    <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                             Margin="5" Watermark="Street" 
+                             Text="{Binding Address.Street}" 
+                             x:Name="StreetTextBox"/>
+
+                    <controls:BusyArea x:Name="BusyArea" IsBusy="{Binding CreateOrderCommand.IsRunning}"  
+                                       Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">
+                        <Button Content="Place Order" Foreground="WhiteSmoke"
+                                VerticalAlignment="Bottom" Margin="10"
+                                Command="{Binding CreateOrderCommand}" />
+                    </controls:BusyArea>
+                </Grid>
+            </Panel>
+        </controls:GlassCard>
+    </DockPanel>
+
+</UserControl>

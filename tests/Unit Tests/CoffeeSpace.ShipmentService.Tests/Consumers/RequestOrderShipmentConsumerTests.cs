@@ -1,5 +1,4 @@
 ﻿using AutoFixture;
-using AutoFixture.AutoNSubstitute;
 using CoffeeSpace.Domain.Ordering.Orders;
 using CoffeeSpace.Messages.Shipment.Commands;
 using CoffeeSpace.ShipmentService.Consumers;

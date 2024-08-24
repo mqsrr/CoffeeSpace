@@ -33,12 +33,11 @@ internal sealed class AuthService : IAuthService<ApplicationUser>
             return null;
         }
 
-        var sendEndpoint = await _endpointProvider.GetSendEndpoint(new Uri("queue:register-new-buyer"));
-        await sendEndpoint.Send<RegisterNewBuyer>(new
+        await _endpointProvider.Send<RegisterNewBuyer>(new
         {
             Name = user.UserName,
             Email = user.Email
-        }, cancellationToken);
+        }, cancellationToken).ConfigureAwait(false);
 
         var claims = await _signInManager.CreateUserPrincipalAsync(user);
         await _signInManager.UserManager.AddClaimsAsync(user, claims.Claims);

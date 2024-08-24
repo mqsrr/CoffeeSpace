@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ShipmentService.name" .}}
+  namespace: {{ include "ShipmentService.namespace" .}}
+  labels:
+    {{- include "ShipmentService.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "ShipmentService.selectorLabels" . | nindent 6}}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "ShipmentService.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      containers:
+        - name: {{ include "ShipmentService.name" .}}
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy}}
+          ports:
+            - containerPort: {{ .Values.service.targetPort }}
+          {{- if ne .Values.livenessProbe.httpGet.path "/" }}
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          {{- end }}
+          {{- if ne .Values.readinessProbe.httpGet.path "/" }}
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+          {{- end }}
+          env:
+            - name: "ASPNETCORE_ENVIRONMENT"
+              value: {{ .Values.global.env.ASPNETCORE_ENVIRONMENT | quote}}
+            - name: "AZURE_CLIENT_ID"
+                      {{- if .Values.global.env.AZURE_CLIENT_ID }}
+              value: {{ .Values.global.env.AZURE_CLIENT_ID}}
+                      {{- else }}
+              valueFrom:
+                secretKeyRef:
+                  key: {{ .Values.secrets.azure.clientId }}
+                  name: {{ .Values.secrets.azure.name }}
+                      {{- end }}
+            - name: "AZURE_CLIENT_SECRET"
+                      {{- if .Values.global.env.AZURE_CLIENT_SECRET }}
+              value: {{ .Values.global.env.AZURE_CLIENT_SECRET }}
+                      {{- else }}
+              valueFrom:
+                secretKeyRef:
+                  key: {{ .Values.secrets.azure.clientSecret | quote }}
+                  name: {{ .Values.secrets.azure.name | quote }}
+                      {{- end }}
+            - name: "AZURE_TENANT_ID"
+                      {{- if .Values.global.env.AZURE_TENANT_ID }}
+              value: {{ .Values.global.env.AZURE_TENANT_ID }}
+                      {{- else }}
+              valueFrom:
+                secretKeyRef:
+                  key: {{ .Values.secrets.azure.tenantId | quote }}
+                  name: {{ .Values.secrets.azure.name | quote }}
+                      {{- end }}
+            - name: "AZURE_VAULT_NAME"
+                      {{- if .Values.global.env.AZURE_VAULT_NAME }}
+              value: {{ .Values.global.env.AZURE_VAULT_NAME}}
+                      {{- else }}
+              valueFrom:
+                secretKeyRef:
+                  key: {{ .Values.secrets.azure.vaultName | quote }}
+                  name: {{ .Values.secrets.azure.name | quote }}
+                      {{- end }}
+      restartPolicy: Always

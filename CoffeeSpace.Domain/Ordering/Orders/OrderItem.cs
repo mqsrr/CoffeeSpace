@@ -2,7 +2,7 @@
 
 public sealed class OrderItem
 {
-    public string Id { get; init; } = Guid.NewGuid().ToString();
+    public Guid Id { get; init; } = Guid.NewGuid();
     
     public required string Title { get; init; }
 

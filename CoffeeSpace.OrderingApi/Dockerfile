@@ -1,21 +1,24 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
+﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+USER $APP_UID
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
+EXPOSE 8080
+EXPOSE 8081
 
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["CoffeeSpace.OrderingApi/CoffeeSpace.OrderingApi.csproj", "CoffeeSpace.OrderingApi/"]
-COPY ["CoffeeSpace.Core/CoffeeSpace.Core.csproj", "CoffeeSpace.Core/"]
+COPY ["CoffeeSpace.Shared/CoffeeSpace.Shared.csproj", "CoffeeSpace.Shared/"]
 COPY ["CoffeeSpace.Domain/CoffeeSpace.Domain.csproj", "CoffeeSpace.Domain/"]
 COPY ["CoffeeSpace.Messages/CoffeeSpace.Messages.csproj", "CoffeeSpace.Messages/"]
 RUN dotnet restore "CoffeeSpace.OrderingApi/CoffeeSpace.OrderingApi.csproj"
 COPY . .
 WORKDIR "/src/CoffeeSpace.OrderingApi"
-RUN dotnet build "CoffeeSpace.OrderingApi.csproj" -c Release -o /app/build
+RUN dotnet build "CoffeeSpace.OrderingApi.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "CoffeeSpace.OrderingApi.csproj" -c Release -o /app/publish /p:UseAppHost=false
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "CoffeeSpace.OrderingApi.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app

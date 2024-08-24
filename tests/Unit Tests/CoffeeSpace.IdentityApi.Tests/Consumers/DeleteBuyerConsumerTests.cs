@@ -9,6 +9,7 @@ using MassTransit.Testing;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
+using NSubstitute.ReturnsExtensions;
 using Xunit;
 
 namespace CoffeeSpace.IdentityApi.Tests.Consumers;
@@ -38,24 +39,51 @@ public sealed class DeleteBuyerConsumerTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task Consume_ShouldConsumeMessages_AndDeleteBuyer()
+    public async Task Consume_ShouldDeleteUser_WhenUserExists()
     {
         // Arrange
         var userToDelete = _fixture.Create<ApplicationUser>();
-        var request = _fixture.Create<DeleteBuyer>();
         var consumerEndpoint = await _testHarness.GetConsumerEndpoint<DeleteBuyerConsumer>();
+        string email = _fixture.Create<string>();
 
-        _userManager.FindByEmailAsync(request.Email)
+        _userManager.FindByEmailAsync(email)
             .Returns(userToDelete);
         
         // Act
-        await consumerEndpoint.Send(request);
+        await consumerEndpoint.Send<DeleteBuyerByEmail>(new
+        {
+            Email = email
+        });
 
         // Assert
-        bool consumedAny = await _consumerTestHarness.Consumed.Any<DeleteBuyer>();
+        bool consumedAny = await _consumerTestHarness.Consumed.Any<DeleteBuyerByEmail>();
         consumedAny.Should().BeTrue();
 
         await _userManager.Received().DeleteAsync(userToDelete);
+    }
+    
+    [Fact]
+    public async Task Consume_ShouldNotDeleteUser_WhenUserDoesNotExist()
+    {
+        // Arrange
+        var userToDelete = _fixture.Create<ApplicationUser>();
+        var consumerEndpoint = await _testHarness.GetConsumerEndpoint<DeleteBuyerConsumer>();
+        string email = _fixture.Create<string>();
+
+        _userManager.FindByEmailAsync(email)
+            .ReturnsNull();
+        
+        // Act
+        await consumerEndpoint.Send<DeleteBuyerByEmail>(new
+        {
+            Email = email
+        });
+
+        // Assert
+        bool consumedAny = await _consumerTestHarness.Consumed.Any<DeleteBuyerByEmail>();
+        consumedAny.Should().BeTrue();
+
+        await _userManager.DidNotReceive().DeleteAsync(userToDelete);
     }
     
     public async Task InitializeAsync()

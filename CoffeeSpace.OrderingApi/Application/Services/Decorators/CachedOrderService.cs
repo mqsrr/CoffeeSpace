@@ -1,9 +1,9 @@
-﻿using CoffeeSpace.Core.Attributes;
-using CoffeeSpace.Core.Services.Abstractions;
-using CoffeeSpace.Domain.Ordering.Orders;
+﻿using CoffeeSpace.Domain.Ordering.Orders;
 using CoffeeSpace.OrderingApi.Application.Helpers;
 using CoffeeSpace.OrderingApi.Application.Messaging.Mediator.Notifications.Orders;
 using CoffeeSpace.OrderingApi.Application.Services.Abstractions;
+using CoffeeSpace.Shared.Attributes;
+using CoffeeSpace.Shared.Services.Abstractions;
 using Mediator;
 
 namespace CoffeeSpace.OrderingApi.Application.Services.Decorators;
@@ -11,11 +11,11 @@ namespace CoffeeSpace.OrderingApi.Application.Services.Decorators;
 [Decorator]
 internal sealed class CachedOrderService : IOrderService
 {
-    private readonly ICacheService<Order> _cacheService;
+    private readonly ICacheService _cacheService;
     private readonly IOrderService _orderService;
     private readonly IPublisher _publisher;
 
-    public CachedOrderService(ICacheService<Order> cacheService, IOrderService orderService, IPublisher publisher)
+    public CachedOrderService(ICacheService cacheService, IOrderService orderService, IPublisher publisher)
     {
         _cacheService = cacheService;
         _orderService = orderService;
@@ -24,7 +24,7 @@ internal sealed class CachedOrderService : IOrderService
 
     public Task<IEnumerable<Order>> GetAllByBuyerIdAsync(Guid buyerId, CancellationToken cancellationToken)
     {
-        return _cacheService.GetAllOrCreateAsync(CacheKeys.Order.GetAll(buyerId.ToString()), () =>
+        return _cacheService.GetAllOrCreateAsync(CacheKeys.Order.GetAll(buyerId), () =>
         {
             var orders = _orderService.GetAllByBuyerIdAsync(buyerId, cancellationToken);
             return orders;
@@ -33,12 +33,11 @@ internal sealed class CachedOrderService : IOrderService
 
     public Task<Order?> GetByIdAsync(Guid id, Guid buyerId, CancellationToken cancellationToken)
     {
-        return _cacheService.GetOrCreateAsync(CacheKeys.Order.GetByCustomerId(id.ToString(), buyerId.ToString()), () =>
+        return _cacheService.GetOrCreateAsync(CacheKeys.Order.GetByCustomerId(id, buyerId), () =>
         {
             var order = _orderService.GetByIdAsync(id, buyerId, cancellationToken);
             return order;
         }, cancellationToken);
-
     }
 
     public async Task<bool> CreateAsync(Order order, CancellationToken cancellationToken)
@@ -63,8 +62,8 @@ internal sealed class CachedOrderService : IOrderService
         {
             await _publisher.Publish(new DeleteOrderNotification
             {
-                Id = id.ToString(),
-                BuyerId = buyerId.ToString()
+                Id = id,
+                BuyerId = buyerId
             }, cancellationToken).ConfigureAwait(false);
         }
         

@@ -10,6 +10,7 @@ using MassTransit.Testing;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
+using NSubstitute.ReturnsExtensions;
 using Xunit;
 
 namespace CoffeeSpace.IdentityApi.Tests.Consumers;
@@ -39,13 +40,13 @@ public sealed class UpdateBuyerConsumerTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task Consume_ShouldConsumeMessages_AndUpdateBuyer()
+    public async Task Consume_ShouldUpdateBuyer_WhenBuyerExists()
     {
         // Arrange
         var userToUpdate = _fixture.Create<ApplicationUser>();
         var consumerEndpoint = await _testHarness.GetConsumerEndpoint<UpdateBuyerConsumer>();
-
         var buyer = _fixture.Create<Buyer>();
+        
         _userManager.FindByEmailAsync(buyer.Email)
             .Returns(userToUpdate);
         
@@ -61,6 +62,31 @@ public sealed class UpdateBuyerConsumerTests : IAsyncLifetime
 
         await _userManager.Received().SetEmailAsync(userToUpdate, buyer.Email);
         await _userManager.Received().SetUserNameAsync(userToUpdate, buyer.Name);
+    }
+    
+    [Fact]
+    public async Task Consume_ShouldNotUpdateBuyer_WhenBuyerDoesExist()
+    {
+        // Arrange
+        var userToUpdate = _fixture.Create<ApplicationUser>();
+        var consumerEndpoint = await _testHarness.GetConsumerEndpoint<UpdateBuyerConsumer>();
+        var buyer = _fixture.Create<Buyer>();
+        
+        _userManager.FindByEmailAsync(buyer.Email)
+            .ReturnsNull();
+        
+        // Act
+        await consumerEndpoint.Send<UpdateBuyer>(new
+        {
+            Buyer = buyer
+        });
+
+        // Assert
+        bool consumedAny = await _consumerTestHarness.Consumed.Any<UpdateBuyer>();
+        consumedAny.Should().BeTrue();
+
+        await _userManager.DidNotReceive().SetEmailAsync(userToUpdate, buyer.Email);
+        await _userManager.DidNotReceive().SetUserNameAsync(userToUpdate, buyer.Name);
     }
 
     public async Task InitializeAsync()

@@ -2,11 +2,14 @@
 using AutoFixture.AutoNSubstitute;
 using CoffeeSpace.Domain.Ordering.Orders;
 using CoffeeSpace.Messages.Ordering.Commands;
+using CoffeeSpace.OrderingApi.Application.Mapping;
 using CoffeeSpace.OrderingApi.Application.Repositories.Abstractions;
 using CoffeeSpace.OrderingApi.Application.Services;
+using CoffeeSpace.OrderingApi.Application.SignalRHubs;
+using CoffeeSpace.OrderingApi.Application.SignalRHubs.Abstraction;
 using FluentAssertions;
 using MassTransit;
-using Mediator;
+using Microsoft.AspNetCore.SignalR;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
 using Xunit;
@@ -15,11 +18,12 @@ namespace CoffeeSpace.OrderingApi.Tests.Services;
 
 public sealed class OrderServiceTests
 {
-    private readonly IPublishEndpoint _publishEndpoint;
+    private readonly ISendEndpointProvider _sendEndpointProvider;
     private readonly IOrderRepository _orderRepository;
-    private readonly Fixture _fixture;
     private readonly IEnumerable<Order> _orders;
-    
+    private readonly IHubContext<OrderingHub, IOrderingHub> _hubContext;
+    private readonly Fixture _fixture;
+
     private readonly OrderService _orderService;
     
     public OrderServiceTests()
@@ -27,14 +31,15 @@ public sealed class OrderServiceTests
         _fixture = new Fixture();
         _fixture.Customize(new AutoNSubstituteCustomization());
         _orders = _fixture.Build<Order>()
-            .With(order => order.Id, Guid.NewGuid().ToString())
-            .With(order => order.BuyerId, Guid.NewGuid().ToString())
+            .With(order => order.Id, Guid.NewGuid())
+            .With(order => order.BuyerId, Guid.NewGuid())
             .CreateMany();
 
-        _publishEndpoint = _fixture.Create<IPublishEndpoint>();
+        _sendEndpointProvider = _fixture.Create<ISendEndpointProvider>();
         _orderRepository = _fixture.Create<IOrderRepository>();
+        _hubContext = _fixture.Create<IHubContext<OrderingHub, IOrderingHub>>();
         
-        _orderService = new OrderService(_orderRepository, _publishEndpoint);
+        _orderService = new OrderService(_orderRepository, _sendEndpointProvider, _hubContext);
     }
 
     [Fact]
@@ -42,14 +47,15 @@ public sealed class OrderServiceTests
     {
         // Arrange
         var orders = _orders.Take(2).ToList();
-        _orderRepository.GetAllByBuyerIdAsync(orders[0].BuyerId, CancellationToken.None)
+        _orderRepository.GetAllByBuyerIdAsync(orders[0].BuyerId, Arg.Any<CancellationToken>())
             .Returns(orders);
         
         // Act
-        var result = await _orderService.GetAllByBuyerIdAsync(Guid.Parse(orders[0].BuyerId), CancellationToken.None);
+        var result = await _orderService.GetAllByBuyerIdAsync(orders[0].BuyerId, CancellationToken.None);
 
         // Assert
         result.Should().BeEquivalentTo(orders);
+        await _orderRepository.Received().GetAllByBuyerIdAsync(orders[0].BuyerId, Arg.Any<CancellationToken>());
     }
     
     [Fact]
@@ -61,25 +67,31 @@ public sealed class OrderServiceTests
             .Returns(expectedOrder);
 
         // Act
-        var result = await _orderService.GetByIdAsync(Guid.Parse(expectedOrder.Id), Guid.Parse(expectedOrder.BuyerId), CancellationToken.None);
+        var result = await _orderService.GetByIdAsync(expectedOrder.Id, expectedOrder.BuyerId, CancellationToken.None);
 
         // Assert
         result.Should().BeEquivalentTo(expectedOrder);
+        await _orderRepository.Received().GetByIdAsync(expectedOrder.Id, Arg.Any<CancellationToken>());
     }
     
     [Fact]
     public async Task GetByIdAsync_ShouldReturnNull_WhenOrderDoesNotExist()
     {
         // Arrange
-        var expectedOrder = _orders.First();
-        _orderRepository.GetByIdAsync(expectedOrder.Id, Arg.Any<CancellationToken>())
+        var order = _fixture.Build<Order>()
+            .With(order => order.Id, Guid.NewGuid())
+            .With(order => order.BuyerId, Guid.NewGuid())
+            .Create();
+        
+        _orderRepository.GetByIdAsync(order.Id, Arg.Any<CancellationToken>())
             .ReturnsNull();
         
         // Act
-        var result = await _orderService.GetByIdAsync(Guid.Parse(expectedOrder.Id), Guid.Parse(expectedOrder.BuyerId), CancellationToken.None);
+        var result = await _orderService.GetByIdAsync(order.Id, order.BuyerId, CancellationToken.None);
  
         // Assert
         result.Should().BeNull();
+        await _orderRepository.Received().GetByIdAsync(order.Id, Arg.Any<CancellationToken>());
     }
     
     [Fact]
@@ -87,18 +99,32 @@ public sealed class OrderServiceTests
     {
         // Arrange
         var orderToCreate = _fixture.Create<Order>();
+        var provider = Substitute.For<ISendEndpoint>();
         
-        _orderRepository.CreateAsync(orderToCreate, Arg.Any<CancellationToken>())
+        var endpointUri = _fixture.Create<Uri>();
+        var cancellationToken = CancellationToken.None;
+        
+        _orderRepository.CreateAsync(orderToCreate, cancellationToken)
             .Returns(true);
 
-        _publishEndpoint.Publish<SubmitOrder>(Arg.Any<object>())
+        _sendEndpointProvider.GetSendEndpoint(endpointUri)
+            .Returns(provider);
+
+        provider.Send(Arg.Any<object>(), cancellationToken)
             .Returns(Task.CompletedTask);
+        
+        EndpointConvention.Map<SubmitOrder>(endpointUri);
 
         // Act
-        bool result = await _orderService.CreateAsync(orderToCreate, CancellationToken.None);
+        bool result = await _orderService.CreateAsync(orderToCreate, cancellationToken);
  
         // Assert
         result.Should().BeTrue();
+
+        await _orderRepository.Received().CreateAsync(orderToCreate, cancellationToken);
+        await _hubContext.Clients.Received().Groups(Arg.Any<string[]>()).OrderCreated(orderToCreate.ToResponse());
+
+        await provider.Received().Send(Arg.Any<object>(), Arg.Any<IPipe<SendContext<SubmitOrder>>>(),cancellationToken);
     }
     
     [Fact]
@@ -114,6 +140,9 @@ public sealed class OrderServiceTests
  
         // Assert
         result.Should().BeFalse();
+
+        _hubContext.Clients.DidNotReceive();
+        await _orderRepository.Received().CreateAsync(orderToCreate, Arg.Any<CancellationToken>());
     }
     
     
@@ -126,10 +155,11 @@ public sealed class OrderServiceTests
             .Returns(true);
 
         // Act
-        bool result = await _orderService.DeleteByIdAsync(Guid.Parse(orderToDelete.Id), Guid.Parse(orderToDelete.BuyerId), CancellationToken.None);
+        bool result = await _orderService.DeleteByIdAsync(orderToDelete.Id, orderToDelete.BuyerId, CancellationToken.None);
  
         // Assert
         result.Should().BeTrue();
+        await _orderRepository.Received().DeleteByIdAsync(orderToDelete.Id, Arg.Any<CancellationToken>());
     }
     
     [Fact]
@@ -141,9 +171,10 @@ public sealed class OrderServiceTests
             .Returns(false);
 
         // Act
-        bool result = await _orderService.DeleteByIdAsync(Guid.Parse(orderToDelete.Id), Guid.Parse(orderToDelete.BuyerId), CancellationToken.None);
+        bool result = await _orderService.DeleteByIdAsync(orderToDelete.Id, orderToDelete.BuyerId, CancellationToken.None);
  
         // Assert
         result.Should().BeFalse();
+        await _orderRepository.Received().DeleteByIdAsync(orderToDelete.Id, Arg.Any<CancellationToken>());
     }
 }

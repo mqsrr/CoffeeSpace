@@ -44,11 +44,10 @@ public sealed class CreateOrderRequestValidatorTests
         // Arrange
         var request = _fixture.Build<CreateOrderRequest>()
             .With(createOrderRequest => createOrderRequest.Address, addressRequest)
-            .With(createOrderRequest => createOrderRequest.OrderItems, new OrderItem[]
+            .With(createOrderRequest => createOrderRequest.OrderItems, new[]
             {
                 new OrderItem
                 {
-                    Id = null,
                     Title = "Title",
                     Description = "Description",
                     UnitPrice = 1.4f,

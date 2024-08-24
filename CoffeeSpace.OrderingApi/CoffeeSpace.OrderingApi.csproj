@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
@@ -15,38 +15,33 @@
     
     <ItemGroup>
       <Folder Include="Persistence\Migrations\" />
-      <Folder Include="Persistence\Migrations\OrderingDb\" />
       <Folder Include="Persistence\Migrations\SagaDb\" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Asp.Versioning.Mvc" Version="7.1.0" />
-      <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="7.1.0" />
-      <PackageReference Include="AspNetCore.HealthChecks.Redis" Version="7.0.1" />
+      <PackageReference Include="Asp.Versioning.Mvc" Version="8.1.0" />
+      <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="8.0.1" />
+      <PackageReference Include="AspNetCore.HealthChecks.Redis" Version="8.0.1" />
       <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
-      <PackageReference Include="MassTransit.AmazonSQS" Version="8.1.1" />
-      <PackageReference Include="MassTransit.AspNetCore" Version="7.3.1" />
-      <PackageReference Include="MassTransit.EntityFrameworkCore" Version="8.1.1" />
-      <PackageReference Include="MassTransit.Newtonsoft" Version="8.1.1" />
-      <PackageReference Include="MassTransit.Quartz" Version="8.1.1" />
-      <PackageReference Include="MassTransit.RabbitMQ" Version="8.1.1" />
+      <PackageReference Include="MassTransit.EntityFrameworkCore" Version="8.2.4" />
+      <PackageReference Include="MassTransit.Quartz" Version="8.2.4" />
       <PackageReference Include="Mediator.Abstractions" Version="2.1.7" />
       <PackageReference Include="Mediator.SourceGenerator" Version="2.1.7">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
-      <PackageReference Include="Microsoft.Azure.SignalR" Version="1.21.7" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.12">
+        
+      <PackageReference Include="Microsoft.Azure.SignalR" Version="1.26.0" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
-      <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="7.0.12" />
-      <PackageReference Include="Microsoft.ML.Recommender" Version="0.20.1" />
-      <PackageReference Include="Riok.Mapperly" Version="3.2.0" />
+      <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.8" />
+      <PackageReference Include="Riok.Mapperly" Version="3.6.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\CoffeeSpace.Core\CoffeeSpace.Core.csproj" />
+      <ProjectReference Include="..\CoffeeSpace.Shared\CoffeeSpace.Shared.csproj" />
       <ProjectReference Include="..\CoffeeSpace.Domain\CoffeeSpace.Domain.csproj" />
       <ProjectReference Include="..\CoffeeSpace.Messages\CoffeeSpace.Messages.csproj" />
     </ItemGroup>

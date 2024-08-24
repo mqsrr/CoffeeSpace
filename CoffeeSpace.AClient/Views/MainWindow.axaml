@@ -1,0 +1,57 @@
+<suki:SukiWindow xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:CoffeeSpace.AClient.ViewModels"
+        xmlns:view="using:CoffeeSpace.AClient.Views"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:suki="clr-namespace:SukiUI.Controls;assembly=SukiUI"
+        xmlns:heroIcons="clr-namespace:HeroIconsAvalonia.Controls;assembly=HeroIconsAvalonia"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="CoffeeSpace.AClient.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="CClient"
+        FontFamily="{StaticResource Montserrat-Regular}"
+        Classes="NakedWindow">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
+
+    <suki:SukiSideMenu suki:SukiHost.ToastLimit="4">
+        <suki:SukiSideMenu.HeaderContent>
+            <StackPanel Orientation="Horizontal" Margin="20" HorizontalAlignment="Left" VerticalAlignment="Center">
+                <heroIcons:HeroIcon Type="LightBulb" Margin="10 0" 
+                                    PointerPressed="OnThemeChangeClick" Min="True"/>
+                <heroIcons:HeroIcon Type="Sparkles" Margin="10 0"
+                                    PointerPressed="OnPrimaryColorChangeClick" Min="True"/>
+            </StackPanel>
+        </suki:SukiSideMenu.HeaderContent>
+        <suki:SukiSideMenu.Items>
+            <suki:SukiSideMenuItem Header="DashBoard">
+                <suki:SukiSideMenuItem.Icon>
+                    <heroIcons:HeroIcon Foreground="WhiteSmoke" Type="ComputerDesktop" />
+                </suki:SukiSideMenuItem.Icon>
+                <suki:SukiSideMenuItem.PageContent>
+                    <view:DashboardView />
+                </suki:SukiSideMenuItem.PageContent>
+            </suki:SukiSideMenuItem>
+            <suki:SukiSideMenuItem Header="Cart">
+                <suki:SukiSideMenuItem.Icon>
+                    <heroIcons:HeroIcon Foreground="WhiteSmoke" Type="ShoppingCart" />
+                </suki:SukiSideMenuItem.Icon>
+                <suki:SukiSideMenuItem.PageContent>
+                    <view:CartView />
+                </suki:SukiSideMenuItem.PageContent>
+            </suki:SukiSideMenuItem>
+            <suki:SukiSideMenuItem Header="Order History">
+                <suki:SukiSideMenuItem.Icon>
+                    <heroIcons:HeroIcon Foreground="WhiteSmoke" Type="Cake" />
+                </suki:SukiSideMenuItem.Icon>
+                <suki:SukiSideMenuItem.PageContent>
+                    <view:OrderHistoryView />
+                </suki:SukiSideMenuItem.PageContent>
+            </suki:SukiSideMenuItem>
+        </suki:SukiSideMenu.Items>
+    </suki:SukiSideMenu>
+</suki:SukiWindow>

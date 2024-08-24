@@ -9,11 +9,6 @@ internal sealed class OrderStateMap : SagaClassMap<OrderStateInstance>
 {
     protected override void Configure(EntityTypeBuilder<OrderStateInstance> entity, ModelBuilder model)
     {
-        entity.HasKey(x => x.CorrelationId);
-
-        entity.Property(x => x.OrderId)
-            .IsRequired();
-        
         entity.Property(x => x.CurrentState)
             .IsRequired()
             .IsUnicode(false);
@@ -23,10 +18,7 @@ internal sealed class OrderStateMap : SagaClassMap<OrderStateInstance>
 
         entity.Property(x => x.StockValidationSuccess)
             .IsRequired();
-
-        entity.Property(x => x.UpdateOrderStatusCorrelationId)
-            .IsRequired();
-
+        
         entity.HasIndex(x => x.CorrelationId)
             .IsUnique();
 

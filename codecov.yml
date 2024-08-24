@@ -1,0 +1,8 @@
+﻿codecov:
+  token: ${{ secrets.CODECOV_TOKEN }}
+  
+ignore:
+  - "CoffeeSpace.Client"
+  - "CoffeeSpace.AClient"
+  - "**/Migrations/**/*"
+  - "**/Migrations/**"

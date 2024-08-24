@@ -1,138 +1,59 @@
-﻿name: Build
+﻿name: Build, Tests
 
-on:
-  push:
-    branches:
-      - main
-      - wip
-  pull_request:
-    branches:
-      - main
+on: [push]
 
 jobs:
-  OrderingApi:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: '7.0.x'
-      - name: Restore dependencies
-        run: dotnet restore CoffeeSpace.OrderingApi/CoffeeSpace.OrderingApi.csproj
-
-      - name: Build
-        run: dotnet build --configuration Release CoffeeSpace.OrderingApi/CoffeeSpace.OrderingApi.csproj
-        
-  ProductsApi:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Setup .NET
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET Core
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '7.0.x'
+          dotnet-version: '8.x'
+
       - name: Restore dependencies
-        run: dotnet restore CoffeeSpace.ProductApi/CoffeeSpace.ProductApi.csproj
+        run: dotnet restore
 
       - name: Build
-        run: dotnet build --configuration Release CoffeeSpace.ProductApi/CoffeeSpace.ProductApi.csproj
-
-  IdentityApi:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: '7.0.x'
-      - name: Restore dependencies
-        run: dotnet restore CoffeeSpace.IdentityApi/CoffeeSpace.IdentityApi.csproj
-
-      - name: Build
-        run: dotnet build --configuration Release CoffeeSpace.IdentityApi/CoffeeSpace.IdentityApi.csproj
-
-  PaymentService:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: '7.0.x'
-      - name: Restore dependencies
-        run: dotnet restore CoffeeSpace.PaymentService/CoffeeSpace.PaymentService.csproj
-
-      - name: Build
-        run: dotnet build --configuration Release CoffeeSpace.PaymentService/CoffeeSpace.PaymentService.csproj
-
-  ShipmentService:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: '7.0.x'
-      - name: Restore dependencies
-        run: dotnet restore CoffeeSpace.ShipmentService/CoffeeSpace.ShipmentService.csproj
-
-      - name: Build
-        run: dotnet build --configuration Release CoffeeSpace.ShipmentService/CoffeeSpace.ShipmentService.csproj
+        run: dotnet build --no-restore --configuration Release
   
-  ApiGateway:
+  backend-tests:
     runs-on: ubuntu-latest
+    needs: build
     steps:
-      - uses: actions/checkout@v3
-      - name: Setup .NET
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET Core
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '7.0.x'
-      - name: Restore dependencies
-        run: dotnet restore CoffeeSpace.ApiGateway/CoffeeSpace.ApiGateway.csproj
+          dotnet-version: '8.x'
 
-      - name: Build
-        run: dotnet build --configuration Release CoffeeSpace.ApiGateway/CoffeeSpace.ApiGateway.csproj
+      - name: Run unit and integration tests
+        run: dotnet test CoffeeSpace.sln --configuration Release --collect:"XPlat Code Coverage;Format=cobertura" --results-directory ./TestResults
+
+      - name: Archive code coverage results
+        uses: actions/upload-artifact@v4
+        with:
+          name: code-coverage-report
+          path: ./TestResults/
   
-  Core-Library:
+  upload-coverage-to-codecov:
     runs-on: ubuntu-latest
+    needs: backend-tests
     steps:
-      - uses: actions/checkout@v3
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download a single artifact
+        uses: actions/download-artifact@v4
         with:
-          dotnet-version: '7.0.x'
-      - name: Restore dependencies
-        run: dotnet restore CoffeeSpace.Core/CoffeeSpace.Core.csproj
+          name: code-coverage-report
 
-      - name: Build
-        run: dotnet build --configuration Release CoffeeSpace.Core/CoffeeSpace.Core.csproj
-  
-  Messages-Library:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+      - name: Upload Test Coverage to Codecov
+        uses: codecov/codecov-action@v3
         with:
-          dotnet-version: '7.0.x'
-      - name: Restore dependencies
-        run: dotnet restore CoffeeSpace.Messages/CoffeeSpace.Messages.csproj
-
-      - name: Build
-        run: dotnet build --configuration Release CoffeeSpace.Messages/CoffeeSpace.Messages.csproj
-
-  Domain-Library:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: '7.0.x'
-      - name: Restore dependencies
-        run: dotnet restore CoffeeSpace.Domain/CoffeeSpace.Domain.csproj
-
-      - name: Build
-        run: dotnet build --configuration Release CoffeeSpace.Domain/CoffeeSpace.Domain.csproj
+          token: ${{ secrets.CODECOV_TOKEN }}
